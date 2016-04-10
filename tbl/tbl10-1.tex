@@ -1,0 +1,29 @@
+
+\startxtable[
+    option=max,
+    align={middle,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,topframe=on,bottomframe=on]
+\startxrow[foregroundstyle=bold,]
+  \processcommalist[ ,未排序的單向鏈表,已排序的單向鏈表,未排序的雙向鏈表,已排序的雙向鏈表]{\xcell[align={middle}]}
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off,bottomframe=on]
+\startxrow \processcommalist[\ALGO{SEARCH(L, k)},線性,線性,線性,線性]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{INSERT(L, x)},常數,線性,常數,線性]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{DELETE(L, x)},線性,線性,常數,常數]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{SUCCESSOR(L, x)},線性,常數,線性,常數]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{PREDECESSOR(L, x)},線性,線性,線性,常數]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{MINIMUM(L)},線性,常數,線性,常數]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{MAXIMUM(L)},線性,線性,線性,線性]\xcell \stopxrow
+\stopxtablebody
+
+\stopxtable

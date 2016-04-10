@@ -1,0 +1,106 @@
+%% use `mtxrun --script font --list --all` to list all fonts
+%% use `mtxrun --script fonts --reload` to reload fonts
+%\usetypescriptfile[euler]
+
+% zhfonts
+\usemodule[p][zhfonts][style=rm, size=9pt]
+%\setupzhfonts[feature][onum=yes, pnum=yes]
+
+\setupzhfonts
+[serif]
+[regular=adobesongstd,
+bold=adobeheitistd,
+italic=adobekaitistd,
+bolditalic=adobeheitistd]
+
+\setupzhfonts
+[sans]
+[regular=adobefangsongstd,
+bold=adobeheitistd,
+italic=adobefangsongstd,
+bolditalic=adobeheitistd]
+
+\setupzhfonts
+[mono]
+[regular=adobekaitistd,
+bold=adobeheitistd,
+italic=adobekaitistd,
+bolditalic=adobeheitistd]
+
+\setupzhfonts
+[latin, serif]
+[regular=texgyrepagellaregular,
+bold=texgyrepagellabold,
+italic=texgyrepagellaitalic,
+bolditalic=texgyrepagellabolditalic]
+
+\setupzhfonts
+[latin, mono]
+[regular=texgyrecursorregular,
+bold=texgyrecursorbold,
+italic=texgyrecursoritalic,
+bolditalic=texgyrecursorbolditalic]
+
+\setupzhfonts
+[latin, sans]
+[regular=texgyreherosregular,
+bold=texgyreherosbold,
+italic=texgyreherositalic,
+bolditalic=texgyreherosbolditalic]
+
+% math
+\setupzhfonts[math][%
+  roman=neoeuler
+]
+
+% 加粗數學函數名 % neoeuler 字體粗細差不多，加粗也看不太出來
+\let\stdmfunctionlabeltext\mfunctionlabeltext
+\def\mfunctionlabeltext#1{%
+\stdmfunctionlabeltext{\bf #1}%
+}
+
+% 启用中文断行
+\setscript[hanzi]
+\mainlanguage[cn]
+
+% 交互
+%\startallmodes[screen,solution]
+\setupinteraction[
+  state=start,	%start stop
+  focus=standard,
+  %menu	on off
+  %page	yes no
+  %click	yes no
+  %split	yes no
+  %display	new
+  %openaction	reference
+  %closeaction	reference
+  %openpageaction	reference
+  %closepageaction	reference
+  %calculate	name
+  %strut	yes no
+  %width	dimension
+  %height	dimension
+  %depth	dimension
+  style=\REF,	%normal bold slanted boldslanted type cap small...command
+  color=black,	%name	link to other page
+  contrastcolor=black,	%name	link to the same page
+  %symbolset	name
+  %title	text
+  %subtitle	text
+  %author	text
+  %date	text
+  %keyword	text
+  %fieldlayer	auto name
+]
+%\stopallmodes
+
+\setuptolerance[horizontal,
+  verystrict, %stretch space verystrict strict tolerant verytolerant
+]
+\setuptolerance[vertical,
+  strict, %stretch space verystrict strict tolerant verytolerant
+]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% font style %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\define\EMP{\bf} % emphasize
+\define\REF{\it} % reference

@@ -1,0 +1,493 @@
+\startcomponent c_b_trees
+
+\startchapter[
+  title={B-Trees},
+]
+
+\startsection[
+  title={Definition of B-trees},
+]
+%e18.1-1
+\startEXERCISE
+爲什麼不允許最小度數 \m{t=1}？
+\stopEXERCISE
+
+\startANSWER
+根據定義，最小度數 \m{t} 意味着所有節點（根節點除外）都至少含有 \m{t-1} 個關鍵字。
+從而使得根節點以外的內部節點都至少有 \m{t} 個孩子節點。
+所以，如果 \m{t=1}，則意味着根節點之外的節點最少可以只有 \m{t-1=0} 個關鍵字，
+根節點之外的內部節點最少可以只有 \m{t=1} 個孩子節點。
+
+因此，最小度數不能是 1。
+\stopANSWER
+
+%e18.1-2
+\startEXERCISE
+當 \m{t} 取何值時，圖 18-1 所示的樹是一棵合法的 B 樹？
+\stopEXERCISE
+
+\startANSWER
+根節點之外的節點至少要有 \m{t-1} 個關鍵字，最多有 \m{2t-1} 個關鍵字。
+根據圖 18-1，有 \m{t-1\le 2} 且 \m{3\le 2t-1}，求解得 \m{2\le \le 3}，
+因此 \m{t} 可以是 2 或 3。
+\stopANSWER
+
+%e18.1-3
+\startEXERCISE
+請給出表示 \m{\{1,2,3,4,5\}} 的最小度數爲 2 的所有合法 B 樹。
+\stopEXERCISE
+
+\startANSWER
+略。
+\stopANSWER
+
+%e18.1-4
+\startEXERCISE
+一棵高度爲 \m{h} 的 B 樹中，可以存儲最多多少個關鍵字？
+用最小度數 \m{t} 的函數表示。
+\stopEXERCISE
+
+\startANSWER
+每個節點最多包含 \m{2t-1} 個關鍵字。每個節點最多有 \m{2t} 個孩子。
+\startformula\startmathalignment
+\NC \NC (2t-1)[(2t)^0 + (2t)^1 + \ldots + (2t)^h] \NR
+\NC = \NC (2t-1)\sum_{i=0}^{h}(2t)^i \NR
+\NC = \NC (2t-1)\frac{(2t)^{h+1} - 1}{2t-1} \NR
+\NC = \NC (2t)^{h+1} - 1 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%18.1-5
+\startEXERCISE
+如果紅黑樹中每個黑節點吸收他的紅色孩子，
+並把他們的孩子併入作爲自己的孩子，
+描述這個結果的數據結構。
+\stopEXERCISE
+
+\startANSWER
+對於黑色節點而言，他可能有一個或兩個紅孩子，也可能沒有，合併後，此節點將有 1、 2 或 3 個關鍵字。
+此後所有葉子節點將具有同樣的高度（根據紅黑樹性質 5：從一個節點到所有其後代葉子節點路徑上的黑色節點數目相同）。
+因此，這棵紅黑樹變成了一棵 \m{t=2} 的 B 樹，即 2-3-4 樹。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Basic operations on B-trees},
+]
+
+%e18.2-1
+\startEXERCISE
+請給出關鍵字 \m{F}、 \m{S}、 \m{Q}、 \m{K}、 \m{C}、 \m{L}、 \m{H}、 \m{T}、 \m{V}、 \m{W}、
+ \m{M}、 \m{R}、 \m{N}、 \m{P}、 \m{A}、 \m{B}、 \m{X}、 \m{Y}、 \m{D}、 \m{Z}、 \m{E} 依序
+插入一棵最小度數爲 2 的空 B 樹的結果。
+只要畫出在某些節點分裂之前的結構以及最終的結構。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e18_2_1-1]
+\stopANSWER
+
+%e18.2-2
+\startEXERCISE
+請解釋在什麼情況下（如果有的話），
+在調用 \ALGO{B-TREE-INSERT} 的過程中，
+會執行冗餘的 \ALGO{DISK-READ} 或 \ALGO{DISK-WRITE} 操作。
+（所謂冗餘的 \ALGO{DISK-READ}，是指對已經在主存中的某頁做 \ALGO{DISK-READ}。
+冗餘的 \ALGO{DISK-WRITE} 是指將已經存在於磁盤上某頁又完全相同的重寫一遍）
+\stopEXERCISE
+
+\startANSWER
+若所要插入的節點是滿的，但其父節點未滿，我們需要做如下操作：
+\startigBase[2]
+\item \ALGO{DISK-READ}：放置關鍵字；
+\item \ALGO{DISK-WRITE}：節點裂變；
+\item \ALGO{DISK-READ}：讀取父節點；
+\item \ALGO{DISK-READ}：填充父節點。
+\stopigBase
+
+如果父節點也是滿的，則會重複第二和第三步。也就是說不會出現冗餘。
+\stopANSWER
+
+%e18.2-3
+\startEXERCISE
+請說明如何在一棵 B 樹中找出最小關鍵字，
+以及如何找出某一給定關鍵字的前驅。
+\stopEXERCISE
+
+\startANSWER
+找最小關鍵字的過程與二叉搜索樹類似。最小關鍵字即最左葉子節點的第一個關鍵字。
+
+找前驅要首先找到給定的關鍵字，假設爲 \m{x.key_i}。
+\startigBase[2]
+\item 如果 \m{x} 不是葉子節點，則要找到以 \m{x.c_i} 爲根的子樹的最大關鍵字。
+\item 如果 \m{x} 是葉子節點，且 \m{i>1}，則返回 \m{x.key_{i-1}}。
+\item 如果 \m{x} 是葉子節點，且 \m{i=1}，則自底向上搜索，
+找到最後一個節點 \m{y}，使得 \m{x.key_i} 是以 \m{y.c_j} 爲根的最左關鍵字（\m{j>0}）。
+如果 \m{j=1}，則返回 \ALGO{NIL}，這時 \m{x.key_i} 是整個 B 樹的最小關鍵字，沒有前驅；
+否則，返回 \m{y.key_{j-1}}。
+\stopigBase
+\stopANSWER
+
+%e18.2-4
+\startEXERCISE
+假設將關鍵字 \m{\{1,2,\ldots,n\}} 插入一棵最小度數爲 2 的空 B 樹中，
+那麼最終的 B 樹有多少個節點？
+\stopEXERCISE
+
+\startANSWER
+\m{O(n)}。
+\stopANSWER
+
+%e18.2-5
+\startEXERCISE
+因爲葉子節點無需指向孩子節點的指針，
+那麼對於同樣大小的磁盤頁面，可選用一個與內部節點不同的（更大的） \m{t} 值。
+請說明如何修改 B 樹的創建和插入過程來處理這個變化。
+\stopEXERCISE
+
+\startANSWER
+最小度數爲 \m{t} 的 B 樹，一個節點最多可存儲 \m{2t-1} 個關鍵字以及 \m{2t} 個指針。
+而葉子節點沒有子節點，因此 \m{2t} 個指針可以用來存儲關鍵字。
+若將新的 \m{t} 值記爲 \m{t'}，總空間要足夠容納 \m{2t'-1} 個關鍵字，
+即根據關鍵字和指針各佔空間多少，即可求出 \m{t'} 的最大值。
+
+B 樹的創建過程當無需修改（空節點）。
+插入過程需要修改。
+葉子節點分裂出來的節點仍是葉子節點，且仍只分裂出一個葉子節點，
+不會出現一個葉子節點一次分裂出多個葉子節點的情況。
+插入過程需要修改兩處：1）葉子節點和內部節點的分裂條件不同。
+2）分裂後葉子節點和內部節點需要複製的關鍵字數目不同。
+\stopANSWER
+
+%e18.2-6
+\startEXERCISE
+假設 \ALGO{B-TREE-SEARCH} 的實現是在每個節點內採用二分查找，而不是線性查找。
+證明：
+無論怎樣選擇 \m{t} （\m{t} 爲 \m{n} 的函數），
+這種實現所需的 CPU 時間都爲 \m{O(\lg n)}。
+\stopEXERCISE
+
+\startANSWER
+令 B 樹高爲 \m{h}，所含關鍵字數目爲 \m{n}，
+則 \m{O(h)=O(\log_{t}n)}，且 \m{h\le \log_{t}\frac{n+1}{2}}。
+每個節點中關鍵字數目不會大於 \m{2t-1}，二分查找用時 \m{O(\lg t)}。
+因此總時間爲：
+\startformula
+O(\lg t \times \log_{t}n) = O(\lg t \times \frac{\lg n}{\lg t}) = O(\lg n)
+\stopformula
+\stopANSWER
+
+%e18.2-7
+\startEXERCISE
+假設磁盤硬件允許我們任意選擇磁盤頁面的大小，
+但讀取磁盤頁面的時間是 \m{a+bt}，
+其中 \m{a} 和 \m{b} 爲規定的常數， \m{t} 爲確定磁盤頁大小後的 B 樹的最小度數。
+請描述如何選擇 \m{t} 以（近似的）最小化 B 樹的查找時間。
+對 \m{a=5ms} 和 \m{b=10ms}，請給出 \m{t} 的一個最優值。
+\stopEXERCISE
+
+\startANSWER
+令 B 樹高爲 \m{h}，關鍵字數目爲 \m{n}，搜索過程最多需要讀取次數爲 \m{h}，
+則讀頁面總用時爲 \m{(a+bt)\times h}，對 \m{t} 求導數。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Deleting a key from a B-tree},
+]
+
+%e18.3-1
+\startEXERCISE
+請說明依次從圖 18-8(f) 中刪除 \m{C}、 \m{P} 和 \m{V} 後的結果。
+附圖 18-8(f)：
+
+\externalfigure[output/e18_3_1-1]
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e18_3_1-2]
+
+\externalfigure[output/e18_3_1-3]
+
+\externalfigure[output/e18_3_1-4]
+\stopANSWER
+
+%e18.3-2
+\startEXERCISE
+請寫出 \ALGO{B-TREE-DELETE} 的僞碼。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{B-TREE-MERGE(T, x, i)}
+\startCLRS
+y = x.c[i]
+z = x.c[i+1]
+
+++y.n
+y.key[y.n] = x.key[i]
+for j = 1 upto z.n
+	++y.n
+	y.key[y.n] = z.key[j]
+	if not y.leaf
+		y.c[y.n] = z.c[j]
+if not y.leaf
+	y.c[y.n + 1] = z.c[z.n + 1]
+free z
+
+for j = i upto x.n - 1
+	x.key[i] = x.key[i+1]
+	x.c[i+1] = x.c[i+2]
+--x.n
+
+if x.n == 0 and T.root == x
+	T.root = y
+\stopCLRS
+
+\CLRSH{B-TREE-DELETE(T, x, k)}
+\startCLRS
+i = 1
+while i <= x.n and x.key[i] < k
+	++i
+if i <= x.n and x.key[i] == k
+	if x.leaf
+		delete x from x
+	else
+		y = x.c[i]
+		z = x.c[i+1]
+		if y.n >= T.t
+			y' = y
+			while not y'.leaf
+				y' = y'.c[y'.n + 1]
+			x.key[i] = y'.key[y'.n]
+			B-TREE-DELETE(T, y, x.key[i])
+		else if z.n >= T.t
+			z' = z
+			while not z'.leaf
+				z' = z'.c[1]
+			x.key[i] = z'.key[1]
+			B-TREE-DELETE(T, z, x.key[i])
+		else
+			B-TREE-MERGE(T, x, i)
+			B-TREE-DELETE(T, y, k)
+else
+	if x.leaf
+		print not found k
+	else
+		if x.c[i].n == T.t - 1
+			if i <= x.n and x.c[i+1].n >= T.t
+				y = x.c[i]
+				z = x.c[i+1]
+				++y.n
+				y.key[y.n] = x.key[i]
+				if not y.leaf
+					y.c[y.n+1] = z.c[1]
+				x.key[i] = z.key[1]
+				for j = 1 upto z.n - 1
+					z.key[j] = z.key[j+1]
+					if not z.leaf
+						z.c[j] = z.c[j+1]
+				if not z.leaf
+					z.c[z.n] = z.c[z.n+1]
+				--z.n
+			else if i > 1 and x.c[i-1].n >= T.t
+				y = x.c[i-1]
+				z = x.c[i]
+				++z.n
+				for j = z.n downto 2
+					z.key[j] = z.key[j-1]
+					if not z.leaf
+						z.c[j+1] = z.c[j]
+				z.key[1] = x.key[i]
+				if not z.leaf
+					z.c[2] = z.c[1]
+					z.c[1] = y.c[y.n+1]
+				x.key[i] = y.key[y.n]
+				--y.n
+			else
+				if i > x.n
+					--i
+				B-TREE-MERGE(T, x, i)
+		B-TREE-DELETE(T, x.c[i], k)
+\stopCLRS
+\stopANSWER
+
+\stopsection
+
+\startsubject[
+  title={Problems},
+]
+
+%p18-1
+\startPROBLEM
+（stacks on secondary storage）
+對於一臺計算機，如果較快的主存較少，而較慢的磁盤存儲空間較多，
+如何在其上實現一個棧。
+ \ALGO{PUSH} 和 \ALGO{POP} 的操作對象爲單字。
+我們希望計算機支持的棧可以增長的很大，
+甚至無法全部裝入主存，即大部分放在磁盤上。
+
+一種簡單但低效的實現方法是將整個棧放在磁盤上。
+在主存中保持一個棧的指針，指向棧頂元素的磁盤地址。
+如果該指針的值爲 \m{p}，
+則棧頂元素是磁盤的 \m{\left\lfloor \frac{p}{m}\right\rfloor} 頁上的第 \m{p \mod m} 個字，
+這裏 \m{m} 爲每頁所含字數。
+
+爲了實現 \ALGO{PUSH} 操作，我們增加棧指針，
+從磁盤將適當的頁讀到主存中後，
+複製要被壓入棧的元素到該頁上適當字的位置，
+最後將該頁寫回到磁盤。
+ \ALGO{POP} 操作與之類似。
+我們減小棧指針，從磁盤上讀入所需的頁，再返回棧頂元素。
+我們不需要寫回該頁，因爲他沒有被修改。
+
+由於磁盤操作代價相對較高，
+我們統計任何實現的兩部分代價：
+總的磁盤存取次數和總的 CPU 時間。
+任何對一個包含 \m{m} 個字的頁面的磁盤存取，
+都會引起一次磁盤存取 \m{\Theta(m)} 的 CPU 時間。
+
+\startigBase[a]\startitem
+從漸進意義上看，使用這種簡單實現，最壞情況下， \m{n} 個棧操作需要存取多少次磁盤？
+ CPU 時間又是多少？
+（用 \m{m} 和 \m{n} 來表示這個問題及後面幾個問題的答案）
+\stopitem\stopigBase
+
+\startANSWER
+\m{2n} 次， \m{\Theta(mn)}。
+\stopANSWER
+
+現在考慮棧的另一種實現，
+即在主存中始終保持存放棧中的一頁。
+（還用少量的主存來記錄當前哪一頁在主存中）
+只有相關的磁盤頁面駐留在主存中，才能執行棧操作。
+如果需要，可以將當前主存中的頁寫回磁盤，
+並且可以從磁盤讀入新的一頁放入主存。
+如果相關磁盤頁已經在主存中，那麼就無需任何磁盤存取。
+
+\startigBase[continue]\startitem
+最壞情況下， \m{n} 個 \ALGO{PUSH} 操作所需的磁盤存取次數是多少？
+所需的 CPU 時間是多少？
+\stopitem\stopigBase
+
+\startANSWER
+\m{n/m} 次， \m{\Theta(n)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+最壞情況下， \m{n} 個棧操作所需的磁盤存取次數是多少？
+所需的 CPU 時間是多少？
+\stopitem\stopigBase
+
+\startANSWER
+\m{n/2} 次， \m{\Theta(mn)}。
+\stopANSWER
+
+假設在另一種實現方式中，在主存中保持棧的 2 頁（此外還有少量的字來記錄哪些頁在主存中）。
+\startigBase[continue]\startitem
+請描述如何管理棧頁，使得任何棧操作的攤還磁盤存取次數爲 \m{O(1/m)}，
+攤還 CPU 時間爲 \m{O(1)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p18-2
+\startPROBLEM
+（joining and splitting 2-3-4 tree）
+{\EMP 連接}：輸入爲兩個動態集合 \m{S'} 和 \m{S''}，以及一個元素 \m{x}，
+且對任何 \m{x'\in S'} 和 \m{x''\in S''}，
+都有 \m{x'.key < x.key < x''.key}；
+返回一個集合 \m{S=S'\cup \{x\} \cup S''}。
+
+{\EMP 分裂}：{\EMP 連接}的逆操作。
+給定一個動態集合 \m{S} 和一個元素 \m{x\in S}，
+他創建了一個集合 \m{S'}，
+其包含 \m{S-\{x\}} 中所有關鍵字小於 \m{x.key} 的元素；
+同時創建了一個集合 \m{S''}，
+其包含 \m{S - \{x\}} 中所有關鍵字大於 \m{x.key} 的元素。
+在這個問題中，我們討論如何在 2-3-4 樹上實現這些操作。
+爲方便起見，假定所有元素都只包含關鍵字，
+並且所有的關鍵字都不相同。
+
+\startigBase[a]\startitem
+對 2-3-4 樹中的每個節點 \m{x}，
+說明如何將以 \m{x} 爲根的子樹的高度作爲一個屬性 \m{x.height} 來維護。
+要確保所給出的實現不影響查找、插入和刪除的漸進運行時間。
+\stopitem\stopigBase
+
+\startANSWER
+插入：分裂時給新根節點的 \m{height} 賦值。
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明如何實現連接操作。
+給定兩棵 2-3-4 樹 \m{T'}、 \m{T''} 以及一個關鍵字 \m{k}，
+連接操作應在 \m{O(1+|h'-h''|)} 運行時間內完成，
+其中 \m{h'} 和 \m{h''} 分別是樹 \m{T'} 和 \m{T''} 的高度。
+\stopitem\stopigBase
+
+\startANSWER
+以較高的樹，從根節點開始沿最左側子樹搜索，
+直到 height 屬性比較低樹的根節點 height 大 1，記爲節點 \m{x}；
+對於路徑上任何一個節點，只要是滿的，就將其分裂。
+然後將較低的樹與新關鍵字 \m{k} 加入 \m{x}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+考慮從一棵 2-3-4 樹 \m{T} 的根到一個給定關鍵字 \m{k} 的簡單路徑 \m{p}，
+ \m{T} 中小於 \m{k} 的關鍵字集合 \m{S'}，
+以及 \m{T} 中大於 \m{k} 的關鍵字集合 \m{S''}。
+證明： \m{p} 將 \m{S'} 分爲一個樹的集合 \m{\{T_0',T_1',\ldots,T_m'\}} 和
+一個關鍵字的集合 \m{\{k_1',k_2',\ldots,k_m'\}}，
+且對任何關鍵字 \m{y\in T_{i-1}'} 和 \m{z\in T_i'} （\m{i=1,2,\ldots,m}），
+都有 \m{y<k_i'<z}。
+ \m{T_{i-1}'} 和 \m{T_i'} 的高度之間有什麼關係？
+請說明 \m{p} 是如何將 \m{S''} 分爲樹集合和關鍵字集合的。
+\stopitem\stopigBase
+
+\startANSWER
+從根節點開始沿路徑 \m{p} 搜索 \m{k}，
+對於路徑上每一個節點 \m{x}，假設 \m{x.c_i} 在路徑 \m{p} 上：
+如果 \m{i = 1}，則分出的子樹爲空，響應關鍵字也爲空；
+否則，則分出以 \m{x.c_{i-1}} 爲根的子樹，以及關鍵字 \m{x.key_{i-1}}。
+所得即爲樹的集合 \m{\{T_0',T_1',\ldots,T_m'\}} 和
+關鍵字的集合 \m{\{k_1',k_2',\ldots,k_m'\}}。
+
+對稱的可得樹的集合 \m{\{T_0'',T_1'',\ldots,T_m''\}} 和
+關鍵字的集合 \m{\{k_1'',k_2'',\ldots,k_m''\}}。
+
+\m{T_{i-1}'} 的高度大於等於 \m{T_i'} 的高度。
+\stopANSWER
+
+\startigBase[continue]\startitem
+請說明如何實現 \m{T} 上的分裂操作。
+利用連接操作將 \m{S'} 中的關鍵字拼成一棵簡單的 2-3-4 樹 \m{T'}，
+將 \m{S''} 中的關鍵字拼成一棵簡單的 2-3-4 樹 \m{T''}。
+分裂操作的運行時間要求爲 \m{O(\lg n)}，
+這裏 \m{n} 是 \m{T} 中關鍵字數目。
+（\hint 連接的代價應是套迭的）
+\stopitem\stopigBase
+
+\startANSWER
+沿到某一個關鍵字的路徑進行分裂。參考上一項的答案。
+然後將分裂出的集合進行合併。
+所用時間爲：
+\startformula
+\sum_{i=1}^{m}(1+|h(T_{i-1}') - h(T_i')|)
+= m + \sum_{i=1}^{m}(h(T_{i-1}') - h(T_i'))
+= m + h(T_0') - h(T_m')
+\in O(\lg n)
+\stopformula
+\stopANSWER
+
+\stopPROBLEM
+
+\stopsubject%Problems
+
+\stopchapter
+\stopcomponent

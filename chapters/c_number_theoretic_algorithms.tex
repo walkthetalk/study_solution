@@ -1,0 +1,782 @@
+\startcomponent c_number_theoretic_algorithms
+
+\startchapter[
+  title={Number-Theoretic Algorithms},
+  reference=chapter:number_theoretic,
+]
+
+\startformula\startmathalignment
+\NC \text{自然數集} \NC \naturalnumbers \NR
+\NC \text{整數集} \NC \integers \NR
+\NC \text{有理數} \NC \rationals \NR
+\NC \text{實數} \NC \reals \NR
+\NC \text{復數} \NC \complexes \NR
+\NC \text{素數} \NC \primes \NR
+\stopmathalignment\stopformula
+
+\startsection[
+  title={Elementary number-theoretic notions},
+]
+
+%e31.1-1
+\startEXERCISE
+證明：如果 \m{a>b>0}，且 \m{c=a+b}，則 \m{c\mod a = b}。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC c \mod a
+       =\NC (a+b) \mod a \NR
+\NC =\NC a \mod a + b \mod a \NR
+\NC =\NC 0 + b \mod a \NR
+\NC =\NC b \mod a \NR
+\stopmathalignment\stopformula
+由於 \m{a>b>0}，因此 \m{b\mod a = b}，所以 \m{c\mod a = b}。
+\stopANSWER
+
+%e31.1-2
+\startEXERCISE
+證明有無窮多個素數。（\hint 證明素數 \m{p_1}、 \m{p_2}、 \m{\ldots}、 \m{p_k} 都不能整除 \m{(p_1 p_2 \ldots p_k) + 1}。）
+\stopEXERCISE
+
+\startANSWER
+假設素數個數是有限的，且由小至大依次爲 \m{p_1}、 \m{p_2}、 \m{\ldots}、 \m{p_k}。令 \m{m = p_1 p_2 \ldots p_k}， \m{n=m+1}：
+\startigBase[n]
+\startitem
+如果 n 爲素數：則 \m{n} 大於 \m{p_1}、 \m{p_2}、 \m{\ldots}、 \m{p_k}，從而 \m{p_k} 不是最大素數，矛盾；
+\stopitem
+\startitem
+如果 n 爲合數：由於 m 和 n 的對大公約數爲 1，所以 n 不能被 \m{p_1}、 \m{p_2}、 \m{\ldots}、 \m{p_k} 整除，但是任一合數都可分解爲素數的乘積，所以分解得到的素數不屬於 \m{p_1}、 \m{p_2}、 \m{\ldots}、 \m{p_k}，矛盾。
+\stopitem
+\stopigBase
+即無論 n 是素數還是合數，都意味着在假設的有限個素數之外還存在其他素數。
+所以有無窮多個素數。
+\stopANSWER
+
+%e31.1-3
+\startEXERCISE
+證明：如果 \m{a|b} 且 \m{b|c}，則 \m{a|c}。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC a|b \Rightarrow \NC b=q_1 a \NR
+\NC b|c \Rightarrow \NC c=q_2 b \NR
+\stopmathalignment\stopformula
+因此 \m{c\mod a = (q_2 b)\mod a = (q_2 q_1 a)\mod a = 0}，即 \m{a|c}。
+\stopANSWER
+
+%e31.1-4
+\startEXERCISE
+證明：如果 p 是素數，且 \m{0<k<p}，則 \m{\gcd(k,p)=1}。
+\stopEXERCISE
+
+\startANSWER
+令 \m{n=\gcd(k,p)}，則 \m{n\le k < p}，且 \m{n|p}。
+由於 p 是素數，因此 \m{n|p} 意味着 \m{n=1} 或 \m{n=p}。
+又由於 \m{n<p}，因此 \m{n=1}，即 \m{\gcd(k,p)=1}。
+\stopANSWER
+
+%e31.1-5
+\startEXERCISE
+證明推論 31.5。
+（附{\EMP 推論 31.5}：
+對於任意正整數 n、 a 和 b，如果 \m{n|ab} 且 \m{\gcd(a,n)=1}，則 \m{n|b}）。
+\stopEXERCISE
+
+\startANSWER
+由於 \m{\gcd(a,n)=1}，因此有 \m{ax+ny=1}，所以 \m{abx+nby=b}。
+模 n 得 \m{b\mod n = (abx+nby)\mod n = (abx\mod n)+(nby\mod n) = 0 + 0 = 0}，所以 \m{n|b}。
+\stopANSWER
+
+%e31.1-6
+\startEXERCISE
+證明：如果 p 是素數，且 \m{0<k<p}，則 \m{p|\binom{p}{k}}。
+從而對於所有整數 a、 b 以及所有素數 p：
+\startformula
+(a+b)^p\equiv a^p + b^p \qquad (\mod p)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \binom{p}{k}
+   =\NC \frac{p!}{(p-k)!k!} \NR
+\NC=\NC \frac{p (p-1)!}{(p-k) (p-1-k)! k!} \NR
+\NC=\NC \frac{\prod_{i=1}^{k}(p-i+1)}{\prod_{i=1}^{k}{i}} \NR
+\NC=\NC p \frac{\prod_{i=2}^{k}(p-i+1)}{\prod_{i=2}^{k}{i}} \qquad \text{令} a = \prod_{i=2}^{k}(p-i+1)\text{， } b=\prod_{i=2}^{k}{i} \NR
+\NC=\NC \frac{p a}{b} \NR
+\stopmathalignment\stopformula
+由於 p 是素數，且 \m{0<k<p}，所以 \m{\gcd(p,b)=1}。而又由於 \m{\binom{p}{k}} 是整數，所以 \m{b|pa}，由推論 31.5 可知 \m{b|a}。因此 \m{\frac{b}{a}} 是正整數，所以 \m{\binom{p}{k} \mod p = p \frac{a}{b} \mod p = 0}，即 \m{p|\binom{p}{k}}。
+
+\startformula\startmathalignment
+\NC(a+b)^p
+   =\NC \sum_{k=0}^{p}\binom{p}{k}a^k b^{p-k} \NR
+\NC=\NC a^p + b^p + \sum_{k=1}^{p-1}\binom{p}{k}a^k b^{p-k} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e31.1-7
+\startEXERCISE
+證明：如果 a 和 b 是任意正整數，且 \m{a|b}，那麼對於任意整數 x，都有 \m{(x\mod b)\mod a = x \mod a}。
+
+證明：在同樣假設下，對於任意整數 x 和 y， \m{x\equiv y \qquad(\mod b)} 意味着 \m{x\equiv y \qquad(\mod a)}。
+\stopEXERCISE
+
+\startANSWER
+令 \m{x=qb+r}，且 \m{0<r<b}，則：
+\startformula\startmathalignment[n=1]
+\NC (x\mod b)\mod a = r\mod a \NR
+\NC x\mod a = (qb+r)\mod a = (qb)\mod a + r\mod a = 0 + r\mod a = r\mod a \NR
+\stopmathalignment\stopformula
+
+令 \m{x=q_x b + r}、 \m{y=q_y b + r}，且 \m{0<r<b}，則：
+\startformula\startmathalignment[n=1]
+\NC x\mod a = (q_x b + r)\mod a = (q_x b)\mod a + r\mod a = 0 + r\mod a = r\mod a \NR
+\NC y\mod a = (q_y b + r)\mod a = (q_y b)\mod a + r\mod a = 0 + r\mod a = r\mod a \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e31.1-8
+\startEXERCISE
+對於任一正整數 k，如果存在整數 a，使得 \m{a^k = n}，則稱整數 n 是一個 {\EMP k 次冪}。進而，如果 \m{n>1} 是一個 k 次冪，且 \m{k>1}，則稱 n 是{\EMP 非平凡冪}。
+如何在關於 \m{\beta} 的多項式時間內確定給定的 \m{\beta} 位整數 n 是否是一個非平凡冪。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+2^{\beta - 1} \le n = \sum_{i=0}^{\beta-1}a_i 2^i < 2^\beta
+\stopformula
+我們只需分析 n 是否是某個整數 a 的素數次冪，即只需分析 k 爲素數的情況。
+即 n 是非平凡冪與下列描述等價：
+
+存在整數 a，使得 \m{n=a^k}，其中 k 爲素數。
+
+由於 \m{a\ge 2}，所以 \m{k<\beta}，令小於 \m{\beta} 的素數集合爲 \m{\primes_\beta}，則 \m{k\in \primes_\beta}。遍歷 \m{\primes_\beta} 中的元素，用二分查找搜索 a。
+\stopANSWER
+
+%e31.1-9
+\startEXERCISE
+證明公式 31.6 ～ 31.10。
+\startformula\startmathalignment[
+  n=3,
+  align={left,left,right},]
+\NC \gcd(a,b)  \NC = \gcd(b,a)     \NC (31.6) \NR
+\NC \gcd(a,b)  \NC = \gcd(-a,b)    \NC (31.7) \NR
+\NC \gcd(a,b)  \NC = \gcd(|a|,|b|) \NC (31.8) \NR
+\NC \gcd(a,0)  \NC = |a|           \NC (31.9) \NR
+\NC \gcd(a,ka) \NC = |a| \qquad \text{對任意 }k\in\integers \NC \qquad (31.10) \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+定理 31.2： \m{\gcd(a,b)} 即爲集合 \m{\{ax+by: x,y\in \integers\}} 中的最小正整數。
+由於這個定義是對稱式的，所以 \m{\gcd(a,b)=\gcd(b,a)}。
+
+又由於 x 和 y 是任意整數，所以 \m{\gcd(a,b)=\gcd(-a,b)=\gcd(|a|,|b|)}。
+
+而 \m{\gcd(a,0)} 是集合 \m{\{ax: x\in\integers\}} 中的最小正整數，
+即 \m{x=\pm 1} 的時候，乘 a 的結果是正整數或者 \m{|a|}。
+
+\m{\gcd(a,ka)} 是集合 \m{\{ax+kay: x,y\in \integers\} = \{a(x+ky): x,y\in\integers\}} 中的最小正整數。此時 \m{x+ky=\pm 1}，即 \m{a(x+ky)=|a|}。
+\stopANSWER
+
+%e31.1-10
+\startEXERCISE
+證明： \m{\gcd} 滿足結合律。即證明對於所有整數 a、 b 和 c，有：
+\startformula
+\gcd(a,\gcd(b,c)) = \gcd(\gcd(a,b),c)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+令 \m{\gcd(a,\gcd(b,c)) = A}， \m{\gcd(\gcd(a,b),c) = B}，則：
+\startformula\startmathalignment[n=1]
+\NC A|a \qquad A|\gcd(b,c) \NR
+\NC A|a \qquad A|b \qquad A|c \NR
+\NC A|\gcd(a,b) \qquad A|c \NR
+\NC A|\gcd(\gcd(a,b),c) \NR
+\NC A|B \NR
+\stopmathalignment\stopformula
+同理 \m{B|A}，所以 \m{A=B}。
+\stopANSWER
+
+%e31.1-11
+\startEXERCISE\DIFFICULT
+證明定理 31.8。（附{\EMP 定理 31.8}：唯一因子分解定理，合數 a 僅能以一種方式寫成如下乘積形式：
+\startformula
+a = p_1^{e_1}p_2^{e_2}\ldots p_r^{e_r}
+\stopformula
+其中 \m{p_i} 爲素數， \m{p_1<p_2<\ldots<p_r}，且 \m{e_i} 爲正整數。）
+\stopEXERCISE
+
+\startANSWER
+用反證法，先反證質數底相同，再反正冪相同。
+\stopANSWER
+
+%e31.1-12
+\startEXERCISE
+如何高效地計算 \m{\beta} 位整數除以短整數的商和餘數。
+算法運行時間應爲 \m{\Theta(\beta^2)}。
+\stopEXERCISE
+
+\startANSWER
+用移位、比較和加法進行運算
+\stopANSWER
+
+%e31.1-13
+\startEXERCISE
+給出一個高效算法，用於將給定的 \m{\beta} 位（二進制）整數轉換承拾進制。
+證明：如果長度不大於 \m{\beta} 的整數乘法和除法所需時間爲 \m{M(\beta)}，
+則我們可以在時間 \m{\Theta(M(\beta)\lg\beta)} 內將二進制轉換成拾進制。
+（\hint 分治策略，用遞迴獨立計算前段和後段）
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{BIN-TO-DEC(B, begin, end)}
+\startCLRS
+if begin == end
+	return (B[begin], 1)
+
+center = (begin + end) / 2
+(Db, Rb) = BIN-TO-DEC(B, begin, center)
+(Dt, Rt) = BIN-TO-DEC(B, center + 1, end)
+return (Dt * Rb * 2 + Db, Rb * Rt)
+\stopCLRS
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Greatest common divisor},
+]
+
+%e31.2-1
+\startEXERCISE
+證明：由式（31.11）和式（31.12）可推出式（31.13）。附：
+
+\startformula\startmathalignment[n=3,align={right,left,right}]
+\NC a = \NC p_1^{e_1} p_2^{e_2} \ldots p_r^{e_r} \NC (31.11) \NR
+\NC b = \NC p_1^{f_1} p_2^{f_2} \ldots p_r^{f_r} \NC (31.12) \NR
+\NC \gcd(a,b) = \NC p_1^{\min(e_1,f_1)} p_2^{\min(e_2,f_2)} \ldots p_r^{\min(e_r,f_r)} \NC \qquad (31.13) \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+令 \m{d=\gcd(a,b)}，則 d 也可以寫成如下形式：
+\startformula
+d = p_1^{g_1} p_2^{g_2} \ldots p_r^{g_r}
+\stopformula
+
+由於 \m{d|a} 且 \m{d|b}，則：
+\startformula
+p_i^{g_i} | a \qquad p_i^{g_i} | b
+\stopformula
+其中 \m{i=1,2,\ldots,r}。由於 \m{p_i} 爲素數，所以：
+\startformula
+p_i^{g_i} | p_i^{e_i} \qquad p_i^{g_i} | p_i^{f_i}
+\stopformula
+
+所以 \m{g_i\le e_i} 且 \m{g_i\le f_i}，即 \m{g_i=\min(e_i,f_i)}。
+\stopANSWER
+
+%e31.2-2
+\startEXERCISE
+計算 \ALGO{EXTENDED-EUCLID(899, 493)} 的返回值 \m{(d, x, y)}。
+\stopEXERCISE
+
+\startANSWER
+\input{tbl/tbl31.2-2}
+\stopANSWER
+
+%e31.2-3
+\startEXERCISE
+證明：對於所有整數 a、 k 和 n，下式都成立：
+\startformula
+\gcd(a,n) = \gcd(a+kn,n)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+由 \ALGO{EUCLID} 計算最大公約數，
+第一步 \m{a\mod n} 與 \m{(a+kn)\mod n} 的結果相同，
+因此 \ALGO{EUCLID(a, n)} 和 \ALGO{EUCLID(a+kn, n)} 的結果相同。
+\stopANSWER
+
+%e31.2-4
+\startEXERCISE
+以迭代的形式重寫 \ALGO{EUCLID}，要求只能使用常數內存（即，僅存儲常數個整數）。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{ITER-EUCLID(a, b)}
+\startCLRS
+while b != 0
+	tmp = a % b
+	a = b
+	b = tmp
+return a
+\stopCLRS
+\stopANSWER
+
+%e31.2-5
+\startEXERCISE[exercise:euclid_time]
+證明：如果 \m{a > b\ge 0}，則 \ALGO{EUCLID(a, b)} 最多執行 \m{1 + \log_\phi b} 次遞歸調用。
+將這個界改進爲 \m{1+\log_\phi (b/\gcd(a,b))}。
+\stopEXERCISE
+
+\startANSWER
+利用 Fibonacci 序列，即 \m{F_0 = 0}， \m{F_1 = 1}，且：
+\startformula
+F_k = F_{k-1} + F_{k-2} \qquad \text{對於} k\ge 2
+\stopformula
+
+當 k 比較大時，\m{F_{k}} 約爲 \m{\phi^k/\sqrt{5}}。
+其中 \m{\phi} 爲黃金比例，值爲：
+\startformula
+\phi = \frac{1+\sqrt{5}}{2} = 1.61803\ldots
+\stopformula
+
+由 Lamè 定理可知，如果 \m{F_{k+1}>b}，則 \ALGO{EUCLID(a,b)} 執行的遞迴調用少於 k 次。
+ k 是滿足下式的最小整數：
+\startformula
+\frac{\phi_{k+1}}{\sqrt{5}} > b
+\stopformula
+
+即， k 是滿足下式的最小整數：
+\startformula
+k > \log_{\phi}b + \log_{\phi}\sqrt{5} - 1 = \log_{\phi}b + 1.67 - 1 = \log_{\phi}b + 0.67
+\stopformula
+解得 \m{k \le \left\lfloor \log_{\phi}b + \log_{\phi}\sqrt{5} - 1 + 0.5 \right\rfloor}：
+
+因此， \ALGO{EUCLID(a, b)} 最多執行 \m{1 + \log_\phi b} 次遞歸調用。
+
+
+令 \m{d = \gcd(a,b)}，由 \ALGO{EUCLID} 的實現可知， \ALGO{EUCLID(a,b)} 的遞迴調用次數與 \ALGO{EUCLID(a/d, b/d)} 相同。
+將上面的證明過程中的 \m{b} 替換爲 \m{b/d}，即得改進後的界： \m{1+\log_\phi(b/\gcd(a,b))}。
+\stopANSWER
+
+%e31.2-6
+\startEXERCISE
+計算 \ALGO{EXTENDED-EUCLID(F_{k+1}, F_k)} 返回的值，並證明你的結論。
+\stopEXERCISE
+
+\startANSWER
+令 \m{f(k) = 1 - 2 (k\mod 2)}，即如果 k 爲偶數，則 \m{f(k)} 爲 1，否則爲 -1。
+結果爲 \m{(1, f(k) F_k, -f(k) F_{k+1})}。
+
+如果結論對 k 成立，則：
+\startformula\startmathalignment
+\NC EXTEND-EUCLID(F_{k+2}, F_{k+1})
+    =\NC (d, -f(k) F_{k+1}, f(k) F_k - \left\lfloor\frac{F_{k+2}}{F_{k+1}}\right\rfloor (-f(k) F_{k+1})) \NR
+\NC =\NC (d, -f(k) F_{k+1}, f(k) (F_k + \left\lfloor\frac{F_{k+2}}{F_{k+1}}\right\rfloor F_{k+1})) \NR
+\NC =\NC (d, -f(k) F_{k+1}, f(k) F_{k+2}) \NR
+\NC =\NC (d, f(k+1) F_{k+1}, -f(k+1) F_{k+2}) \NR
+\stopmathalignment\stopformula
+即結論對 \m{k+1} 也成立。
+\stopANSWER
+
+%31.2-7
+\startEXERCISE
+通過遞迴爲多於兩個的參數定義函數 \m{\gcd}： \m{\gcd(a_0,a_1,\ldots,a_n) = \gcd(a_0,\gcd(a_1,a_2,\ldots,a_n))}。
+證明函數 \m{\gcd} 的返回值不依賴於參數的順序。
+如何找到整數 \m{x_0,x_1,\ldots,x_n}，使得：
+\startformula
+\gcd(a_0,a_1,\ldots,a_n) = a_0x_0 + a_1x_1 + \ldots + a_nx_n
+\stopformula
+並證明你的算法所執行的除法次數爲：
+\startformula
+O(n + \lg(\max(a_0,a_1,\ldots,a_n)))
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+令 \m{d=\gcd(a_0,a_1,\ldots,a_n)}， \m{d'=\gcd(a_0,\gcd(a_1,a_2,\ldots,a_n))}：
+因此 \m{d} 和 \m{d'} 均是 \m{a_0,a_1,\ldots,a_n} 的公約數。
+由前至後得 \m{d \ge d'}，而由後至前得 \m{d'\ge d}，因此 \m{d' = d}。
+即無論 \m{d'} 中的 \m{a_i} 順序如何，都有 \m{d'=d}。
+
+根據最大公約數的定義，可以寫成如下形式：
+\startformula
+\gcd(a_0,a_1,\ldots,a_n) = a_0x_0 + a_1x_1 + a_2x_2 + \ldots + a_nx_n
+\stopformula
+
+以四個參數爲例：
+\startformula\startmathalignment
+\NC   \NC \gcd(a_0,a_1,a_2,a_3) \NR
+\NC = \NC \gcd(a_0,\gcd(a_1,a_2,a_3)) \NR
+\NC = \NC \gcd(a_0,\gcd(a_1,\gcd(a_2,a_3))) \NR
+\stopmathalignment\stopformula
+根據定理 31.2 可以將 \m{\gcd(a_2,a_3)} 寫爲 \m{a_2x_2 + a_3x_3}。所以：
+\startformula\startmathalignment
+\NC   \NC \gcd(a_0,a_1,a_2,a_3) \NR
+\NC = \NC \gcd(a_0,\gcd(a_1,a_2,a_3)) \NR
+\NC = \NC \gcd(a_0,\gcd(a_1, a_2x_2 + a_3x_3)) \NR
+\stopmathalignment\stopformula
+然後根據定理 31.2 將 \m{\gcd(a_1, a_2x_2 + a_3x_3)} 寫爲：
+\startformula\startmathalignment
+\NC   \NC \gcd(a_1, a_2x_2 + a_3x_3) \NR
+\NC = \NC x_1a_1 + y_1(a_2x_2 + a_3x_3) \NR
+\NC = \NC x_1a_1 + y_1x_2a_2 + y_1x_3a_3 \NR
+\stopmathalignment\stopformula
+因此：
+\startformula\startmathalignment
+\NC   \NC \gcd(a_0, a_1, a_2, a3) \NR
+\NC = \NC \gcd(a_0, x_1a_1 + y_1x_2a_2 + y_1x_3a_3) \NR
+\stopmathalignment\stopformula
+從而：
+\startformula\startmathalignment
+\NC   \NC \gcd(a_0, a_1, a_2, a3) \NR
+\NC = \NC x_0a_0 + y_2(x_1a_1 + y_1x_2a_2 + y_1x_3a_3) \NR
+\NC = \NC x_0a_0 + y_2x_1a_1 + y_1y_2x_2a_2 + y_1y_2x_3a_3 \NR
+\stopmathalignment\stopformula
+
+由\refexercise{euclid_time} 可知： \m{1+\log_\phi (\min(a,b)/\gcd(a,b))}。
+總的次數爲：
+\startformula\startmathalignment[n=3]
+\NC     \NC   \NC 1+\log_\phi\frac{\min(a_0,\gcd(a_1,a_2,\ldots,a_n))}{\gcd(a_0,\gcd(a_1,a_2,\ldots,a_n))} \NR
+\NC     \NC + \NC 1+\log_\phi\frac{\min(a_1,\gcd(a_2,a_3,\ldots,a_n))}{\gcd(a_1,\gcd(a_2,a_3,\ldots,a_n))} \NR
+\NC     \NC + \NC 1+\log_\phi\frac{\min(a_2,\gcd(a_3,a_4,\ldots,a_n))}{\gcd(a_1,\gcd(a_3,a_4,\ldots,a_n))} \NR
+\NC     \NC + \NC \ldots \NR
+\NC     \NC + \NC 1+\log_\phi\frac{\min(a_{n-1},a_n)}{\gcd(a_{n-1},a_n)} \NR
+\NC \le \NC   \NC 1+\log_\phi\frac{\gcd(a_1,a_2,\ldots,a_n)}{\gcd(a_0,\gcd(a_1,a_2,\ldots,a_n))} \NR
+\NC     \NC + \NC 1+\log_\phi\frac{\gcd(a_2,a_3,\ldots,a_n)}{\gcd(a_1,\gcd(a_2,a_3,\ldots,a_n))} \NR
+\NC     \NC + \NC 1+\log_\phi\frac{\gcd(a_3,a_4,\ldots,a_n)}{\gcd(a_1,\gcd(a_3,a_4,\ldots,a_n))} \NR
+\NC     \NC + \NC \ldots \NR
+\NC     \NC + \NC 1+\log_\phi\frac{a_n}{\gcd(a_{n-1},a_n)} \NR
+\NC =   \NC   \NC n-1 + \log_\phi \frac{a_n}{\gcd(a_0,a_1,\ldots,a_n)}\NR
+\NC \le \NC   \NC n-1 + \log_\phi \max(a_0,a_1,\ldots,a_n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%31.2-8
+\startEXERCISE
+定義 \m{\lcm(a_1,a_2,\ldots,a_n)} 爲 n 個整數 \m{a_1,a_2,\ldots,a_n} 的{\EMP 最小公倍數（least common multiple）}，
+即，是所有 \m{a_i} 的倍數，且是最小的非負整數。
+如何利用參數爲兩個的 \m{\gcd} 運算有效的計算 \m{\lcm(a_1,a_2,\ldots,a_n)}？
+\stopEXERCISE
+
+\startANSWER
+令 \m{d = \gcd(a_0,a_1,\ldots,a_n)}：
+\startformula\startmathalignment
+\NC  \NC \lcm(a_0,a_1,\ldots,a_n) \NR
+\NC =\NC d \frac{a_0}{d} \frac{a_1}{d} \ldots \frac{a_n}{d} \NR
+\NC =\NC \frac{\prod_{i=0}^{n}a_i}{d^n} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e31.2-9
+\startEXERCISE
+證明：當且僅當 \m{\gcd(n_1n_2,n_3n_4) = \gcd(n_1n_3,n_2n_4) = 1} 時，
+四個正整數 \m{n_1,n_2,n_3,n_4} 兩兩互素。
+
+更一般地，當且僅當從 \m{n_i} 中導出的 \m{\lceil \lg{k}\rceil} 對整數互素時，
+ \m{n_1,n_2,\ldots,n_k} 兩兩互素。
+\stopEXERCISE
+
+\startANSWER
+如果 \m{n_1,n_2,n_3,n_4} 兩兩互素，則：
+\startformula\startmathalignment[n=1]
+\NC \gcd(n_1,n_3) = \gcd(n_2,n_3) = 1 \NR
+\NC \gcd(n_1 n_2,n_3) = 1 \qquad \gcd(n_1 n_2,n_4) = 1 \qquad \text{（由定理 31.6 可得）} \NR
+\NC \gcd(n_1 n_2, n_3 n_4) = \gcd(n_1 n_3, n_2 n_4) = 1 \qquad \text{（由定理 31.6 可得）} \NR
+\stopmathalignment\stopformula
+
+而如果 \m{\gcd(n_1 n_2, n_3 n_4) = \gcd(n_1 n_3, n_2 n_4) = 1}，則存在整數 x、 y：
+\startformula
+n_1 n_3 x + n_2 n_4 y = 1
+\stopformula
+可以將其看作是 \m{n_1, n_2} 的線性組合，所以 \m{\gcd(n_1,n_2) = 1}。
+同理可得其他，所以 \m{n_1,n_2,n_3,n_4} 兩兩互素。
+
+同理可證更一般地情況。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Modular arithmetic},
+]
+
+%e31.3-1
+\startEXERCISE
+畫出羣\m{(\integers_4, +_4)} 和羣 \m{(\integers_5^\ast, \cdot_5)} 的運算表。
+通過找這兩個羣的元素間的一一對應關係 \alpha，
+滿足 \m{a+b\equiv c (\mod 4)} 當且僅當 \m{\alpha(a)\cdot \alpha(b) \equiv \alpha(c) (\mod 5)}，
+來證明這兩個羣是同構的。
+\stopEXERCISE
+
+\startANSWER
+先找到各自的單位元（Identify） \m{a_0}，再找到 \m{a_1}，使得 \m{a_1^{(2)} = a_0}。
+以此類推，找到 \m{a_2} 和 \m{a_3}。
+
+\startcolumns[n=3, rule=on]
+\startformula\startmathalignment[n=3]
+\NC +_4 \NC \rightarrow \NC \cdot_5 \NR
+\NC 0 \NC \rightarrow \NC 1 \NR
+\NC 1 \NC \rightarrow \NC 3 \NR
+\NC 2 \NC \rightarrow \NC 4 \NR
+\NC 3 \NC \rightarrow \NC 1 \NR
+\stopmathalignment\stopformula
+\column
+\input{tbl/tbl31.3-1-1}
+\column
+\input{tbl/tbl31.3-1-2}
+\stopcolumns
+\stopANSWER
+
+%e31.3-2
+\startEXERCISE
+列出 \m{\integers_9} 和 \m{\integers_{13}^\ast} 的所有子羣。
+\stopEXERCISE
+
+\startANSWER
+\startcolumns[n=2, rule=on]
+\startformula\startmathalignment
+\NC \langle 0 \rangle \NC= \{ 0 \} \NR
+\NC \langle 1 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\NC \langle 2 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\NC \langle 3 \rangle \NC= \{ 0, 3, 6 \} \NR
+\NC \langle 4 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\NC \langle 5 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\NC \langle 6 \rangle \NC= \{ 0, 3, 6 \} \NR
+\NC \langle 7 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\NC \langle 8 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\stopmathalignment\stopformula
+\column
+\startformula\startmathalignment
+\NC \langle 1 \rangle \NC= \{ 1 \} \NR
+\NC \langle 2 \rangle \NC= \{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 \} \NR
+\NC \langle 3 \rangle \NC= \{ 1, 3, 9 \} \NR
+\NC \langle 4 \rangle \NC= \{ 1, 3, 4, 9, 10, 12 \} \NR
+\NC \langle 5 \rangle \NC= \{ 1, 5, 8, 12 \} \NR
+\NC \langle 6 \rangle \NC= \{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 \} \NR
+\NC \langle 7 \rangle \NC= \{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 \} \NR
+\NC \langle 8 \rangle \NC= \{ 1, 5, 8, 12 \} \NR
+\NC \langle 9 \rangle \NC= \{ 1, 3, 9 \} \NR
+\NC \langle 10 \rangle \NC= \{ 1, 3, 4, 9, 10, 12 \} \NR
+\NC \langle 11 \rangle \NC= \{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 \} \NR
+\NC \langle 12 \rangle \NC= \{ 1, 12 \} \NR
+\stopmathalignment\stopformula
+\stopcolumns
+\stopANSWER
+
+%e31.3-3
+\startEXERCISE
+證明定理 31.14。附：
+
+定理 31.14 （一個有限羣的非空封閉子集是一個子羣）：如果 \m{(S,\oplus)} 是一個有限羣，
+ \m{S'} 是 \m{S} 的任意一個非空子集並滿足對所有 \m{a,b\in S'}，都有 \m{a\oplus b\in S'}，
+則 \m{(S',\oplus)} 是 \m{(S,\oplus)} 的一個子羣。
+\stopEXERCISE
+
+\startANSWER
+只需證明 \m{S'} 是一個羣即可。
+\startigBase[n]
+\item {\EMP 封閉性}：假設已經滿足；
+\item {\EMP 單位元}：\TODO{}；
+\item {\EMP 結合律}：繼承自 \m{S}，也滿足；
+\item {\EMP 逆元}：\TODO{}。
+\stopigBase
+\stopANSWER
+
+%e31.3-4
+\startEXERCISE
+證明：如果 p 是素數且 e 是正整數，則：
+\startformula
+\phi(p^e) = p^{e-1}(p-1)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula
+\phi(p^e) = p^e (1-\frac{1}{p}) = p^{e-1}(p-1)
+\stopformula
+\stopANSWER
+
+%e31.3-5
+\startEXERCISE
+證明：對任意 \m{n>1} 和任意 \m{a\in\integers_n^\ast}，
+由 \m{f_a(x)=ax \mod n} 所定義的函數 \m{f_a: \integers_n^\ast \rightarrow \integers_n^\ast} 是 \m{\integers_n^\ast} 的一個置換。
+\stopEXERCISE
+
+\startANSWER
+對於任一 a 和 n，每一個 x 都有一個唯一的 y 與其對應，也就是 \m{f(x)} 是一個雙射函數。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Solving modular linear equations},
+]
+
+%e31.4-1
+\startEXERCISE
+找出方程 \m{35x\equiv 10 (\mod 50)} 的所有解。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+d = 5 \qquad x' = 3 \qquad y' = -2 \qquad x_0 = 6
+\stopformula
+解爲 6、 16、 26、 36、 46。
+\stopANSWER
+
+%e31.4-2
+\startEXERCISE
+證明：只要 \m{\gcd(a,n)=1}，方程 \m{ax\equiv ay (\mod n)} 就意味着 \m{x\equiv y (\mod n)}。
+通過一個 \m{\gcd(a,n)>1} 情況下的反例，
+證明條件 \m{\gcd(a,n)=1} 是必要的。
+\stopEXERCISE
+
+\startANSWER
+由於 \m{ax \equiv ay (\mod n)}，所以 \m{n|a(x-y)}。
+
+而由於 \m{\gcd(a,n)=1}，而根據推論 31.5 得 \m{n|(x-y)}，所以 \m{x\equiv y (\mod n)}。
+
+而如果 \m{\gcd(a,n)>1}，令 \m{a=12, x=6, y=5, n=3}，滿足 \m{ax\equiv ay (\mod n)}，
+但是不滿足 \m{x\equiv y (\mod n)}。
+\stopANSWER
+
+%e31.4-3
+\startEXERCISE
+考察下列過程 \ALGO{MODULAR-LINEAR-EQUIATION-SOLVER} 的第三行的修改：
+
+\CLRSH{MODULAR-LINEAR-EQUATION-SOLVER(a, b, n)}
+\startCLRS
+(d, x', y') = EXTENDED-EUCLID(a, n)
+if d | b
+	x0 = x'(b/d) mod (n/d)
+	for i = 0 to d - 1
+		print (x0 + i(n/d)) mod n
+else print "no solutions"
+\stopCLRS
+能否正確進行？並解釋原因。
+\stopEXERCISE
+
+\startANSWER
+能，因爲 \m{x'(b/d) \mod (n/d)} 和 \m{x'(b/d) \mod n} 對 \m{n/d} 同餘。
+\stopANSWER
+
+%e31.4-4
+\startEXERCISE[exercise:model_zero]\DIFFICULT
+令 p 是一個素數，且 \m{f(x) \equiv f_0 + f_1 x + \ldots + f_t x^t (\mod p)} 是一個 t 次多項式，
+係數 \m{f_i} 是從 \m{\integers_p} 得到的。
+如果 \m{f(a) \equiv 0 (\mod p)}，則將 \m{a\in \integers_p} 稱爲 f 的{\EMP 零元}。
+證明：如果 a 是 f 的一個零元，則對某個 \m{t-1} 次的多項式 \m{g(x)}，
+有 \m{f(x)\equiv (x-a)g(x) (\mod p)}。
+通過對 t 進行歸納來證明：如果 p 是素數， t 次多項式 \m{f(x)} 對模 p 至多有 t 個不同的零元。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment[n=6]
+\NC \NC     f(x)    \NC - (x-a)g(x) \NC \NC \NC \NR
+\NC=\NC     f_0     \NC + f_1 x   \NC + f_2 x^2   \NC + \ldots + f_t x^t           \NC \NR
+\NC \NC - (x-a)(g_0 \NC + g_1 x   \NC + g_2 x^2   \NC + \ldots + g_{t-1}x^{t-1})   \NC \NR
+\NC=\NC     f_0     \NC + f_1 x   \NC + f_2 x^2   \NC + \ldots + f_{t-1}x^{t-1}    \NC + f_t x^t \NR
+\NC \NC             \NC - g_0 x   \NC - g_1 x^2   \NC - \ldots - g_{t-2}x^{t-1}    \NC - g_{t-1} x^t \NR
+\NC \NC     + g_0 a \NC + g_1 a x \NC + g_2 a x^2 \NC + \ldots + g_{t-1} a x^{t-1} \NC \NR
+\NC=\NC (f_0 + g_0 a) \NC + (f_1 - g_0 + g_1 a)x \NC + (f_2 - g_1 + g_2 a)x^2 \NC + \ldots + (f_{t-1} - g_{t-2} + g_{t-1}a)x^{t-1} \NC + (f_t - g_{t-1})x^t \NR
+\stopmathalignment\stopformula
+
+按順序求解 \m{g_i}：
+\startformula\startmathalignment[align={left,left}]
+\NC g_0 \quad \NC (f_0 + g_0 a) \mod p = 0 \NR
+\NC g_1 \NC (f_1 - g_0 + g_1 a) \mod p = 0 \NR
+\NC \vdots \NC \vdots \NR
+\NC g_{t-1} \NC (f_{t-1} - g_{t-2} + g_{t-1} a) \mod p = 0 \NR
+\NC g_t \NC (f_t - g_{t-1}) \mod p = 0 \NR
+\stopmathalignment\stopformula
+
+由 \m{f(x)\equiv(x-a)g(x) (\mod p)} 類推：
+\startformula
+f(x) \equiv (x - a_0)(x - a_1) \ldots (x - a_t) (\mod p)
+\stopformula
+從而 \m{a_0,a_1,\ldots,a_n} 中的任何一個都是零元。
+如果他們兩兩均不相等且爲整數，即最多有 n 個零元。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={The Chinese remainder theorem},
+]
+
+%31.5-1
+\startEXERCISE
+找出所有解，使得 \m{x\equiv 4 (\mod 5)} 和 \m{x\equiv 5 (\mod 11)} 同時成立。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+x \equiv 49 (\mod 55)
+\stopformula
+\input{tbl/tbl31.5-1}
+\stopANSWER
+
+%31.5-2
+\startEXERCISE
+找出被 9、 8、 7 除時，餘數分別爲 1、 2、 3 的所有整數 x。
+\stopEXERCISE
+
+\startANSWER
+由於 \m{\lcm(9,8,7) = 504}，則：
+\startformula
+x \equiv 10 (\mod 504)
+\stopformula
+\stopANSWER
+
+%e1.5-3
+\startEXERCISE
+論證：在定理 31.27 的定義下，如果 \m{\gcd(a,n)=1}，則：
+\startformula
+(a^{-1} \mod n) \leftrightarrow
+  ((a_1^{-1} \mod n_1),(a_2^{-1} \mod n_2),\ldots,(a_k^{-1} \mod n_k))
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\TODO{需要證明}
+\stopANSWER
+
+%31.5-4
+\startEXERCISE
+在定理 31.27 的定義下，證明：
+對於任意的多項式 f，方程 \m{f(x)\equiv 0 (\mod n)} 的根的個數
+等於 \m{f(x)\equiv 0 (\mod n_1), f(x)\equiv 0 (\mod n_2), \ldots, f(x) \equiv 0 (\mod n_k)} 中每個方程根的個數的積。
+\stopEXERCISE
+
+\startANSWER
+\TODO{需要證明}
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Powers of an element},
+]
+\stopsection
+
+\startsection[
+  title={The RSA public-key cryptosystem},
+]
+\stopsection
+
+\startsection[
+  title={Primality testing},
+]
+\stopsection
+
+\startsection[
+  title={Integer factorization},
+]
+\stopsection
+
+\startsubject[
+  title={Problems},
+]
+
+\stopsubject%Problems
+
+\stopchapter
+\stopcomponent

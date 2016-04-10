@@ -1,0 +1,27 @@
+
+\startxtable[
+    option=max,
+    align={middle,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,bottomframe=on]
+\startxrow[foregroundstyle=bold,]
+  \xcell[rightframe=on]{}\processcommalist[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10]\xcell
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off]
+\startxrow \xcell[rightframe=on]{0}\processcommalist[ 0,45,35,25,15, 5,50,40,30,20,10]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{1}\processcommalist[11, 1,46,36,26,16, 6,51,41,31,21]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{2}\processcommalist[22,12, 2,47,37,27,17, 7,52,42,32]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{3}\processcommalist[33,23,13, 3,48,38,28,18, 8,53,43]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{4}\processcommalist[44,34,24,14, 4,{\bfa 49},39,29,19, 9,54]\xcell \stopxrow
+\stopxtablebody
+
+\stopxtable

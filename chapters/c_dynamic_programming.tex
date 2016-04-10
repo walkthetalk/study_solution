@@ -1,0 +1,1250 @@
+\startcomponent c_dynamic_programming
+
+\startchapter[
+  title={Dynamic Programming},
+]
+
+\startsection[
+  title={Rod cutting},
+]
+
+%e15.1-1
+\startEXERCISE
+由公式 15.3 和初始條件 \m{T(0)=1}，證明公式 15.4 成立。
+
+附公式 15.3：
+\startformula
+T(n) = 1 + \sum_{j=0}^{n-1} T(j)
+\stopformula
+
+附公式 15.4：
+\startformula
+T(n) = 2^n
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\m{n=0} 時顯然成立。
+
+如果 \m{n\le i} 時成立，則 \m{n=i+1} 時有：
+\startformula\startmathalignment
+\NC T(i+1) \NC = 1 + \sum_{j=0}^{i} T(j) \NR
+\NC        \NC = 1 + \sum_{j=0}^{i} 2^j \NR
+\NC        \NC = 1 + 2^{i+1} - 1 \NR
+\NC        \NC = 2^{i+1} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e15.1-2
+\startEXERCISE
+下面描述的“貪心”策略，可以用來解決鋼條切割問題，請舉出反例證明此策略並不能保證得到最優方案。
+
+定義鋼條的長度為 \m{i}，{\EMP 密度}為 \m{p_i / i}，即每英寸的價值。
+貪心策略將長度為 \m{n} 的鋼條切下長度為 \m{i} （\m{1\le i \le n}）的壹段，其密度最高。
+接下來繼續使用相同的策略切割長度為 \m{n-i} 的剩余部分。
+\stopEXERCISE
+
+\startANSWER
+假設密度有三種，\m{d_a, d_b, d_c}，其中 \m{d_a > d_b > d_c}。
+對應的鋼條長度為 \m{l_a, l_b, l_c}，其中 \m{l_a + l_c = 2 l_b}。
+則對於長度為 \m{2 l_b} 的鋼條，按“貪心”策略，應切割成長度為 \m{l_a} 和 \m{l_c} 的兩段。
+其價值為 \m{l_a d_a + l_c d_c}；而如果切割成長度均為 \m{l_b} 的兩段，價值為 \m{2 l_b d_b}。
+若“貪心”策略的結果不是最優解，需要滿足 \m{l_a d_a + l_c d_c < 2 l_b d_b}。
+
+\startformula\startmathalignment
+\NC l_a d_a + l_c d_c \NC < 2 l_b d_b \NR
+\NC l_a d_a + l_c d_c \NC < (l_a + l_c) d_b \NR
+\NC l_a d_a + l_c d_c \NC < l_a d_b + l_c d_b \NR
+\NC l_a (d_a - d_b)   \NC < l_c (d_b - d_c) \NR
+\stopmathalignment\stopformula
+
+令 \m{l_a = 3, l_c = 2, d_a = 5, d_b = 4, d_c = 2}，滿足上式，鋼條長度為 5，即為反例。
+\stopANSWER
+
+%e15.1-3
+\startEXERCISE
+我們修改壹下鋼條切割問題，除了切下的鋼條段具有不同價格 \m{p_i} 外，
+每次切割還要付出固定成本 \m{c}。
+這樣，切割方案的收益就等於鋼條段價格之和減去切割的成本。
+設計壹個動態規劃算法解決修改後的鋼條切割問題。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{EXTENDED2-BOTTOM-UP-CUT-ROD(p, n)}
+\startCLRS
+let r[0..n] and s[0..n] be new arrays
+r[0] = 0
+for j = 1 to n
+	q = -∞
+	for i = 1 to j
+		if q < p[i] + r[j - i] - c
+			q = p[i] + r[j - i] - c
+			s[j] = i
+	r[j] = q
+return r and s
+\stopCLRS
+\stopANSWER
+
+%e15.1-4
+\startEXERCISE
+修改\ALGO{MEMOIZED-CUR-ROD}，使之不僅返回最優收益值，還返回切割方案。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{MEMOIZED-CUT-ROD'(p, n)}
+\startCLRS
+let r[0..n] and s[0..n] be a new arrays
+for i = 0 to n
+	r[i] = -∞
+return MEMOIZED-CUT-ROD-AUX'(p, n, r, s) and s
+\stopCLRS
+
+\CLRSH{MEMOIZED-CUT-ROD-AUX'(p, n, r, s)}
+\startCLRS
+if r[n] >= 0
+	return r[n]
+if n == 0
+	q = 0
+else
+	q = -∞
+	for i = 1 to n
+		tmp = p[i] + MEMOIZED-CUT-ROD-AUX'(p, n-i, r, s)
+		if q < tmp
+			q = tmp
+			s[n] = i
+r[n] = q
+return q
+\stopCLRS
+\stopANSWER
+
+%e15.1-5
+\startEXERCISE
+Fibonacci 數列可以用遞迴式（3.22）定義。
+設計一個 \m{O(n)} 時間的動態規劃算法計算第 n 個 Fibonacci 數。
+畫出子問題圖。圖中有多少頂點和邊？
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{Fibonacci(n)}
+\startCLRS
+let F[0..n] be a new array
+F[0] = 1
+F[1] = 1
+for i = 2 to n
+	F[i] = F[i - 1] + F[i - 2]
+return F[n]
+\stopCLRS
+
+圖中有 n 個節點，數列中的每個元素是一個節點。
+所有邊都是由稍大的子問題指向稍小的子問題：
+如由 F[2] 起始的兩條邊分別指向 F[1] 和 F[0]。
+邊的總數爲 \m{
+  \left\lfloor \frac{n}{2} \right\rfloor
++ \left\lfloor \frac{n-1}{2} \right\rfloor
++ n}。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Matrix-chain multiplication},
+]
+
+%e15.2-1
+\startEXERCISE
+對於矩陣規模序列 \m{\langle 5,10,3,12,5,50,6\rangle}，求其矩陣鏈最優括號化方案。
+\stopEXERCISE
+
+\startANSWER
+解決此問題，可以直接用 \ALGO{MATRIX-CHAIN-ORDER(p)}，
+其中 \m{p = \langle 5,10,3,12,5,50,6\rangle}，
+或者直接使用下列方程：
+\startformula
+m[i,j]=\startmathcases
+\NC 0 \MC \text{如果} i = j\NR
+\NC \min_{i\le k < j}\{m[i,k]+m[k+1,j] + p_{i-1} p_k p_j\}\MC \text{如果} i<j\NR
+\stopmathcases
+\stopformula
+其中對於所有 \m{i}，都有 \m{m[i,i] = 0}，可用以計算 \m{m[i,i+1]}。
+
+\externalfigure[output/e15_2_1-1]
+\externalfigure[output/e15_2_1-2]
+
+最終，結果爲 \m{(A_1 A_2)((A_3 A_4)(A_5 A_6))}。
+\stopANSWER
+
+%e15.2-2
+\startEXERCISE
+設計遞迴算法 \ALGO{MATRIX-CHAIN-MULTIPLY(A, s, i, j)}，
+實現矩陣鏈最優代價乘法計算的真正計算過程，
+其輸入參數爲矩陣序列 \m{\langle A_1, A_2, \cdots, A_n \rangle}，
+ \ALGO{MATRIX-CHAIN-ORDER} 得到的表 \m{s}，以及下標 \m{i} 和 \m{j}。
+（初始調用應爲 \ALGO{MATRIX-CHAIN-MULTIPLY(A, s, 1, n)}。）
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{MATRIX-CHAIN-MULTIPLY(A, s, i, j)}
+\startCLRS
+if i == j
+	return A[i]
+else
+	X = MATRIX-CHAIN-MULTIPLY(A, s, i, s[i,j])
+	Y = MATRIX-CHAIN-MULTIPLY(A, s, s[i,j] + 1, j)
+	return MATRIX-MULTIPLY(X, Y)
+\stopCLRS
+\stopANSWER
+
+%e15.2-3
+\startEXERCISE
+用代入法證明遞迴公式（15.6）的結果爲 \m{\Omega(2^n)}。附公式（15.6）：
+\startformula
+P(n) = \startmathcases
+\NC 1 \MC \text{如果} n = 1 \NR
+\NC \sum_{k=1}^{n-1} P(k) P(n-k) \MC \text{如果} n\ge 2 \NR
+\stopmathcases
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+如果對於所有 \m{1\le k \le n}，都有 \m{P(k) \ge 2^k}，則：
+\startformula
+P(n+1) \ge \sum_{k=1}^{n} 2^k 2^{n+1-k} = n 2^{n+1} \ge 2^{n+1}
+\stopformula
+\stopANSWER
+
+%e15.2-4
+\startEXERCISE
+對輸入鏈長度爲 \m{n} 的矩陣鏈乘法問題，描述子問題圖：
+他包含多少個頂點？包含多少條邊？這些邊分別鏈接哪些頂點？
+\stopEXERCISE
+
+\startANSWER
+\TODO{}
+\stopANSWER
+
+%e15.2-5
+\startEXERCISE
+令 \m{R(i,j)} 表示在一次調用 \ALGO{MATRIX-CHAIN-ORDER} 過程中，
+計算其他表項時訪問表項 \m{m[i,j]} 的次數。證明：
+\startformula
+\sum_{i=1}^n\sum_{j=i}^{n} R(i,j) = \frac{n^3 - n}{3}
+\stopformula
+（{\EMP 提示：}證明中可用到公式（A.3）。）
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \sum_{i=1}^n\sum_{j=i}^{n} R(i,j)
+    \NC = \sum_{l=2}^{n} 2(n-l+1)(l-1) \NR
+\NC \NC = 2\sum_{l=1}^{n-1} (n-l) l \NR
+\NC \NC = 2\sum_{l=1}^{n-1} nl - 2\sum_{l=1}^{n-1}l^2 \NR
+\NC \NC = \frac{2n(n-1)n}{2} - \frac{2(n-1)n(2n-1)}{6} \NR
+\NC \NC = \frac{n^3 - n}{3} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e15.2-6
+\startEXERCISE
+證明：對 \m{n} 個元素的表達式進行完全括號化，恰好需要 \m{n-1} 對括號。
+\stopEXERCISE
+
+\startANSWER
+最內層括號括住兩個矩陣，之後每加一對括號會括住一個新的矩陣。
+因此當 \m{n\ge 2} 時，共需要 \m{n-1} 對括號。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Elements of dynamic programming},
+]
+
+%e15.3-1
+\startEXERCISE
+對於矩陣鏈乘法問題，下面兩種確定最優代價的方法哪種效率更高？
+第一種是窮舉所有可能的括號化方案，
+對每種方案計算乘法運算次數，
+第二種是運行 \ALGO{RECURSIVE-MATRIX-CHAIN}。
+證明你的結論。
+\stopEXERCISE
+
+\startANSWER
+第二種方法效率更高。
+
+考慮兩種方法都是如何對待子問題的。
+
+對於用於分割矩陣鏈的每個位置，窮舉法會找出左、右兩部分各自的所有括號化方案，
+然後觀察左右兩側所有可能的組合。組合的數目是左右各自括號化方案數目的乘積。
+
+而第二種方法會找到左右兩側各自的最優括號化方案，然後將這兩種方案組合起來。
+組合的數目是 \m{O(1)}。
+
+實際運行時間：第一種方法是 \m{O(4^n / n^{3/2})}，第二種方法是 \m{O(n3^{n-1})}。
+\stopANSWER
+
+%e15.3-2
+\startEXERCISE
+對於一個有 16 個元素的數列，畫出節 2.3.1 中 \ALGO{MERGE-SORT} 運行過程的遞迴調用樹。
+解釋備忘技術爲什麼對 \ALGO{MERGE-SORT} 這種分治算法無效。
+\stopEXERCISE
+
+\startANSWER
+子問題的屬性不滿足要求。
+\stopANSWER
+
+%e15.3-3
+\startEXERCISE
+考慮矩陣鏈乘法問題的一個變形：
+目標改爲最大化矩陣序列括號化方案的標量乘法運算次數，而非最小化。
+此問題具有最優子結構性質嗎？
+\stopEXERCISE
+
+\startANSWER
+是的。
+\stopANSWER
+
+%e15.3-4
+\startEXERCISE
+如前所述，使用動態規劃方法，我們首先求解子問題，
+然後選擇哪些子問題用來構造原問題的最優解。
+ Capulet 教授認爲，我們不必爲了求原問題的最優解而總是求解出所有子問題。
+他建議，在求矩陣鏈乘法問題的最優解時，
+我們總可以在求解子問題{\EMP 之前}選定 \m{A_i A_{i+1}\cdots A_j} 的劃分位置 \m{A_k}
+（選定的 \m{k} 使得 \m{p_{i-1} p_k p_j} 最小）。
+請找出一個反例，證明這個貪心方法可能生成次優解。
+\stopEXERCISE
+
+\startANSWER
+錯誤在於最小 cost 是指最小左半 cost 加最小有半 cost 加 \m{p_{i-1} p_k p_j} 的和，
+而不單單是 \m{p_{i-1} p_k p_j} 最小。
+例如 \m{[1x1][1x2][2x3]}。
+\stopANSWER
+
+%e15.3-5
+\startEXERCISE
+對於節 15.1 的鋼條切割問題加入限制條件：
+假定對於每種鋼條長度 \m{i}（\m{i=1,2,\cdots,n-1}），
+最多允許切割出 \m{l_i} 段長度爲 \m{i} 的鋼條。
+證明：節 15.1 所描述的最優子結構性質不再成立。
+\stopEXERCISE
+
+\startANSWER
+由於限制了總數，所以子結構之間實際是相互影響的，沒有最優子結構的性質。
+\stopANSWER
+
+%e15.3-6
+\startEXERCISE
+假定你希望兌換外匯，你意識到與其直接兌換，不如進行多種外幣的一系列兌換，
+最後兌換到你想要的那種外幣，可能會獲得更大收益。
+假定你可以交易 \m{n} 種不同的貨幣，
+編號爲 \m{1,2,\cdots,n}，兌換從 1 號貨幣開始，最終兌換爲 \m{n} 號貨幣。
+對於每兩種貨幣 \m{i} 和 \m{j}，給定匯率 \m{r_{ij}}，
+意味着你如果有 \m{d} 個單位的貨幣 \m{i}，可以兌換 \m{d r_{ij}} 個單位的貨幣 \m{j}。
+進行一系列的交易需要支付一定的佣金，金額取決於交易的次數。
+令 \m{c_k} 表示 \m{k} 次交易需要支付的佣金。
+證明：如果對於所有 \m{k=1,2,\cdots,n}， \m{c_k = 0}，
+那麼尋找最優兌換序列的問題具有最優子結構性質。
+然後請證明：如果佣金 \m{c_k} 爲任意值，那麼問題不一定具有最優子結構性質。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Longest common subsequence},
+]
+
+%e15.4-1
+\startEXERCISE
+求 \m{\langle 1,0,0,1,0,1,0,1\rangle} 和 \m{\langle 0,1,0,1,1,0,1,1,0\rangle} 的一個 LCS。
+\stopEXERCISE
+
+\startANSWER
+LCS 爲 \m{\langle 1,0,0,1,1,0\rangle}。
+
+\externalfigure[output/e15_4_1-1]
+\stopANSWER
+
+%e15.4-2
+\startEXERCISE
+設計僞碼，利用完整的表 \m{c} 及
+原始序列 \m{X=\langle x_1, x_2, \ldots, x_m \rangle}
+和 \m{Y=\langle y_1, y_2, \ldots, y_n\rangle} 來重構 LCS，
+要求運行時間爲 \m{O(m+n)}，不能使用表 \m{b}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{PRINT-LCS(c, X, Y, i, j)}
+\startCLRS
+if i == 0 or j == 0
+	return
+if X[i] == Y[j]
+	PRINT-LCS(c, X, Y, i-1, j-1)
+	printf X[i]
+elseif c[i-1, j] >= c[i, j-1]
+	PRINT-LCS(c, X, Y, i-1, j)
+else
+	PRINT-LCS(c, X, Y, i, j-1)
+\stopCLRS
+\stopANSWER
+
+%e15.4-3
+\startEXERCISE
+設計 \ALGO{LCS-LENGTH} 帶備忘的版本，運行時間爲 \m{O(mn)}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{LCS-LENGTH(X, Y, c, i, j)}
+\startCLRS
+if c[i, j] >= 0
+	return c[i, j]
+if i == 0 or j == 0
+	c[i, j] = 0
+	return 0
+if X[i] == Y[j]
+	c[i, j] = LCS-LENGTH(X, Y, c, i-1, j-1) + 1
+else
+	c[i, j] = max(LCS-LENGTH(X, Y, c, i-1, j), LCS-LENGTH(X, Y, c, i, j-1))
+return c[i, j]
+\stopCLRS
+\stopANSWER
+
+%e15.4-4
+\startEXERCISE
+說明如何只使用表 c 中 \m{2 \times \min(m,n)} 個表項及 \m{O(1)} 的額外空間來計算 LCS 的長度。
+然後說明如何只用 \m{\min(m,n)} 個表項及 \m{O(1)} 的額外空間完成相同的工作。
+\stopEXERCISE
+
+\startANSWER
+選取元素個數少的序列作爲 Y。
+計算 c 中某一行的值時，僅需要上一行的值。
+
+進一步優化後，計算 \m{c[i,j]} 時，僅需保留
+\m{c[i, k], 1\le k < j-1}、
+\m{c[i-1, k], k \ge j-1} 即可。
+\stopANSWER
+
+%e15.4-5
+\startEXERCISE
+給定一個含 \m{n} 個數的序列，
+設計一個時間復雜度爲 \m{O(n^2)} 的算法，
+求其最長單調遞增子序列。
+\stopEXERCISE
+
+\startANSWER
+排序後的序列與原序列的 LCS 即爲所求。
+排序時間爲 \m{n\lg n}，求 LCS 需時間 \m{O(n^2)}，總共爲 \m{O(n^2)}。
+\stopANSWER
+
+%e15.4-6
+\startEXERCISE\DIFFICULT
+給定一個含 \m{n} 個數的序列，
+設計一個時間復雜度爲 \m{O(n\lg n)} 的算法，
+求其最長單調遞增子序列。
+（{\EMP 提示：}一個長度爲 \m{i} 的候選子序列的尾元素
+至少不比長度爲 \m{i-1} 候選子序列的尾元素小。
+因此，可以在輸入序列中將候選子序列鏈接起來。）
+\stopEXERCISE
+
+\startANSWER
+參考 \goto{Dynamic Programming – a Quick Review}
+[url(http://www.csie.ntu.edu.tw/~kmchao/seq06fall/dp.pdf)] 中 2.2 節。
+
+\CLRSH{LIS_LENGTH(X)}
+\startCLRS
+BESTEND[]	// 所有長度爲 k 的子序列中最小的尾元素
+		// 單調遞增
+len = 1
+BESTEND[1] = X[1]
+for i = 2 to X.len
+	if X[i] > BESTEND[len]
+		len = len + 1
+		BESTEND[len] = X[i]
+	else
+		// 查找大於 X[i] 的最小元素的位置
+		pos = BI-SEARCH(BESTEND, len, X[i])
+		BESTEND[pos] = X[i]
+return len
+\stopCLRS
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Optimal binary search trees},
+]
+
+%e15.5-1
+\startEXERCISE
+設計僞碼 \ALGO{CONSTRUCT-OPTIMAL-BST(root)}，
+輸入爲表 root，
+輸出是最優二叉搜索樹的結構。
+例如，對圖 15-10 中的 root 表，應輸出：
+
+\startigBase
+\item \m{k_2} 爲根
+\item \m{k_1} 爲 \m{k_2} 的左孩子
+\item \m{d_0} 爲 \m{k_1} 的左孩子
+\item \m{d_1} 爲 \m{k_1} 的右孩子
+\item \m{k_5} 爲 \m{k_2} 的右孩子
+\item \m{k_4} 爲 \m{k_5} 的左孩子
+\item \m{k_3} 爲 \m{k_4} 的左孩子
+\item \m{d_2} 爲 \m{k_3} 的左孩子
+\item \m{d_3} 爲 \m{k_3} 的右孩子
+\item \m{d_4} 爲 \m{k_4} 的右孩子
+\item \m{d_5} 爲 \m{k_5} 的右孩子
+\stopigBase
+
+與圖 15-9(b) 中的最優二叉搜索樹對應。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{CONSTRUCT-OPTIMAL-BST(root)}
+\startCLRS
+print "k" root[1, n] "是根"
+p<-0
+PRINT-OPTIMAL-BST(root, 1, n)
+\stopCLRS
+
+\CLRSH{PRINT-OPTIMAL-BST(root, i, j)}
+\startCLRS
+if root[i, root[i, j]-1]
+	print "k" root[i, root[i, j]-1] "是k" root[i, j] "的左孩子"
+	PRINT-OPTIMAL-BST(root, i, root[i, j]-1)
+else
+	print "d" p "是k" root[i, j] "的左孩子"
+	p<-p+1
+if root[root[i, j]+1, j]
+	print "k" root[root[i, j]+1, j] "是k" root[i, j] "的右孩子"
+	PRINT-OPTIMAL-BST(root, root[i, j]+1, j)
+else
+	print "d" p "是k" root[i, j] "的右孩子"
+	p<-p+1
+\stopCLRS
+\stopANSWER
+
+%e15.5-2
+\startEXERCISE
+若 7 個關鍵字的概率如下所示，求其最優二叉搜索樹的結構和代價。
+\input{tbl/tbl15.5-2}
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e15_5_2-1]
+\externalfigure[output/e15_5_2-2]
+\externalfigure[output/e15_5_2-3]
+\externalfigure[output/e15_5_2-4]
+\stopANSWER
+
+%e15.5-3
+\startEXERCISE
+假設 \ALGO{OPTIMAL-BST} 不維護表 \m{\omega[i,j]}，
+而是在第 9 行利用公式（15.12）直接計算 \m{\omega(i,j)}，
+然後在第 11 行使用此值。
+如此改動會對漸進時間複雜度有何影響？
+附公式（5-5）：
+\startformula
+\omega(i,j) = \sum_{l=i}^{j}p_l + \sum_{l=i-1}^{j}q_l
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+此改動不會影響算法的漸進時間複雜度。
+就改動本身而言，時間由 \m{\Theta(1)} 變爲 \m{\Theta(j-i)}。
+但是，後面的循環本來就是 \m{\Theta(j-i)}，所以再加一個 \m{\Theta(j-i)}，
+結果還是 \m{\Theta(j-i)}，從而對整個算法而言，時間複雜度沒什麼變化，還是 \m{\Theta(n^3)}。
+\stopANSWER
+
+%e15.5-4
+\startEXERCISE
+Knuth 已經證明，對所有 \m{1\le i < j \le n}，
+存在最優二叉搜索樹，其根滿足 \m{root[i,j-1]\le root[i,j]\le root[i+1,j]}。
+利用這一特性修改算法 \ALGO{OPTIMAL-BST}，
+使得運行時間減少爲 \m{\Theta(n^2)}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{OPTIMAL-BST‘(p, q, n)}
+\startCLRS
+for i = 1 to n + 1
+	e[i, i-1] = q[i-1]
+	w[i, i-1] = q[i-1]
+for l = 1 to n
+	for i = 1 to n - l + 1
+		j = i + l - 1
+		e[i, j] = ∞
+		w[i, j] = w[i, j-1] + p[j] + q[j]
+		for r = root[i, j-1] to root[i+1, j]
+			t = e[i, r-1] + e[r+1, j] + w[i, j]
+			if t < e[i, j]
+				e[i, j] = t
+				root[i, j] = r
+return e and root
+\stopCLRS
+
+計算 \m{root[i,j]} 的時候 r 循環次數爲 \m{root[i+1,j] - root[i, j-1] + 1}。
+則 root 中第 k 層所有元素共需要 r 循環 \m{root[k,1] - root[1,k] + n - k} 次。
+又因爲 \m{1\le root[1,k] \le root[k,1] \le n}，所以每一層的循環次數爲 \m{O(n)}。
+而 \m{0\le k\le n-1}，所以總循環次數爲 \m{O(n^2)}。
+\stopANSWER
+
+\stopsection
+
+\startsubject[
+  title={Problems},
+]
+
+%p15-1
+\startPROBLEM
+（Longest simple path in a directed acyclic graph）
+給定一個有向無環圖 \m{G=(V,E)}，
+邊權重爲實數，給定途中兩個頂點 \m{s} 和 \m{t}。
+設計動態規劃算法，求從 \m{s} 到 \m{t} 的最長加權簡單路徑。
+子問題圖是怎樣的？
+算法效率如何？
+\stopPROBLEM
+
+\startANSWER
+\CLRSH{LSP-DAG(G, s, t)}
+\startCLRS
+for each vertex v in V(G)
+	L[v] = 0
+
+for each vertex v in topOrder(G)
+	for each edge (v, w) in E(G)
+		L[w] = max(L[w], L[v] + weight(G, (v, w)))
+
+return L[t]
+\stopCLRS
+
+其中 toporder 爲關鍵所在，爲所有節點排序，保證任何一個有向邊的起始點在結束點的前面。
+\stopANSWER
+
+%p15-2
+\startPROBLEM
+（Longest palindrome subsequence）
+{\EMP 回文}（palindrome）是正序與逆序相同的非空字串。
+例如，所有長度爲 1 的字串、 civic、 racecar、 aibohphobia（害怕回文之意）都是回文。
+
+設計高效算法，求給定輸入字串的最長回文子序列。
+例如，給定輸入 character，算法應該返回 carac。
+算法的運行時間如何？
+\stopPROBLEM
+
+\startANSWER
+設 \m{m} 爲最長回文子序列的長度，則：
+\startformula
+m[i,j] = \startcases
+\NC m[i+1,j-1] + 1 \MC \text{如果 \m{A[i] = A[j]}；} \NR
+\NC \max\{m[i,j-1], m[i+1,j]\} \MC \text{如果 \m{A[i] \ne A[j]}。}\NR
+\stopcases
+\stopformula
+
+\CLRSH{LPS-LENGTH(A)}
+\startCLRS
+n = A.length
+for i = 1 to n
+	m[i,i] = 1
+for l = 2 to n
+	for i = 1 to n - l + 1
+		j = i + l - 1
+		if A[i] == A[j]
+			m[i,j] = m[i+1, j-1] + 1
+			s[i,j] = "↙"
+		else if m[i+1, j] >= m[i, j-1]
+			m[i, j] = m[i+1, j]
+			s[i, j] = "↓"
+		else
+			m[i ,j] = m[i, j-1]
+			s[i, j] = "←"
+return m and s
+\stopCLRS
+\stopANSWER
+
+%p15-3
+\startPROBLEM
+（Bitonic euclidean traveling-salesman problem）
+在{\EMP 歐幾裏德旅行商}問題中，給定平面商 \m{n} 個點作爲輸入，
+希望求出連接所有 \m{n} 個點的最短巡遊路線。
+圖 15-11(a) 給出了一個 7 點問題的解。
+此問題是 NP 難問題，因此大家相信他並不存在多項式時間的求解算法（參見第 34 章）。
+
+J.L. Bentley 建議將問題簡化，
+限制巡遊路線爲{\EMP 雙調巡遊}（bitonic tours），
+即從最左邊的點開始，嚴格向右前進，直至最右邊的點，
+然後掉頭嚴格向左前進，直至回到起始點。
+圖 15-11(b) 給出了相同 7 個點的最短雙調巡遊路線。
+問題簡化後，存在一個多項式時間的算法。
+
+設計一個 \m{O(n^2)} 時間的最優雙調巡遊路線算法。
+你可以人外任何兩個點的 \m{x} 坐標均不同，
+且所有實數運算都花費單位時間。
+（\hint 由左至右掃描，對巡遊路線的兩個部分分別維護可能的最優解。）
+\stopPROBLEM
+
+\startANSWER
+\startcombination[nx=2]
+{\externalfigure[output/p15_3-1][width=.3\textwidth]}
+{\externalfigure[output/p15_3-2][width=.3\textwidth]}
+\stopcombination
+
+先對所有點按橫坐標進行排序，得到序列 \m{\langle p_1, p_2, \ldots, p_n\rangle}。
+最左端的點爲 \m{p_1}，最右端的點爲 \m{p_n}。
+定義最短雙調路徑爲 \m{B[i,j]}，包括 \m{p_1} 到 \m{p_j} 中所有點，其中 \m{1\le i \le j\le n}。
+此路徑包含兩部分：從 \m{p_i} 到 \m{p_1} 的向左子圖，以及從 \m{p_1} 到 \m{p_j} 的向右子圖。
+根據題意，需要計算 \m{b[n,n]}。
+
+\startformula\startmathalignment
+\NC B[1,2] \NC = |p_1 p_2| \NR
+\NC B[i,j] \NC = B[i, j-1] + |p_{j-1} p_j| \qquad \text{如果 \m{i < j-1}；} \NR
+\NC B[j-1, j] \NC = \min_{k=1}^{j-1}\{B[k,j-1] + |p_k p_j|\} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%p15-4
+\startPROBLEM
+（Printing neatly）
+考慮整齊打印問題，
+即在打印機商用等寬字符打印一段文本。
+輸入文本爲 \m{n} 個單詞的序列，單詞長度分別爲 \m{l_1,l_2,\ldots,l_n} 個字符。
+我們希望將此段文本整齊打印在若幹行商，每行最多 \m{M} 個字符。
+“整齊”的標準是這樣的：
+如果某行包含第 \m{i} 到第 \m{j} （\m{i\le j}）個單詞，且單詞間隔爲一個空格符，
+則行尾的額外空格符數量爲 \m{M-j+i-\sum_{k=i}{j}l_k}，
+此值必須爲非負的，否則一行內無法容納這些單詞。
+我們希望能最小化所有行（最後一行除外）的額外空格數的立方之和。
+設計一個動態規劃算法，在打印機商整齊打印一段 \m{n} 個單詞的文本。
+分析算法的時間、空間復雜性。
+\stopPROBLEM
+
+\startANSWER
+如果某一行包含單詞 \m{i} 到 \m{j}，
+令 \m{\EXTRAS[i,j] = M - j + i - \sum_{k=1}^{j}l_k} 爲此行行尾空格數目。
+需要注意的是， \m{\EXTRAS} 可能是負值。
+
+定義此行的代價爲 \m{\LINECOST[i,j]}，則：
+\startformula
+\LINECOST[i,j] = \startcases
+\NC \infty \MC \text{如果 \m{\EXTRAS[i,j] < 0} （即單詞 \m{i,\ldots,j} 不滿足要求）； }\NR
+\NC 0 \MC \text{如果 \m{j=n} 且 \m{\EXTRAS\ge 0} （最後一行代價爲 0）；} \NR
+\NC (\EXTRAS[i,j])^3 \MC \text{否則。} \NR
+\stopcases
+\stopformula
+
+目標就是使得所有 \m{\LINECOST} 的和最小。
+
+令 \m{C(j)} 爲前 \m{j} 個單詞的最小代價，其中第 \m{j} 個單詞位於一行的末尾，則：
+\startformula\startmathalignment
+\NC C(0) \NC = 0 \NR
+\NC C(j) \NC = \min_{i = 1}^{j}\{C(i-1) + \LINECOST(i, j)\} \NR
+\stopmathalignment\stopformula
+\m{C(n)} 即爲最終結果。
+
+\CLRSH{PRINT_NEATLY(M, l, n)}
+\startCLRS
+C[0] = 0
+for j = 1 to n
+	C[j] = ∞
+	for i = 1 to j
+		lc = linecost(i, j)
+		if lc == ∞
+			break;
+		tmp = C[i-1] + lc
+		if tmp < C[j]
+			C[j] = tmp
+			L[j] = i
+return L
+\stopCLRS
+
+\m{L[n]} 的值爲最後一行第一個單詞的序號，
+即，令 \m{k=L[n]}，則最後一行的單詞爲 \m{l_k,\ldots, l_n}。
+而 \m{L[k]} 的值爲倒數第二行第一個單詞的序號。
+以此類推，我們可以找到每一行的第一個單詞，即可打印出所有單詞。
+
+\m{C} 和 \m{L} 的長度均爲 \m{n+1}，因此空間複雜度爲 \m{O(n)}。
+
+運行時間爲填充 \m{C} 和 \m{L} 的時間，加上遍歷 \m{L} 打印所有單詞的時間。
+其中遍歷 \m{L} 的時間爲 \m{O(n)}。
+填充 \m{C[j]} 時，我們做了 \m{j} 次比較，因此循環所需時間爲 \m{O(n^2)}。
+但是考慮到每一行的單詞數目肯定小於 \m{M/2} （一旦打印長度超過了 \m{M}，
+即可提前退出循環），因此比較所用時間爲 \m{O(M)}。
+從而整體時間爲 \m{O(nM)}。
+\stopANSWER
+
+%p15-5
+\startPROBLEM
+（Edit distance）
+爲將一文本串 \m{x[1..m]} 轉換爲目標串 \m{y[1..n]}，
+我們可以使用多種變換操作。
+我們的目標是：給定 \m{x} 和 \m{y}，
+求將 \m{x} 轉換爲 \m{y} 的一個變換操作序列。
+使用 \m{z} 保存中間結果，假定他足夠大，可寸下中間結果的所有字符。
+初始時， \m{z} 是空的，
+結束時，應有 \m{z[j]=y[j]}，其中 \m{j=1,2,\ldots,n}。
+我們維護兩個下標 \m{i} 和 \m{j}，分別用來索引 \m{x} 和 \m{z}，
+變換操作允許改變 \m{z} 的內容和這兩個下標。
+初始時， \m{i=j=1}。
+在轉換過程中應處理 \m{x} 的所有字符，
+這意味着在變換操作結束時，應有 \m{i=m+1}。
+
+我們可以使用如下 6 種變換操作：
+\startigBase
+\item {\EMP 複製}（copy）——從 \m{x} 複製一個字符到 \m{z}，
+即賦值操作 \m{z[j] = x[i]}，並將兩個下標 \m{i} 和 \m{j} 都增 1。
+此操作處理了 \m{x[i]}。
+
+\item {\EMP 替換}（replace）——將 \m{x} 中的一個字符替換爲另一個字符 \m{c}， \m{z[j]=c}，
+並將兩個下標 \m{i} 和 \m{j} 都增 1。
+此操作處理了 \m{x[i]}。
+
+\item {\EMP 刪除}（delete）——刪除 \m{x} 中一個字符，即將 \m{i} 增 1， \m{j} 不變。
+此操作處理了 \m{x[i]}。
+
+\item {\EMP 插入}（insert）——將字符 \m{c} 插入 \m{z} 中， \m{z[j]=c}，
+將 \m{j} 增 1， \m{i} 不變。此操作未處理 \m{x} 中字符。
+
+\item {\EMP 旋轉}（twiddle，即交換）——將 \m{x} 中下兩個字符複製到 \m{z} 中，
+但交換順序， \m{z[j]=x[i+1]}、 \m{z[j+1]=x[i]}，
+將 \m{i} 和 \m{j} 都增 2。此操作處理了 \m{x[i]} 和 \m{x[i+1]}。
+
+\item {\EMP 終止}（kill）——刪除 \m{x} 中剩餘字符，令 \m{i=m+1}。
+此操作處理了 \m{x} 中所有尚未處理的字符。
+如果執行此操作，則轉換過程結束。
+\stopigBase
+
+下面給出了將源字串 {\tt algorithm} 轉換爲目標字串 {\tt altruistic} 的一種變換操作序列，
+下劃線指出執行一個變換操作後兩個下標的位置，
+注意，還有其他方法完成這個轉換。
+
+\input{tbl/tbl15-5}
+
+每個變換操作都有相應的代價。
+具體代價依賴於特定應用，但我們假定每個操作的代價均爲已知常量。
+我們還假定複製和替換的代價小於刪除和插入的組合代價，否則複製和替換操作就沒有意義了。
+一個給定的變換操作序列的代價爲其中所有變換操作的代價總和。
+在上例中，將 {\tt algorithm} 轉換爲 {\tt altruistic} 的代價爲：
+\m{3 \times \COST(\text{複製})
++ \COST (\text{替換})
++ \COST (\text{刪除})
++ 4 \times \COST (\text{插入})
++ \COST (\text{交換})
++ \COST (\text{終止})}。
+
+\startigNum
+\startitem
+給定兩個字串 \m{x[1..m]} 和 \m{y[1..n]} 以及變換操作的代價，
+ \m{x} 到 \m{y} 的{\EMP 編輯距離}（edit distance）是
+將 \m{x} 轉換爲 \m{y} 所需變換序列的最小代價。
+設計動態規劃算法，求 \m{x[1..m]} 到 \m{y[1..n]} 的編輯距離並打印最優變換序列。
+分析算法的時間、空間複雜度。
+\stopitem
+\stopigNum
+
+\startANSWER
+子問題：將 \m{x[1..i]} 轉換成 \m{y[1..j]}，
+其中 \m{1\le i\le m}， \m{1\le j\le n}，
+其代價爲 \m{D(i,j)}。則：
+\startformula\startmathalignment
+\NC D(0,0) \NC = 0 \NR
+\NC D(i,j) \NC = \min\startcases
+\NC D(i-1,j-1) + \COST(\text{複製}) \MC \text{如果\m{x_i=y_j}；}\NR
+\NC D(i-1,j-1) + \COST(\text{替換}) \MC \text{如果\m{x_i\ne y_j}；}\NR
+\NC D(i-1,j) + \COST(\text{刪除}) \MC \NR
+\NC D(i,j-1) + \COST(\text{插入}) \MC \NR
+\NC D(i-2,j-2) + \COST(\text{交換}) \MC \text{如果\m{[x_{i-1}x_i]=[y_i y_{i-1}]}；}\NR
+\stopcases \NR
+\stopmathalignment\stopformula
+除 \m{D} 外，我們還可以維護一張表用來記錄執行了哪些操作。
+最小代價爲
+\startformula
+\min(D[m,n], \min_{i<m}D[i,n] + \COST[\text{終止}])
+\stopformula
+
+時間、空間複雜度均爲 \m{\Theta(mn)}。
+\stopANSWER
+
+編輯距離問題是 DNA 序列對齊問題的推廣
+（參考其他文獻，如 Setubal 和 Meidanis [310， 3.2 節]）。
+已有多種方法可以通過對齊兩個 DNA 序列來衡量他們的相似度。
+有一種對齊方法是將空格符插入到兩個序列 \m{x} 和 \m{y} 中，
+可以插入到任何位置（包括兩端），
+使得結果序列 \m{x'} 和 \m{y'} 的長度相同，
+但不會在相同的位置出現空格符
+（即不存在位置 \m{j} 使得 \m{x'[j]} 和 \m{y'[j]} 都是空格符）。
+然後爲每個位置“打分”，位置 \m{j} 的分數爲：
+\startigBase
+\item +1，如果 \m{x'[j]=y'[j]} 且不是空格符；
+\item -1，如果 \m{x'[j]\ne y'[j]} 且都不是空格符；
+\item -2， \m{x'[j]} 或 \m{y'[j]} 是空格符；
+\stopigBase
+
+對齊方案的分數爲每個位置的分數之和。
+例如，給定序列 \m{x=\text{\tt GATCGGCAT}} 和 \m{y=\text{\tt CAATGTGAATC}}，
+一種對齊方案爲：
+
+{\tt G ATCG GCAT }
+
+{\tt CAAT GTGAATC}
+
+{\tt -*++*+*+-++*}
+
+其中 + 表示該位置分數爲 +1， - 表示分數爲 -1， * 表示分數爲 -2，
+因此此方案的總分數爲 \m{6\times 1 - 2 \times 1 - 4 \times 2 = -4}。
+
+\startigNum[continue]
+\startitem
+解釋如何將最優對齊問題轉換爲編輯距離問題，
+使用的操作爲變換操作復制、替換、刪除、插入、旋轉和終止的子集。
+\stopitem
+\stopigNum
+
+\startANSWER
+如果 \m{x'[j]=y'[j]} 且不是空格符，則等效爲複製；
+如果 \m{x'[j]} 爲空格， \m{y'[j]} 不是空格，則等效爲插入；
+如果 \m{x'[j]} 不是空格， \m{y'[j]} 是空格，則等效爲刪除；
+如果 \m{x'[j]\ne y'[j]} 且都不是空格符，則等效爲替換。
+\stopANSWER
+
+\stopPROBLEM
+
+%p15-6
+\startPROBLEM
+（Planning a company party）
+一位 CEO 正在向 Stewart 教授諮詢公司聚會的計劃。
+公司的內部結構關係是層次化的，
+即員工按主管——下屬關係構成一棵樹，根節點爲 CEO。
+人事部按“宴會交際能力”爲每個員工打分，分值爲實數。
+爲了使所有參加聚會的員工都感到愉快， CEO 不希望員工及其主管同時出席。
+
+公司主席向 Stewart 教授提供公司結構樹，
+採用 10.4 節介紹的左孩子右兄弟表示法描述。
+樹中每個節點除保存指針外，
+還保存員工的名字和宴會交際評分。
+設計算法，求宴會交際評分之和最大的賓客名單。
+分析算法的時間複雜度。
+\stopPROBLEM
+
+\startANSWER
+令 \m{D[i]} 爲僅邀請 \m{i} 及其下屬的最大得分。
+令 \m{E[i]} 爲僅邀請 \m{i} 的下屬的最大得分。
+則：
+\startformula\startmathalignment
+\NC E[i] \NC = \sum_{j\in C_i}D[j] \NR
+\NC D[i] \NC = \max(E[i], a_i + \sum_{j\in C_i}E[j]) \NR
+\stopmathalignment\stopformula
+
+\m{D[1]} 即爲所求。
+由於 \m{D[i]} 和 \m{E[i]} 僅依賴於 \m{D[j]} 和 \m{E[j]}，
+其中 \m{j} 爲 \m{i} 的下屬，我們可以按樹中自下而上的順序進行計算。
+如果我們知道 \m{i} 的下屬序號均大於 \m{i}，
+則可以按從 \m{n} 到 \m{1} 的順序計算 \m{E[i]}、 \m{D[i]}。
+
+\CLRSH{PLAN-PARTY(A, C)}
+\startCLRS
+for i = n downto 1
+	E[i] = 0
+	D[i] = 0
+	foreach j ∈ C[i]
+		E[i] = E[i] + D[j]
+		D[i] = D[i] + E[j]
+	D[i] = D[i] + A[i]
+	if E[i] > D[i]
+		D[i] = E[i]
+\stopCLRS
+
+第 \m{i} 次迭代中的循環需要 \m{2|C_i|+4} 步，
+總共需要時間 \m{4n + 2\sum_i|C_i|}。
+除 CEO 外，其他員工都有一個直接領導，因此 \m{\sum_i|C_i|=n-1}。
+因此總時間爲 \m{\Theta(n)}。
+\stopANSWER
+
+%p15-7
+\startPROBLEM
+（Viterbi algorithm）
+我們可以通過在有向圖 \m{G=(V,E)} 上使用動態規劃方法實現語音識別。
+對每條邊 \m{(u,v)\in E} 打上標籤 \m{\sigma(u, v)}，
+該聲音來自於有限聲音集 \m{\Sigma}。
+這樣的標籤圖就成爲一個特定人說限定語言的形式化模型。
+圖中從特定頂點 \m{v_0\in V} 開始的每條路徑都對應模型產生的一個可能的語音序列。
+對於一條有向路徑，我們定義其標籤爲路徑中邊上標籤的簡單連接。
+\startigNum
+\startitem
+設計高效算法，對給定的圖 G （邊上帶標籤）、
+特定頂點 \m{v_0} 及 \m{\Sigma} 上的聲音序列
+ \m{s=\langle \sigma_1,\sigma_2,\ldots,\sigma_k\rangle}，
+返回 \m{G} 中從 \m{v_0} 開始的一條路徑， \m{s} 爲該路徑的標籤（如果存在這樣的路徑）。
+否則，算法返回 \ALGO{NO-SUCH-PATH}。
+分析算法的時間複雜度（\hint 你可能發現第 22 章中的概念可用於此題）。
+\stopitem
+\stopigNum
+
+\startANSWER
+\startformula\startmathalignment
+\NC S(i,j) \NC = \bigvee_{k:(v_k,v_i)\in E \land \sigma(v_k,v_i)=\sigma_j} S(k,j-1) \NR
+\NC S(0,0) \NC = 1 \NR
+\NC S(i,0) \NC = 0 \qquad 1\le i \le n-1 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+現在，假定每條邊 \m{(u,v)\in E} 都關聯一個非負概率 \m{p(u,v)}，
+他表示從頂點 \m{u} 開始，經過邊 \m{(u,v)}，產生對應的聲音的概率。
+任何頂點的出射邊的概率之和均爲 1。
+一條路徑的概率定義爲路徑上邊的概率之積。
+對於從 \m{v_0} 開始的一條路徑，
+我們可以將其概率看作從 \m{v_0} 開始進行“隨機遊走”（random walk），
+最後恰巧經過這條路徑的概率。
+所謂“隨機遊走”，是指當位於頂點 \m{u} 時，隨機選擇一條出射邊前進，
+每條邊被選中的概率jiujitsu他所關聯的概率。
+
+\startigNum[continue]
+\startitem
+擴展（a）中的算法，使得返回的路徑從 \m{v_0} 開始、標籤爲 \m{s}，且概率最大。
+分析算法的時間複雜度。
+\stopitem
+\stopigNum
+
+\startANSWER
+\startformula\startmathalignment
+\NC S(i,j) \NC = \max_{k:(v_k,v_i)\in E \land \sigma(v_k,v_i)=\sigma_j}
+  \left{p(v_k,v_i) \times S(k,j-1)\right} \NR
+\NC S(0,0) \NC = 1 \NR
+\NC S(i,0) \NC = 0 \qquad 1\le i \le n-1 \NR
+\NC R(i,j) \NC = \argmax_{k:(v_k,v_i)\in E \land \sigma(v_k,v_i)=\sigma_j}
+  \left{p(v_k,v_i) \times S(k,j-1)\right} \NR
+\stopmathalignment\stopformula
+
+計算每一列時，僅需要考慮左側相鄰列。
+計算一列的時間爲 \m{O(n+e)}，共 \m{k} 列，
+因此總時間爲 \m{O((n+e)\times k)}。
+其中 \m{e} 爲邊的數目， \m{k} 爲輸入序列的長度。
+\stopANSWER
+\stopPROBLEM
+
+%p15-8
+\startPROBLEM
+（Image compression by seam carving）
+給定一副彩色圖像，他由數組 \m{A[1..m,1..n]} 構成，
+每個元素都是包含紅綠藍（RGB）亮度的三元組。
+假如我們希望輕度壓縮這幅圖像。具體而言，
+我們希望從每一行中刪除一個像素，使得圖像變窄一個像素。
+但爲了避免影響視覺效果，我們要求相鄰兩行中刪除的像素必須位於統一列或相鄰列。
+也就是說，刪除的像素構成從頂端行到底端行的一條“接縫”（seam），
+相鄰像素均在垂直或對角線方向上相鄰。
+\startigNum
+\startitem
+證明：可能的接縫數量是 \m{m} 的指數函數，假定 \m{n>1}。
+\stopitem
+\stopigNum
+
+\startANSWER
+窮舉法，第一行有 \m{n} 種選擇，以後每一行都有 3 種選擇（不考慮邊界的特殊性）。
+共 \m{n\times (m-1)^3} 種選擇，命題得證。
+\stopANSWER
+
+\startigNum[continue]
+\startitem
+假定現在對每個像素 \m{A[i,j]}，我們都已計算出其“破壞度” \m{d[i,j]} （實數），
+表示刪除像素 \m{A[i,j]} 對圖像可視效果的破壞程度。
+直觀地，一個像素的破壞度越低，他與相鄰像素的相似度越高。
+再假定一條接縫的破壞度定義爲他包含的像素的破壞度之和。
+設計算法，尋找破壞度最低的接縫。
+分析算法的時間複雜度。
+\stopitem
+\stopigNum
+
+\startANSWER
+定義 \m{a[i,j]}：如果接縫只包含第 1 行到第 \m{i} 行，選擇了 \m{A[i,j]} 作爲接縫時的最小破壞度。
+則：
+\startformula
+a[i,j] = d[i,j] + \min(a[i-1,j-1], a[i-1,j], a[i-1,j+1])
+\stopformula
+注意，對於第一行元素 \m{a[i,j] = d[i,j]}，其他行邊緣像素只有兩種選擇。
+
+算法複雜度爲 \m{O(nm)}。
+\stopANSWER
+
+\stopPROBLEM
+
+%p15-9
+\startPROBLEM
+（Breaking a string）
+某種字串處理語言允許程序員將一個字符串拆分爲兩段。
+由於此操作需要複製字串，因此要話費 \m{n} 個時間單位將長度爲 \m{n} 的字符串拆分爲兩段。
+假定一個程序員希望將一個字串拆分爲多段，
+拆分的順序會影響所花費的總時間。
+例如，假定這個程序員希望將長度爲 20 的字串在第 2 個、第 8 個以及第 10 個字符後進行拆分
+（字符從左至右，從 1 開始編號）。
+如果他按由左至右的順序進行拆分，則第一次拆分花費 20 個時間單位，
+第二次拆分花費 18 個時間單位（在第 8 個字符處拆分 3～20 間的字串），
+第三次拆分花費 12 個時間單位，共花費 50 個時間單位。
+但如果從右至左進行拆分，所花時間爲 20、 10、 8 共 38 個時間單位。
+還可以其他順序進行拆分，如，可以線在第 8 個字符處拆分（時間 20），
+接着在左邊第 2 個字符處拆分（時間 8），
+最後在右邊第 10 個字符處拆分（時間 12），總時間爲 40。
+
+設計算法，對給定的拆分位置，確定拆分順序，使其代價最小。
+更形式化地，給定長度爲 \m{n} 的字串 \m{S} 和拆分點序列 \m{L[1..m]}，
+計算拆分的最小代價，以及最優拆分序列。
+
+\startANSWER
+\startformula
+c[i,j] = L[i,j] + \min_{i<k<j}(c[i,k] + c[k,j]) \qquad \text{\m{k} 爲拆分位置}
+\stopformula
+\stopANSWER
+\stopPROBLEM
+
+%p15-10
+\startPROBLEM
+（Planning an investment strategy）
+你所掌握的算法知識從 Acme 計算機公司獲得了一份令人興奮的工作，
+簽約獎金 1 萬美元。
+你決定利用這筆錢進行投資，目標是 10 年後獲得最大回報。
+你決定請 Amalgamated 投資公司管理你的投資，
+該公司的投資回報規則如下。
+該公司提供 \m{n} 種不同的投資，從 1～\m{n} 編號。
+在第 \m{j} 年，第 \m{i} 種投資的回報率爲 \m{r_{ij}}。
+換句話說，如果你在第 \m{j} 年第 \m{i} 種投資投入 \m{d} 美元，
+那麼在第 \m{j} 年底，你會得到 \m{d r_{ij}} 美元。
+回報率是有保證的，即未來 10 年每種投資的回報率均已知。
+你每年只能做出一次投資決定。
+在每年年底，你既可以將錢繼續投入到上一年選擇的投資種類中，
+也可以轉移到其他投資中（轉移到已有的投資種類，或者新的投資種類）。
+如果跨年時不做投資轉移，
+需要支付 \m{f_1} 美元的費用，
+否則，需要支付 \m{f_2} 美元的費用，其中 \m{f_2 > f_1}。
+
+\startigNum
+\startitem
+如上所述，本題允許你每年將錢投入到多種投資中。
+證明：如果每年都將所有錢投入到單一投資中，存在最優投資策略
+（記住最優投資策略只需最大化 10 年的回報，
+無需關心任何其他目標，如最小化風險）。
+\stopitem
+\stopigNum
+
+\startigNum[continue]
+\startitem
+證明：規劃最優投資策略問題具有最優子結構性質。
+\stopitem
+\stopigNum
+
+\startigNum[continue]
+\startitem
+設計最優投資策略規劃算法，分析算法時間複雜度。
+\stopitem
+\stopigNum
+
+\startANSWER
+令 \m{P_i} 爲第 \m{i} 年拿到的利潤。
+令 \m{S_i} 爲第 \m{i} 年選擇的項目。
+令 \m{r[i,j]} 爲第 \m{i} 項目在第 \m{j} 年的利潤率。
+令 \m{R_j} 爲第 \m{j} 年利潤率最高的項目編號。
+\startformula
+P_i = \max(
+(P_{i-1} - f_1) \times r_{S_{i-1} i},
+(P_{i-1} - f_2) \times r_{R_i i}
+)
+\stopformula
+
+時間複雜度爲 \m{\lg n}。
+\stopANSWER
+
+\startigNum[continue]
+\startitem
+假定 Amalgamated 投資公司在上述規則上又加入了新的限制條款，
+在任何時刻你都不能在任何單一投資種類中投入 15000 美元以上。
+證明：最大化 10 年回報問題不再具有最優子結構性質。
+\stopitem
+\stopigNum
+\stopPROBLEM
+
+%p15-11
+\startPROBLEM
+（Inventory planning）
+Rinky Dink 公司是一家製造溜冰場冰面整修設備的公司。
+這種設備每個月的需求量都在變化，因此公司希望設計一種策略來規劃生產，
+需求是給定的，即他雖然是波動的，但是可預測的。
+公司希望設計接下來 \m{n} 個月的生產計劃。
+對第 \m{i} 個月，公司知道需求 \m{d_i}，
+即該月能夠銷售出去的設備數量。
+令 \m{D=\sum_{i=1}{n} d_i} 爲後 \m{n} 個月的總需求。
+公司僱傭的全職員工，可以提供一個月製造 \m{m} 臺設備的勞動力。
+如果公司希望一個月內製造多於 \m{m} 臺設備，
+可以僱傭額外的兼職勞動力，
+僱傭稱霸爲每製造一臺機器付出 \m{c} 美元。
+而且，如果在月末有設備尚未售出，
+公司還要付出庫存成本。
+保存 \m{j} 臺設備的成本可描述爲一個函數 \m{h(j)}，
+其中 \m{1\le j \le D}、 \m{h(j)\ge 0}，
+且對於所有 \m{1\le j\le D-1}，滿足 \m{h(j)\le h(j+1)}。
+
+設計庫存規劃算法，在滿足所有需求的前提下最小化成本。
+算法運行時間應爲 \m{n} 和 \m{D} 的多項式函數。
+\stopPROBLEM
+
+\startANSWER
+令 \m{L_i} 爲第 \m{i} 月的產品剩餘； \m{C_i} 爲第 \m{i} 月的成本。
+\startformula
+C_i = \startcases
+\NC h(L_{i-1}-d_i) \MC \text{如果 \m{L_{i-1}\ge d_i}；（\m{L_i=L_{i-1}-d_i}）} \NR
+\NC 0 \MC \text{如果 \m{d_i - m\le L_{i-1} \le d_i}；（\m{L_i=0}）} \NR
+\NC c\times (L_{i-1}+m-d_i) \MC \text{如果 \m{L_{i-1} < di - m}；（\m{L_i=0}）} \NR
+\stopcases
+\stopformula
+
+\m{C} 依賴於 \m{L}， \m{L_i} 依賴於 \m{L_{i-1}}。
+\stopANSWER
+
+%p15-12
+\startPROBLEM
+（Signing free-agent baseball players）
+假設你是一支棒球大聯盟球隊的總經理。
+在賽季休季期間，你需要簽入一些自由球員。
+球隊老闆給你的預算爲 \m{X} 美元，
+你可以使用少於 \m{X} 美元來簽入球員，
+但如果超支，球隊老闆就會解僱你。
+
+你正在考慮在 \m{N} 個不同位置簽入球員，
+在每個位置上，有 \m{P} 個該位置的自由球員供你選擇。
+由於你不希望任何位置過於臃腫，
+每個位置最多簽入一名球員，
+如果在某個位置上你沒有簽入新球員，則意味着計劃繼續使用現有球員。
+
+爲了確定一名球員的價值，你決定使用一種稱爲“VORP”，
+或“球員替換價值”（value over replacement player）的統計評價指標（sabermetric）。
+球員的 VORP 值越高，其價值越高。
+但 VORP 值高的球員的簽約費用並不一定比 VORP 值低的球員高，
+因爲還有球員價值之外的因素影響簽約費用。
+
+對於每個可選擇的自由球員，你知道他三方面信息：
+\startigBase
+\item 他打哪個位置；
+\item 他的簽約費用；
+\item 他的 VORP。
+\stopigBase
+
+設計一個球員選擇算法，使得簽約總費用不超過 \m{X} 美元，
+而球員的 VORP 總值最大。
+你可以假定每位球員的簽約費用是 10 萬美元的整數倍。
+算法應輸出簽約球員的 VORP 總值、簽約總費用，以及球員名單。
+分析算法的時間、空間複雜度。
+\stopPROBLEM
+
+\startANSWER
+令 \m{c_{ij}} 爲第 \m{i} 個位置、第 \m{j} 個球員的價碼；
+令 \m{v_{ij}} 爲第 \m{i} 個位置、第 \m{j} 個球員的價值；
+共有 \m{n} 個位置。
+令 \m{f(m,n)} 爲用錢 \m{m} 購買 \m{1..n} 位置球員的最大價值總和。
+
+如果在第 \m{n} 個位置購買球員，則 \m{f(m,n)=f(m,n-1)}；
+否則 \m{f(m,n) = \max_{1\le i\le p \land m > c_{ni}}(v_{ni} + f(m-c_{ni},n-1))}。
+最終 \m{f(m,n)} 是兩種情況中值較大的那個。
+\stopANSWER
+
+\stopsubject%Problems
+
+\stopchapter
+\stopcomponent

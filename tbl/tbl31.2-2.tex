@@ -1,0 +1,28 @@
+
+\startxtable[
+    option=max,
+    align={middle,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,bottomframe=on]
+\startxrow[foregroundstyle=bold,]
+  \xcell[rightframe=on]{}\processcommalist[\m{a}, \m{b}, \m{\left\lfloor a/b \right\rfloor}, \m{d}, \m{x}, \m{y}]{\xcell[align={middle}]}
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off]
+\startxrow \xcell[rightframe=on]{0}\processcommalist[899, 493,  1, 29, -6, 11]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{1}\processcommalist[493, 406,  1, 29,  5, -6]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{2}\processcommalist[406,  87,  4, 29, -1,  5]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{3}\processcommalist[ 87,  58,  1, 29,  1, -1]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{4}\processcommalist[ 58,  29,  2, 29,  0,  1]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{5}\processcommalist[ 29,   0,  -, 29,  1,  0]\xcell \stopxrow
+\stopxtablebody
+
+\stopxtable

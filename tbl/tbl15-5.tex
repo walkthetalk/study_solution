@@ -1,0 +1,34 @@
+\startxtable[
+    option=max,
+    align={flushleft,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,topframe=on,bottomframe=on,align={middle}]
+\startxrow[foregroundstyle=bold,]
+  \xcell{操作}\xcell[frame=on]{x}\xcell{z}
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off,topframe=on,bottomframe=on,foregroundstyle={\tt}]
+\startxrow \xcell{初始字符串}\xcell{\underbar{a}lgorithm}\xcell{\uerbarspace} \stopxrow
+\startxrow \xcell{複製}\xcell{a\underbar{l}gorithm}\xcell{a\uerbarspace} \stopxrow
+\startxrow \xcell{複製}\xcell{al\underbar{g}orithm}\xcell{al\uerbarspace} \stopxrow
+\startxrow \xcell{替換爲 t}\xcell{alg\underbar{o}rithm}\xcell{alt\uerbarspace} \stopxrow
+\startxrow \xcell{刪除}\xcell{algo\underbar{r}ithm}\xcell{alt\uerbarspace} \stopxrow
+\startxrow \xcell{複製}\xcell{algor\underbar{i}thm}\xcell{altr\uerbarspace} \stopxrow
+\startxrow \xcell{插入 u}\xcell{algor\underbar{i}thm}\xcell{altru\uerbarspace} \stopxrow
+\startxrow \xcell{插入 i}\xcell{algor\underbar{i}thm}\xcell{altrui\uerbarspace} \stopxrow
+\startxrow \xcell{插入 s}\xcell{algor\underbar{i}thm}\xcell{altruis\uerbarspace} \stopxrow
+\startxrow \xcell{旋轉}\xcell{algorit\underbar{h}m}\xcell{altruisti\uerbarspace} \stopxrow
+\startxrow \xcell{插入 c}\xcell{algorit\underbar{h}m}\xcell{altruistic\uerbarspace} \stopxrow
+\startxrow \xcell{終止}\xcell{algorithm\uerbarspace}\xcell{altruistic\uerbarspace} \stopxrow
+\stopxtablebody
+
+\stopxtable
+

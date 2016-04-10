@@ -1,0 +1,27 @@
+
+\startxtable[
+    option=max,
+    align={middle,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,topframe=on,bottomframe=on]
+\startxrow[foregroundstyle=bold,]
+  \processcommalist[,已排序的單向鏈表,未排序的單向鏈表]{\xcell[align={middle}]}
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off,bottomframe=on]
+\startxrow \processcommalist[\ALGO{MAKE-HEAP},常數,常數]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{INSERT},線性,常數]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{MINIMUM},常數,線性]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{EXTRACT-MIN},常數,線性]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{UNION},線性,線性]\xcell \stopxrow
+\stopxtablebody
+
+\stopxtable

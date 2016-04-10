@@ -1,0 +1,16 @@
+
+\definemathcommand [lcm]     [limop] {\mfunction{lcm}}
+\definemathcommand [argmax]  [limop] {\mfunction{arg\,max}}
+\definemathcommand [argmin]  [limop] {\mfunction{arg\,min}}
+
+\setupmathematics[
+  functionstyle=\rm\bf,
+  %functioncolor=,
+  %textstyle=,
+  %textcolor=,
+]
+
+%%% workaround for vdots
+\define\vdots{%
+\rotate[rotation=90]{\ldots}%
+}

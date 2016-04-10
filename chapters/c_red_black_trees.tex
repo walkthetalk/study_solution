@@ -1,0 +1,918 @@
+\startcomponent c_red_black_trees
+
+\startchapter[
+  title={Red-Black Trees},
+]
+
+\startsection[
+  title={Properties of red-black trees},
+]
+
+%e13.1-1
+\startEXERCISE
+有關鍵字 \m{\left{1,2,\ldots,15\right}}，以圖 13.1（a）的形式，畫出高度爲 3 的完全二叉樹。
+以三種不同的方式給此樹塗色並添加 NIL 葉子，使其變成紅黑樹，其黑高分別爲 2，3 和 4。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e13_1_1-1]
+\stopANSWER
+
+%e13.1-2
+\startEXERCISE
+有紅黑樹如圖 13-1，畫出插入關鍵字 36 後的結果。
+如果插入的節點標爲紅色，所得樹是不是紅黑樹？如果該節點標爲黑色呢？
+\stopEXERCISE
+
+\startANSWER
+無論標記爲紅色，還是黑色，都不再是紅黑樹。
+\stopANSWER
+
+%e13.1-3
+\startEXERCISE
+定義{\EMP 鬆弛紅黑樹（relaxed red-black tree）}爲滿足紅黑性質 1、 3、 4 和 5 的二叉搜索樹。
+換句話說，根節點的顏色沒有限制，即可以是紅色，也可以是黑色。
+考慮根節點爲紅色的鬆弛紅黑樹 T，如果將 T 的根節點標爲黑色，而其他都不變，
+那麼所得是否是紅黑樹？
+\stopEXERCISE
+
+\startANSWER
+是。
+\stopANSWER
+
+%e13.1-4
+\startEXERCISE
+如果將紅黑樹的每一個紅色節點都“吸收”進其黑色父節點中，
+使得紅色節點的子節點變成黑色父節點的子節點（忽略關鍵字的變化）。
+當一個黑色節點的所有紅色子節點都被吸收後，他的度會是多少？
+所得樹的葉節點深度如何？
+\stopEXERCISE
+
+\startANSWER
+黑度不變，深度減半。
+\stopANSWER
+
+%e13.1-5
+\startEXERCISE
+證明：在紅黑樹中，從某節點 \m{x} 到其後代葉節點的所有簡單路徑中，
+最長的一條至多是最短一條的 2 倍。
+\stopEXERCISE
+
+\startANSWER
+最短路徑：全黑，包括葉子節點，長度爲 \m{bh+1}。
+
+最長路徑：黑紅黑紅……黑，紅比黑少 1，長度爲 \m{2bh+1}。
+\stopANSWER
+
+%e13.1-6
+\startEXERCISE
+有一紅黑樹，其黑高爲 \m{k}，則最多有多少內部節點？最少又是多少？
+\stopEXERCISE
+
+\startANSWER
+內部節點最多：樹高爲 \m{2k+1}，偶數層紅色，奇數層黑色，內部節點個數爲 \m{2^{2k}-1}。
+
+內部節點最少：高爲 \m{k} 的滿二叉樹，全部爲黑色節點，內部節點數爲 \m{2^k-1}，可用歸納法證明，參見定理 13.1。
+
+附定理13.1：若紅黑樹內部節點個數爲 \m{n}，則樹高最多爲 \m{2\lg(n+1)}。
+\stopANSWER
+
+%e13.1-7
+\startEXERCISE
+有一紅黑樹，含 \m{n} 個關鍵字，其內部節點中紅色的個數和黑色的個數比值最大是多少？最小又是多少？
+\stopEXERCISE
+
+\startANSWER
+紅黑樹內部節點個數爲 \m{n}，則樹高爲：
+\startformula
+h=\lfloor \lg{n} \rfloor + 1
+\stopformula
+
+若紅色節點最多：
+\startigBase[a]
+\startitem
+若 \m{h} 爲偶數，從根節點到數據節點的最長路徑爲 BRBR...BR：
+\startformula\startmathalignment
+\NC \#(B) \NC =2^0+2^2+\ldots + 2^{h-2} \NR
+\NC ratio \NC = \frac{n-\#(B)}{\#(B)} \NR
+\stopmathalignment\stopformula
+\stopitem
+
+\startitem
+若 \m{h} 爲奇數，從根結點到數據結點的最長路徑爲 BRBR...BBR：
+\startformula\startmathalignment
+\NC \#(B) \NC = \startmathcases
+\NC 1		\MC h=1 \NR
+\NC 2^0+2^2+\ldots +2^{h-3}+2^{h-2}	\MC h\ge 3 \NR
+\stopmathcases \NR
+\NC ratio \NC = \frac{n-\#(B)}{\#(B)} \NR
+\stopmathalignment\stopformula
+\stopitem
+\stopigBase
+
+若紅色節點最少：
+\startformula\startmathalignment
+\NC \#(R) \NC = \startmathcases
+\NC 0		\MC h=2^h-1 \NR
+\NC n-(2^{n-1}-1)	\MC n\ne 2^h-1 \NR
+\stopmathcases \NR
+\NC ratio \NC = \frac{n-\#(R)}{\#(R)} \NR
+\stopmathalignment\stopformula
+
+當 \m{n=3} 時，最多有 2 個紅色節點，紅黑比值爲 2。
+當 \m{n} 生成滿二叉樹時，紅黑比值爲 0。
+\stopANSWER
+\stopsection
+
+%sec 13.2
+\startsection[
+  title={Rotations},
+]
+
+%e13.2-1
+\startEXERCISE
+寫出 \ALGO{RIGHT-ROTATE} 的僞碼。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{RIGHT-ROTATE(T, y)}
+\startCLRS
+x = y.left
+y.left = x.right
+if x.right != T.nil
+	x.right.p = y
+x.p = y.p
+if y.p == T.nil
+	T.root = x
+elseif y == y.p.left
+	y.p.left = x
+else y.p.right = x
+x.right = y
+y.p = x
+\stopCLRS
+\stopANSWER
+
+%e13.2-2
+\startEXERCISE
+證明：對於任何一棵二叉搜索樹，如果節點數爲 \m{n}，則有 \m{n-1} 種可能的旋轉。
+\stopEXERCISE
+
+\startANSWER
+只有孩子節點才能旋轉，而根節點不是任何節點的孩子。
+\stopANSWER
+
+%e13.2-3
+\startEXERCISE
+如圖 13-2 中左側樹，在子樹 \m{\alpha}、 \m{\beta}、 \m{\gamma} 中分別任取節點 \m{a}、 \m{b}、 \m{c}。
+在將節點 \m{x} 左旋後， \m{a}、 \m{b}、 \m{c} 的深度有什麼變化？ 附圖 13-2：
+
+\externalfigure[output/e13_2_3-1]
+\stopEXERCISE
+
+\startANSWER
+\m{\alpha} 下降一层， \m{\beta} 深度不变， \m{\gamma} 上升一层。
+\stopANSWER
+
+%e13.2-4
+\startEXERCISE
+證明：任一二叉搜索樹，其節點個數爲 \m{n}，則可以通過 \m{O(n)} 次旋轉，
+轉換爲其他任一含 \m{n} 個節點的二叉搜索樹。
+（\hint 先證明至多 \m{n-1} 次右旋足以將樹轉變爲一條右側伸展的鏈。）
+\stopEXERCISE
+
+\startANSWER
+右旋會使左孩子數少 1，而右孩子多 1。
+\stopANSWER
+
+%e13.2-5
+\startEXERCISE
+有二叉搜索樹 \m{T_1}，通過一系列右旋操作變成二叉搜索樹 \m{T_2}，
+則稱 \m{T_1} 可以{\EMP 右轉（right-converted）}成 \m{T_2}。
+試舉反例，描述 \m{T_1} 不能右轉成 \m{T_2} 的情況。
+然後證明：如果 \m{T_1} 可以右轉成 \m{T_2}，那麼可以通過 \m{O(n^2)} 次右旋來實現。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e13_2_5-1]
+\externalfigure[output/e13_2_5-2]
+
+\m{T_1} 中右孩子都不可能變成根節點。
+所以新的根節點只能是 \m{T_1} 的根節點到最小節點路徑上的節點。
+我們可以在 \m{O(n)} 時間解決根節點，然後遞歸解決左右子樹，時間複雜度爲：
+\m{T(n)=T(n_L)+T(n_R)+O(n)=O(n^2)}，其中 \m{n_L+n_R=n-1}。
+\stopANSWER
+
+\stopsection
+
+%sec 13.3
+\startsection[
+  title={Insertion},
+]
+
+%e13.3-1
+\startEXERCISE
+在 \ALGO{RB-INSERT} 的第 16 行，將新節點 z 着爲紅色，從而可能破壞紅黑樹性質 4。
+如果將 z 着爲黑色，則不會破壞紅黑樹的性質 4。
+爲什麼不將 z 着爲黑色？
+\stopEXERCISE
+
+\startANSWER
+如果將 z 着爲黑色，會破壞紅黑樹的性質 5。
+\stopANSWER
+
+%e13.3-2
+\startEXERCISE
+現有一紅黑樹，初始爲空，將關鍵字 41、 38、 31、 12、 19、 8 相繼插入，試畫出結果。
+\stopEXERCISE
+
+\startANSWER
+請參閱 \goto{可視化紅黑樹}[url(https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)]。
+
+\externalfigure[output/e13_3_2-1]
+\stopANSWER
+
+%e13.3-3
+\startEXERCISE
+假設圖 13-5 和圖 13-6 中子樹 \m{\alpha}、 \m{\beta}、 \m{\gamma}、 \m{\delta} 和 \m{\epsilon} 的黑高都是 k。
+給兩圖中的所有節點都標上黑高，以驗證圖中所示的轉換能保持性質 5。
+\stopEXERCISE
+
+\startANSWER
+略。
+\stopANSWER
+
+%e13.3-4
+\startEXERCISE
+Teach 教授擔心 \ALGO{RB-INSERT-FIXUP} 會將 \m{T.nil.color} 設爲紅色，
+從而在 \m{z} 爲根時，第 1 行的測試不會終止循環。
+試說明 \ALGO{RB-INSERT-FIXUP} 永遠不會將 \m{T.nil.color} 設爲紅色。
+\stopEXERCISE
+
+\startANSWER
+略。
+\stopANSWER
+
+%e13.3-5
+\startEXERCISE
+用 \ALGO{RB-INSERT} 插入 \m{n} 個節點形成一棵紅黑樹。
+證明：如果 \m{n>1}，則該樹至少有一個紅節點。
+\stopEXERCISE
+
+\startANSWER
+\m{n=2} 時，有一個內部節點是紅的。
+以後每次運行 \ALGO{RB-INSERT-FIXUP} 時，
+如果是 case 1，則 \m{z} 保持紅色，case 2 和 case 3 都不會減少紅色節點的數量。
+\stopANSWER
+
+%e13.3-6
+\startEXERCISE
+說明如果紅黑樹中不提供父指針，如果有效地實現 \m{RB-INSERT}。
+\stopEXERCISE
+
+\startANSWER
+可以採用自頂向下的插入，一旦紅黑樹性質遭到破壞就通過修改顏色、旋轉恢復紅黑樹的性質。
+ case 2 和 case 3 都能在本節點完成，
+ case 1 會使節點 \m{z} 上升兩層至 \m{z.p.p}，
+但這時不會再遇到 case 1，因爲向下搜索時已經把這種情況消除了。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Deletion},
+]
+
+%e13.4-1
+\startEXERCISE
+證明：執行 \ALGO{RB-DELETE-FIXUP} 之後，樹根一定是黑色的。
+\stopEXERCISE
+
+\startANSWER
+\ALGO{RB-DELETE-FIXUP} 中的 while 循環會向上搜索，直到到達樹根或者一個紅色節點。
+如果找到樹根，則會將其染成黑色，無論這個根是怎麼來的。
+
+如果在到達根節點之前先碰到了紅色節點，則根節點還會繼續保持黑色。
+\stopANSWER
+
+%e13.4-2
+\startEXERCISE
+證明：在 \ALGO{RB-DELET} 中，如果 \m{x} 和 \m{x.p} 都是紅色的，
+可以通過調用 \ALGO{RB-DELETE-FIXUP(T, x)} 來恢復性質 4。
+\stopEXERCISE
+
+\startANSWER
+如果 \m{x} 是紅色，則 \m{y} （即 \m{x} 的父節點，
+同時也是 \m{z} 或者 \m{z} 的後繼）有至少一個非空孩子（\m{x}）且不是紅色
+（否則， \m{x} 會是黑色），否則會針對 \m{x} 調用 \ALGO{RB-DELETE-FIXUP}。
+ \m{y} 也有一個黑色兄弟節點。
+
+\m{y} 曾經只有一個孩子 \m{x}：如果 \m{y} 跟 \m{z} 一樣，只有一個孩子，
+則 \m{z} 只有左孩子， \m{x} 就是左孩子， \m{z} 只有右孩子， \m{x} 就是右孩子；
+如果 \m{y} 是 \m{z} 的後繼（ \m{z} 有兩個孩子），那麼 \m{x} 就是右孩子。
+這兩種情況類似，我們以 \m{x} 是 \m{y} 的左孩子爲例：
+
+結果取決於 \m{x} 的兄弟 \m{w} 是否有兩個黑色孩子，前者是 case 2，後者是 case 3；
+然後都會變成 case 4，並恢復性質 4。
+\stopANSWER
+
+%e13.4-3
+\startEXERCISE
+在練習 13.3-2 中，將關鍵字 41、 38、 31、 12、 19、 8 連續插入一棵初始爲空的樹，
+最終得到了一棵紅黑樹。請給出從該樹中連續刪除關鍵字 8、 12、 19、 31、 38、 41 後
+的紅黑樹。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[3*2]
+{\externalfigure[output/e13_4_3-1]}
+{\externalfigure[output/e13_4_3-2]}
+{\externalfigure[output/e13_4_3-3]}
+{\externalfigure[output/e13_4_3-4]}
+{\externalfigure[output/e13_4_3-5]}
+{\externalfigure[output/e13_4_3-6]}
+\stopcombination
+\stopANSWER
+
+%e13.4-4
+\startEXERCISE
+在 \ALGO{RB-DELETE-FIXUP} 代碼的哪些行中，可能會檢查或修改哨兵 \m{T.nil}？
+\stopEXERCISE
+
+\startANSWER
+刪除黑色節點後，首先會告訴其孩子（所刪除節點最多只有一個孩子），
+如果他沒有孩子，則會檢查或修改 \m{T.nil}。
+
+\m{x} 的兄弟 \m{w} 沒有孩子，或者沒有左孩子但要左旋，或者沒有右孩子卻要右旋。
+\stopANSWER
+
+%e13.4-5
+\startEXERCISE
+在圖 13-7 的每種情況中，給出所示子樹的根節點至每棵子樹 \m{\alpha}、 \m{\beta}、
+ \m{\ldots}、 \m{\epsilon} 之間的黑色節點個數，
+並驗證他們在轉換後保持不變。
+當一個節點的 color 屬性爲 c 或 c' 時，
+在計數中用記號 count(c) 或 count(c') 來表示。
+\stopEXERCISE
+
+\startANSWER
+\TODO{}
+\stopANSWER
+
+%e13.4-6
+\startEXERCISE
+Skelton 和 Baron 教授擔心在 \ALGO{RB-DELETE-FIXUP} 的 case 1 開始時，
+節點 \m{x.p} 可能不是黑色的，這樣第 5 ～ 6 行就是錯的。
+證明： \m{x.p} 在 case 1 開始時肯定是黑色的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{}
+\stopANSWER
+
+%e13.4-7
+\startEXERCISE
+假設用 \ALGO{RB-INSERT} 將一個節點 \m{x} 插入一棵紅黑樹，
+緊接着又用 \ALGO{RB-DELETE} 將他從樹中刪除。
+所得紅黑樹有什麼變化？
+\stopEXERCISE
+
+\startANSWER
+可能不同。
+新加入節點可能會導致某些旋轉操作，刪除後不會旋轉回來。
+即使樹的結構不變，節點的顏色也可能發生變化。
+\stopANSWER
+
+\stopsection
+
+\startsubject[
+  title={Problems},
+]
+
+\startPROBLEM
+（Persistent dynamic sets）
+在算法的執行過程中，我們有時會發現更新動態集合時需要維護其歷史版本。
+我們稱這樣的集合爲{\EMP 持久的（persistent）}。
+實現持久集合的一種方法是每次修改都將其完整的復制一份，
+但這種方法會降低一個程序的執行速度，且佔用空間過多。
+有時我們可以做得更好。
+
+考慮結合 \m{S}，支持 \ALGO{INSERT}、 \ALGO{DELETE} 和 \ALGO{SEARCH}，
+我們使用圖 13-8（a）所示的二叉搜索樹來實現。
+對集合的每一個版本都維護一個不同的根。
+爲了將關鍵字 5 插入其中，創建一個具有關鍵字 5 的新節點。
+該節點會成爲關鍵字 7 的左孩子，由於我們不能修改關鍵字 7 所在節點，
+因此我們需要一個關鍵字爲 7 的新節點。
+以此類推，關鍵字 8 和 4 都需要一個新節點。
+新節點 4 是新的根結點。
+從而我們只需要復制一部分，就能構造一顆新樹，與原樹共享部分節點，
+如圖 13-8（b）所示。
+
+假設樹中每個節點都有屬性 key、 left 和 right，但沒有屬性 parent。
+（參見練習 13.3-6）
+\startigBase[a]
+\startitem%a
+對於一顆一般的持久二叉搜索樹，爲插入一個關鍵字 k 或刪除一個節點 y，
+需要改變哪些節點。
+\stopitem
+
+\startANSWER
+需要改變從根結點開始，到要插入或刪除節點路徑上的所有節點。
+
+如果是刪除，且要刪除的 z 有兩個孩子，則 z 的後繼 y 會代替 z 的位置。
+ z 的所有祖先以及 y 都會發生變化，即 y 及其祖先都會改變。
+\stopANSWER
+
+\startitem%b
+請寫出一個過程 \ALGO{PERSISTENT-TREE-INSERT}，
+使得在給定一棵持久樹 T 和一個要插入的關鍵字 k 時，
+他返回將 k 插入 T 後得到的新的持久樹 T'。
+\stopitem
+
+\startANSWER
+\CLRSH{PERSISTENT-TREE-INSERT(T, k)}
+\startCLRS
+y = T.root
+if y == nil
+	return new_by_key(k)
+else
+	new_root = new_copy(T.root)
+	x = new_root
+	while y != nil
+		z = x
+		if k < y.key
+			y = y.left
+			x = new_copy(y)
+			z.left = x
+		else
+			y = y.right
+			x = new_copy(y)
+			z.right = x
+			z = new_by_key(k)
+			if k < x.key
+				x.left = z
+			else
+				x.right = z
+	return new_root
+\stopCLRS
+\stopANSWER
+
+\startitem%c
+如果持久二叉搜索樹 T 的高度爲 h，
+實現 \ALGO{PERSISTENT-TREE-INSERT} 過程的時間和空間需求分別是多少？
+（空間需求與新分配的節點數成正比）
+\stopitem
+
+\startANSWER
+時間和空間都是 \m{O(h)}。
+\stopANSWER
+
+\startitem%d
+假設在每個節點中增加一個父節點屬性。
+在這種情況下， \ALGO{PERSISTENT-TREE-INSERT} 需要做一些額外的復制工作。
+證明： \ALGO{PERSISTENT-TREE-INSERT} 的時間需求和空間需求爲 \m{\Omega(n)}，
+其中 n 爲樹中的節點個數。
+\stopitem
+
+\startANSWER
+如果有屬性 parent，由於新根節點的存在，根節點孩子的 parent 會指向新根節點，
+然後他們的孩子也會改成指向他們，以此類推。
+因此每個節點都需要有一份拷貝，
+插入操作會創建 \m{\Omega(n)} 個新節點，所需時間爲 \m{\Omega(n)}。
+\stopANSWER
+
+\startitem%e
+說明如何利用紅黑樹來保證每次插入或刪除的最壞情況運行時間和空間爲 \m{O(\lg{n})}。
+\stopitem
+
+\startANSWER
+由（a）和（c）可知，高爲 h 的持久二叉搜索樹與普通二叉搜索樹相同，
+插入操作的最壞情況時間都是 \m{O(h)}。
+紅黑樹的高度 \m{h=O(\lg n)}，
+因此普通紅黑樹的插入操作需要的時間爲 \m{O(\lg n)}。
+如果紅黑樹是持久的，
+則插入操作仍然可以在時間 \m{O(\lg n)} 內完成。
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+%p13-2
+\startPROBLEM
+（Join operation on red-black trees）
+{\EMP 連接（join）}操作指的是取兩個動態集合 \m{S_1}、 \m{S_2} 和一個元素 \m{x}，
+使得對於任何 \m{x_1\in S_1} 和 \m{x_2\in S_2}，均滿足 \m{x_{1}.key \le x.key \le x_{2}.key}。
+該操作返回一個集合 \m{S=S_1 \cup \{x\} \cup S_2}。
+在這個問題中，討論如何在紅黑樹上實現連接操作。
+\startigBase[a]
+\startitem%a
+給定一棵紅黑樹 \m{T}，其黑高存儲在新屬性 \m{T.bh} 中。證明：
+在不需要樹中節點的額外存儲空間和不增加漸進運行事件的前提下，
+ \ALGO{RB-INSERT} 和 \ALGO{RB-DELETE} 可以維護這個屬性。
+並證明：當沿 \m{T} 下降時，可以對每個被訪問的節點在 \m{O(1)} 時間內確定其黑高。
+要求實現操作 \ALGO{RB-JOIN(T1, x, T2)}，
+他會銷燬 \m{T_1} 和 \m{T_2} 並返回一棵紅黑樹 \m{T=T_1\cup \{x\} \cup T_2}。
+令 \m{n} 爲 \m{T_1} 和 \m{T_2} 中的節點總數。
+\stopitem
+\startANSWER
+對於空的紅黑樹，將其 bh 初始化爲 0。
+插入只會增加黑高，刪除只會減小黑高。
+插入過程中，如果 \ALGO{BALANCING} 到達了根節點，
+將根節點由紅色改成了黑色，則 bh 會增 1。
+這是往樹中添加黑色節點唯一的地方。
+刪除過程中，如果額外的黑節點到達了根節點，則將 bh 減 1；
+這是往樹中刪除黑色節點唯一的地方。
+因此每次操作過程中， bh 的開銷爲 \m{O(1)}。
+樹中每個節點的黑高，都可以由根節點的 bh 開始，每過一個黑色節點就減 1；
+其開銷也爲 \m{O(1)}。
+\stopANSWER
+
+\startitem%b
+假設 \m{T_{1}.bh\ge T_{2}.bh}。
+試給出一個 \m{O(\lg n)} 時間的算法，
+使之能從黑高爲 \m{T_{2}.bh} 的節點中選出具有最大關鍵字的 \m{T_1} 中的黑色節點 \m{y}。
+\stopitem
+\startANSWER
+我們只需要遍歷樹的最右路徑，即，
+如果有右孩子，我們就可以一直往右走，否則就往左走。
+在此過程中，每過一個黑色節點，就將黑高減 1。
+直到所到達黑色節點的黑高等於 \m{bh[T_2]}，
+我們就找到了黑高爲 \m{bh[T_2]} 的最大關鍵字。
+由於紅黑樹的高度爲 \m{O(\lg n)}，此操作需要時間爲 \m{O(\lg n)}。
+\stopANSWER
+
+\startitem%c
+令 \m{T_y} 爲以 \m{y} 爲根節點的子樹。
+試說明如何在不破壞二叉搜索樹性質的前提下，
+在 \m{O(1)} 時間內用 \m{T_y\cup \{x\} \cup T_2} 來取代 \m{T_y}。
+\stopitem
+\startANSWER
+在 \m{T_1} 中 y 所在位置插入 x。
+令 y 爲左孩子， x 的右孩子。
+假定連接操作滿足 \m{x_1.key\le x.key\le x_2.key}，
+則會保持二叉搜索樹的性質，所需時間爲 \m{O(1)}。
+\stopANSWER
+
+\startitem%d
+要保持紅黑性質 1、 3 和 5，應將 \m{x} 着成什麼顏色？
+試說明如何在 \m{O(\lg n)} 時間內維護性質 2 和 4。
+\stopitem
+\startANSWER
+將 x 着爲紅色。
+我們可以執行 \ALGO{RB-INSERT-FIXUP(T_1, x)} 來維持性質 2、 4。
+ \m{T_2} 的黑高等於 \m{T_y}，
+因此 \ALGO{RB-INSERT-FIXUP} 可以工作。
+運行時間爲 \m{O(\lg n)}。
+\stopANSWER
+
+\startitem%e
+論證使用（b）部分的假設是不失一般性的，
+並描述當 \m{T_1.bh\le T_2.bh} 時所出現的對稱情況。
+\stopitem
+\startANSWER
+如果 \m{T_1.bh < T_2.bh}，
+我們會掃描 \m{T_2} 最左側的路徑，找到黑高爲 \m{T_1.bh} 的最小的黑色節點。
+\stopANSWER
+
+\startitem%f
+證明： \ALGO{RB-JOIN} 的運行時間是 \m{O(\lg n)}。
+\stopitem
+\startANSWER
+由之前幾部分來實現 \ALGO{RB-JOIN}：
+可以在 \m{O(1)} 時間內計算維護黑高。
+可以在 \m{O(\lg n)} 時間內找到所需黑色節點 y。
+在 \m{O(1)} 時間內完成連接，
+最後花 \m{O(\lg n)} 時間來保持紅黑樹的性質。
+總共需要時間爲 \m{O(\lg n)}。
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+%p13-3
+\startPROBLEM
+（AVL 樹）
+ AVL 樹是一種{\EMP 高度平衡的（height balanced）}二叉搜索樹：
+對每一個節點 x，其左子樹和右子樹的高度最多差 1。
+要實現一棵 AVL 樹，
+需要在每個節點內維護一個額外的屬性： \m{x.h} 爲節點 x 的高度。
+與任何其他二叉搜索樹 T 一樣，
+假設 \m{T.root} 指向根節點。
+\startigBase[a]
+\startitem%a
+證明：一棵有 n 個節點的 AVL 樹高度爲 \m{O(\lg n)}。
+（\hint 證明高度爲 h 的 AVL 樹至少有 \m{F_h} 個節點，
+其中 \m{F_h} 是 Fibonacci 數列的第 h 個數）
+\stopitem
+\startANSWER
+對於一棵高度爲 \m{h} 的高度平衡樹，令 \m{T(h)} 時節點數目的最小值。
+現在來歸納。
+對於基準情況， \m{T(1)\ge T(0)\ge 1}，因此 \m{T(1)\ge F_1} 且 \m{T(0)\ge F_0}。
+現在假設對於所有 \m{h'<h}，都有 \m{T(h')\ge F_{h'}}。
+高度爲 h 的 AVL 樹中的根節點有兩個孩子：
+一個孩子高度爲 \m{h-1}，二另一個孩子高度至少爲 \m{h-2}。
+高度爲 h 的 AVL 樹中節點數用 \m{T(h-1)} 和 \m{T(h-2)} 表示爲 \m{T(h)\ge T(h-1)+T(h-2)}。
+由歸納假設，這意味着 \m{T(h)\ge F_{h-1} + F_{h-2} = F_h}。
+所以 \m{F_h\ge 1.6^h}，因此 \m{n\ge 1.6^h}， \m{h=O(\lg n)}。
+\stopANSWER
+
+\startitem%b
+要在一棵 AVL 樹中插入一個節點，
+首先以二叉搜索樹的順序把該節點放在適當的位置上。
+此時，這棵樹可能不再是高度平衡的。
+也就是說，某些節點的左子樹和右子樹高度差可能會是 2。
+請描述一個過程 \ALGO{BALANCE(x)}，
+輸入一棵以 x 爲根的子樹，
+其左子樹與右子樹是高度平衡的，且高度差最多是 2，
+即 \m{|x.right.h - x.left.h|\le 2}，
+並將這棵以 x 爲根的子樹轉換成高度平衡的。
+（\hint 使用旋轉）
+\stopitem
+\startANSWER
+\CLRSH{BALANCE(x)}
+\startCLRS
+if height(x.left) - height(x.right) \le 1
+	return x
+else if height(x.left) < height(x.right)
+	y = x.right
+	if y.left < y.right
+		return left-rotate(x)
+	else
+		right-rotate(y)
+		return left-rotate(x)
+else
+	y = x.right
+	if y.right < y.left
+		return right-rotate(x)
+	else
+		left-rotate(y)
+		return right-rotate(x)
+\stopCLRS
+\stopANSWER
+
+\startitem%c
+利用（b）來描述一個過程 \ALGO{AVL-INSERT(x, z)}，
+該操作輸入一個 AVL 樹中的節點 x 以及一個新節點 z （其關鍵字已經填好），
+然後將 z 添加到以 x 爲根的子樹中，
+並保持 x 是一棵 AVL 樹的根節點。
+和 12.3 節中的 \ALGO{TREE-INSERT} 一樣，
+假設 \m{z.key} 已經填好，且 \m{z.left=NIL}， \m{z.right=NIL}；
+再假設 \m{z.h=0}。
+因此要把節點 z 插入到 AVL 樹 T 中，
+需要調用 \ALGO{AVL-INSERT(T.root, z)}。
+\stopitem
+\startANSWER
+\CLRSH{AVL-INSERT(x, z)}
+\startCLRS
+if x == nil
+	height[z] = 0
+	return z
+if key[z] \le key[x]
+	y = AVL-INSERT(left[x], x)
+	left[x] = y
+else
+	y = AVL-INSERT(right[x], x)
+	right[x] = y
+	parent[y] = x
+	height[x] = height[y] + 1
+	x = BALANCE(x)
+
+return x
+\stopCLRS
+\stopANSWER
+
+\startitem%d
+證明：在一棵 n 個節點的 AVL 樹上 \ALGO{AVL-INSERT} 操作需花費 \m{O(\lg n)} 時間，
+且執行 \m{O(1)} 次旋轉。
+\stopitem
+\startANSWER
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+%p13-4
+\startPROBLEM
+（treap 樹）
+如果將一個含 n 個元素的集合插入到一棵二叉搜索樹中，
+所得到的樹可能會相當不平衡，
+從而導致查找事件很長。
+然而從 12.4 節中可知，
+隨機構造二叉搜索樹是趨向於平衡的。
+因此，一般來說，要爲一組固定的元素建立一棵平衡樹，
+可以採用的一種策略就是先隨機排列這些元素，然後按照排列的順序將他們插入到樹中。
+
+如果沒法同時得到所有的元素，應該怎樣處理呢？
+如果一次收到一個元素，
+是否仍然能用他們來隨機建立一棵二叉搜索樹？
+
+我們將通過考察一個數據結構來正面回答這個問題。
+一棵 treap 樹是一棵更改了節點排序方式的二叉搜索樹。
+圖 13-9 顯示了一個例子。
+通常，樹內的每個節點 x 都有一個關鍵字 x.key。
+另外，還要爲每個節點指定 x.priority，
+他是一個獨立選取的隨機數。
+假設所有的優先級都是不同的，
+而且所有的關鍵字也是不同的。
+在 treap 樹中，所有節點的關鍵字排列順序遵循二叉搜索樹的性質，
+且優先級遵循最小堆順序性質：
+\startigBase[2]
+\item 如果 v 是 u 的左孩子，則 v.key < u.key。
+\item 如果 v 是 u 的右孩子，則 v.key > u.key。
+\item 如果 v 是 u 的孩子，則 v.priority > u.priority。
+\stopigBase
+（這兩個性質的結合就是這種樹被稱爲“treap”樹的原因：
+他同時具有二叉搜索樹和堆的特徵）
+
+用以下方式考慮 treap 樹是會有幫助的。
+假設將已有相應關鍵字的節點 \m{x_1}、 \m{x_2}、 \m{\ldots}、 \m{x_n} 插入到一棵 treap 樹內。
+通過將這些節點以他們的優先級（隨機選取的）順序插入一棵正常的二叉搜索樹形成一棵 treap 樹，
+即 \m{x_i.priority < x_j.priority} 表示 \m{x_i} 在 \m{x_j} 之前被插入。
+
+\startigBase[a]
+\startitem%a
+證明：給定一個已有相應關鍵字和優先級（互異）的節點  \m{x_1}、 \m{x_2}、 \m{\ldots}、 \m{x_n} 組成的集合，
+存在唯一的一棵 treap 樹與這些節點相關聯。
+\stopitem
+\startANSWER
+首先，根節點是唯一的，是優先級最小的那個節點。
+剩下的節點分成了左右兩棵子樹。
+子樹的根節點時子樹中優先級最小的那個節點。
+以此類推，每個節點的位置都是固定的。因此所對應的 treap 樹是唯一的。
+\stopANSWER
+
+\startitem%b
+證明： treap 樹的期望高度是 \m{\Theta(\lg n)}，
+因此在 treap 樹內查找一個值所花的時間爲 \m{\Theta(\lg n)}。
+讓我們看看如何將一個新的節點插入到一個已存在的 treap 樹中。
+要做的第一件事就是將一個隨機的優先級賦予這個新節點。
+然後調用稱爲 \ALGO{TREAT-INSERT} 的插入算法，
+其操作如圖 13-10 所示。
+\stopitem
+\startANSWER
+我們直到隨機構建的二叉樹，其高度期望值爲 \m{O(\lg n)}。
+ treap 樹與通過按優先級升序插入 n 個節點所構成的 BST 是一樣的。
+如果優先級時隨機指定的，則優先級所有排列的可能性相同。
+因此 treap 樹高度的期望值與隨機構建的 BST 高度的期望值相同，
+均是 \m{O(\lg n)}。
+\stopANSWER
+
+\startitem%c
+解釋 \ALGO{TREAP-INSERT} 是如何工作的。
+說明其思想並給出僞代碼。
+（\hint 執行通常的二叉搜索樹插入過程，然後做旋轉來恢復最小堆順序的性質）
+\stopitem
+\startANSWER
+我們調用 \ALGO{BST-INSERT} 將新節點 x 插入 treap。
+接着我們來看 x 的父節點。
+如果 x 的優先級比其父節點的優先級高，
+我們根據 x 是左孩子還是右孩子來進行旋轉。
+一級一級往上，直到到達根節點。
+
+\CLRSH{TREAP-INSERT(T, x, priority)}
+\startCLRS
+BST-INSERT(T, x)
+while x.parent != NIL && x.priority < x.parent.priority
+	if x.parent.left == x
+		RIGHT-ROTATE(T, x.parent)
+	else
+		LEFT-ROTATE(T, x.parent)
+\stopCLRS
+\stopANSWER
+
+\startitem%d
+證明： \ALGO{TREAP-INSERT} 的期望運行時間是 \m{\Theta(\lg n)}。
+\stopitem
+\startANSWER
+\ALGO{TREAP-INSERT} 首先執行 \ALGO{BST-INSERT}，所需時間爲 \m{\Theta(h)}。
+然後沿着路徑往根節點前進，並保持最小堆的性質，
+所花時間爲 \m{\Theta(h)}，因爲我們所到達的每個節點最多秩序一次旋轉。
+所以 \ALGO{TREAP-INSERT} 的期望運行時間爲 \m{\Theta(h) = \Theta(\lg n)}。
+\stopANSWER
+
+\ALGO{TREAP-INSERT} 先執行一次查找，然後做一系列旋轉。
+雖然這兩種操作的期望運行時間相同，但其實際代價不同。
+查找操作會從 treap 樹中讀取信息而不做修改。
+相反，旋轉操作會改變 treap 樹內的父節點和子節點的指針。
+在大部分的計算機上，讀取操作要比寫入操作快很多。
+所以我們希望 \ALGO{TREAP-INSERT} 執行少量的旋轉。
+後面將說明所執行旋轉的期望次數有一個常數界。
+
+爲此，需要做一些定義，如果 13-11 所示。
+一棵二叉搜索樹 T 的{\EMP 左脊柱（left spine）}是從根節點到最小關鍵字節點的簡單路徑。
+換句話說，左脊柱是從根節點開始只包含左邊緣的簡單路徑。
+對稱地， T 的{\EMP 右脊柱（left spine）}是從根節點開始只包含右邊緣的簡單路徑。
+一條脊柱的長度是他包含的節點數目。
+
+\startitem%e
+考慮利用 \ALGO{TREAP-INSERT} 插入節點 x 後的 treap T。
+設 C 爲 x 左子樹的右脊柱的長度， D 爲 x 右子樹的左脊柱的長度。
+證明：在插入 x 期間所執行的旋轉總次數等於 \m{C+D}。
+現在來計算 C 和 D 的期望值。
+不失一般性，假設關鍵字爲 1、 2、 …、 n，因爲只是將他們兩兩比較。
+\stopitem
+\startANSWER
+剛調用完 \ALGO{TREAP-INSERT}， x 沒有孩子， \m{C+D=0}。
+每次在 x 的父節點 y 上執行左旋， x 的右孩子保持不變。
+ x 的左孩子變成 y， x 之前的左子樹變成 y 的右子樹。
+換句話說，我們給集合 \m{C+D} 添加新節點， x 會向根節點上升，
+ y 永遠在 x 左子樹的右脊柱上。
+右旋類似。
+所以旋轉的總次數爲 \m{C+D}。
+\stopANSWER
+
+對 treap T 中的節點 x 和 y，其中 \m{y\ne x}，
+設 \m{k=x.key} 以及 \m{i=y.key}。
+定義指示器隨機變量：
+\startformula
+X_{ik} = I\{\text{ \m{y} 在 \m{x} 的左子樹的右脊柱中}\}
+\stopformula
+
+\startitem%f
+證明：當且僅當滿足下列條件時， \m{X_{ik}=1}：
+\m{y.priority > x.priority}、 \m{y.key < x.key}，
+且對於每個滿足 \m{y.key < z.key < x.key} 的 \m{z}，有 \m{y.priority < z.priority}。
+\stopitem
+\startANSWER
+首先，假設 \m{X_{ik} = 1}。
+由最小堆性質可知， y 是 x 的後裔，才有 \m{y.priority < x.priority}。
+由 BST 屬性可知， y 在 x 的左子樹中，才有 \m{y.key < x.key}。
+最後，考慮任一節點 z 滿足 \m{y.key < z.key < x.key}，
+以中序遍歷 treap。
+打印出 y 後，我們會打印 y 的右子樹，而 x 的左子樹已經打印完了，
+因爲 y 位於 x 左子樹的右脊柱上。
+因此，在 y 之後， x 之前打印的節點均位於 y 的右子樹中；
+ z 一定時在 y 的右子樹中。
+
+然後，我們假設三個性質保持不變，並證明 \m{X_{ik} = 1}。
+首先考慮 y 在 x 的左子樹中，但不在此子樹的右脊柱上的可能性。
+在此脊柱上存在節點 z，y 在 z 的左脊柱上。
+ z 滿足 \m{y.key < z.key < x.key}，
+但是 \m{z.priority < y.priority} 不滿足第三個性質。
+顯然 y 不能在 x 的右子樹中，否則違反了第二個性質。
+且 x 不能時 y 的後裔，否則會違反第一個性質。
+假定 x 和 y 不是彼此的後裔， 而 z 是他們共同的祖先。
+則 \m{y.key < z.key < x.key}，但是 \m{z.priority < y.priority}，
+違反了第三個性質。
+剩下的唯一可能就是 y 在 x 左子樹的右脊柱上，即 \m{X_{ik} = 1}。
+\stopANSWER
+
+\startitem%g
+證明：
+\startformula
+\Pr\{X_{ik}=1\} = \frac{(k-i-1)!}{(k-i+1)!} = \frac{1}{(k-i+1)(k-i)}
+\stopformula
+\stopitem
+\startANSWER
+假定 \m{k>1}， \m{\Pr\{X_{ik} = 1\}} 是滿足（f）中所有條件的概率。
+考慮關鍵字爲 \m{i}、 \m{i+1}、 \m{\ldots}、 \m{k} 的所有元素。
+共有 \m{k-i+1} 個元素。其優先級的順序隨機。
+共有 \m{(k-i+1)} 種可能的排列（且概率相同）。
+爲滿足條件，需要對於所有 \m{z\in i+1, i+2, \ldots, k-1}，
+都有 \m{z.priority > y.priority > x.priority}。
+ x 和 y 的優先級是剩餘元素中最小的兩個，剩餘元素排列方式有 \m{(k-i-1)!} 種。
+\stopANSWER
+
+\startitem%h
+證明：
+\startformula
+E[C] = \sum_{j=1}^{k-1}\frac{1}{j(j+1)} = 1 - \frac{1}{k}
+\stopformula
+\stopitem
+\startANSWER
+\startformula\startmathalignment
+\NC E[C] \NC = \sum_{j=1}^{k-1}\frac{1}{j(j+1)} \NR
+\NC      \NC = \sum_{j=1}^{k-1}(\frac{1}{j} - \frac{1}{j+1}) \NR
+\NC      \NC = 1 - \frac{1}{k} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startitem%i
+利用對稱性證明：
+\startformula
+E[D] = 1 - \frac{1}{n-k+1}
+\stopformula
+\stopitem
+\startANSWER
+x 左子樹的右脊柱，期望長度取決於元素 x 的秩 k。
+右子樹的左脊柱，期望長度取決於 x 的反向秩 \m{n-k+1}。
+因此， \m{E[D] = 1 - 1/(n-k+1)}。
+\stopANSWER
+
+\startitem%j
+得出如下結論：
+當在一棵 treap 樹中插入一個節點時，
+執行旋轉的期望次數小於 2。
+\stopitem
+\startANSWER
+\startformula
+E[C+D] = E[C] + E[D] = 2 - \frac{1}{k} - \frac{1}{n-k+1} \le 2
+\stopformula
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+\stopsubject%Problems
+
+\stopchapter
+\stopcomponent

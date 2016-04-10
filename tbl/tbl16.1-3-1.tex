@@ -1,0 +1,25 @@
+
+\startxtable[
+    option=max,
+    align={middle,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,bottomframe=on]
+\startxrow[foregroundstyle=bold,]
+  \xcell[rightframe=on]{\m{i}}\processcommalist[1, 2, 3]\xcell
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off]
+\startxrow \xcell[rightframe=on]{\m{s_i}}   \processcommalist[0,2,3]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{\m{f_i}}   \processcommalist[3,4,6]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{\m{hold_i}}\processcommalist[3,2,3]\xcell \stopxrow
+\stopxtablebody
+
+\stopxtable

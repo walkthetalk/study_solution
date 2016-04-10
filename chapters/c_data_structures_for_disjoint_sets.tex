@@ -1,0 +1,534 @@
+\startcomponent c_data_structures_for_disjoint_sets
+
+\startchapter[
+  title={Data Structures for Disjoint Sets},
+]
+
+\startsection[
+  title={Disjoint-set operations},
+  reference=section:disjoint_set_op,
+]
+
+%e21.1-1
+\startEXERCISE
+假設 \ALGO{CONNECTED-COMPONENTS} 作用於一個無向圖 \m{G=(V,E)}，
+這裏 \m{V=\{a,b,c,d,e,f,g,h,i,j,k\}}，
+且 \m{E} 中的邊處理順序如下：
+ \m{(d,i)}， \m{(f,k)}， \m{(g,i)}， \m{(b,g)}， \m{(a,h)}， \m{(i,j)}， \m{(d,k)}， \m{(b,j)}， \m{(d,f)}， \m{(g,j)}， \m{(a,e)}。
+請列出每次執行完第 3～5 行後各連通分量的頂點。
+\stopEXERCISE
+
+\startANSWER
+\input{tbl/tbl21.1-1}
+\stopANSWER
+
+%e21.1-2
+\startEXERCISE
+證明： \ALGO{CONNECTED-COMPONENTS} 處理完所有的邊後，
+兩個頂點在相同的連通分量中當且僅當他們在同一個集合中。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.1-3
+\startEXERCISE
+在 \ALGO{CONNECTED-COMPONENTS} 作用於一個有 \m{k} 個連通分量的無向圖 \m{G=(V,E)} 的過程中，
+ \ALGO{FIND-SET} 需要調用多少次？
+ \ALGO{UNION} 需要調用多少次？
+用 \m{|V|}、 \m{|E|} 和 \m{k} 來表示你的答案。
+\stopEXERCISE
+
+\startANSWER
+\ALGO{FIND-SET} 需要調用 \m{2|E|} 次。
+
+\ALGO{UNION} 需要調用 \m{|V|-k} 次。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Linked-list representation of disjoint sets},
+]
+
+%e21.2-1
+\startEXERCISE
+使用鏈表表示和加權合併啓發式策略，
+寫出 \ALGO{MAKE-SET}、 \ALGO{FIND-SET} 和 \ALGO{UNION} 操作的僞碼。
+並指定你在集合對象和表對象中所使用的對象。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.2-2
+\startEXERCISE[exercise:21.2-2]
+給出下面程序的結果數據結構，
+並回答該程序中 \ALGO{FIND-SET} 操作返回的答案。
+這裏使用加權合併啓發式策略的鏈表表示。
+
+\startCLRS
+for i=1 to 16
+	MAKE-SET(x[i])
+for i=1 to 15 by 2
+	UNION(x[i], x[i+1])
+for i=1 to 13 by 4
+	UNION(x[i], x[i+2])
+UNION(x[1], x[5])
+UNION(x[11], x[13])
+UNION(x[1], x[10])
+FIND-SET(x[2])
+FIND-SET(x[9])
+\stopCLRS
+
+假定如果包含 \m{x_i} 和 \m{x_j} 的集合有相同的大小，
+則 \ALGO{UNION(x_i, x_j)} 表示將 \m{x_j} 所在的表鏈接到 \m{x_i} 所在的表後。
+\stopEXERCISE
+
+\startANSWER
+兩個 \ALGO{FIND-SET} 返回的都是第一個集合。
+\stopANSWER
+
+%e21.2-3
+\startEXERCISE
+對定理 21.1 的整體證明進行改造，
+得到使用鏈表表示和加權合併啓發式策略下的 \ALGO{MAKE-SET} 和 \ALGO{FIND-SET} 的攤還時間上界爲 \m{O(1)}，
+以及 \ALGO{UNION} 的攤還時間上界爲 \m{O(\lg n)}。
+\stopEXERCISE
+
+\startANSWER
+\ALGO{MAKE-SET} 只是初始化一個空集合， \ALGO{FIND-SET} 只是返回節點的父指針，
+兩者攤還時間上界爲 \m{O(1)}。
+
+\ALGO{UNION} 的總時間爲 \m{O(n\lg n)}，因此其攤還時間上界爲 \m{O(\lg n)}。
+\stopANSWER
+
+%e21.2-4
+\startEXERCISE
+請給出圖 21-3 所示操作序列的一個運行時間的漸進緊確界，
+假定使用鏈表表示和加權合併啓發式策略。
+附圖 21-3：
+\input{tbl/tbl21-3}
+\stopEXERCISE
+
+\startANSWER
+\m{O(n)}
+\stopANSWER
+
+%e21.2-5
+\startEXERCISE
+Gompers 教授猜想也許有可能在每個集合對象中僅使用一個指針，
+而不是兩個指針（\m{head} 和 \m{tail}），
+同時仍然保留每個鏈表元素的 2 個指針。
+請說明教授的猜想是有道理的，
+並通過描述如何使用一個鏈表來表示每個集合，
+使得每個操作與本章中描述的操作有相同的運行時間，來加以解釋。
+同時描述這些操作是如何工作的。
+你的方法應該允許使用加權合併啓發式策略，
+並與本節所描述的有相同效果。
+（\hint 使用一個鏈表的尾作爲集合的代表。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.2-6
+\startEXERCISE
+如何對 \ALGO{UNION} 過程做一個簡單的改動，
+在採用鏈表表示中拿掉讓集合對象的 \m{tail} 指針總是指向每個表的最後一個對象的要求。
+無論是否使用加權合併啓發式策略，
+這個修改不應該改變 \ALGO{UNION} 過程的漸進運行時間。
+（\hint 而不是把一個表連接到另一個表後面，將他們拼接在一起。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Disjoint-set forests},
+  reference=section:disjoint_set_forests,
+]
+
+%e21.3-1
+\startEXERCISE
+用按秩合併與路徑壓縮啓發式策略的不相交集合森林重做\refexercise{21.2-2}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.3-2
+\startEXERCISE
+寫出使用路徑壓縮的 \ALGO{FIND-SET} 過程的非遞歸版本。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{FIND-SET(x)}
+\startCLRS
+y = x
+z = x.p
+while y != z
+	tmp = z.p
+	z.p = y
+	y = z
+	z = tmp
+ret = y
+y = z.p
+while z != x
+	tmp = z.p
+	z.p = ret
+	z = tmp
+x.p = ret
+return ret
+\stopCLRS
+\stopANSWER
+
+%e21.3-3
+\startEXERCISE
+給出一個包含 \m{m} 個 \ALGO{MAKE-SET}、 \ALGO{UNION} 和 \ALGO{FIND-SET} 操作的序列
+（其中有 \m{n} 個是 \ALGO{MAKE-SET} 操作），
+當僅使用按秩合併時，需要 \m{\Omega(m\lg n)} 的時間。
+\stopEXERCISE
+
+\startANSWER
+提示： \ALGO{UNION} 操作的結果是一棵高度爲 \m{\lg n} 的樹。
+\stopANSWER
+
+%e21.3-4
+\startEXERCISE
+假設想要增加一個 \ALGO{PRINT-SET(x)} 操作，
+他是對於給定的節點 \m{x} 打印出 \m{x} 所在集合的所有成員，順序可以任意。
+如何對一棵不相交集合森林的每個節點僅增加一個屬性，
+使得 \ALGO{PRINT-SET(x)} 所花費的時間同 \m{x} 所在集合元素的個數呈線性關係，
+並且其他操作的漸進運行時間不改變。
+這裏假設我們可在 \m{O(1)} 時間內打印除集合的每個成員。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.3-5
+\startEXERCISE\DIFFICULT
+證明：任何具有 \m{m} 個 \ALGO{MAKE-SET}、 \ALGO{FIND-SET} 和 \ALGO{LINK} 操作的序列，
+這裏所有的 \ALGO{LINK} 操作都出現在 \ALGO{FIND-SET} 操作之前，
+如果同時使用路徑壓縮和按秩合併啓發式策略，
+則這些操作只需 \m{O(m)} 的時間。
+在同樣情況下，如果只使用路徑壓縮啓發式策略，又會如何？
+\stopEXERCISE
+
+\startANSWER
+\m{n-1} 個 \ALGO{UNION} 需要 \m{O(n)} 時間，會創建 \m{n-1} 條邊。
+ \ALGO{FIND-SET} 會壓縮到根節點路徑上的所有邊。
+所以 \m{m} 個 \ALGO{FIND-SET} 需要的時間不會多於 \m{O(m+n)}。
+只使用路徑壓縮，結果也一樣。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Analysis of union by rank with path compression},
+]
+
+%e21.4-1
+\startEXERCISE
+證明引理 21.4。附引理 21.4：
+
+對於所有節點 \m{x}，有 \m{x.rank\le x.p.rank}，如果 \m{x\ne x.p}，
+則此式是嚴格不等式。 \m{x.rank} 初值爲 0，並且隨時間而增加，直到 \m{x\ne x.p}；
+從此以後， \m{x.rank} 的值就不再發生變化。
+ \m{x.p.rank} 的值隨時間單調遞增。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.4-2
+\startEXERCISE[exercise:21.4-2]
+證明每個節點的秩最多爲 \m{\lfloor \lg n\rfloor}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.4-3
+\startEXERCISE
+根據\refexercise{21.4-2} 的結論，對於每個節點 \m{x}，需要多少位（bit）來存儲 \m{x.rank}？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.4-4
+\startEXERCISE
+利用\refexercise{21.4-2} 請給出一個簡單的證明，
+證明在一個不相交集合森林上使用按秩合併策略而不使用路徑壓縮策略的運行時間爲 \m{O(m\lg n)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.4-5
+\startEXERCISE
+Dante 教授認爲，因爲各節點的秩在一條指向根的簡單路徑上是嚴格遞增的，
+所以節點的級沿着路徑也一定是單調遞增的。
+換句話說，如果 \m{x.rank > 0}，
+並且 \m{x.p} 不是一個根，那麼 \m{level(x)\le level(x.p)}。
+請問這位教授的想法正確嗎？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.4-6
+\startEXERCISE\DIFFICULT
+考慮函數 \m{\alpha'(n)=\min\{k:A_k(1)\ge\lg(n+1)\}}。
+證明：
+對於 \m{n} 的所有實際值，有 \m{\alpha'(n)\le 3}，
+並利用 \refexercise{21.4-2}，
+說明如何修改勢函數的參數來證明對於一組 \m{m} 個 \ALGO{MAKE-SET}、 \ALGO{UNION} 和 \ALGO{FIND-SET} 操作的序列
+（其中 \m{n} 個是 \ALGO{MAKE-SET} 操作），
+我們能在一個不相交集合森林上使用按秩合併與路徑壓縮在最壞情況時間 \m{O(m\alpha'(n))} 內處理完。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection
+
+\startsubject[
+  title={Problems},
+]
+
+%p21-1
+\startPROBLEM
+（Off-line minimum）
+{\EMP 脫機最小值問題}（off-line minimum problem）是使用 \ALGO{INSERT} 和 \ALGO{EXTRACT-MIN} 操作
+維護一個元素取自域 \m{\{1,2,\ldots,n\}} 的動態集合 \m{T}。
+給定一組包含 \m{n} 個 \ALGO{INSERT} 和 \m{m} 個 \ALGO{EXTRACT-MIN} 的調用序列 \m{S}，
+其中屬於 \m{\{1,2,\ldots,n\}} 中的每個關鍵字只被插入一次。
+我們希望確定每個 \ALGO{EXTRACT-MIN} 調用返回的是哪個關鍵字。
+特別地，希望對一個 \m{extracted[1..m](i=1,2,\ldots,m)} 數組進行填充，
+其中 \m{extracted[i]} 是由第 \m{i} 次 \ALGO{EXTRACT-MIN} 調用所返回的關鍵字。
+該問題是“脫機的”，其含義就是在確定任何返回的關鍵字之前處理真個序列 \m{S}。
+
+\startigBase[a]\startitem
+在下面脫機最小值問題的實例中，每個操作 \ALGO{INSERT(i)} 用一個 \m{i} 值來表示，
+並且每個 \ALGO{EXTRACT-MIN} 用字母 \m{E} 來表示：
+\startformula
+4,8,E,3,E,9,2,6,E,E,E,1,7,E,5
+\stopformula
+將正確的值填入 \m{extracted} 數組。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+爲了設計出解決此問題的算法，我們把序列 \m{S} 劃分成若干個同構的子序列，
+即如下表示 \m{S}：
+\startformula
+I_1,E,I_2,E,I_3,\ldots,I_m,E,I_{m+1}
+\stopformula
+這裏每個 \m{E} 代表單次 \ALGO{EXTRACT-MIN} 調用，
+並且每個 \m{I_j} 代表一個（可能爲空的） \ALGO{INSERT} 調用序列。
+對於每個子序列 \m{I_j}，
+開始時把由這些操作插入的關鍵字插入一個集合 \m{K_j}，
+如果 \m{I_j} 爲空，那麼他也爲空。然後執行下面的程序：
+
+\CLRSH{OFF-LINE-MINIMUM(m, n)}
+\startCLRS
+for i = 1 to n
+	determine j such that i in K[j]
+	if j != m + 1
+		extracted[j] = i
+		let l be the smallest value greater than j
+			for which set K[l] exists
+		K[l] = K[j] merge K[l], destroying K[j]
+return extracted
+\stopCLRS
+
+\startigBase[continue]\startitem
+證明：由 \ALGO{OFF-LINE-MINIMUM} 返回的數組 \m{extracted} 是正確的。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+描述如何用不相交集合數據結構來實現高效的 \ALGO{OFF-LINE-MINIMUM}。
+給出其最壞情況下運行時間的緊確界。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p21-2
+\startPROBLEM
+（Depth determination）
+在{\EMP 深度確定}（Depth determination）問題中，
+我們通過以下三個操作來維護一個有根樹的森林 \m{\cal{F} = \{T_i\}}：
+
+\ALGO{MAKE-TREE(v)}：創建一棵只包含唯一節點 \m{v} 的樹。
+
+\ALGO{FIND-DEPTH(v)}：返回節點 \m{v} 在樹中的深度。
+
+\ALGO{GRAFT(r, v)}：使得節點 \m{r} （假定他爲一棵樹的樹根）成爲節點 \m{v} 的孩子
+（假定他在另一棵樹中，但是他本身可能是、也可能不是一棵樹的根）
+
+\startigBase[a]\startitem
+假設採用類似於不相交集合森林的樹表示：
+ \m{v.p} 是節點 \m{v} 的父節點，
+除了 \m{v} 是根時 \m{v.p = v} 的這種情況。
+進一步假設，我們可以通過置 \m{r.p=v} 來實現 \ALGO{GRAFT(r,v)}，
+並且可以通過沿着查找路徑上升至根，
+返回一個除 \m{v} 以外的節點樹來實現 \ALGO{FIND-PATH(v)}。
+證明：一組 \m{m} 個 \ALGO{MAKE-TREE}、 \ALGO{FIND-DEPTH} 和 \ALGO{GRAFT} 操作
+序列的最壞情況運行時間是 \m{\Theta(m^2)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+通過使用按秩合併與路徑壓縮啓發式策略，
+能減少最壞情況運行時間。
+我們使用不相交集合森林 \m{{\cal{S}} = \{S_i\}}，
+其中每個集合 \m{S_i} （他本身是一棵樹）對應於一棵森林 \m{\cal{F}} 中的樹 \m{T_i}。
+然而，集合 \m{S_i} 中的樹結構沒有必要對應於 \m{T_i} 的樹結構。
+實際上， \m{S_i} 的實現並沒有記錄準確的父子關係，
+但他允許我們確定 \m{T_i} 中任意節點的深度。
+
+關鍵的思想是維護每個節點 \m{v} 的一個“僞距離” \m{v.d}，
+他倍定義爲使得沿着從 \m{v} 到他的集合 \m{S_i} 的根的簡單路徑上的僞距離之和等於 \m{T_i} 中節點 \m{v} 的深度。
+也就是說，如果從 \m{v} 到他在 \m{S_i} 的根的簡單路徑爲 \m{v_0,v_1,\ldots,v_k}（這裏 \m{v_0=v} 並且 \m{v_k} 是 \m{S_i} 的根），
+那麼節點 \m{v} 在樹 \m{T_i} 上的深度爲 \m{\sum_{j=0}^{k}v_j\cdot d}。
+
+\startigBase[continue]\startitem
+給出 \ALGO{MAKE-TREE} 的一種實現。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明應如何修改 \ALGO{FIND-SET} 來實現 \ALGO{FIND-DEPTH}。
+你的實現要採用路徑壓縮，
+並且他的運行時間應與查找路徑的長度呈線性關係。
+試確保你的實現能正確地更新僞距離。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明如何實現 \ALGO{GRAFT(r,v)}，
+他通過修改 \ALGO{UNION} 和 \ALGO{LINK} 來合併包含 \m{r} 和 \m{v} 的集合。
+試確保你的實現能正確地更新僞距離。
+並注意到，
+集合 \m{S_i} 的根沒有必要是對應樹 \m{T_i} 的根。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+試給出一組 \m{m} 個 \ALGO{MAKE-TREE}、 \ALGO{FIND-DEPTH} 和 \ALGO{GRAFT} 操作的序列
+（其中 \m{n} 個是 \ALGO{MAKE-TREE} 操作）最壞情況運行時間的一個緊確界。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p21-3
+\startPROBLEM
+（Tarjan’s off-line least-common-ancestors algorithm）
+在一棵有根樹 \m{T} 中，
+兩個節點 \m{u} 和 \m{v} 的{\EMP 最小公共祖先}
+（leat common ancestor） \m{\omega} 是節點 \m{u} 和 \m{v} 的一個共同祖先，
+且他有最大的深度。
+在{\EMP 脫機最小公共祖先問題}（off-line least-common-ancestors problem）中，
+給定一棵有根樹 \m{T} 和一個在 \m{T} 中的無序節點對的任意集合 \m{P=\{\{u,v\}\}} ，
+我們希望確定 \m{P} 中每對的最小公共祖先。
+
+爲了解決脫機最小公共祖先問題，
+下面的過程通過對 \ALGO{LCA(T.root)} 的初始調用，
+來執行對 \m{T} 的樹遍歷。
+假設在執行遍歷之前，每個節點被着色爲白色。
+
+\CLRSH{LCA(u)}
+\startCLRS
+MAKE-SET(u)
+FIND-SET(u).ancestor = u
+for each child v of u in T
+	LCA(v)
+	UNION(u,v)
+	FIND-SET(u).ancestor = u
+u.color = BLACK
+for each node v such that {u,v} in P
+	if v.color = BLACK
+		print "The least common ancestor of "
+			u " and " v " is " FIND-SET(v).ancestor
+\stopCLRS
+
+\startigBase[a]\startitem
+證明：對每對 \m{\{u,v\}\in P}，第 10 行恰好只執行一次。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：在調用 \ALGO{LCA(u)} 時，不相交集合數據結構的集合數等於 \m{T} 中 \m{u} 的深度。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：對於每對 \m{\{u,v\}\in P}， \ALGO{LCA} 能正確地輸出 \m{u} 和 \m{v} 的最小公共祖先。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+假設我們使用\refsection{disjoint_set_forests} 中的不相交集合數據結構實現，試分析 \ALGO{LCA} 的運行時間。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+\stopsubject%Problems
+
+\stopchapter
+\stopcomponent

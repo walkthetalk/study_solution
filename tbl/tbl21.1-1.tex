@@ -1,0 +1,42 @@
+
+\startxtable[
+    option=max,
+    align={middle,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,bottomframe=on]
+\startxrow[foregroundstyle=bold,]
+  \xcell[rightframe=on]{}\xcell{}
+\stopxrow
+\stopxtablehead
+
+\define[1]\MSET{%
+\ifx&#1&%
+\xcell{}%
+\else%
+\xcell[align={flushleft,lohi}]{\m{\{#1\}}}%
+\fi%
+}%
+
+% body
+\startxtablebody[frame=off]
+\startxrow \xcell[rightframe=on]{     }\processcommalist[a,      b,              c,d,      e,f,    g,h,i,j,k]\MSET \stopxrow
+\startxrow \xcell[rightframe=on]{(d,i)}\processcommalist[a,      b,              c,{d,i},  e,f,    g,h, ,j,k]\MSET \stopxrow
+\startxrow \xcell[rightframe=on]{(f,k)}\processcommalist[a,      b,              c,{d,i},  e,{f,k},g,h, ,j, ]\MSET \stopxrow
+\startxrow \xcell[rightframe=on]{(g,i)}\processcommalist[a,      b,              c,{d,g,i},e,{f,k},g,h, ,j, ]\MSET \stopxrow
+\startxrow \xcell[rightframe=on]{(b,g)}\processcommalist[a,      {b,d,g,i},      c,       ,e,{f,k}, ,h, ,j, ]\MSET \stopxrow
+\startxrow \xcell[rightframe=on]{(a,h)}\processcommalist[{a,h},  {b,d,g,i},      c,       ,e,{f,k}, , , ,j, ]\MSET \stopxrow
+\startxrow \xcell[rightframe=on]{(i,j)}\processcommalist[{a,h},  {b,d,g,i,j},    c,       ,e,{f,k}, , , , , ]\MSET \stopxrow
+\startxrow \xcell[rightframe=on]{(d,k)}\processcommalist[{a,h},  {b,d,f,g,i,j,k},c,       ,e,     , , , , , ]\MSET \stopxrow
+\startxrow \xcell[rightframe=on]{(b,j)}\processcommalist[{a,h},  {b,d,f,g,i,j,k},c,       ,e,     , , , , , ]\MSET \stopxrow
+\startxrow \xcell[rightframe=on]{(d,f)}\processcommalist[{a,h},  {b,d,f,g,i,j,k},c,       ,e,     , , , , , ]\MSET \stopxrow
+\startxrow \xcell[rightframe=on]{(g,j)}\processcommalist[{a,h},  {b,d,f,g,i,j,k},c,       ,e,     , , , , , ]\MSET \stopxrow
+\startxrow \xcell[rightframe=on]{(a,e)}\processcommalist[{a,e,h},{b,d,f,g,i,j,k},c,       , ,     , , , , , ]\MSET \stopxrow
+\stopxtablebody
+
+\stopxtable

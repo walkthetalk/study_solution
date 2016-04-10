@@ -1,0 +1,727 @@
+\startcomponent c_growth_of_functions
+
+\chapter{Growth of Functions}
+
+\section{Asymptotic notation}
+
+\startEXERCISE
+證明 \m{\max(f(n),g(n)) = \Theta(f(n)+g(n))}。
+\stopEXERCISE
+\startANSWER
+由於單調遞增，則：
+\startformula\startalign[n=3]
+\NC \exists n_1, n_2: \NC f(n) \geq 0 \NC \quad\text{若 \m{n > n_1}；} \NR
+\NC                   \NC g(n) \geq 0 \NC \quad\text{若 \m{n > n_2}。} \NR
+\stopalign\stopformula
+
+設 \m{n_0 = \max(n_1,n_2)}，對於 \m{n > n_0}：
+\startformula\startalign
+\NC f(n) \NC \leq \max(f(n), g(n)) \NR
+\NC g(n) \NC \leq \max(f(n), g(n)) \NR
+\NC (f(n) + g(n))/2 \NC \leq \max(f(n),g(n)) \NR
+\NC \max(f(n), g(n)) \NC \leq f(n) + g(n) \NR
+\stopalign\stopformula
+
+對於最後兩個不等式，有：
+\startformula
+0 \leq \frac{1}{2}(f(n)+g(n)) \leq \max(f(n),g(n)) \leq f(n) + g(n)\text{，若 \m{n > n_0}。}
+\stopformula
+
+這與 \m{\Theta(f(n)+g(n))} 的定義一致，其中 \m{c_1 = 1/2}， \m{c_2=1}。
+
+\stopANSWER
+
+\startEXERCISE
+證明：對於任意實數常量 \m{a} 和 \m{b}，其中 \m{b>0}，有：
+\startformula
+(n+a)^b = \Theta(n^b)
+\stopformula
+\stopEXERCISE
+\startANSWER
+\startformula
+(n + a)^b = \binom{n}{0}n^b + \binom{n}{1}n^{b-1}b + \cdots + \binom{n}{0}a^b
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+解釋一下爲什麼說“算法 \m{A} 的運行時間至少是 \m{O(n^2)}”沒有任何意義。
+\stopEXERCISE
+\startANSWER
+\m{O} 是指上界，“至少”是指下界。
+\stopANSWER
+
+\startEXERCISE
+\m{2^{n+1} = O(2^n)}？ \m{2^{2n} = O(2^n)}？
+\stopEXERCISE
+\startANSWER
+\m{2^{n+1} = O(2^n)}。
+
+\m{2^{2n} \neq O(2^n)}，因爲\m{\nexists c: 2^n \cdot 2^n \leq c 2^n}。
+\stopANSWER
+
+\startEXERCISE
+證明定理 3.1。
+
+當且僅當 \m{f(n) = O(g(n))} 並且 \m{f(n) = \Omega(g(n))} 時，才有 \m{f(n) = \Theta(g(n))}。
+\stopEXERCISE
+\startANSWER
+如果 \m{f(n) = \Theta(g(n))}，則：
+\startformula
+0 \leq c_1g(n) \leq f(n) \leq c_2g(n) \quad \text{若} n > n_0
+\stopformula
+將兩個常數 \m{c_1} 和 \m{c_2} 代入 \m{O} 和 \m{\Omega} 的定義中即得：
+\startformula\startalign
+\NC f(n) \NC = O(g(n)) \NR
+\NC f(n) \NC = \Omega(g(n)) \NR
+\stopalign\stopformula
+
+如果 \m{f(n) = O(g(n))} 並且 \m{f(n) = \Omega(g(n))}，則：
+\startformula\startalign
+0 \leq c_3g(n) \leq f(n) \NC \quad \text{若} n \geq n_1 \NR
+0 \leq f(n) \leq c_4g(n) \NC \quad \text{若} n \geq n_2 \NR
+\stopalign\stopformula
+設 \m{n_3=\max(n_1,n_2)}，合並兩個不等式，得：
+\startformula
+0 \leq c_3g(n) \leq f(n) \leq c_4g(n) \quad \text{若} n > n_3
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明當且僅當算法的最壞情況運行時間爲 \m{O(g(n))}，且最好情況運行時間爲 \m{\Omega(g(n))} 時，
+其運行時間才是 \m{\Theta(g(n))}。
+\stopEXERCISE
+\startANSWER
+設最壞情況運行時間爲 \m{T_w}，最好情況運行時間爲 \m{T_b}，則：
+\startformula\startalign
+\NC 0 \leq c_1g(n) \leq T_b(n) \NC \quad \text{若} n > n_b \NR
+\NC 0 \leq T_w(n) \leq c_2g(n) \NC \quad \text{若} n > n_w \NR
+\stopalign\stopformula
+
+結合兩式，有：
+\startformula
+0 \leq c_1g(n) \leq T_b(n) \leq T_w(n) \leq c_2g(n)
+   \quad \text{若} n > \max(n_b, n_w)
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明集合 \m{o(g(n)) \cap \omega(g(n))} 爲空。
+\stopEXERCISE
+\startANSWER
+對於常量 \m{c > 0}：
+\startformula\startalign
+\NC \exists n_1 > 0 : \NC 0 \leq f(n) < cg(n) \NR
+\NC \exists n_2 > 0 : \NC 0 \leq cg(n) < f(n) \NR
+\stopalign\stopformula
+
+如果 \m{n_0 = \max(n_1,n_2)}，則：
+\startformula
+f(n) < cg(n) < f(n)
+\stopformula
+顯然此不等式不成立，不存在這樣的函式 \m{f(n)}。
+\stopANSWER
+
+\startEXERCISE
+將參數 \m{n} 推廣爲兩個參數 \m{m} 和 \m{n}，
+存在正常數 \m{c}、 \m{n_0} 和 \m{m_0}，
+使得對於所有的 \m{n\geq n_0} 或 \m{m\geq m_0}，
+有 \m{0 \leq f(n,m) \leq cg(n,m)}，即 \m{O(g(n,m)) = f(n,m)}。
+給出 \m{\Omega(g(n,m))} 和 \m{\Theta(g(n,m))} 的定義。
+\stopEXERCISE
+\startANSWER
+存在正常數 \m{c}、 \m{n_0} 和 \m{m_0}，
+使得對於所有的 \m{n\geq n_0} 或 \m{m\geq m_0}，
+有 \m{0 \leq cg(n,m) \leq f(n,m)}，即 \m{\Omega(g(n,m)) = f(n,m)}。
+
+存在正常數 \m{c_1}、 \m{c_2}、 \m{n_0} 和 \m{m_0}，
+使得對於所有的 \m{n\geq n_0} 或 \m{m\geq m_0}，
+有 \m{0 \leq c_1g(n,m) \leq f(n,m) \leq c_2g(n,m)}，即 \m{\Theta(g(n,m)) = f(n,m)}。
+\stopANSWER
+
+\section[section:notationfunction]{Standard notations and common functions}
+
+\startEXERCISE
+如果 \m{f(n)} 和 \m{g(n)} 均單調遞增，證明函式 \m{f(n) + g(n)} 和 \m{f(g(n))} 也都單調遞增。
+另外，如果 \m{f(n)} 和 \m{g(n)} 均非負，則 \m{f(n)\cdot g(n)} 也單調遞增。
+\stopEXERCISE
+\startANSWER
+\m{f(n)} 和 \m{g(n)} 均單調遞增，則：
+\startformula\startalign
+ \NC f(m) \leq f(n) \NC \quad \text{若 } m \leq n \NR
+ \NC g(m) \leq f(n) \NC \quad \text{若 } m \leq n \NR
+\stopalign\stopformula
+兩式相加得：
+\startformula
+f(m) + g(m) \leq f(n) + g(n)
+\stopformula
+即 \m{f(n) + g(n)} 單調遞增。
+
+而
+\startformula\startalign
+ \NC m \NC \leq n \NR
+\NC g(m) \NC \leq g(n) \NR
+\NC f(g(m)) \NC \leq f(g(n)) \NR
+\stopalign\stopformula
+，所以 \m{f(g(n))} 也單調遞增。
+
+由於 \m{f(n)} 和 \m{g(n)} 均非負，兩式直接相乘：
+\startformula
+f(m) \cdot g(m) \leq f(n) \cdot g(n)
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明 \m{a^{\log_bc} = c^{\log_ba}}。
+\stopEXERCISE
+\startANSWER
+\startformula
+a^{\log_bc}
+= a^{\frac{\log_ac}{\log_ab}}
+= (a^{\log_ac})^{\frac{1}{\log_ab}}
+= c^{\log_ba}
+\stopformula
+\stopANSWER
+
+\startEXERCISE[exercise:lg_n_fac]
+證明：
+\startformula\startalign
+ \NC n! \NC = o(n^n) \NR
+ \NC n! \NC = \omega(2^n) \NR
+ \NC \lg(n!) \NC = \Theta(n\lg n) \NR
+\stopalign\stopformula
+\stopEXERCISE
+\startANSWER
+使用 {\em Stirling's approximation}：
+\startformula\startalign
+\NC \lg(n!) \NC= \lg(\sqrt{2\pi{n}} (\frac{n}{e})^n (1+\Theta(\frac{1}{n}))) \NR
+\NC         \NC= \lg\sqrt{2\pi{n}} + \lg(\frac{n}{e})^n + \lg(1+\Theta(\frac{1}{n})) \NR
+\NC         \NC= \Theta(\sqrt{n}) + n\lg{\frac{n}{e}} + \lg(\Theta(1) + \Theta(\frac{1}{n})) \NR
+\NC         \NC= \Theta(\sqrt{n}) + \Theta(n\lg{n}) + \Theta(\frac{1}{n}) \NR
+\NC         \NC= \Theta(n\lg{n}) \NR
+\stopalign\stopformula
+
+\startformula
+\forall n > 3:\quad
+  2^n = \underbrace{2 \cdot 2 \cdot \cdots \cdot 2}_{\text{n 次}}
+      < 1 \cdot 2 \cdot \cdots \cdot n
+      = n!
+      \quad\Rightarrow\quad n! = \omega(2^n)
+\stopformula
+
+\startformula
+\forall n > 1:\quad
+  n! = 1 \cdot 2 \cdot \cdots n
+     < \underbrace{n \cdot n \cdot \cdots \cdot n}_{\text{n 次}}
+     = n^n
+     \quad\Rightarrow\quad n! = o(n^n)
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+函式 \m{\lceil \lg{n} \rceil!} 多項式有界嗎？
+函式 \m{\lceil \lg{\lg{n}} \rceil!} 多項式有界嗎？
+\stopEXERCISE
+\startANSWER
+多項式有界的定義：
+\startformula
+ f(n) \leq c n^k
+\stopformula
+兩邊同時取對數：
+\startformula
+ \lg f(n) \leq c_1 k \lg n
+\stopformula
+即如果 \m{\lg f(n) = \Theta(\lg n)}，則函式 \m{f(n)} 多項式有界。
+
+設 \m{f(n) = \lceil \lg{n} \rceil!}， \m{m = \lceil \lg{n} \rceil}，由上個練習可得：
+\startformula\startalign
+ \NC \lg f(n) \NC = \lg \lceil\lg{n}\rceil ! \NR
+ \NC          \NC = \lg m! \NR
+ \NC          \NC = \Theta(m\lg m) \NR
+ \NC          \NC = \Theta(\lceil\lg n\rceil \lg \lceil \lg n\rceil) \NR
+ \NC          \NC \neq \Theta(\lg n) \NR
+\stopalign\stopformula
+所以 \m{\lceil \lg{n} \rceil!} {\EMP 不是}多項式有界的。
+
+對於另外一個，
+設 \m{f(n) = \lceil \lg{\lg{n}} \rceil!}， \m{p = \lceil \lg{\lg{n}} \rceil}，
+由上個練習可得：
+\startformula\startalign
+ \NC \lg f(n) \NC = \lg \lceil\lg{\lg{n}}\rceil ! \NR
+ \NC          \NC = \lg p! \NR
+ \NC          \NC = \Theta(p\lg p) \NR
+ \NC          \NC = \Theta(\lceil\lg\lg n\rceil \lg \lceil \lg\lg n\rceil) \NR
+ \NC          \NC = \Theta(\lg\lg n \lg\lg\lg n) \NR
+ \NC          \NC = o(\lg\lg n \lg\lg n) \NR
+ \NC          \NC = o(\lg^2\lg n) \NR
+ \NC          \NC = o(\lg n) \NR
+\stopalign\stopformula
+所以 \m{\lceil \lg\lg{n} \rceil!} {\EMP 是}多項式有界的。
+\stopANSWER
+
+\startEXERCISE
+\m{\lg(\lg^*n)} 和 \m{\lg^*(\lg n)} 那個更大？
+\stopEXERCISE
+\startANSWER
+後者：
+\startformula
+\lg^*(\lg{n}) = \lg^*n - 1 > \lg(\lg^*(n))
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明 \m{\phi} 及其共扼 \m{\hat \phi} 均滿足方程 \m{x^2 = x + 1}。
+\stopEXERCISE
+\startANSWER
+\startformula\startalign
+ \NC \phi^2 - \phi - 1 \NC = (\frac{1 + \sqrt5}{2})^2 - \frac{1 + \sqrt5}{2} - 1 \NR
+ \NC                   \NC = \frac{1 + 2\sqrt{5} + 5 - 2 - 2\sqrt{5} - 4}{4} \NR
+ \NC                   \NC = 0 \NR
+\stopalign\stopformula
+
+\startformula\startalign
+ \NC \hat\phi^2 - \hat\phi - 1 \NC = (\frac{1 - \sqrt5}{2})^2 - \frac{1 - \sqrt5}{2} - 1 \NR
+ \NC                           \NC = \frac{1 - 2\sqrt{5} + 5 - 2 + 2\sqrt{5} - 4}{4} \NR
+ \NC                           \NC = 0 \NR
+\stopalign\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明第 \m{i} 個 Fibonacci 數滿足方程：
+\startformula
+F_i = \frac{\phi^i - \hat{\phi^i}}{\sqrt5}
+\stopformula
+\stopEXERCISE
+\startANSWER
+初始：
+\startformula\startalign
+\frac{\phi^0 - \hat\phi^0}{\sqrt{5}} = \frac{1 - 1}{\sqrt{5}} = 0 = F_0 \NR
+\frac{\phi - \hat{\phi}}{\sqrt{5}} = \frac{1 + \sqrt{5} - 1 + \sqrt{5}}{2\sqrt{5}} = 1 = F_1 \NR
+\stopalign\stopformula
+歸納：
+\startformula\startalign
+ \NC F_{n + 2} \NC = F_{n + 1} + F_n \NR
+ \NC           \NC = \frac{\phi^{n+1} - {\hat\phi}^{n+1}}{\sqrt{5}} + \frac{\phi^n - {\hat\phi}^n}{\sqrt{5}} \NR
+ \NC           \NC = \frac{\phi^n(\phi + 1) - {\hat\phi}^n(\hat\phi + 1)}{\sqrt{5}} \NR
+ \NC           \NC = \frac{\phi^n\phi^2 - {\hat\phi}^n{\hat\phi}^2}{\sqrt{5}} \NR
+ \NC           \NC = \frac{\phi^{n+2} + {\hat\phi}^{n+2}}{\sqrt{5}} \NR
+\stopalign\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明 \m{k\ln k = \Theta(n)} 蘊含着 \m{k = \Theta(n/\ln n)}。
+\stopEXERCISE
+\startANSWER
+由 \m{\Theta} 的對稱性可知：
+\startformula
+k\ln{k} = \Theta(n) \Rightarrow n = \Theta(k\ln{k})
+\stopformula
+則：
+\startformula
+\ln{n} = \Theta(\ln(k\ln{k})) = \Theta(\ln{k} + \ln\ln{k}) = \Theta(\ln{k})
+\stopformula
+兩式相除：
+\startformula
+\frac{n}{\ln{n}}
+  = \frac{\Theta(k\ln{k})}{\Theta(\ln{k})}
+  = \Theta(\frac{k\ln{k}}{\ln{k}})
+  = \Theta(k)
+\stopformula
+\stopANSWER
+
+% problem
+\startPROBLEM
+（多項式的漸近行爲）
+設\m{p(n) = \sum_{i = 0}^{d} {a_i n^i}}是關於\m{n}的\m{d}次多項式，
+其中\m{a_d > 0}，\m{k}是一個常量。用漸進記號的定義證明下列性質。
+\startigBase[a]
+\item 如果\m{k \geq d}，那麼\m{p(n) = O(n^k)}。
+\item 如果\m{k \leq d}，那麼\m{p(n) = \Omega(n^k)}。
+\item 如果\m{k = d}，那麼\m{p(n) = \Theta(n^k)}。
+\item 如果\m{k > d}，那麼\m{p(n) = o(n^k)}。
+\item 如果\m{k < d}，那麼\m{p(n) = \omega(n^k)}。
+\stopigBase
+\startANSWER
+取 \m{c = a_d + b}，滿足下列不等式：
+\startformula
+p(n) = \sum_{i = 0}^{d}a_i n^i = a_d n^d + a_{d-1}n^{d-1} + \ldots + a_1 n + a_0 \leq cn^d
+\stopformula
+兩邊同除以 \m{n^d}，有：
+\startformula
+c = a_d + b \geq a_d + \frac{a_{d-1}}n + \frac{a_{d-2}}{n^2} + \ldots + \frac{a_0}{n^d}
+\stopformula
+即
+\startformula
+b \geq \frac{a_{d-1}}n + \frac{a_{d-2}}{n^2} + \ldots + \frac{a_0}{n^d}
+\stopformula
+如果使 \m{b = 1}，則選取 \m{n_0}，使得：
+\startformula
+n_0 = \max(da_{d-1}, d\sqrt{a_{d-2}}, \ldots, d\sqrt[d]{a_0})
+\stopformula
+則有：
+\startformula
+p(n) \leq cn^d \quad \text{對於 } n \geq n_0
+\stopformula
+即 \m{O(n^d)} 的定義。如果選 \m{b = -1}，則可得 \m{\Omega(n^d)}，綜合可得 \m{\Theta(n^d)}。
+另外兩個的證明類似。
+\stopANSWER
+\stopPROBLEM
+
+\startPROBLEM
+（相對漸進增長）
+對於下表中每對算式 \m{(A, B)}，指明 \m{A} 是否是 \m{B} 的 \m{O}、\m{o}、\m{\Omega}、\m{\omega}、\m{\Theta}。
+假定 \m{k \geq 1}，\m{\epsilon > 0} 且 \m{c > 1}，均爲常量。
+\bTABLE[align=center]
+\bTABLEhead
+\bTR
+	\bTH \m{A} \eTH
+	\bTH \m{B} \eTH
+	\bTH \m{O} \eTH
+	\bTH \m{o} \eTH
+	\bTH \m{\Omega} \eTH
+	\bTH \m{\omega} \eTH
+	\bTH \m{\Theta} \eTH
+\eTR
+\eTABLEhead
+\bTABLEbody
+\bTR
+	\bTD \m{\lg^kn} \eTD
+	\bTD \m{n^\epsilon} \eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n^k} \eTD
+	\bTD \m{c^n} \eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{\sqrt{n}} \eTD
+	\bTD \m{n^{\sin n}} \eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{2^n} \eTD
+	\bTD \m{2^{n/2}} \eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n^{\lg c}} \eTD
+	\bTD \m{c^{\lg n}} \eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{\lg(n!)} \eTD
+	\bTD \m{\lg(n^n)} \eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+\eTR
+\eTABLEbody
+\eTABLE
+\stopPROBLEM
+
+\startPROBLEM
+(根據漸進增長率排序)
+\startigBase[a]
+\item{%
+根據增長的階爲下列函數排序，即求出滿足
+\m{g_1 = \Omega(g_2)}、\m{g_2 = \Omega(g_3)}、\m{\ldots}、\m{g_{29} = \Omega(g_{30})}
+的函數的一種排列 \m{g_1, g_2, \ldots, g_{30}}。
+並將這些函數劃分成等價類，當且僅當 \m{f(n) = \Theta(g(n))}時，\m{f(n)}和\m{g(n)}才再同一類中。
+\bTABLE[align=center]
+\bTR \bTD \m{\lg(\lg^{\ast}n)} \eTD \bTD \m{2^{\lg^{\ast}n}} \eTD \bTD \m{(\sqrt{2})^{\lg{n}}} \eTD \bTD \m{n^2} \eTD \bTD \m{n!} \eTD \bTD \m{(\lg{n})!} \eTD \eTR
+\bTR \bTD \m{(\frac{3}{2})^n} \eTD \bTD \m{n^3} \eTD \bTD \m{\lg^2{n}} \eTD \bTD \m{\lg(n!)} \eTD \bTD \m{2^{2^n}} \eTD \bTD \m{n^{1/\lg{n}}} \eTD \eTR
+\bTR \bTD \m{\ln{\ln{n}}} \eTD \bTD \m{\lg^{\ast}n} \eTD \bTD \m{n \cdot 2^n} \eTD \bTD \m{n^{\lg\lg{n}}} \eTD \bTD \m{\ln{n}} \eTD \bTD \m{1} \eTD \eTR
+\bTR \bTD \m{2^{\lg{n}}} \eTD \bTD \m{(\lg{n})^{\lg{n}}} \eTD \bTD \m{e^n} \eTD \bTD \m{4^{\lg{n}}} \eTD \bTD \m{(n + 1)!} \eTD \bTD \m{\sqrt{\lg{n}}} \eTD \eTR
+\bTR \bTD \m{\lg^{\ast}(\lg{n})} \eTD \bTD \m{2^{\sqrt{2\lg{n}}}} \eTD \bTD \m{n} \eTD \bTD \m{2^n} \eTD \bTD \m{n\lg{n}} \eTD \bTD \m{2^{2^{n + 1}}} \eTD \eTR
+\eTABLE
+}
+\startANSWER
+\startformula\startalign
+\NC (\sqrt{2})^{\lg{n}} \NC = \sqrt{n} \NR
+\NC \sqrt{2}^{\lg{n}} \NC = 2^{1/2\lg{n}} = 2^{\lg{\sqrt{n}}} = \sqrt{n} \NR
+\NC n! < n^n \NC = 2^{\lg{n^n}} = 2^{n\lg{n}} \NR
+\NC n^{1/\lg{n}} \NC = n^{\log_n{2}} = 2 \NR
+\NC n^{\lg{\lg{n}}} \NC = (2^{\lg{n}})^{\lg\lg{n}} = (2^{\lg\lg{n}})^{\lg{n}} = (\lg{n})^{\lg{n}} \NR
+\NC \lg^2{n} \NC = 2^{\lg{\lg^2{n}}} = o(2^{\sqrt{2\lg{n}}}) \NR
+\stopalign\stopformula
+\startcolumns[n=3,blank=small,distance=2em,balance=yes]
+\startigBase[n]
+\item \m{1 = n^{1/\lg n}}
+\item \m{\lg(\lg^{\ast}n)}
+\item \m{\lg^{\ast}n\simeq \lg^{\ast}{\lg{n}}}
+\item \m{2^{\lg^{\ast}n}}
+\item \m{\ln{\ln{n}}}
+\item \m{\sqrt{\lg{n}}}
+\item \m{\ln{n}}
+\item \m{\lg^2{n}}
+\item \m{2^{\sqrt{2\lg{n}}}}
+\item \m{(\sqrt{2})^{\lg{n}}}
+\item \m{n = 2^{\lg{n}}}
+\item \m{n\lg{n} \simeq \lg(n!)}
+\item \m{n^2 = 4^{\lg{n}}}
+\item \m{n^3}
+\item \m{n^{\lg\lg{n}} = (\lg{n})^{\lg{n}}}
+\item \m{(\frac{3}{2})^n}
+\item \m{2^n}
+\item \m{n \cdot 2^n}
+\item \m{e^n}
+\item \m{n!}
+\item \m{(n + 1)!}
+\item \m{2^{2^n}}
+\item \m{2^{2^{n+1}}}
+\stopigBase
+\stopcolumns
+\stopANSWER
+\item{%
+給出一個非負函數 \m{f(n)}，使得對於所有 \m{g_i(n)}，\m{f(n)}既不是 \m{O(g_i(n))}，也不是 \m{\Omega(g_i(n))}。
+}
+
+\startANSWER
+\m{2^{2^{(n + 1)\sin{x}}}}
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+\startPROBLEM
+（漸進記號的性質）
+假設 \m{f(n)} 和 \m{g(n)} 是漸進正函數，證明或反駁下面的每個猜測。
+\startigBase[a]
+\item \m{f(n) = O(g(n))} 蘊含 \m{g(n) = O(f(n))}。
+
+\startANSWER
+錯誤。 \m{n = O(n^2)}，但是 \m{n^2 \neq O(n)}。
+\stopANSWER
+
+\item \m{f(n) + g(n) = \Theta(\min(f(n), g(n)))}。
+
+\startANSWER
+錯誤。 \m{n^2 + n \neq \Theta(min(n^2, n)) = \Theta(n)}。
+\stopANSWER
+
+\item 如果對於足夠的 \m{n}，有 \m{\lg(g(n))\geq 1} 且 \m{f(n)\geq 1}，那麼 \m{f(n) = O(g(n))} 蘊含 \m{\lg(f(n)) = O(lg(g(n)))}。
+
+\startANSWER
+正確。 因爲對於給定 \m{n \geq n_0}， \m{f(n) \geq 1}：
+\startformula
+\exists c, n_0 : \forall n \geq n_0 : 0 \leq f(n) \leq cg(n)
+\stopformula
+\startformula
+   \Downarrow
+\stopformula
+\startformula
+   0 \leq \lg{f(n)} \leq \lg(cg(n)) = \lg{c} + \lg{g(n)}
+\stopformula
+需要證明：
+\startformula
+\lg{f(n)} \leq d\lg{g(n)}
+\stopformula
+很容易找到 \m{d}：
+\startformula
+d = \frac{\lg{c} + \lg{g(n)}}{\lg{g(n)}} = \frac{\lg{c}}{\lg{g}} + 1 \leq \lg{c} + 1
+\stopformula
+最後一步顯然成立，因爲 \m{\lg{g(n)} \geq 1}。
+\stopANSWER
+
+\item \m{f(n) = O(g(n))} 蘊含 \m{2^{f(n)} = O(2^{g(n)})}。
+
+\startANSWER
+錯誤。 \m{2n = O(n)}，但是 \m{2^{2n} = 4^n \neq O(2^n)}。
+\stopANSWER
+
+\item \m{f(n) = O((f(n))^2)}。
+
+\startANSWER
+正確。只要 \m{f(n) \geq 1}， \m{0 \leq f(n) \leq cf^2(n)} 是很自然的。
+當然如果對於所有 \m{n}， \m{f(n) < 1}，則錯誤，但我們通常不考慮這種函數。
+\stopANSWER
+
+\item \m{f(n) = O(g(n))} 蘊含 \m{g(n) = \Omega(f(n))}。
+
+\startANSWER
+正確。如果 \m{f(n) = O(g(n))}，則 \m{0 \leq f(n) \leq cg(n)}，我們只需證明：
+\startformula
+0 \leq df(n) \leq g(n)
+\stopformula
+對於 \m{d = 1/c}，上式顯然成立。
+\stopANSWER
+
+\item \m{f(n) = \Theta(f(n/2))}。
+
+\startANSWER
+錯誤。取 \m{f(n) = 2^n}，我們需要證明：
+\startformula
+\exists c_1, c_2, n: \forall n \geq n_0 : 0 \leq c_1 \cdot 2^{n/2} \leq 2^n
+   \leq c_2 \cdot 2^{n/2}
+\stopformula
+顯然不成立。
+\stopANSWER
+
+\item \m{f(n) + o(f(n)) = \Theta(f(n))}。
+
+\startANSWER
+正確。設 \m{g(n) = o(f(n))}，我們需要證明 \m{c_1f(n) \leq f(n) + g(n) \leq c_2f(n)}，我們知道：
+\startformula
+\forall c \exists n_0 \forall n \geq n_0 : cg(n) < f(n)
+\stopformula
+因此，只需 \m{c_1 = 1}， \m{c_2 = 2} 即可。
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+\startPROBLEM
+（\m{O}與\m{\Omega}的一些變形）
+某些作者用一種與我們稍微不同的方式來定義 \m{\Omega}；
+假設我們使用 \m{\mathop{\Omega}\limits^{\infty}} 來表示這種定義。
+若存在正常量 \m{c}，使得對無窮多個整數 \m{n}，有 \m{f(n)\geq cg(n)\geq 0}，
+則稱 \m{f(n) = \mathop{\Omega}\limits^{\infty}(g(n))}。
+\startigBase[a]
+\item 證明：對漸進非負的任意兩個函數 \m{f(n)} 和 \m{g(n)}，
+或者 \m{f(n) = O(g(n))} 或者 \m{f(n) = \mathop{\Omega}\limits^{\infty}(g(n))} 或者二者均成立，
+然而，如果用 \m{\Omega} 代替 \m{\mathop{\Omega}\limits^{\infty}}，那麼該命題卻不成立。
+
+\startANSWER
+我們需要比較 \m{cg(n) \leq f(n)}；
+如果對於正無窮整數均成立，則有 \m{\mathop{\Omega}\limits^{\infty}}；
+而如果之對有限的整數成立，則設最大值爲 \m{n_0}，有：
+\startformula
+\forall n > n_0: f(n) < cg(n)
+\stopformula
+足以說明 \m{f(n) = O(g(n))}。
+
+如果 \m{f(n) = g(n)}，顯然兩式均成立。
+
+但是對於 \m{\Omega}，卻不一定，
+如 \m{n = \mathop{\Omega}\limits^{\infty}(n^{\sin{n}})}，
+但 \m{n \neq \Omega(n^{\sin{n}})}。
+\stopANSWER
+
+\item 描述用 \m{\mathop{\Omega}\limits^{\infty}} 代替 \m{\Omega} 來刻畫程序運行時間的潛在優點和缺點。
+
+\startANSWER
+TODO
+\stopANSWER
+
+\stopigBase
+
+某些作者也用一種稍微不同的方式定義 \m{O}；
+假設用 \m{O'} 來表示這種可選的定義。
+我們稱 \m{f(n) = O'(g(n))}，當且儘當 \m{|f(n)| = O(g(n))}。
+
+\startigBase[a,continue]
+\item 如果用 \m{O'} 代替 \m{O}，但仍使用 \m{\Omega}，定理 3.1 中的“當且儘當”的每個方向將出現什麼情況？
+
+\startANSWER
+定理 3.1 中的“當且儘當”要改爲“蘊含”，即 \m{\Theta \Rightarrow O'}，反向則不成立。
+比如函數 \m{f(n) = n \cdot \sin{n}}，即爲 \m{O'(n)}，但卻不是 \m{O(n)} 或 \m{\Theta(n)}。
+\stopANSWER
+\stopigBase
+
+有些作者定義 \m{\tilde{O}} 來意指忽略對數因子的 \m{O}：
+\startformula
+\tilde{O} = \lbrace f(n) : \exists c > 0, k > 0, n_0 > 0 \forall n \geq n_0: 0 \leq f(n) \leq cg(n)\lg^k(n) \rbrace
+\stopformula
+\startigBase[a,continue]
+\item 用類似方式定義 \m{\tilde{\Omega}} 和 \m{\tilde{\Theta}}。
+證明定理 3.1 相對應的類似結論。
+
+\startANSWER
+\startformula
+\tilde{\Omega} = \lbrace f(n) : \exists c, k, n_0 \forall n > n_0 : 0 \leq cg(n) \lg^{-k}(n) \leq f(n) \rbrace
+\stopformula
+\startformula
+\tilde{\Theta} = \lbrace f(n) : \exists c_1, c_2, k_1, k_2, n_0 \forall n > n_0 : 0 \leq c_1g(n) \lg^{-k_1}(n) \leq f(n) \leq c_2g(n) \lg^{k_2}(n)\rbrace
+\stopformula
+\stopANSWER
+\stopigBase
+
+\stopPROBLEM
+
+\startPROBLEM
+（多重函數）我們可以把用於函數 \m{\lg^{\ast}} 中的重復運算符 \m{\ast} 應用於實數集上的任意單調遞增函數 \m{f(n)}。
+對給定的常量 \m{c \in R}，我們定義多重函數 \m{f_c^{\ast}} 爲：
+\startformula
+f_c^{\ast}(n) = \min \lbrace i \geq 0 : f^{(i)}(n) \leq c \rbrace
+\stopformula
+該函數不必在所有情況下都爲良定義的。
+換句話說， \m{f_c^{\ast}(n)} 的值就是爲將其參數縮小至 \m{c} 或更小所需要將函數 \m{f} 重復應用的數目。
+對如下每個函數 \m{f(n)} 和常量 \m{c}，給出 \m{f_c^{\ast}(n)} 的一個盡量緊確的界。
+
+\bTABLE[align=center]
+\bTABLEhead
+\bTR
+	\bTH \m{f(n)} \eTH
+	\bTH \m{c} \eTH
+	\bTH \m{f_c^{\ast}(n)} \eTH
+\eTR
+\eTABLEhead
+\bTABLEbody
+\bTR
+	\bTD \m{n - 1} \eTD
+	\bTD \m{0} \eTD
+	\bTD\startANSWER \m{\Theta(n)} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{\lg{n}} \eTD
+	\bTD \m{1} \eTD
+	\bTD\startANSWER \m{\Theta(\lg^{\ast}n)} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n/2} \eTD
+	\bTD \m{1} \eTD
+	\bTD\startANSWER \m{\Theta(\lg{n})} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n/2} \eTD
+	\bTD \m{2} \eTD
+	\bTD\startANSWER \m{\Theta(\lg{n})} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{\sqrt{n}} \eTD
+	\bTD \m{2} \eTD
+	\bTD\startANSWER \m{\Theta(\lg\lg{n})} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{\sqrt{n}} \eTD
+	\bTD \m{1} \eTD
+	\bTD\startANSWER 無法收斂 \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n^{1/3}} \eTD
+	\bTD \m{2} \eTD
+	\bTD\startANSWER \m{\Theta(\log_3\lg{n})} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n/\lg{n}} \eTD
+	\bTD \m{2} \eTD
+	\bTD\startANSWER \m{\omega(\lg\lg{n}), o(\lg{n})} \stopANSWER\eTD
+\eTR
+\eTABLEbody
+\eTABLE
+
+\stopPROBLEM
+
+\stopcomponent
+

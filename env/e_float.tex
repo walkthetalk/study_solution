@@ -1,0 +1,100 @@
+\setupframed[
+  %height	fit broad dimension
+  %width	fit broad fixed local dimension
+  %autowidth	yes no force
+  %offset	none overlay default dimension
+  %location	depth hanging high lohi low top middle bottom
+  %option	none empty
+  %strut	yes no global local
+  %align	no flushleft flushright middle normal high low lohi
+  %bottom	command
+  %top	command
+  %frame	on off none overlay
+  %topframe	on off
+  %bottomframe	on off
+  %leftframe	on off
+  %rightframe	on off
+  %frameoffset	dimension
+  %framedepth	dimension
+  %framecorner	round rectangular
+  %frameradius	dimension
+  %framecolor	name
+  %background	screen color none foreground name
+  %backgroundscreen	number
+  %backgroundcolor	name
+  %backgroundoffset	frame dimension
+  %backgrounddepth	dimension
+  %backgroundcorner	round rectangular
+  %backgroundradius	dimension
+  %depth	dimension
+  %corner	round rectangular
+  %radius	dimension
+  %empty	yes no
+  %foregroundcolor	name
+  %foregroundstyle	name
+  %rulethickness	dimension
+]
+\setupfloats[
+  %location	left right middle
+  %width	fit dimension
+  before=,	%command
+  after=,	%command
+  %margin	dimension
+  %spacebefore	small medium big none
+  %spaceafter	small medium big none
+  %sidespacebefore	small medium big none
+  %sidespaceafter	small medium big none
+  indentnext=yes,	%yes no
+  %ntop	number
+  %nbottom	number
+  %nlines	number
+  %default	name
+  %tolerance	0 1 2
+  %leftmargindistance	dimension
+  %rightmargindistance	dimension
+  %sidealign	normal line
+  %numbering	yes nocheck
+  % to see \setupframed
+]
+
+\setupcaptions[align={middle}]
+
+\setuplabeltext[cn][figure={圖\;,}]
+\setupcaption[figure][
+  %location	top bottom none high low middle
+  %width=max,	%fit broad max dimension
+  %minwidth	fit dimension
+  headstyle=\rmx\bf,	%normal bold slanted boldslanted type cap small... command
+  style=\rmx\bf,	%normal bold slanted boldslanted type cap small... command
+  %number	yes no
+  %inbetween	command
+  %align	left middle right no
+  conversion=numbers,	%numbers characters Characters romannumerals Romannumerals
+  way=bychapter,	%bytext bysection bychapter 每一章都重新编号
+  %separator=a,	%text
+  %stopper	text
+  %command	command
+  %distance	dimension
+  prefixsegments=chapter,	%chapter:section
+]
+
+\setuplabeltext[cn][table={表\;,}]
+\setupcaption[table][
+  location=top,	%top bottom none high low middle
+  %width=max,	%fit broad max dimension
+  %minwidth	fit dimension
+  headstyle={\rmx\bf},	%normal bold slanted boldslanted type cap small... command
+  style={\rmx\bf},	%normal bold slanted boldslanted type cap small... command
+  %number	yes no
+  %inbetween	command
+  %align	left middle right no
+  conversion=numbers,	%numbers characters Characters romannumerals Romannumerals
+  way=bychapter,	%bytext bysection bychapter 每一章都重新编号
+  %separator=a,	%text
+  %stopper	text
+  %command	command
+  %distance	dimension
+  prefixsegments=chapter,	%chapter:section
+]
+
+\setupfloatsplitting[lines=1,conversion=greek]

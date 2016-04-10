@@ -1,0 +1,179 @@
+%D \module
+%D   [     file=p-clrscode,
+%D      version=2014.05.01,
+%D        title=\CONTEXT\ User Module,
+%D     subtitle=clrscode,
+%D       author=Yi Qingliang,
+%D         date=\currentdate,
+%D    copyright=Yi Qingliang,
+%D        email=niqingliang2003@gmail.com,
+%D      license=Public Domain]
+
+\writestatus{loading}{ConTeXt User Module / clrscode}
+\startmodule[clrscode]
+
+% The "CLRS" environment
+% NOTE: you can only use the star/stop form of CLRS
+\definetyping[CLRS][%option=c,
+  bodyfont=9pt,
+  %space	on off
+  %page	yes no
+  %option	slanted normal commands color none
+  %text	yes no
+  %icommand	command
+  %vcommand	command
+  %ccommand	command
+  before={\vskip.5ex\starttextbackground[verb]},	%command
+  after={\stoptextbackground\vskip.5ex},	%command
+  margin=no,	%dimension standard yes no
+  %evenmargin	dimension
+  %oddmargin	dimension
+  %blank	dimension small medium big standard halfline line
+  escape=yes,	%character %{[[,]]}
+  %space	on off
+  tab=8,	%number yes no
+  %page	yes no
+  %indentnext	yes no
+  style=\tt\tf,		%normal bold slanted boldslanted type cap small... command
+  %color	name
+  %palet	name
+  %lines=yes,	%yes no hyphenated
+  %empty	yes all no
+  numbering=line,	%line file no
+]
+
+\defineenumeration[EXERCISE][
+  text={練習},
+  right={：},
+  headstyle=\rm\bf,	%normal bold slanted boldslanted type cap small... command
+  headcolor=red,
+  %style=\rm\bf,		%normal bold slanted boldslanted type cap small... command
+  color=red,	%name
+  width=fit,	%fit broad dimension
+  distance=0em,		%dimension
+%sample	text
+  %align=flushleft,	%flushleft middle flushright
+  %margin=no,	%standard yes no dimension
+  alternative=serried,	%left right top serried inmargin inleft inright hanging
+  %hang=2,		%fit broad number
+%headcommand	command
+%before	command
+%inbetween={\startEnglish},	%command
+%after={\stopEnglish},	%command
+  %indentnext=auto,	%yes no
+  indenting=next,	%never not no yes always first next
+  prefix=yes,
+  prefixsegments=chapter:section, %chapter:section
+  prefixconnector={-},
+  %numberstopper={：},
+  way=bysection,
+]
+\define[1]\refexercise{%
+\in{練習}{}[exercise:#1]%
+}
+
+\defineenumeration[PROBLEM][
+  text={問題},
+  right={：},
+  headstyle=\rm\bf,	%normal bold slanted boldslanted type cap small... command
+  headcolor=red,
+  %style=\rm\bf,		%normal bold slanted boldslanted type cap small... command
+  color=red,	%name
+  width=fit,	%fit broad dimension
+  distance=0em,		%dimension
+%sample	text
+  %align=flushleft,	%flushleft middle flushright
+  %margin=no,	%standard yes no dimension
+  alternative=serried,	%left right top serried inmargin inleft inright hanging
+  %hang=2,		%fit broad number
+%headcommand	command
+%before	command
+%inbetween={\startEnglish},	%command
+%after={\stopEnglish},	%command
+  %indentnext=auto,	%yes no
+  indenting=next,	%never not no yes always first next
+  prefix=yes,
+  prefixsegments=chapter, %chapter:section
+  prefixconnector={-},
+  %numberstopper={：},
+  way=bychapter,
+]
+\define[1]\refproblem{%
+\in{問題}{}[problem:#1]%
+}
+
+\setupformulae[%
+%location	left right
+%left	text
+%right	text
+%align	flushleft middle flushright
+%option	middle
+%strut	yes no
+%distance	dimension
+%margin	dimension standard yes no
+%leftmargin	dimension
+%rightmargin	dimension
+  indentnext=auto,	%yes no
+%alternative	name
+%spacebefore	dimension
+%spaceafter	dimension
+%separator	text
+%conversion	numbers characters Characters romannumerals Romannumerals text
+]
+
+\define[1]\refformula{%
+\in{公式}{}[formula:#1]%
+}
+
+\define\DIFFICULT{★}
+
+\startluacode
+function commands.clrsalgo(algoname)
+	local name,args = string.match(algoname, '([%a%-]+)(.*)')
+	tex.sprint(tex.ctxcatcodes, "\\m{")
+	for word,postfix in string.gmatch(name, "([^%-]+)(%-?)") do
+		if string.match(string.sub(word, 1), "%u") then
+			tex.sprint(tex.ctxcatcodes, string.sub(word, 1,1))
+			tex.sprint(tex.ctxcatcodes, "\\scale[scale=800]{")
+			tex.sprint(tex.ctxcatcodes, string.sub(word, 2,string.len(word)))
+			tex.sprint(tex.ctxcatcodes, "}")
+		else
+			tex.sprint(tex.ctxcatcodes, word)
+		end
+		if postfix ~= "" then
+			tex.sprint(tex.ctxcatcodes, "\\!" .. postfix .. "\\!")
+		end
+	end
+	if args then
+		tex.sprint(tex.ctxcatcodes, args)
+	end
+	tex.sprint(tex.ctxcatcodes, "}")
+end
+\stopluacode
+\define[1]\ALGO{\ctxlua{%
+commands.clrsalgo([[#1]])
+}}%
+
+\define[1]\TODO{#1}
+
+\define[1]\CLRSH{\noindentation\ALGO{#1}}
+
+\define[1]\SIMPLEURL{%
+\goto{#1}[url(#1)]%
+}
+
+\definemathcommand [COST]    [limop] {\mfunction{cost}}
+\definemathcommand [EXTRAS]  [limop] {\mfunction{extras}}
+\definemathcommand [LINECOST][limop] {\mfunction{LineCost}}
+
+\definemathmatrix[pmatrix]%
+[left={\left(\,},right={\,\right)}]
+
+\define\hint{{\EMP 提示：}}
+
+%urls
+\useurl[urlgreedyalgo][http://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/04GreedyAlgorithmsI.pdf]
+
+\stopmodule
+\endinput
+

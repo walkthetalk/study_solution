@@ -1,0 +1,634 @@
+\startcomponent c_probabilistic_analysis_randomized_algorithms
+
+\chapter{Probabilistic Analysis and Randomized Algorithms}
+
+\section{The hiring problem}
+
+\startEXERCISE
+證明：假設在 HIRE-ASSISTANT 算法的第 4 行中，
+我們總能確定哪一個應聘者更佳，
+則意味着我們知道應聘者排名的全部次序。
+
+\CLRSH{HIRE-ASSISTANT(n)}
+\startCLRS
+best = 0	// candidate 0 is a least-qualified dummy candidate
+for i = 1 to n
+	interview candidate i
+	if candidate i is better than candidate best
+		best = i
+		hire candidate i
+\stopCLRS
+\stopEXERCISE
+\startANSWER
+全序是一種包含了所有關系的偏序\m{\forall a,b \in A: a R b \text{或} b R a}。
+一個關系若是偏序關系，他必須是自反的、反對稱的以及可傳遞的。
+
+令這個關系爲“同樣好或更好”：
+\startigBase[1]
+\item 自反：顯然，任何人與自身相比都滿足次關系；
+\item 反對稱：如果 \m{A} 比 \m{B} 好，那麼 \m{B} 不會比 \m{A} 好；
+\item 可傳遞：如果 \m{A} 比 \m{B} 好， \m{B} 又比 \m{C} 好，那麼 \m{A} 比 \m{C} 好。
+\stopigBase
+到此可知，此關系是偏序關系。
+
+又由於我們假設可以比較任意兩個應聘者，也就說包含了所有關系，即全序。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+利用 \ALGO{RANDOM(0,1)} 實現過程 \ALGO{RANDOM(a,b)}。
+作爲 \m{a} 和 \m{b} 的函數，其運行時間是多少？
+\stopEXERCISE
+\startANSWER
+令 \m{n=b-a}，算法爲：
+\startigBase[n]
+\item 找到最小整數 \m{c}，使得 \m{2^c\ge n} （\m{c=\lceil\ln{n}\rceil}）；
+\item 調用 \ALGO{RANDOM(0,1)} \m{c} 次，得到一個 \m{c} 比特的二進制數 \m{r}；
+\item 如果 \m{r>n}，跳轉到上一步；
+\item 否則返回 \m{a+r}。
+\stopigBase
+這會在範圍 \m{[a, b]} 內均勻的生成一個隨機數。
+但是，第二步可能會重復多次。
+有 \m{p=n/2^c} 概率不會重復第二步。
+由幾何分布可知有 \m{1/p} 的概率會重復第二步，即 \m{2^c/n}。
+由於每次執行第二步，需要調用 \ALGO{RANDOM(0,1)} \m{c} 次，運行時間爲：
+\startformula
+O(\frac{2^c}{n} c) = O(\frac{\ln(b-a)2^{\ln(b-a)}}{b-a}) = O(\ln(b-a))
+\stopformula
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+假設你希望以各爲 1/2 的概率輸出 0 和 1。
+已有一個可以輸出 0 或 1 的過程 \ALGO{BIASED-RANDOM} 可用。
+此過程輸出 1 的概率爲 \m{p}，輸出 0 的概率爲 \m{1-p}，
+其中 \m{0<p<1}，但 \m{p} 的值未知。
+請給出一個利用 \ALGO{BIASED-RANDOM} 作爲子程式的算法，返回一個無偏的結果，
+即各以 1/2 的概率返回 0 和 1。
+作爲 \m{p} 的函數，此算法的運行時間爲多少？
+\stopEXERCISE
+\startANSWER
+簡單！
+\startigBase[n]
+\item 生成兩個隨機數 \m{x} 和 \m{y}；
+\item 如果這兩個數不同，則返回 \m{x}；
+\item 否則，重復第一步。
+\stopigBase
+\m{x=0, y=1} 和 \m{x=1, y=0} 的概率相同。
+第二步直接返回的概率是 \m{2pq}。
+重試次數的期望值是 \m{1/(2pq)}，運行時間爲 \m{O(\frac{1}{p(1-p)})}。
+\stopANSWER
+
+\section{Indicatorrandom variables}
+
+\startEXERCISE
+在 \ALGO{HIRE-ASSISTANT} 中，假設應聘者以隨機順序出現，
+你只僱傭一次的概率是多少？正好僱傭 \m{n} 次的概率是多少？
+\stopEXERCISE
+\startANSWER
+當最好的應聘者出現在第一個時，我們只需僱傭一次，其概率爲 \m{1/n} （一共有 \m{n!} 種全排列，而最好的出現在第一個的全排列共 \m{(n-1)!} 種）。
+而正好僱傭 \m{n} 次，則需應聘者必須以增序出現，概率爲 \m{1/n!}。
+\stopANSWER
+
+\startEXERCISE
+在 \ALGO{HIRE-ASSISTANT} 中，假設應聘者以隨機順序出現，
+你正好僱傭兩次的概率是多少？
+\stopEXERCISE
+\startANSWER
+如果正好僱傭了兩次，那麼假設第一個僱傭的人級別爲 \m{i}，
+第二次僱傭的人級別肯定爲 \m{n}，且 \m{i < n}。
+
+比第一個僱傭的人級別高的應聘者有 \m{n-i} 個，
+這些人中級別爲 \m{n} 的那個排在最前面，其概率爲 \m{1/(n-i)}
+（我們可以忽略其他應聘者，他們不影響概率）。
+因此在第一個應聘者級別爲 \m{i}，則正好僱傭兩次的概率爲：
+\startformula
+\Pr{T_i} = \frac{1}{n}\frac{1}{n-i}
+\stopformula
+其中第一部分反映的是級別爲 \m{i} 的應聘者排在第一個的概率。
+
+正好僱傭兩次的概率爲：
+\startformula\startmathalignment
+\NC \Pr{T} \NC= \sum_{i=1}^{n-1}\Pr{T_i} \NR
+\NC        \NC= \sum_{i=1}^{n-1}\frac{1}{n}\frac{1}{n-i} \NR
+\NC        \NC= \frac{1}{n} \sum_{i=1}^{n-1}\frac{1}{i} \NR
+\NC        \NC= \frac{1}{n} (\lg(n-1) + O(1)) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+利用指示器隨機變量計算擲 \m{n} 個骰子之和的期望值。
+\stopEXERCISE
+\startANSWER
+如果是單個骰子，期望值 \m{X_i} 爲：
+\startformula\startmathalignment
+\NC E[X_k] \NC= \sum_{i=0}^6 i \Pr{X_k = i} \NR
+\NC        \NC= \frac{1 + 2 + 3 + 4 + 5 + 6}{6} \NR
+\NC        \NC= \frac{21}{6} \NR
+\NC        \NC= 3.5 \NR
+\stopmathalignment\stopformula
+
+對於多個骰子，則：
+\startformula\startmathalignment
+\NC E[X] \NC= E[\sum_{i=1}^nX_i] \NR
+\NC      \NC= \sum_{i=1}^n E[X_i] \NR
+\NC      \NC= \sum_{i=1}^n 3.5 \NR
+\NC      \NC= 3.5 \cdot n \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+利用指示器隨機變量來求解如下{\EMP 帽子核對問題}（hat-check problem）：
+\m{n} 位顧客，每個人都將自己的帽子交給服務生。
+服務生以隨機次序將帽子歸還給顧客。
+請問拿到自己帽子的顧客數目的期望值是多少？
+\stopEXERCISE
+\startANSWER
+每位顧客拿回自己帽子的概率都是 \m{1/n}。
+記 \m{X_i} 爲第 \m{i} 個顧客拿回自己帽子的事件。
+因此：
+\startformula
+E[X] = E[X_1 + X_2 + \ldots + X_n]
+         = \sum_{i=1}^n E[X_i]
+         = \sum_{i=1}^n \frac{1}{n}
+         = 1
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+設 \m{A[1..n]} 是由 \m{n} 個不同的數構成的數列。
+如果 \m{i < j} 且 \m{A[i] > A[j]}，則稱 \m{(i,j)} 爲 \m{A} 的一個{\EMP 逆序對}（inversion）。
+（參見\refproblem{inversion} 中更多關於逆序對的例子）
+假設 \m{A} 的元素構成 \m{\langle1,2,\ldots,n\rangle} 上的一個均勻隨機排列，
+請用指示器隨機變量來計算其中逆序對的數目期望值。
+\stopEXERCISE
+\startANSWER
+記 \m{X_{ij}} 爲 \m{i} 和 \m{j} 爲逆序對的情況。
+每個逆序對發生的概率爲 \m{1/2}，
+因爲有 \m{\binom{n}{2}} 種可能，而大的那個在前面的概率爲 \m{\frac{1}{n(n-1)}}。
+兩式相乘得 \m{1/2}。由此可得 \m{E[X_{ij}] = 1/2}。
+\startformula\startmathalignment
+\NC E[X] \NC= \sum_{i=1}^{n-1} \sum_{j=i+1}^n E[X_{ij}] \NR
+\NC      \NC= \sum_{i=1}^{n-1} \sum_{j=i+1}^n \frac{1}{2} \NR
+\NC      \NC= \frac{1}{2} \sum_{i=1}^{n-1} \sum_{j=i+1}^n 1 \NR
+\NC      \NC= \frac{1}{2} \sum_{i=1}^{n-1} (n-i) \NR
+\NC      \NC= \frac{1}{2} \sum_{i=1}^{n-1} i \NR
+\NC      \NC= \frac{n(n-1)}{4} \NR
+\NC      \NC= \binom{n}{2}/2 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\section{Randomized algorithms}
+
+\startEXERCISE
+Marceau 教授不同意引理 5.5 證明中所用的循環不變式。
+他對第一次迭代之前循環不變式是否爲真提出質疑。
+他的理由是，我們可以很容易宣稱一個空數列不包含 0 排列，
+從而第一次迭代之前循環不變式無效。
+請重寫過程 \ALGO{RANDOMIZE-IN-PLACE}，
+使得循環不變式適用於第一次迭代之前的非空子數列，
+並爲你的過程修改引理 5.5 的證明。
+\stopEXERCISE
+\startANSWER
+變通一下，其實我們可以在循環之前，隨機選擇一個元素來替代第一個。
+這樣不變式對於 1 排列是有效的。
+\stopANSWER
+
+\startEXERCISE
+Kelp 教授決定寫一個過程來隨機產生除恆等排列（identity permutation）外的任意排列。
+他提出了如下過程：
+
+\CLRSH{PERMUTE-WITHOUT-IDENTITY(A)}
+\startCLRS
+n = A.length
+for i = 1 to n - 1
+	swap A[i] with A[RANDOM(i + 1, n)]
+\stopCLRS
+這段代碼實現了 Kelp 教授的意圖嗎？
+\stopEXERCISE
+\startANSWER
+不能。因爲這個過程改變了所有元素的位置。
+我們無法得到恆等排列，但同時也無法使得任何一個元素處於原有位置。
+\stopANSWER
+
+\startEXERCISE
+假設我們不是將元素 \m{A[i]} 與子數列 \m{A[i..n]} 中的一個隨機元素交換，
+而是將他與數列任意位置上的隨機元素交換：
+
+\CLRSH{PERMUTE-WITH-ALL(A)}
+\startCLRS
+n = A.length
+for i = 1 to n
+	swap A[i] with A[RANDOM(1, n)]
+\stopCLRS
+這段代碼會產生一個均勻隨機排列嗎？爲什麼？
+\stopEXERCISE
+\startANSWER
+不會。直覺上來講，有 \m{n^n} 種不同方式，但只有 \m{n!} 種組合。
+由於 \m{n!} 無法整除 \m{n^n}，不可能是均勻分布
+（爲什麼無法整除？這就是直覺。對於 \m{n>2}， \m{n-1} 可以整除 \m{n!}，但卻不能整除 \m{n^n}）。
+參見 \goto{Coding Horror}[url(http://blog.codinghorror.com/the-danger-of-naivete/)]。
+\stopANSWER
+
+\startEXERCISE
+Armstrong 教授建議用下面的過程來產生一個均勻隨機排列：
+
+\CLRSH{PERMUTE-BY-CYCLIC(A)}
+\startCLRS
+n = A.length
+let B[1..n] be a new array
+offset = RANDOM(1, n)
+for i = 1 to n
+	dest = i + offset
+	if dest > n
+		dest = dest - n
+	B[dest] = A[i]
+return B
+\stopCLRS
+
+請說明每個元素 \m{A[i]} 出現在 \m{B} 中任何特定位置的概率是 \m{1/n}。
+然後通過說明排列結果不是均勻隨機排列，證明 Armstrong 教授錯了。
+\stopEXERCISE
+\startANSWER
+如果 \m{j \equiv \text{offset} + i \pmod{n}}，則 \m{A[i]} 就會出現在 \m{B[j]} 處，其概率爲 \m{1/n}。
+但他不能生成所有排列，他所生成的排列都是數列 \m{A} 循環右移得到。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+證明：在過程 \ALGO{PERMUTE-BY-SORTING} 的數列 \m{P} 中，所有元素都唯一的概率至少是 \m{1 - 1/n}。
+\stopEXERCISE
+\startANSWER
+令 \m{\Pr\{j\}} 爲索引爲 \m{j} 的元素唯一的概率。
+如果有 \m{n^3} 個元素，則 \m{\Pr\{j\} = 1 - \frac{j-1}{n^3}}。
+\startformula\startmathalignment
+\NC \Pr\{1 \cap 2 \cap 3 \cap \ldots\}
+       \NC= \Pr\{1\} \cdot \Pr\{2 | 1\} \cdot \Pr\{3 | 1 \cap 2\} \cdots \NR
+\NC    \NC= 1 (1 - \frac{1}{n^3})
+            (1 - \frac{2}{n^3})
+            (1 - \frac{3}{n^3})
+            \cdots \NR
+\NC    \NC\ge 1 (1 - \frac{n}{n^3})
+            (1 - \frac{n}{n^3})
+            (1 - \frac{n}{n^3})
+            \cdots \NR
+\NC    \NC\ge (1 - \frac{1}{n^2})^n \NR
+\NC    \NC\ge 1 - \frac{1}{n} \NR
+\stopmathalignment\stopformula
+你問最後一步如何推導出來的？ \m{(1-x)^n \ge 1 - nx}。
+\stopANSWER
+
+\startEXERCISE
+請解釋如何實現算法 \ALGO{PERMUTE-BY-SORTING}，
+以處理兩個或更多優先級相同的情形。
+也就是說，即使有兩個或更多優先級相同，你的算法也應該產生一個均勻隨機排列。
+\stopEXERCISE
+\startANSWER
+愚蠢的算法需要用愚蠢的方式解決。只要重新生成優先級重試就可以了。
+\stopANSWER
+
+\startEXERCISE
+假設我們希望創建集合 \m{\{1,2,3,\ldots,n\}} 的一個{\EMP 隨機樣本（random sample）}，
+即一個具有 \m{m} 個元素的子集 \m{S}，其中 \m{0\le m\le n}，
+使得以同樣的概率創建每個 \m{m} 子集。
+一種方法是對 \m{i = 1,2,\ldots,n} 設 \m{A[i] = i}，
+調用 \ALGO{RANDOMIZE-IN-PLACE(A)}，
+然後取最前面的 \m{m} 個數列元素。
+這種方法會調用 \m{n} 次過程 \ALGO{RANDOM}。
+如果 \m{n} 比 \m{m} 大的多，
+只調用 \ALGO{RANDOM} 少量次數，就能創建一個隨機樣本。
+請說明下面遞迴過程返回 \m{\{1,2,3,\ldots,n\}} 的一個隨機 \m{m} 子集 \m{S}，
+其中每個 \m{m} 子集是等概率的，
+然後只調用 \m{m} 次 \ALGO{RANDOM}。
+
+\CLRSH{RANDOM-SAMPLE(m,n)}
+\startCLRS
+if m == 0
+	return ∅
+else S = RANDOM-SAMPLE(m - 1, n - 1)
+	i = RANDOM(1, n)
+	if i ∈ S
+		S = S ∪ {n}
+	else S = S ∪ {i}
+	return S
+\stopCLRS
+\stopEXERCISE
+\startANSWER
+每種組合的概率應爲 \m{1/\binom{n}{m}}。
+我們來證明下面的命題：
+
+\ALGO{RANDOM-SAMPLE(m,n)} 返回均勻分布的組合。
+
+在 \m{m} 上進行歸納。 \m{m} 爲 \m{1} 或 \m{0} 時顯然是成立的。
+現在假定 \m{m-1} 時命題成立，看看 \m{m} 會發生什麼。
+
+遞迴調用 \m{m - 1} 返回的樣本時均勻分布的。
+然後有兩種情況，新的 \m{m} 子集是否包含 \m{n}。
+
+如果包含 \m{n} （概率： \m{m/n}），則其概率爲：
+\startformula
+\frac{m}{n}\frac{1}{\binom{n-1}{m-1}} = 1/\binom{n}{m}
+\stopformula
+
+如果不包含 \m{n} （概率： \m{(n-m)/n}），則其概率爲：
+\startformula
+\frac{n-m}{n}\frac{1}{\binom{n-1}{m}} = 1/\binom{n}{m}
+\stopformula
+\stopANSWER
+
+\section{Probabilistic analysis and further uses of indicator random variables}
+
+\startEXERCISE
+屋子裏至少要有多少人，才能使得某人與你生日相同的概率不小於 \m{1/2}？
+至少要有多少人，才能使得至少兩人生日爲 7 月 4 日的概率大於 \m{1/2}？
+\stopEXERCISE
+\startANSWER
+任一人生日與己不同的概率爲 \m{(n-1)/n}，
+則 \m{k} 個人生日都與己不同的概率爲 \m{（\frac{n-1}{n})^k}。
+利用互補事件求 \m{k}：
+\startformula\startmathalignment[n=1]
+1 - (\frac{n-1}{k})^k \ge \frac{1}{2} \NR
+(\frac{n-1}{k})^k \le \frac{1}{2} \NR
+k \lg(\frac{n-1}{n}) \ge \lg\frac{1}{2} \NR
+k = \frac{\log(1/2)}{\log(364/365)} \approx 263 \NR
+\stopmathalignment\stopformula
+
+另外一個問題：
+\startformula\startmathalignment
+\NC \Pr\{\text{至少兩人生日爲 7 月 4 日}\} \NC=
+        1 - \Pr\{\text{只有 1 人生日爲 7 月 4 日}\} - Pr\{\text{沒有人生日爲 7 月 4 日}\} \NR
+\NC \NC= 1 - \frac{k}{n}(\frac{n-1}{n})^{k-1} - (\frac{n-1}{n})^k \NR
+\NC \NC= 1 - (\frac{n-1}{n})^{k-1}(\frac{n+k-1}{n}) \NR
+\stopmathalignment\stopformula
+計算可得 \m{k} 爲 115。
+\stopANSWER
+
+\startEXERCISE
+假設我們將球投到 \m{b} 個箱子裏，直到某個箱子中有兩個球。
+每一次投擲都是獨立的，並且每個球落入任一箱子的機會均等。
+請問投擲次數的期望值是多少？
+\stopEXERCISE
+\startANSWER
+本質還是生日問題，更多討論參見 \goto{wikipedia}[url(http://en.wikipedia.org/wiki/Birthday_problem#Average_number_of_people)]。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+生日悖論的分析中，要求各人生日彼此獨立是否很重要？
+或者，是否只要兩兩成對獨立就足夠了？
+證明你的答案。
+\stopEXERCISE
+\startANSWER
+成對獨立足夠了。對於（5.6）之後的推導，有此即可。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+一次聚會需要邀請多少人，才能讓其中 3 人的生日很可能相同？
+\stopEXERCISE
+\startANSWER
+感覺不大對勁:(
+
+令 \m{X_{ijk}} 爲 \m{i}、 \m{j}、 \m{k} 三人生日相同時間的指示器隨機變量，
+其概率爲 \m{1/n^2}。則：
+\startformula\startmathalignment
+\NC E[X] \NC= \sum_{i=1}^n\sum_{j=i+1}^n\sum_{k=j+1}^nX_{ijk} \NR
+\NC      \NC= \sum_{i=1}^n\sum_{j=i+1}^n\sum_{k=j+1}^n\frac{1}{n^2} \NR
+\NC      \NC= \binom{n}{3}\frac{1}{n^2} \NR
+\NC      \NC= \frac{k(k-1)(k-2)}{6n^2} \NR
+\stopmathalignment\stopformula
+解得 \m{k = 94}。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+一個長度爲 \m{k} 的字串，其中所有字符均選自一個元素個數爲 \m{n} 的集合，
+那麼此字串構成一個 \m{k} 排列的概率是多少？
+此問題與生日悖論有何關聯？
+\stopEXERCISE
+\startANSWER
+\startformula
+\Pr\{k\text{-perm in }n\} = 1 \cdot
+                                 \frac{n-1}{n} \cdot
+                                 \frac{n-2}{n} \cdots
+                                 \frac{n-k+1}{n}
+      = \frac{(n-1)!}{(n-k)!n^k}
+\stopformula
+這是生日問題的互補事件，即 \m{k} 個人生日各不相同。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+假設將 \m{n} 個球投入 \m{n} 個箱子裏，其中每次投球相互獨立，
+並且每個球落入任一箱子的機會均等。
+空箱子的數目期望值是多少？
+正好有一個球的箱子數目期望值是多少？
+\stopEXERCISE
+\startANSWER
+當 \m{n} 足夠大時，兩個答案都漸進於 \m{n/e}。
+首先來看空箱子的數目：
+
+令 \m{X_i} 代表的事件爲：第 \m{i} 個箱子爲空：
+\startformula
+\Pr\{X_i\} = \left(\frac{n-1}{n}\right)^n
+                = \left(1 - \frac{1}{n}\right)^n
+                \approx \frac{1}{e}
+\stopformula
+其期望值爲：
+\startformula
+E[X] = \sum_{i=1}^n E[X_i] = \frac{n}{e}
+\stopformula
+
+箱子裏只有一個球的情況類似，其概率爲：
+\startformula
+\Pr\{Y_i\} = n\frac{1}{n}\left(\frac{n-1}{n}\right)^{n-1}
+                = \left(\frac{n-1}{n}\right)^{n-1} \approx \frac{1}{e}
+\stopformula
+期望值一樣。
+
+參見 \goto{stackexchange}[url(http://math.stackexchange.com/questions/545920/expectation-of-throwing-n-balls-into-n-bins)]。
+\stopANSWER
+
+%e5.4-7
+\startEXERCISE \DIFFICULT
+为使特征序列长度的下界变得更精确，
+请说明在 \m{n} 次硬币的公平抛掷中，
+不出现比 \m{\lg{n} - 2\lg\lg{n}} 更长的连续正面特征序列的概率小于 \m{1/n}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{需要證明}
+\stopANSWER
+
+\startPROBLEM（Probabilstic counting）
+利用一個 \m{b} 位的計數器，
+我們一般只能計數到 \m{2^b -1}。
+而用 R.Morris 的{\EMP 概率記數法}，
+我們可以計數到一個大得多的值，
+代價是精度有所損失。
+
+對 \m{i=0,1,\ldots,2^b-1}，令計數器的值 \m{i} 表示 \m{n_i} 的計數，
+其中 \m{n_i} 構成了一個非負的遞增序列。
+假設計數器初值爲 \m{0}，表示計數 \m{n_0 = 0}。
+INCREMENT 運算單元工作在一個計數器上，
+他以概率的方式包含值 \m{i}。
+如果 \m{i = 2^b-1}，則該運算單元報告溢出錯誤；
+否則，該運算單元以概率 \m{1/(n_{i+1}-n_i)} 把計數器增加 \m{1}，
+以概率 \m{1-1/(n_{i+1}-n_i)} 保持計數器不變。
+
+對所有的 \m{i\ge 0}，若選擇 \m{n_i = i}，此計數器就退化爲一個普通的計數器。
+若選擇 \m{n_i=2^{i-1}(i>0)}，或者 \m{n_i=F_i}（第 \m{i} 個 Fibonacci 數，參見\refsection{notationfunction}），
+則會出現更多有趣的情形。
+
+對於這個問題，假設 \m{n_{2^b-1}} 已足夠大，發生溢出錯誤的概率可以忽略。
+
+\startigBase[a]
+\item 請說明在執行 \m{n} 次 INCREMENT 運算後，計數器所表示的數期望值正好是 \m{n}；
+
+\startANSWER
+假設第 \m{j} 次 INCREMENT 前，計數器的值爲 \m{i}，表示 \m{n_i}。
+如果計數器增加，那麼其值會增大 \m{n_{i+1} - n_i}。
+其概率爲 \m{1/(n_{i+1} - n_i)}，並且：
+\startformula\startmathalignment
+\NC E[X_j] \NC= 0 \cdot \Pr\{\text{stays same}\} + 1 \cdot \Pr\{\text{increases}\} \NR
+\NC        \NC= 0 \cdot \left(1 - \frac{1}{n_{i+1} - n_i}\right) +
+                1 \cdot \left((n_{i+1} - n_i) \cdot \frac{1}{n_{i+1} - n_i}\right) \NR
+\NC        \NC= 1 \NR
+\stopmathalignment\stopformula
+這是每次 INCREMENT 的期望值，由於有 \m{n} 次 INCREMNT，其期望值爲 \m{n}。
+\stopANSWER
+
+\item 分析計數器表示的計數的方差依賴於 \m{n_i} 序列。
+我們來看一個簡單情形：對所有 \m{i\ge 0}， \m{n_i = 100i}。
+在執行了 \m{n} 次 INCREMENT 運算後，請估計計數器所表示數的方差。
+
+\startANSWER
+單次 INCREMENT 運算的協方差：
+\startformula\startmathalignment
+\NC Var[X_j] \NC= E[X_j^2] - E^2[X_j] \NR
+\NC           \NC= \left(0^2 \cdot \frac{99}{100} + 100^2 \frac{1}{100}\right) - 1 \NR
+\NC           \NC= 99 \NR
+\stopmathalignment\stopformula
+
+\m{n} 次運算的協方差：
+\startformula
+Var[X] = Var[X_1 + X_2 + \ldots + X_n] = \sum_{i=1}^n Var[X_i] = 99n
+\stopformula
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+\startPROBLEM（Searching an unsorted array）
+本題將分析三個算法，他們在一個包含 \m{n} 個元素的無序數列 \m{A} 中查找一個值 \m{x}。
+
+考慮如下的隨機策略：隨機挑選 \m{A} 中的一個下標 \m{i}。
+如果 \m{A[i] = x}，則終止；否則，繼續挑選 \m{A} 中的一個新的隨機下標。
+重復隨機挑選下標，知道找到一個下標 \m{j}，使得 \m{A[j] = x}，
+或者知道我們已檢查過 \m{A} 中的所有元素。
+注意，我們每次都是從全部下標的結合中挑選，於是可能會不止一次地檢查某個元素。
+\startigBase[a]
+\item 請寫出過程 \ALGO{RANDOM-SEARCH} 的僞碼實現上述策略。
+確保當 \m{A} 中所有下標都被挑選過時，你的算法應停止。
+
+\startANSWER
+\CLRSH{RANDOM-SEARCH(x, A, n)}
+\startCLRS
+v = ∅
+while |∅| ≠ n
+	i = RANDOM(1, n)
+	if A[i] = x
+		return i
+	else:
+		v = v ∩ i
+return ␀
+\stopCLRS
+其中可以多種方式實現 \m{v}——如散列表、樹或位圖。位圖的時間、空間性能應當都是最好的。
+\stopANSWER
+
+\item 假定恰好有一個下標 \m{i} 使得 \m{A[i] = x}。
+在我們找到 \m{x} 和 \ALGO{RANDOM-SEARCH} 結束之前，
+必須挑選 \m{A} 下標的數目期望值是多少？
+
+\startANSWER
+參考 \goto{Bernoulli trials}[url(http://en.wikipedia.org/wiki/Bernoulli_trial)]，期望值爲 \m{n}。
+\stopANSWER
+
+\item 假設有 \m{k\ge 1} 個下標 \m{i} 使得 \m{A[i] = x}，
+推廣你對上一項的解答。
+在找到 \m{x} 或 \ALGO{RANDOM-SEARCH} 結束之前，
+必須挑選 \m{A} 的下標的數目期望值是多少？
+你的答案應該是 \m{n} 和 \m{k} 的函數。
+
+\startANSWER
+答案爲 \m{n/k}。
+\stopANSWER
+
+\item 假設沒有下標 \m{i} 使得 \m{A[i] = x}，
+在檢查完 \m{A} 的所有元素或 \ALGO{RANDOM-SEARCH} 結束之前，
+我們必須挑選 \m{A} 的下標的數目期望值是多少？
+
+\startANSWER
+答案爲 \m{n(\ln{n} + \O(1))}，參見節 5.4.2。
+\stopANSWER
+
+\stopigBase
+
+現在考慮一個確定性的線性查找算法，我們稱之爲 \ALGO{DETERMINISTIC-SEARCH}。
+具體地說，這個算法在 \m{A} 中順序查找 \m{x}，
+考慮 \m{A[1]}、 \m{A[2]}、 \m{A[3]}、 \m{\ldots}、 \m{A[n]}，
+直到找到 \m{A[i] = x}，或者到達數列的末尾。
+假設輸入數列的所有排列都是等可能的。
+\startigBase[a,continue]
+\item 假設恰好有一個下標 \m{i} 使得 \m{A[i] = x}。
+\ALGO{DETERMINISTIC-SEARCH} 的平均運行時間是多少？
+最壞運行時間又是多少？
+
+\startANSWER
+最壞運行時間爲 \m{n}。平均運行時間爲 \m{(n+1)/2}。
+\stopANSWER
+
+\item 假設有 \m{k\ge 1} 個下標 \m{i} 使得 \m{A[i] = x}，推廣你對上一項的解答。
+\ALGO{DETERMINISTIC-SEARCH} 的平均運行時間是多少？最壞運行時間又是多少？
+你的答案應該是 \m{n} 和 \m{k} 的函數。
+
+\startANSWER
+最壞運行時間爲 \m{n-k+1}。
+平均運行時間爲 \m{(n+1)/(k+1)}。
+令 \m{X_i} 爲指示器隨機變量，代表第 \m{i} 個元素匹配，則 \m{\Pr\{X_i\} = 1/(k+1)}。
+令 \m{Y} 爲指示器隨機變量，代表在前 \m{n-k+1} 個元素中找到了匹配項（\m{\Pr{\{Y\}}=1}）。
+因此：
+\startformula\startmathalignment
+\NC E[X] \NC= E[X_1 + X_2 + \ldots + X_{n-k} + Y] \NR
+\NC      \NC= 1 + \sum_{i=1}^{n-k}E[X_i] \NR
+\NC      \NC= 1 + \frac{n-k}{k+1} \NR
+\NC      \NC= \frac{n+1}{k+1} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\item 假設沒有下標 \m{i} 使得 \m{A[i] = x}，
+\ALGO{DETERMINISTIC-SEARCH} 的平均運行時間是多少？最壞運行時間又是多少？
+
+\startANSWER
+兩種情況都是 \m{n}。
+\stopANSWER
+\stopigBase
+
+最後，考慮一個隨機算法 \ALGO{SCRAMBLE-SEARCH}，
+他縣將輸入數列隨機變換排列，然後在變換後的數列上，運行上面的確定性線性查找算法。
+\startigBase[a,continue]
+\item 設 \m{k} 是滿足 \m{A[i] = x} 的下標的數目，
+請給出在 \m{k=0} 和 \m{k=1} 兩種情況下，
+算法 \ALGO{SCRAMBLE-SEARCH} 最壞情形的運行時間和運行時間期望值。
+推廣你的解答以處理 \m{k\ge 1} 的情況。
+
+\startANSWER
+與 \ALGO{DETERMINISTIC-SEARCH} 一樣，只是將“平均情況”換成了“期望”。
+\stopANSWER
+
+\item 你將會使用 3 種查找算法中的哪一個？解釋你的答案。
+
+\startANSWER
+當然是 \ALGO{DETERMINISTIC-SEARCH}。
+雖然 \ALGO{SCRAMBLE-SEARCH} 可以有更好的期望值，
+但是排列變換需要額外的時間，而這個時間是線性的操作。
+在進行排列變換的時間李，我們可能已經掃描完了整個數列並得到了結果。
+\stopANSWER
+
+\stopigBase
+
+\stopPROBLEM
+
+\stopcomponent

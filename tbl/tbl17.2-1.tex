@@ -1,0 +1,25 @@
+
+\startxtable[
+    option=max,
+    align={middle,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,topframe=on,bottomframe=on]
+\startxrow[foregroundstyle=bold,]
+  \processcommalist[操作,攤還代價]{\xcell[align={middle}]}
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off,bottomframe=on]
+\startxrow \processcommalist[\ALGO{PUSH},3]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{POP},0]\xcell \stopxrow
+\startxrow \processcommalist[\ALGO{COPY},0]\xcell \stopxrow
+\stopxtablebody
+
+\stopxtable

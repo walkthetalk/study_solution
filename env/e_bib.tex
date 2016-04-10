@@ -1,0 +1,13 @@
+\setupbibtex[
+  database={ref},
+  sort=author,	% title author short no FILE
+]
+
+\define[1]\WithBrackets{[#1]~}
+\setuppublications[
+  alternative=cn,	% ams apa apa-de apa-fr aps num num-fr ssa
+  numbering=yes,
+  numbercommand=\WithBrackets,
+  autohang=yes
+]
+\setupheadtext[cn][pubs={參考文獻}]

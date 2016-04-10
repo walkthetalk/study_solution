@@ -1,0 +1,55 @@
+instance 實體
+implement 實現
+implementation 實作
+data pattern 數據樣式
+operator 算子
+operand 算元
+data type 數據型別
+argument 引數 *********
+parameter 參數 ********
+expression 算式
+function 函式
+profile 評測
+access 存取
+address 位址
+array 陣列
+scope 作用域
+string 字串
+literal 常值
+message 訊息
+information 資訊
+field 欄位
+bitfield 位欄
+macro 巨集
+macro replacement 巨集代換
+header (file) 頭檔
+source file 源檔
+recursion 遞迴
+directive 指示
+pragma 雜注
+instruction 指令
+token 符記
+endianness 端序
+component 組件
+costruct 構件
+alignement 齊位
+notation 符號
+illustrate 演示
+widen 拓寬
+extension 擴展
+extent 擴充
+contract(ion) 化簡
+qualifier 限定符
+specifier 說明符
+modifier 修飾符
+enable 使能
+disable 去能
+flag　 标志
+tag　 标签
+token　 标记
+identity　 标识
+label　　标号
+notation　符号
+mark 標註
+symbol 記號
+loop 迴圈

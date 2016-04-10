@@ -1,0 +1,25 @@
+
+\startxtable[
+    option=max,
+    align={middle,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,bottomframe=on]
+\startxrow[foregroundstyle=bold,]
+  \xcell{\m{i,j}}\xcell{White}\xcell{Gray}\xcell{Black}
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off]
+\startxrow \xcell{White}\xcell{TBFC}\xcell{BC}  \xcell{C}   \stopxrow
+\startxrow \xcell{Gray} \xcell{TF}  \xcell{TBF} \xcell{TFC} \stopxrow
+\startxrow \xcell{Black}\xcell{}    \xcell{B}   \xcell{TBFC}\stopxrow
+\stopxtablebody
+
+\stopxtable

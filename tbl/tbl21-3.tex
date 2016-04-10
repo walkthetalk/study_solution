@@ -1,0 +1,31 @@
+
+\startxtable[
+    option=max,
+    align={middle,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,bottomframe=on]
+\startxrow[foregroundstyle=bold,]
+  \xcell{Operation}\xcell{Number of objects updated}
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off]
+\startxrow \xcell{\ALGO{MAKE-SET(x_1)}}\xcell{1} \stopxrow
+\startxrow \xcell{\ALGO{MAKE-SET(x_2)}}\xcell{1} \stopxrow
+\startxrow \xcell{\m{\vdots}}\xcell{\m{\vdots}} \stopxrow
+\startxrow \xcell{\ALGO{MAKE-SET(x_n)}}\xcell{1} \stopxrow
+\startxrow \xcell{\ALGO{UNION(x_2,x_1)}}\xcell{1} \stopxrow
+\startxrow \xcell{\ALGO{UNION(x_3,x_2)}}\xcell{2} \stopxrow
+\startxrow \xcell{\ALGO{UNION(x_4,x_3)}}\xcell{3} \stopxrow
+\startxrow \xcell{\m{\vdots}}\xcell{\m{\vdots}} \stopxrow
+\startxrow \xcell{\ALGO{UNION(x_n,x_{n-1})}}\xcell{\m{n-1}} \stopxrow
+\stopxtablebody
+
+\stopxtable

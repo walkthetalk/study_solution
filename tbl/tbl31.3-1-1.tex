@@ -1,0 +1,26 @@
+
+\startxtable[
+    option=max,
+    align={middle,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,bottomframe=on]
+\startxrow[foregroundstyle=bold,]
+  \xcell[rightframe=on]{\m{+_4}}\processcommalist[0, 1, 2, 3]{\xcell[align={middle}]}
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off]
+\startxrow \xcell[rightframe=on]{0}\processcommalist[0,1,2,3]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{1}\processcommalist[1,2,3,0]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{2}\processcommalist[2,3,0,1]\xcell \stopxrow
+\startxrow \xcell[rightframe=on]{3}\processcommalist[3,0,1,2]\xcell \stopxrow
+\stopxtablebody
+
+\stopxtable

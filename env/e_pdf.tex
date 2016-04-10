@@ -1,0 +1,23 @@
+% BUG: can't put 'part' in pdf index, or the chapter/section... missed
+\placebookmarks[
+  chapter,section,subsection% put these in the pdf index
+][
+  all% open all by default
+]
+
+\placebookmarks[
+  title,subject,subsubject%
+][
+  force=yes%
+]
+
+\setupinteraction[
+  state=start,
+  color=blue,
+  contrastcolor=blue,
+  style=bold,
+  title={算法导论笔记},
+  author={倪慶亮},
+  subtitle={算法导论笔记},
+  keyword=算法导论 笔记,
+]

@@ -1,0 +1,887 @@
+\startcomponent c_elementary_graph_algorithms
+
+\startchapter[
+  title={Elementary Graph Algorithms},
+]
+
+\startsection[
+  title={Representations of graphs},
+]
+
+%e22.1-1
+\startEXERCISE
+給定有向圖的鄰接鏈表，需要多長時間才能計算出每個節點的出度（發出的邊的條數）？
+多長時間才能計算出每個節點的入度（進入的邊的條數）？
+\stopEXERCISE
+
+\startANSWER
+\m{\Theta(|V|+|E|)}。
+
+\m{\Theta(|V||E|)}。而如果使用額外 \m{\Theta(|V|)} 空間，可以在 \m{\Theta(|V| + |E|)} 時間內完成。
+\stopANSWER
+
+%e22.1-2
+\startEXERCISE
+給定一棵有 7 個節點的完全二叉樹的鄰接鏈表，
+請給出等價的鄰接矩陣表示。
+這裏假設節點的編號爲從 1～7。
+\stopEXERCISE
+
+\startANSWER
+
+\startformula\startmathalignment
+\NC 1 \NC \qquad 2,3 \NR
+\NC 2 \NC \qquad  1,4,5 \NR
+\NC 3 \NC \qquad  1,6,7 \NR
+\NC 4 \NC \qquad  2 \NR
+\NC 5 \NC \qquad  2 \NR
+\NC 6 \NC \qquad  3 \NR
+\NC 7 \NC \qquad  3 \NR
+\stopmathalignment\stopformula
+
+\startformula\startmatrix
+\NC 0 \NC 1 \NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NR
+\NC 1 \NC 0 \NC 0 \NC 1 \NC 1 \NC 0 \NC 0 \NR
+\NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NC 1 \NC 1 \NR
+\NC 0 \NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NC 0 \NR
+\NC 0 \NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NC 0 \NR
+\NC 0 \NC 0 \NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NR
+\NC 0 \NC 0 \NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NR
+\stopmatrix\stopformula
+
+\stopANSWER
+
+%e22.1-3
+\startEXERCISE
+有向圖 \m{G=(V,E)} 的{\EMP 轉置}是圖 \m{G^T=(V,E^T)}，
+這裏 \m{E^T=\{(v,u)\in V \times V:(u,v)\in E\}}。
+\stopEXERCISE
+
+\startANSWER
+\m{O(V+E)}，需要額外大小爲 \m{O(V)} 的指針數組。
+
+轉置矩陣即可， \m{O(|V|^2)}。
+\stopANSWER
+
+%e22.1-4
+\startEXERCISE
+給定多圖 \m{G=(V,E)} 的鄰接鏈表（多圖是允許重複邊和自循環邊的圖），
+請給出一個時間爲 \m{O(V+E)} 的算法，
+用來計算該圖的“等價”無向圖 \m{G'=(V,E')} 的鄰接鏈表表示。
+這裏 \m{E'} 是將 \m{E} 中的冗餘邊和自循環邊刪除後餘下的邊。
+刪除冗餘邊指的是將兩個節點之間的多條邊替換爲一條邊。
+\stopEXERCISE
+
+\startANSWER
+遍歷所有頂點 \m{V_i}，新建一個空數組，用來記錄是否有 \m{V_i} 到其他節點的邊，
+遍歷 \m{V_i} 的鄰接鏈表中所有元素 \m{V_j}，如果 \m{V_j} 在新數組中沒有被標記過，則標記，
+如果已被標記過，則刪除當前節點。然後清空新數組，遍歷下一個頂點的鄰接鏈表。
+\stopANSWER
+
+%e22.1-5
+\startEXERCISE
+有向圖 \m{G=(V,E)} 的{\EMP 平方圖}是圖 \m{G^2=(V,E^2)}，
+這裏，邊 \m{(u,v)\in E^2} 當且僅當圖 \m{G} 包含一條最多由兩條邊構成的從 \m{u} 到 \m{v} 的路徑。
+請給出一個有效算法來計算圖 \m{G} 的平方圖 \m{G^2}。
+這裏圖 \m{G} 既可以以鄰接表表示，
+也可以以鄰接矩陣表示。
+請分析算法的運行時間。
+\stopEXERCISE
+
+\startANSWER
+鄰接矩陣： \m{M^2[u,w] = \sum_{v}M[u,v]\cdot M[v,w]}，即矩陣相乘；時間複雜度爲 \m{O(V^3)}。
+如果採用 Strassen 算法則爲 \m{O(V^{2.376})}。
+
+若採用鄰接鏈表：遍歷所有邊 \m{(u,v)}，然後在遍歷 \m{v} 的所有鄰接頂點 \m{w}，將 \m{w} 加入到新的鄰接鏈表中（利用額外數組記錄是否已經添加過，以解決衝突）。時間複雜度爲 \m{O(VE)}。
+\stopANSWER
+
+%e22.1-6
+\startEXERCISE
+多數以鄰接矩陣作爲輸入的圖算法的運行時間爲 \m{\Omega(V^2)}，但也有例外。
+給定圖 \m{G} 的鄰接矩陣表示，
+請給出一個 \m{O(V)} 時間的算法來判斷有向圖 \m{G} 是否存在一個 {\EMP 通用匯點}（universal sink）。
+通用匯點指的是入度爲 \m{|V|-1} 但出度爲 0 的節點。
+\stopEXERCISE
+
+\startANSWER
+只需判斷一行加一列元素。
+\stopANSWER
+
+%e22.1-7
+\startEXERCISE
+有向無環圖 \m{G=(V,E)} 的{\EMP 關聯矩陣}（incidence matrix）是一個滿足下述條件的 \m{|V|\times|E|} 矩陣 \m{B=(b_{ij})}：
+\startformula
+b_{ij} = \startcases
+\NC -1 \MC \text{如果邊 \m{j} 從節點 \m{i} 出發} \NR
+\NC 1 \MC \text{如果邊 \m{j} 進入節點 \m{i}} \NR
+\NC 0 \MC \text{其他} \NR
+\stopcases
+\stopformula
+請說明矩陣乘積 \m{BB^T} 裏的每一個元素代表什麼意思。
+這裏 \m{B^T} 是矩陣 \m{B} 的轉置。
+\stopEXERCISE
+
+\startANSWER
+與頂點 \m{i} 相連的邊的數目。
+\stopANSWER
+
+%e22.1-8
+\startEXERCISE
+假定數組 \m{Adj[u]} 的每個記錄項不是鏈表，而是一個散列表，
+裏面包含的是 \m{(u,v)\in E} 的節點 \m{v}。
+如果每條邊被查詢的概率相同，
+則判斷一條邊是否在圖中的期望時間值是多少？
+這種表示方法的缺陷是什麼？
+請爲每條邊鏈表給出一個不同的數據結構來解決這個問題。
+與散列表相比較，你給出的新方法存在什麼缺陷嗎？
+\stopEXERCISE
+
+\startANSWER
+每個散列表越大，則期望時間越少，當散列表跟頂點個數一樣大時，期望的查詢時間就是 \m{O(1)} 了。
+
+缺陷是空間佔用大。
+
+用鄰接矩陣。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Breadth-first search},
+]
+
+%e22.2-1
+\startEXERCISE
+請計算出在有向圖 22-2（a）上運行廣度優先搜索算法後的 \m{d} 值和 \m{\phi} 值。
+這裏假定節點 3 爲算法所用的源節點。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.2-2
+\startEXERCISE
+請計算出在有向圖 22-3 所示無向圖上運行廣度優先搜索算法後的 \m{d} 值和 \m{\phi} 值。
+這裏假定節點 u 爲算法所用的源節點。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.2-3
+\startEXERCISE
+證明：使用單個位來存放每個節點的顏色即可。
+這個論點可以通過證明將算法第 18 行的僞碼刪除後， \ALGO{BFS} 過程生成的結果不變得到。
+\stopEXERCISE
+
+\startANSWER
+算法只關心節點是不是白色，至於是黑還是灰則沒有區別。
+\stopANSWER
+
+%e22.2-4
+\startEXERCISE
+如果將輸入的圖用鄰接矩陣來表示，
+並修改算法來應對此種形式的輸入，
+請問 \ALGO{BFS} 的運行時間將是多少？
+\stopEXERCISE
+
+\startANSWER
+\m{O(V^2)}
+\stopANSWER
+
+%e22.2-5
+\startEXERCISE
+證明：在廣度有限搜索算法裏，
+賦給節點 \m{u} 的 \m{u.d} 值與節點在鄰接表裏出現的次序無關。
+使用圖 22-3 作爲例子，
+證明： \ALGO{BFS} 所計算出的廣度優先樹可以因鄰接鏈表中的次序不同而不同。
+\stopEXERCISE
+
+\startANSWER
+最短路徑長度當然和次序無關。
+而最短路徑可能有多條，就和次序有關了。
+\stopANSWER
+
+%e22.2-6
+\startEXERCISE
+舉出一個有向圖 \m{G=(V,E)} 的例子，
+對於源節點 \m{s\in V} 和一組樹邊 \m{E_{\pi}\subseteq E}，
+使得對於每個節點 \m{v\in V}，圖 \m{V, E_{\pi}} 中從源節點 \m{s} 到
+節點 \m{v} 的唯一簡單路徑也是圖 \m{G} 中的一條最短路徑，
+但是，不管鄰接表裏節點之間的次序如何，
+邊集 \m{E_\pi} 都不能通過在圖 \m{G} 上運行 \ALGO{BFS} 來獲得。
+\stopEXERCISE
+
+\startANSWER
+如下圖，實線屬於 \m{E_\pi}。
+
+\externalfigure[output/e22_2_6-1]
+\stopANSWER
+
+%e22.2-7
+\startEXERCISE
+職業摔跤手可以分爲兩種類型：
+“娃娃臉”（“好人”）型和“高跟鞋”（“壞人”）型。
+在任意一對職業摔跤手之間都有可能存在競爭關係。
+假定有 \m{n} 個職業摔跤手，
+並且有一個給出競爭關係的 \m{r} 對摔跤手的鏈表。
+請給出一個時間爲 \m{O(n+4)} 的算法來判斷是否可以將某些摔跤手劃分爲“娃娃臉”型，
+而剩下的劃分爲”高跟鞋“型，
+使得所有的競爭關係均只存在於娃娃臉型和高跟鞋型選手之間。
+如果可以進行這種劃分，
+則算法還應當生成一種這樣的劃分。
+\stopEXERCISE
+
+\startANSWER
+遍歷邊，給頂點染色。
+\stopANSWER
+
+%e22.2-8
+\startEXERCISE\DIFFICULT
+我們將一棵樹 \m{T=(V, E)} 的{\EMP 直徑}定義爲 \m{\max_{u,v\in V}\delta(u,v)}，
+也就是說，樹中所有最短路徑距離的最大值即爲樹的直徑。
+請給出一個有效算法來計算樹的直徑，
+並分析算法的運行時間。
+\stopEXERCISE
+
+\startANSWER
+\startigBase[n]
+\item 選擇任意節點 \m{A}，運行 \ALGO{BFS} 找到離 \m{A} 最遠的節點 \m{S}；
+\item 從 \m{S} 開始運行 \ALGO{BFS}，找到最遠節點 \m{D}；
+\item 從 \m{S} 到 \m{D} 的路徑即爲所求。
+\stopigBase
+
+主要是證明 \m{S} 必爲直徑的一個端點。用反證法，參考如下鏈接：
+
+\SIMPLEURL{http://stackoverflow.com/questions/12989578/prove-traversing-a-k-ary-tree-twice-yields-the-diameter}。
+\stopANSWER
+
+%e22.2-9
+\startEXERCISE
+設 \m{G=(V,E)} 爲一個連通無向圖。
+請給出一個 \m{O(V+E)} 時間的算法來計算圖 \m{G} 中的一條這樣的路徑：
+該路徑正反向通過 \m{E} 中每條邊恰好一次（該路徑通過每條邊兩次，但這兩次的方向相反）。
+如果給你大量的分幣作爲獎勵，
+請描述如何在迷宮中找出一條路。
+\stopEXERCISE
+
+\startANSWER
+深度優先進行遍歷，優先訪問沒有訪問過的邊，如果所有相鄰點都訪問過，沿路徑返回上一個節點，繼續執行。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Depth-first search},
+]
+
+%e22.3-1
+\startEXERCISE
+劃一個 \m{3\times 3} 的網格，行和列的擡頭分別標記爲白色、灰色和黑色。
+對於每個表單元 \m{(i,j)}，
+請指出在對有向圖進行深度有限搜索的過程中，是否可能存在一條邊，
+鏈接一個顏色爲 \m{i} 的節點和一個顏色爲 \m{j} 的節點。
+對於每種可能的邊，指明該種邊的類型。
+另外，請針對無向圖的深度優先搜索再製作一張這樣的網格。
+\stopEXERCISE
+
+\startANSWER
+\startigBase[2]
+\item T：樹邊
+\item B：後向邊
+\item F：前向邊
+\item C：橫向邊
+\stopigBase
+
+有向圖：
+\input{tbl/tbl22.3-1_1}
+
+無向圖：
+\input{tbl/tbl22.3-1_2}
+\stopANSWER
+
+%e22.3-2
+\startEXERCISE[exercise:22.3-2]
+給出深度有限搜索算法在圖 22-6 上的運行過程。
+假定深度有限搜索算法的第 5～7 行的 {\EMP for} 循環是以字母表順序依次處理每個節點，
+並假定每條鄰接鏈表皆以字母表順序對裏面的節點進行了排序。
+請給出每個節點的發現時間和完成時間，並給出每條邊的分類。
+附圖 22-6：
+
+\externalfigure[output/e22_3_2-1]
+\stopEXERCISE
+
+\startANSWER
+如下圖，其中紅色的是樹邊，藍色的是後向邊，黑色的是前向邊，虛線是橫向邊。
+
+\externalfigure[output/e22_3_2-2]
+\stopANSWER
+
+\stopsection
+
+%e22.3-3
+\startEXERCISE
+給出圖 22-4 的深度優先搜索的括號化結構。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e22_3_3-1]
+\stopANSWER
+
+%e22.3-4
+\startEXERCISE
+證明：使用單個位來存放每個節點的顏色已經足夠。
+這一點可以通過證明如下事實來得到：
+如果將 \ALGO{DFS-VISIT} 的第 2 行刪除， \ALGO{DFS} 給出的結果相同。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.3-5
+\startEXERCISE
+證明邊 \m{(u,v)} 是：
+\startigBase[a]
+\item 樹邊或前向邊當且僅當 \m{u.d < v.d < v.f < u.f}；
+\item 後向邊當且僅當 \m{v.d\le u.d < u.f \le v.f}；
+\item 橫向邊當且僅當 \m{v.d<v.f<u.d<u.f}。
+\stopigBase
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.3-6
+\startEXERCISE
+證明：在無向圖中，根據深度有限搜索算法是先探索 \m{(u,v)} 還是先探索 \m{(v,u)} 来将邊 \m{(u,v)} 分類爲樹邊或者後向邊，
+與根據分類列表中的 4 種類型的次序進行分類是等價的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.3-7
+\startEXERCISE
+請重寫 \ALGO{DFS} 算法的僞碼，以便使用棧來消除遞歸調用。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{DFS-STACK(G, s)}
+\startCLRS
+for each vertex u in V(G) - {s}
+	u.color = WHITE
+	u.pred = NIL
+time = 0
+S = EMPTY
+
+time = time + 1
+s.td = time
+s.color = GRAY
+PUSH(S, s)
+while S != EMPTY
+	t = TOP(S)
+	if exist v in V(G).Adj[t], v.color == WHITE	// v's adjacency list hasn't been fully examined
+		v.pred = t
+		time = time + 1
+		v.td = time
+		v.color = GRAY
+		PUSH(S, v)
+	else
+		t = POP(S)
+		time = time + 1
+		v.tf = time
+		v.color = BLACK
+\stopCLRS
+\stopANSWER
+
+%e22.3-8
+\startEXERCISE
+請給出如下猜想的一個反例：
+如果有向圖 \m{G} 包含一條從節點 \m{u} 到節點 \m{v} 的路徑，
+並且在對圖 \m{G} 進行深度優先搜索時有 \m{u.d < v.d}，
+則節點 \m{v} 是節點 \m{u} 在深度優先森林中的一個後代。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e22_3_8-1]
+\stopANSWER
+
+%e22.3-9
+\startEXERCISE
+請給出如下猜想的一個反例：
+如果有向圖 \m{G} 包含一條從節點 \m{u} 到節點 \m{v} 的路徑，
+則任何對圖 \m{G} 的深度優先搜索都將導致 \m{v.d\le u.f}。
+\stopEXERCISE
+
+\startANSWER
+參考上一題。
+\stopANSWER
+
+%e22.3-10
+\startEXERCISE
+修改深度優先搜索的僞碼，
+讓其打印出有向圖 \m{G} 的每條邊及其分類。
+並指出，如果圖 \m{G} 是無向圖，
+要進行何種修改才能達到相同的效果。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.3-11
+\startEXERCISE
+請解釋有向圖的一個節點 \m{u} 怎樣才能成爲深度優先樹中的唯一節點，
+即使節點 \m{u} 同時有入邊和出邊。
+\stopEXERCISE
+
+\startANSWER
+有頂點 \m{v_1,v_2,\ldots,v_k}，存在邊 \m{(v_i,u)}；
+有頂點 \m{w_1,w_2,\ldots,w_l}，存在邊 \m{(u,w_j)}；
+在執行 \ALGO{DFS} 時，可能先發現所有 \m{w_j}，
+然後再以 \m{u} 爲根進行搜索時， \m{u} 就會成爲一個孤立的節點。
+\stopANSWER
+
+%e22.3-12
+\startEXERCISE
+證明：我們可以在無向圖 \m{G} 上使用深度優先搜索來獲得圖 \m{G} 的連通分量，
+並且深度優先森林所包含的樹的棵樹與 \m{G} 的連通分量數量相同。
+更準確地說，請給出如何修改深度優先搜索來讓其給每個節點賦予一個介於 1 和 \m{k} 之間的整數值 \m{v.cc}，
+這裏 \m{k} 是 \m{G} 的連通分量數，
+使得 \m{u.cc = v.cc} 當且僅當節點 \m{u} 和節點 \m{v} 處於同一個連通分量中。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.3-13
+\startEXERCISE\DIFFICULT
+對於有向圖 \m{G=(V,E)} 來說，
+如果 \m{u\leadsto v} 意味着圖 \m{G} 至多包含一條從 \m{u} 到 \m{v} 的簡單路徑，
+則圖 \m{G} 是{\EMP 單連通圖}（singly connected）。
+請給出一個有效算法來判斷一個有向圖是否是單連通圖。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startsection[
+  title={Topological sort},
+]
+
+%e22.4-1
+\startEXERCISE
+給出算法 \ALGO{TOPOLOGICAL-SORT} 運行於圖 22-8 上時所生成的節點次序。
+這裏的所有假設與\refexercise{22.3-2} 一樣。
+附圖 22-8：
+
+\externalfigure[output/e22_4_1-1]
+\stopEXERCISE
+
+\startANSWER
+\m{pnosmryvwzxuqt}。
+\stopANSWER
+
+%e22.4-2
+\startEXERCISE
+請給出線性時間算法，其輸入爲一個有向無環圖 \m{G=(V,E)} 以及兩個節點 \m{s} 和 \m{t}，
+其輸出是從節點 \m{s} 到節點 \m{t} 之間的簡單路徑的數量。
+例如，對於圖 22-8 所示的有向無環圖，
+從節點 \m{p} 到節點 \m{v} 一共有 4 條簡單路徑，
+分別是 \m{pov}、 \m{poryv}、 \m{posryv} 和 \m{psryv}。
+（本題僅要求計數簡單路徑的條數，而不要求將簡單路徑本身列舉出來。）
+\stopEXERCISE
+
+\startANSWER
+先進行拓撲排序，並取 \m{s} 到 \m{t} 間的子集，令序列爲 \m{v_1, v_2, \ldots, v_n}，
+其中 \m{v_1=s}， \m{v_n = t}。給序列中每一項加一個屬性用來計數，初始值全爲 0。
+然後從左至右遍歷此序列。如果 \m{v_i=s}，則 \m{c_i = 1}；
+否則， \m{c_i = \sum_{v_j:(v_j,v_i)\in E}p[j]}。
+
+\startCLRS
+for i = 1 upto n
+	if v[i] == s
+		c[i] = 1
+	else
+		c[i] = 0
+for i = 1 upto n - 1
+	for each (v[i],v[j]) in E and j <= n
+		c[j] += c[i]
+
+return c[n]
+\stopCLRS
+\stopANSWER
+
+%e22.4-3
+\startEXERCISE
+給出一個算法來判斷給定無向圖 \m{G=(V,E)} 是否包含一個環路。
+算法運行時間應該在 \m{O(V)} 數量級，且與 \m{|E|} 無關。
+\stopEXERCISE
+
+\startANSWER
+運行 \ALGO{DFS}，如果發現前向邊，則有環路。
+如果沒有環路，則 \m{|E| < |V|}。
+如果有環路，則掃描的邊數肯定小於 \m{|V|}，因此算法時間複雜度爲 \m{O(V)}。
+\stopANSWER
+
+%e22.4-4
+\startEXERCISE
+證明或反證下述論斷：
+如果有向圖 \m{G} 包含環路，
+則在算法 \ALGO{TOPOLOGICAL-SORT(G)} 所生成的節點序列裏，
+圖 \m{G} 中與所生成序列不一直的“壞”邊的條數最少。
+\stopEXERCISE
+
+\startANSWER
+不成立。選擇不同的起點，會得到不同的序列，壞邊的數目也不盡相同，因此不能保證壞邊數目最少。
+如下圖，若從 \m{a} 點開始，則得到序列 \m{a,b,c}，有 1 條壞邊 \m{(c,a)}。
+若從 \m{b} 點開始，則得到序列 \m{b,c,a}，有 2 條壞邊 \m{(a,c)}、 \m{(a,b)}。
+
+\externalfigure[output/e22_4_4-1]
+\stopANSWER
+
+%e22.4-5
+\startEXERCISE
+在有向無環圖 \m{G=(V,E)} 上執行拓撲排序還有一種辦法，
+就是重複尋找入度爲 0 的節點，輸出該節點，
+將該節點及從其發出的邊從圖中刪除。
+請解釋如何在 \m{O(V+E)} 時間內實現這種思想。
+如果圖 \m{G} 包含環路，將會發生什麼情況？
+\stopEXERCISE
+
+\startANSWER
+首先運行 \ALGO{DFS} 或 \ALGO{BFS} 可以在 \m{O(V+E)} 時間內統計出每個點的入度和出度，
+以後在刪除邊的時候要維護這些信息。
+每次輸出入度爲 0 的那個點並刪除其出邊，並更新相應節點的入度。
+要執行 \m{O(V)} 次輸出和 \m{O(E)} 次的刪除。
+總時間爲 \m{O(V+E)}。
+
+如果有環路，那可能沒有入度爲 0 的點。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Strongly connected components},
+]
+
+%e22.5-1
+\startEXERCISE
+如果在圖 \m{G} 中加入一條新的邊， \m{G} 中的強連通分量的數量會發生怎樣的變化？
+\stopEXERCISE
+
+\startANSWER
+如果增加的邊位於某一強連通分量內部，則不會發生變化。
+如果增加的邊跨越兩個分量，則分量的數量可能不變，也可能減少，甚至減少到只有一個強連通分量。
+\stopANSWER
+
+%e22.5-2
+\startEXERCISE
+給出算法 \ALGO{STRONGLY-CONNECTED-COMPONENTS} 在圖 22-6 上的運行過程。
+具體要求是，給出算法第 1 行所計算出的完成時間和第 3 行所生成的森林。
+假定 \ALGO{DFS} 的第 5～7 行的循環是以字母表順序來對節點進行處理，
+並且連接鏈表中的節點也是以字母表順序排列好的。
+附圖 22-6：
+
+\externalfigure[output/e22_3_2-1]
+\stopEXERCISE
+
+\startANSWER
+下圖爲 \m{G^T}，其中的數字爲第一行所計算出的時間。
+黑色邊連接兩個強連通分量，其他顏色的邊標記不同的顏色分量。
+
+\externalfigure[output/e22_5_2-1]
+\stopANSWER
+
+%e22.5-3
+\startEXERCISE
+Bacon 教授聲稱，如果在第二次深度優先搜索時使用原始圖 \m{G} 而不是圖 \m{G} 的轉置圖 \m{G^T}，
+並且以完成時間的遞增次序來掃描節點，則計算強連通分量的算法將更加簡單。
+這個更加簡單的算法總是能計算出正確的結果嗎？
+\stopEXERCISE
+
+\startANSWER
+不正確。
+\stopANSWER
+
+%e22.5-4
+\startEXERCISE
+證明：對於任意有向圖 \m{G} 來說， \m{((G^T)^{SCC})^T=G^{SCC}}。
+也就是說，轉置圖 \m{G^T} 的分量圖的轉置與圖 \m{G} 的分量圖相同。
+\stopEXERCISE
+
+\startANSWER
+\m{G} 和 \m{G^T} 有相同的強連通分量，但分量間的連接關係正好相反。
+\stopANSWER
+
+%e22.5-5
+\startEXERCISE
+給出一個時間複雜度爲 \m{O(V+E)} 的算法來計算有向圖 \m{G=(V,E)} 的分量圖。
+請確保在算法所生成的分量圖中，任意兩個節點之間至多存在一條邊。
+\stopEXERCISE
+
+\startANSWER
+給各分量編號，記爲 \m{1,2,\ldots,k}， \m{k \le V}，
+並記錄每一個節點 \m{u} 所屬分量 \m{s[u]}。
+遍歷所有邊 \m{(u,v)}，如果 \m{s[u] \ne s[v]}，則將 \m{(s[u],s[v])} 加入到新集合 \m{T} 中。
+對 \m{T} 中元素進行基排序。
+將 \m{T} 中所有與前一個元素不同的元素加入到新集合 \m{S} 中，
+則 \m{S} 即爲所求。
+\stopANSWER
+
+%e22.5-6
+\startEXERCISE
+給定有向圖 \m{G=(V,E)}，
+請說明如何創建另一個圖 \m{G'=(V,E')}，
+使得：
+（a） \m{G'} 的強連通分量與 \m{G} 的相同，
+（b） \m{G'} 的分量圖與 \m{G} 的相同，
+以及（c） \m{E'} 所包含的邊儘可能少。
+請給出一個計算圖 \m{G'} 的快速算法。
+\stopEXERCISE
+
+\startANSWER
+利用上一題的結果，另外每個分量內部進行 \ALGO{DFS}，保留一個環路即可。
+\stopANSWER
+
+%e22.5-7
+\startEXERCISE
+給定有向圖 \m{G=(V,E)}，
+如果對於所有節點對 \m{u,v\in V}，
+我們有 \m{u\leadsto v} 或 \m{v\leadsto u}，
+則 \m{G} 是{\EMP 半連通}的。
+請給出一個有效的算法來判斷圖 \m{G} 是否是半連通的。
+證明算法的正確性並分析其運行時間。
+\stopEXERCISE
+
+\startANSWER
+先生成強連通分量圖，若所有分量間存在一個線性鏈（開環），則此圖是半連通的。
+\stopANSWER
+
+\stopsection
+
+\startsubject[
+  title={Problems},
+]
+
+%e22-1
+\startPROBLEM
+（Classifying edges by breadth-first search）
+深度優先搜索將圖中的邊分類爲樹邊、後向邊、前向邊和橫向邊。
+廣度優先搜索也可以用來進行這種分類。
+具體來說，廣度優先搜索將從源節點可以到達的邊劃分爲同樣的 4 種類型。
+\startigBase[a]
+\startitem
+證明在對無向圖進行的廣度優先搜索中，下面的性質成立：
+\startigBase[n]
+\item 不存在後向邊，也不存在前向邊。
+\item 對於每條樹邊 \m{(u,v)}，我們有 \m{v.d=u.d+1}。
+\item 對於每條橫向邊 \m{(u,v)}，我們有 \m{v.d=u.d} 或 \m{v.d=u.d+1}。
+\stopigBase
+\stopitem
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startitem
+證明在對有向圖進行廣度優先搜索時，下面的性質成立：
+\startigBase[n]
+\item 不存在前向邊。
+\item 對於每條樹邊 \m{(u,v)}，我們有 \m{v.d=u.d+1}。
+\item 對於每條橫向邊 \m{(u,v)}，我們有 \m{v.d\le u.d+1}。
+\item 對於每條後向邊 \m{(u,v)}，我們有 \m{0\le v.d\le u.d}。
+\stopigBase
+\stopitem
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+%e22-2
+\startPROBLEM
+（Articulation points, bridges, and biconnected components）
+設 \m{G=(V,E)} 爲一個連通無向圖。
+圖 \m{G} 的{\EMP 銜接點}是指圖 \m{G} 中的一個節點，
+刪除該節點將導致圖不連通。
+圖 \m{G} 的{\EMP 橋}是指圖中的一條邊，刪除該邊，圖就不再連通。
+圖 \m{G} 的{\EMP 雙連通分量}是指一個最大的邊集合，
+裏面的任意兩條邊都處於同一條簡單環路中。
+圖 22-10 描述的就是這些概念的定義。
+我們可以使用深度優先搜索算法來判斷 \m{G} 的銜接點、橋和雙連通分量。
+設 \m{G_\pi = (V, E_\pi)} 來爲圖 \m{G} 的深度優先樹。
+附圖 22-10：
+
+\externalfigure[output/p22-2-1]
+
+\startigBase[a]\startitem
+證明： \m{G_\pi} 的根節點是圖 \m{G} 的銜接點當且僅當他在 \m{G_\pi} 中至少有兩個子節點。
+\stopitem\stopigBase
+
+\startANSWER
+如果根節點是銜接點，如果只有一個子節點，那麼刪除根節點，不會影響圖的連通性，則不是銜接點，與假設不符。
+
+如果根節點有至少兩個子節點，由於沒有連接各子樹的橫向邊，那麼刪除根節點會影響圖的連通性，符合銜接點的定義。
+\stopANSWER
+
+\startigBase[continue]\startitem
+設節點 \m{v} 爲 \m{G_\pi} 的一個非根節點。證明：
+ \m{v} 是 \m{G} 的銜接點當且僅當節點 \m{v} 有一個子節點 \m{s}，
+且沒有任何從節點 \m{s} 或任何 \m{s} 的後代節點指向 \m{v} 的真祖先的後向邊。
+\stopitem\stopigBase
+
+\startANSWER
+有後向邊會導致成環。
+\stopANSWER
+
+\startigBase[continue]\startitem
+定義：
+\startformula
+v.low = \min \startcases
+\NC v.d \MC \NR
+\NC w.d \MC\text{：\m{(u,w)} 是節點 \m{v} 的某個後代節點 \m{u} 的一條後向邊}\NR
+\stopcases
+\stopformula
+請說明如何在 \m{O(E)} 的時間內爲所有節點 \m{v} 計算出 \m{v.low} 的值。
+\stopitem\stopigBase
+
+\startANSWER
+\CLRSH{DFS-VISIT(u)}
+\startCLRS
+color[u] = GRAY
+time = time + 1
+d[u] = time
+low[u] = d[u]
+for each v Adj[u]
+	if color[v] = WHITE
+		pi[v] = u
+		DFS-VISIT(v)
+		if low[v] < low[u]
+			low[u] = low[v]
+	elseif color[v] = GRAY		// back edge
+		if d[v] < low[u]
+			low[u] = d[v]
+color[u] = BLACK
+time = time + 1
+f[u] = time
+\stopCLRS
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明如何在 \m{O(E)} 時間內計算出圖 \m{G} 的所有銜接點。
+\stopitem\stopigBase
+
+\startANSWER
+對於根節點，檢查有幾個子節點，如果多於一個，則爲銜接點，在（a）中已經證明。
+對於其他節點 \m{v}，如果 \m{v} 有一個孩子 \m{b}，滿足 \m{low[b]\ge d[v]}，
+意味着以 \m{b} 爲根的子樹上沒有指向 \m{v} 的祖先的後向邊，
+即 \m{v} 是銜接點，因爲刪除 \m{v} 會破壞圖的連通性。
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：圖 \m{G} 的一條邊是橋當且僅當該邊不屬於 \m{G} 中的任何簡單環路。
+\stopitem\stopigBase
+
+\startANSWER
+根據環路的定義，從環路中的任意節點開始，都可以返回到該節點的路。
+因此，移除環路中的任意一條邊都不會孤立這個節點。
+如果邊 \m{(u,v)} 沒有在環路中，
+則只有一條從 \m{u} 到 \m{v} 的路。
+如果可以從 \m{v} 沿其他路徑返回到 \m{u}，則會形成一個環路。
+因此，移除 \m{(u,v)} 會斷開 \m{u} 和 \m{v} 的連接，因此 \m{(u,v)} 是橋。
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明如何在 \m{O(E)} 時間內計算出圖 \m{G} 的所有橋。
+\stopitem\stopigBase
+
+\startANSWER
+在 \ALGO{DFS-VISIT} 中，計算 \m{low[v]} 時，如果發現 \m{u} 的子節點 \m{v} 滿足 \m{low[v]>d[u]}，
+則我們可以任務此邊是橋，因爲移除他會導致 \m{u} 和 \m{v} 失連，這在（d）中已經證明。
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明： \m{G} 的雙連通分量是 \m{G} 的非橋邊的一個劃分。
+\stopitem\stopigBase
+
+\startANSWER
+根據雙連通分量的定義，其內所有邊都不是橋，由由於其“最大”性，外部的邊都是橋。
+因此他是 \m{G} 的非橋邊的一個劃分。
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個 \m{O(E)} 時間複雜度的算法來給圖 \m{G} 的每條邊 \m{e} 做出標記。
+這個標記是一個正整數 \m{e.bcc} 且滿足 \m{e.bcc = e'.bcc} 當且僅當邊 \m{e} 和邊 \m{e'} 在同一個雙連通分量中。
+\stopitem\stopigBase
+
+\startANSWER
+移除橋邊，遍歷銜接點。
+\stopANSWER
+
+\stopPROBLEM
+
+%p22-3
+\startPROBLEM
+（Euler tour）
+強連通有向圖 \m{G=(V,E)} 中的一個歐拉回路是指一條遍歷圖 \m{G} 中每條邊恰好一次的環路。
+不過，這條環路可以多次訪問同一個節點。
+
+\startigBase[a]\startitem
+證明：圖 \m{G} 有一條歐拉回路當且僅當對於圖中的每個節點 \m{v}，
+有 \m{in-degree(v) = out-degree(v)}。
+\stopitem\stopigBase
+
+\startANSWER
+如果圖 \m{G} 有歐拉回路 \m{C}，所有節點的出度和入度顯然是相等的。
+
+反過來，如果所有節點的入度和出度均相等，任取節點 \m{v}，
+則肯定存在一條路徑從 \m{v} 出發最後又返回到 \m{v}。
+不停的刪除簡單環路，並刪除孤立的節點，然後再從被刪除了部分邊但還未被孤立的節點開始，
+重新尋找簡單環路……
+最終將所有簡單環路組合起來就是一條歐拉回路。
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個複雜度爲 \m{O(E)} 的算法來找出圖 \m{G} 的一條歐拉回路。
+（\hint 對邊不相交環路進行歸併。）
+\stopitem\stopigBase
+
+\startANSWER
+先以 \m{O(|E|)} 時間檢查是不是所有節點的入度都等於其出度。
+如果是，然後再以不停搜索、刪除簡單環路的方式給出歐拉回路。
+\stopANSWER
+
+\stopPROBLEM
+
+%p22-4
+\startPROBLEM
+（Reachability）
+設 \m{G=(V,E)} 爲一個有向圖，
+且每個節點 \m{u\in V} 都標有一個唯一的整數值標記 \m{L(u)}，
+ \m{L(u)} 的取值爲集合 \m{\{1,2,\ldots,|V|\}}。
+對於每個節點 \m{u\in V}，
+設 \m{R(u)=\{v\in V: u\leadsto v\}} 爲從節點 \m{u} 可以到達的所有節點的集合。
+定義 \m{\min(u)} 爲 \m{R(u)} 中標記爲最小的節點，
+即 \m{\min(u)} 爲節點 \m{v}，滿足 \m{L(v)=\min\{L(w): w\in R(u)\}}。
+請給出一個時間複雜度爲 \m{O(V+E)} 的算法來計算所有節點 \m{u\in V} 的 \m{\min(u)}。
+\stopPROBLEM
+
+\startANSWER
+從標記最小的節點開始反向深度優先搜索，路徑上的所有點的結果均爲起始點的標記值。
+完成後，若還有僞確定的點，繼續執行上述過程。
+\stopANSWER
+
+\stopsubject%Problems
+
+\stopchapter
+\stopcomponent

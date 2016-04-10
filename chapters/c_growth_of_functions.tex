@@ -340,6 +340,8 @@ k\ln{k} = \Theta(n) \Rightarrow n = \Theta(k\ln{k})
 \item 如果\m{k > d}，那麼\m{p(n) = o(n^k)}。
 \item 如果\m{k < d}，那麼\m{p(n) = \omega(n^k)}。
 \stopigBase
+\stopPROBLEM
+
 \startANSWER
 取 \m{c = a_d + b}，滿足下列不等式：
 \startformula
@@ -364,12 +366,12 @@ p(n) \leq cn^d \quad \text{對於 } n \geq n_0
 即 \m{O(n^d)} 的定義。如果選 \m{b = -1}，則可得 \m{\Omega(n^d)}，綜合可得 \m{\Theta(n^d)}。
 另外兩個的證明類似。
 \stopANSWER
-\stopPROBLEM
 
 \startPROBLEM
 （相對漸進增長）
 對於下表中每對算式 \m{(A, B)}，指明 \m{A} 是否是 \m{B} 的 \m{O}、\m{o}、\m{\Omega}、\m{\omega}、\m{\Theta}。
 假定 \m{k \geq 1}，\m{\epsilon > 0} 且 \m{c > 1}，均爲常量。
+
 \bTABLE[align=center]
 \bTABLEhead
 \bTR
@@ -444,11 +446,12 @@ p(n) \leq cn^d \quad \text{對於 } n \geq n_0
 \startPROBLEM
 (根據漸進增長率排序)
 \startigBase[a]
-\item{%
+\startitem
 根據增長的階爲下列函數排序，即求出滿足
 \m{g_1 = \Omega(g_2)}、\m{g_2 = \Omega(g_3)}、\m{\ldots}、\m{g_{29} = \Omega(g_{30})}
 的函數的一種排列 \m{g_1, g_2, \ldots, g_{30}}。
 並將這些函數劃分成等價類，當且僅當 \m{f(n) = \Theta(g(n))}時，\m{f(n)}和\m{g(n)}才再同一類中。
+
 \bTABLE[align=center]
 \bTR \bTD \m{\lg(\lg^{\ast}n)} \eTD \bTD \m{2^{\lg^{\ast}n}} \eTD \bTD \m{(\sqrt{2})^{\lg{n}}} \eTD \bTD \m{n^2} \eTD \bTD \m{n!} \eTD \bTD \m{(\lg{n})!} \eTD \eTR
 \bTR \bTD \m{(\frac{3}{2})^n} \eTD \bTD \m{n^3} \eTD \bTD \m{\lg^2{n}} \eTD \bTD \m{\lg(n!)} \eTD \bTD \m{2^{2^n}} \eTD \bTD \m{n^{1/\lg{n}}} \eTD \eTR
@@ -456,7 +459,8 @@ p(n) \leq cn^d \quad \text{對於 } n \geq n_0
 \bTR \bTD \m{2^{\lg{n}}} \eTD \bTD \m{(\lg{n})^{\lg{n}}} \eTD \bTD \m{e^n} \eTD \bTD \m{4^{\lg{n}}} \eTD \bTD \m{(n + 1)!} \eTD \bTD \m{\sqrt{\lg{n}}} \eTD \eTR
 \bTR \bTD \m{\lg^{\ast}(\lg{n})} \eTD \bTD \m{2^{\sqrt{2\lg{n}}}} \eTD \bTD \m{n} \eTD \bTD \m{2^n} \eTD \bTD \m{n\lg{n}} \eTD \bTD \m{2^{2^{n + 1}}} \eTD \eTR
 \eTABLE
-}
+\stopitem
+
 \startANSWER
 \startformula\startalign
 \NC (\sqrt{2})^{\lg{n}} \NC = \sqrt{n} \NR
@@ -494,9 +498,10 @@ p(n) \leq cn^d \quad \text{對於 } n \geq n_0
 \stopigBase
 \stopcolumns
 \stopANSWER
-\item{%
+
+\startitem
 給出一個非負函數 \m{f(n)}，使得對於所有 \m{g_i(n)}，\m{f(n)}既不是 \m{O(g_i(n))}，也不是 \m{\Omega(g_i(n))}。
-}
+\stopitem
 
 \startANSWER
 \m{2^{2^{(n + 1)\sin{x}}}}

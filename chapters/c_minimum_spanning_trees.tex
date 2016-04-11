@@ -7,6 +7,213 @@
 \startsection[
   title={Growing a minimum spanning tree},
 ]
+
+%e23.1-1
+\startEXERCISE
+設 \m{(u,v)} 是連通圖 \m{G} 中的一條權重最小的邊，證明：
+邊 \m{(u,v)} 爲圖 \m{G} 的某棵最小生成樹中的一條邊。
+\stopEXERCISE
+
+\startANSWER
+根據定理 23.1 可知，如果切割 \m{(S,V-S)} 將 \m{u} 和 \m{v} 分割開來，
+由於 \m{(u,v)} 是橫跨此切割的最輕邊，所以 \m{(u,v)} 屬於最小生成樹。
+\stopANSWER
+
+%e23.1-2
+\startEXERCISE
+Sabatier 教授猜想出了定理 23.1 的一個逆定理如下：
+設 \m{G=(V,E)} 是一個連通無向圖，
+並有定義在邊集合 \m{E} 上的實數值權重函數 \m{\omega}。
+設集合 \m{A} 爲 \m{E} 的一個子集，
+該子集包含在圖 \m{G} 的某個最小生成樹中。
+又設 \m{(S,V-S)} 爲 \m{G} 中任意尊重集合 \m{A} 的一個切割，
+邊 \m{(u,v)} 是一條橫跨切割 \m{(S,V-S)} 且對於集合 \m{A} 安全的邊。
+那麼邊 \m{(u,v)} 是該切割的一條輕量級邊。
+請通過舉出反例來證明 Sabatier 教授的猜想是不正確的。
+\stopEXERCISE
+
+\startANSWER
+令 \m{S=\{a,b,c\}}， \m{A=\{(a,b),(b,c)\}}，
+可以看到 \m{(a,d),(b,e),(c,f)} 均橫跨切割 \m{(S,V-S)}，且對 \m{A} 都是安全的，
+但只有 \m{(b,e)} 是此切割的輕量級邊。
+
+\externalfigure[output/e23_1_2-1]
+\stopANSWER
+
+%e23.1-3
+\startEXERCISE[exercise:23.1-3]
+證明：如果圖 \m{G} 的一條邊 \m{(u,v)} 包含在圖 \m{G} 的某棵最小生成樹中，
+則該條邊是橫跨圖 \m{G} 的某個切割的一條輕量級邊。
+\stopEXERCISE
+
+\startANSWER
+將最小生成樹分成兩部分，一部分包含頂點 \m{u}，一部分包含頂點 \m{v}。
+則兩部分包含了原圖的所有頂點， \m{(u,v)} 橫跨此切割。
+任何橫跨此切割的邊都可以將兩部分連接起來形成一個生成樹。
+假設有另一個邊 \m{(x,y)} 橫跨此切割，且 \m{\omega(x,y)<\omega(u,v)}，
+則由 \m{(x,y)} 連接而成的生成樹的權重要小於用 \m{(u,v)} 連接而成的生成樹。
+這與最小生成樹的假設矛盾，因此不存在這樣的 \m{(x,y)}，即 \m{(u,v)} 是此切割的一條輕量級邊。
+\stopANSWER
+
+%e23.1-4
+\startEXERCISE
+給出一個連通圖的例子，
+使得如下邊集合所形成的不是最小生成樹：
+\startformula
+\left{(u,v): \text{存在一個切割 \m{(S,V-S)}，使得 \m{(u,v)} 是橫跨該切割的一條輕量級邊}\right}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+一個切割可能有多個輕量級邊，這樣會造成重複，從而形成環路，當然就不是最小生成樹。
+\stopANSWER
+
+%e23.1-5
+\startEXERCISE
+設 \m{e} 爲連通圖 \m{G=(V,E)} 的某條環路上權重最大的邊。
+證明：圖 \m{G'=(V,E-\{e\})} 中存在一棵最小生成樹，
+他也同時是 \m{G} 的最小生成樹。
+也就是說，圖 \m{G} 中存在一棵不包含邊 \m{e} 的最小生成樹。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e23.1-6
+\startEXERCISE
+證明：如果對於圖的每個切割，
+都存在一條橫跨該切割的唯一的輕量級邊，
+則該圖存在一棵唯一的最小生成樹。
+並通過舉出反例來證明其逆論斷不成立。
+\stopEXERCISE
+
+\startANSWER
+假設存在兩個最小生成樹 \m{T} 和 \m{T'}，
+如果從 \m{T} 中移除 \m{e}，
+則 \m{T} 變得不連通，形成切割 \m{(S,V-S)}，
+根據\refexercise{23.1-3} 可知， \m{e} 是橫跨切割 \m{(S,V-S)} 的最輕邊。
+假設邊 \m{x} 屬於 \m{T'}，並橫跨切割 \m{(S,V-S)}，則 \m{x} 同樣是最輕邊。
+由於橫跨切割 \m{(S,V-S)} 的最輕邊唯一，所以 \m{e} 和 \m{x} 是同一條邊，
+所以 \m{e} 也屬於 \m{T'}，
+由於我們選擇 \m{e} 是任意的，所有在 \m{T} 中的邊，均在 \m{T'} 中，
+即最小生成樹唯一。
+
+但是反過來不成立，如下：
+
+\externalfigure[output/e23_1_6-1]
+\stopANSWER
+
+%e23.1-7
+\startEXERCISE
+證明：如果一個圖的所有邊的權重都是正值，
+則任意一個連接所有節點且總權重最小的一個邊集合必然形成一棵樹。
+另外，請舉出例子來證明：
+如果允許某些邊的權重爲負值，則該論斷不成立。
+\stopEXERCISE
+
+\startANSWER
+如果不是一棵樹，由於連接所有節點，那麼必定存在環路，
+這樣去掉一個邊，仍然可以連接所有節點，但總權重會變小（權重都是正值），
+與總權重最小矛盾。
+
+如果權重可以爲負，則不一定可以形成一棵樹，下圖三條邊總權重最小：
+
+\externalfigure[output/e23_1_7-1]
+\stopANSWER
+
+%e23.1-8
+\startEXERCISE
+設 \m{T} 爲圖 \m{G} 的一棵最小生成樹，
+設 \m{L} 爲樹 \m{T} 中一個邊權重的有序列表。
+證明：對於圖 \m{G} 的任何其他最小生成樹 \m{T'}，
+列表 \m{L} 也是 \m{T'} 中一個邊權重的有序列表。
+\stopEXERCISE
+
+\startANSWER
+假設最小生成樹有 \m{n} 條邊，存在兩個最小生成樹 \m{T} 和 \m{T'}，
+用 \m{\omega(e)} 表示邊的權值。
+
+\m{T} 的權值遞增序列爲 \m{\omega(a_1)\le \omega(a_2)\le \ldots \le \omega(a_n)}。
+
+\m{T'} 的權值遞增序列爲 \m{\omega(b_1)\le \omega(b_2)\le \ldots \le \omega(b_n)}。
+
+假設 \m{i} 是兩個列表中，第一次出現邊不同的位置，即 \m{a_i \ne b_i}，先假定 \m{\omega(a_i)\ge \omega(b_i)}。
+
+情況 1：如果 \m{T} 中包含邊 \m{b_i}，由於兩個列表在 \m{i} 之前均相同，若含有 \m{b_i}，
+則位置一定在 \m{i} 之後，即有 \m{j>i}，使得 \m{\omega(a_j)=\omega(b_i)}，
+從而有 \m{\omega(b_i)=\omega(a_j)\ge\omega(a_i)\ge\omega(b_i)}，
+即 \m{\omega(b_i)=\omega(a_j)=\omega(a_i)}，
+故 \m{\omega(a_i)=\omega(b_i)}。
+
+情況 2：如果 \m{T} 不包含邊 \m{b_i}，則把 \m{b_i} 加到 \m{T} 中，
+會在某處形成一個環路。
+由於 \m{T} 是最小生成樹，環路內任何一條邊的權值都小於等於 \m{\omega(b_i)}。
+另外這個環路內必定存在 \m{a_j}，不再 \m{T'} 中（否則 \m{T'} 中會形成環路）。
+從而有 \m{\omega(a_j)\le \omega(b_i)}，且 \m{j>i}。
+因此 \m{\omega(b_i)\le\omega(a_i)\le\omega(a_j)\le\omega(b_i)}，
+即 \m{\omega(b_i)=\omega(a_j)=\omega(a_i)}。
+\stopANSWER
+
+%e23.1-9
+\startEXERCISE
+設 \m{T} 爲 \m{G=(V,E)} 的一棵最小生成樹，
+設 \m{V'} 爲 \m{V} 的一個子集。
+設 \m{T'} 爲由 \m{V'} 所誘導的 \m{T} 的子圖，
+設 \m{G'} 爲由 \m{V'} 所誘導的 \m{G} 的子圖。
+證明：如果 \m{T'} 是連通的，
+則 \m{T'} 是 \m{G'} 的一棵最小生成樹。
+\stopEXERCISE
+
+\startANSWER
+用切割 \m{(V',V-V')} 分割圖 \m{G}，
+該切割一定不影響 \m{T'}，且 \m{T'} 是 \m{T} 的子集，
+所以 \m{T'} 對於 \m{G'} 是安全的。
+如果 \m{T'} 是連通的，則 \m{T'} 一定是 \m{G'} 的最小生成樹。
+\stopANSWER
+
+%e23.1-10
+\startEXERCISE
+給定圖 \m{G} 和 \m{G} 的一棵最小生成樹 \m{T}，
+假設減小了 \m{T} 中一條邊的權重。
+證明： \m{T} 仍然是 \m{G} 的一棵最小生成樹。
+更形式化的，設 \m{T} 爲 \m{G} 的一棵最小生成樹， \m{G} 的邊權重由權重函數 \m{\omega} 給出。
+選擇一條邊 \m{(x,y)\in T} 和一個正數 \m{k}，
+並定義下述的權重函數 \m{\omega'}：
+\startformula
+\omega'(u,v)=\startcases
+\NC \omega(u,v) \MC \text{若 \m{(u,v)\ne(x,y)}；} \NR
+\NC \omega(x,y)-k \MC \text{若 \m{(u,v)=(x,y)}；} \NR
+\stopcases
+\stopformula
+
+證明： \m{T} 仍然是 \m{G} 的一棵最小生成樹，
+這裏 \m{G} 的邊權重由函數 \m{\omega'} 給出。
+\stopEXERCISE
+
+\startANSWER
+由於 \m{\omega(T)-k=\omega'(T)} 且 \m{k} 是正數，
+假設 \m{X} 是任意其他生成樹，有 \m{\omega(T)\le \omega(X)}。
+如果 \m{X} 含有 \m{(x,y)}，則 \m{\omega'(T)\le\omega'(X)}；
+如果 \m{X} 不包含 \m{(x,y)}，則 \m{\omega'(T)\le\omega'(X)-k}。
+兩種情況下， \m{\omega'(T)} 均最小。
+另外，減少權值後 \m{T} 的其他屬性無變化，仍然連通所有點，且無還，
+所以用 \m{\omega'} 計算權值， \m{T} 仍然是最小生成樹。
+\stopANSWER
+
+%e23.1-11
+\startEXERCISE\DIFFICULT
+給定圖 \m{G} 和一棵最小生成樹 \m{T}，
+假設減小了位於 \m{T} 之外的某條邊的權重。
+請給出一個在修改後的圖中尋找最小生成樹的算法。
+\stopEXERCISE
+
+\startANSWER
+在原有最小生成樹中按 \ALGO{DFS} 搜索 \m{u} 到 \m{v} 的路徑，
+然後找到此路徑中權值最大的邊，如果其權值大於修改後的 \m{(u,v)} 的權值，
+則用 \m{(u,v)} 取代此邊，形成新的最小生成樹，否則，最小生成樹不變。
+\stopANSWER
+
 \stopsection
 
 \startsection[

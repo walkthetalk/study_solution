@@ -219,11 +219,187 @@ Sabatier 教授猜想出了定理 23.1 的一個逆定理如下：
 \startsection[
   title={The algorithms of Kruskal and Prim},
 ]
+
+%e23.2-1
+\startEXERCISE
+對於同一個輸入圖， Kruskal 算法返回的最小生成樹可以不同。
+這種不同來源於對邊進行排序時，對權重相同的邊進行的不同處理。
+證明：對於圖 \m{G} 的每棵最小生成樹 \m{T}，
+都存在一種辦法來對 \m{G} 的邊進行排序，
+使得 Kruskal 算法所返回的最小生成樹就是 \m{T}。
+\stopEXERCISE
+
+\startANSWER
+排序時，對於同樣權重的邊，讓出現在 \m{T} 中的排在前面。
+\stopANSWER
+
+%e23.2-2
+\startEXERCISE
+假定我們用鄰接矩陣來表示圖 \m{G=(V,E)}。
+請給出 Prim 算法的一種簡單實現，
+使其運行時間爲 \m{O(V^2)}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{MST-PRIME2(G, r)}
+\startCLRS
+for each u in V[G]
+	key[u] = infinite
+	pi[u] = NIL
+key[r] = 0
+Q = V[G]
+while Q is not empty
+	u = EXTRACT-MIN(Q)
+	for each v in V[G]
+		if A[u,v] != 0 and v in Q and A[u,v] < key[v]
+			pi[v] = u
+			key[v] = A[u,v]
+\stopCLRS
+
+兩層循環次數均爲 \m{|V|}，因此算法的時間複雜度爲 \m{O(V^2)}。
+\stopANSWER
+
+%e23.2-3
+\startEXERCISE
+對於稀疏圖 \m{G=(V,E)}，這裏 \m{|E|=\Theta(V)}，
+使用 Fibonacci 堆實現的 Prim 算法是否比使用二叉堆實現的算法更快？
+對於稠密圖又如何呢？
+ \m{|E|} 和 \m{|V|} 必須具備何種關係才能使 Fibonacci 堆的實現在漸進級別上比二叉堆的實現更快？
+\stopEXERCISE
+
+\startANSWER
+令 \ALGO{EXTRACT-MIN} 時間爲 \m{T_1}， \ALGO{DECREASE-KEY} 時間爲 \m{T_2}。
+時間複雜度爲 \m{\Theta(VT_1 + ET_2)}。
+ Fibonacci 堆 \m{T_1=\lg V}， \m{T_2=1}；
+二叉堆 \m{T_1=\lg V}， \m{T_2=\lg V}。
+
+若 \m{E=\Theta(V)}，則兩種複雜度均爲 \m{\Theta(V\lg V)}。
+若 \m{E=\Theta(V^2)}， Fibonacci 堆爲 \m{\Theta(V^2)}，二叉堆爲 \m{\Theta(V^2\lg V)}。
+
+當 \m{E=\omega(V)} 時， Fibonacci 堆漸進更快。
+\stopANSWER
+
+%e23.2-4
+\startEXERCISE
+假定圖中的邊權重全部爲整數，且在範圍 \m{1}～\m{|V|} 內。
+ Kruskal 算法最快能多快？
+如果邊的權重取值範圍在 1 到某個常數 \m{W} 之間呢？
+\stopEXERCISE
+
+\startANSWER
+無論在什麼範圍內，排序用的時間都是 \m{O(E)}。
+總時間爲 \m{O(E)+O((E+V)\alpha(V))=O(E\alpha(V))}。
+\stopANSWER
+
+%e23.2-5
+\startEXERCISE
+假定圖中的邊權重全部爲整數，且在範圍 \m{1}～\m{|V|} 內。
+ Prim 算法最快能多快？
+如果邊的權重取值範圍在 1 到某個常數 \m{W} 之間呢？
+\stopEXERCISE
+
+\startANSWER
+用數組加雙向鏈表的形式實現， \m{T_1=1}， \m{T_2=1}，總時間複雜度爲 \m{\Theta(E)}。
+\stopANSWER
+
+%e23.2-6
+\startEXERCISE\DIFFICULT
+假定一個圖中所有的邊權重均勻分佈在半開區間 \m{[0,1)} 內。
+ Prim 算法和 Kruskal 算法哪一個可以運行得更快？
+\stopEXERCISE
+
+\startANSWER
+Kruskal 算法可以運行得更快，可以使用桶排序，期望運行時間爲 \m{O(E)}。
+總時間爲 \m{O(E)+O((E+V)\alpha(V))=O(E\alpha(V))}。
+\stopANSWER
+
+%e23.2-7
+\startEXERCISE\DIFFICULT
+假定圖 \m{G} 的一棵最小生成樹已經被計算出來。
+如果在圖中加入一個新節點及其相關的新邊，
+我們需要多少時間來對最小生成樹進行更新？
+\stopEXERCISE
+
+\startANSWER
+如果只新增一條邊，則將這條邊加入原最小生成樹即可。
+如果新增了 \m{k(k>1)} 條邊，那麼要刪除 \m{k-1} 條邊。
+
+假設新節點是 \m{v}，那麼必然存在包含 \m{v} 的環路。
+遍歷 \m{k-1} 次，每次都能找到一個環路，從該環路中刪除一條權值最大的邊。
+\stopANSWER
+
+%e23.2-8
+\startEXERCISE
+Borden 教授提出了一個新的分治算法來計算最小生成樹。
+該算法的原理如下：
+給定圖 \m{G=(V,E)}，將 \m{V} 劃分成兩個集合 \m{V_1} 和 \m{V_2}，
+使得 \m{|V_1|} 和 \m{|V_2|} 的差最多爲 1。
+設 \m{E_1} 爲端點全部在 \m{V_1} 中的邊的集合，
+ \m{E_2} 爲端點全部在 \m{V_2} 中的邊的集合。
+我們遞歸地解決兩個子圖 \m{G_1=(V_1,E_1)} 和 \m{G_2=(V_2,E_2)} 的最小生成樹問題。
+最後，在邊集合 \m{E} 中選擇橫跨切割 \m{V_1} 和 \m{V_2} 的最小權重的邊來
+將求出的兩棵最小生成樹連接起來，
+從而形成一棵最後的最小生成樹。
+請證明該算法能正確計算除一棵最小生成樹，
+或者舉出反例來說明該算法不正確。
+\stopEXERCISE
+
+\startANSWER
+不正確，無法保證第一條邊屬於某個最小生成樹。如下圖：
+
+\externalfigure[output/e23_2_8-1]
+\stopANSWER
+
 \stopsection
 
 \startsubject[
   title={Problems},
 ]
+
+%p23-1
+\startPROBLEM
+（Second-best minimum spanning tree）
+設 \m{G=(V,E)} 爲一連通無向圖，
+其權重函數爲 \m{\omega:E\rightarrow R}，
+假定 \m{|E|\ge |V|} 並且所有的權重都互不相同。
+我們定義一棵次優最小生成樹如下：
+設 \m{\tau} 爲 \m{G} 的所有生成樹的集合，
+ \m{T'} 爲 \m{G} 的一棵最小生成樹。
+那麼{\EMP 次優最小生成樹}是生成樹 \m{T}，
+其滿足 \m{\omega(T)=\min_{T''\in \tau-\{T'\}}\{\omega(T'')\}}。
+\startigBase[a]\startitem
+證明：最小生成樹唯一，並不能保證次優最小生成樹唯一。
+\stopitem\stopigBase
+
+\startANSWER
+\startcolumns[n=3]
+\startalignment[middle]
+\externalfigure[output/p23_1-1]
+
+最小生成樹
+\stopalignment
+\column
+\startalignment[middle]
+\externalfigure[output/p23_1-2]
+
+次優生成樹 1
+\stopalignment
+\column
+\startalignment[middle]
+\externalfigure[output/p23_1-3]
+
+次優生成樹 2
+\stopalignment
+\stopcolumns
+\stopANSWER
+
+\startigBase[continue]\startitem
+設 \m{T} 爲 \m{G} 的一棵最小生成樹。證明：
+圖 \m{G} 包含邊 \m{(u,v)\in T} 和邊 \m{(x,y)\notin T}，
+使得 \m{T-\{(u,v)\}\cup\{(x,y)\}} 是 \m{G} 的一棵次優最小生成樹。
+\stopitem\stopigBase
+
+\stopPROBLEM
 
 \stopsubject%Problems
 

@@ -395,9 +395,137 @@ Borden 教授提出了一個新的分治算法來計算最小生成樹。
 
 \startigBase[continue]\startitem
 設 \m{T} 爲 \m{G} 的一棵最小生成樹。證明：
-圖 \m{G} 包含邊 \m{(u,v)\in T} 和邊 \m{(x,y)\notin T}，
+圖 \m{G} 中可以找到兩條邊 \m{(u,v)\in T} 和 \m{(x,y)\notin T}，
 使得 \m{T-\{(u,v)\}\cup\{(x,y)\}} 是 \m{G} 的一棵次優最小生成樹。
 \stopitem\stopigBase
+
+\startANSWER
+由於任一生成樹均包含 \m{|V|-1} 條邊，
+因此次優 MST 至少含有一條邊不在 MST 中。
+
+如果次優 MST 中只有一條邊不在 MST 中，如 \m{(x,y)}，
+則次優 MST 與 MST 中邊的差異，只有 \m{(x,y)} 和另一條邊 \m{(u,v)}。
+即次優 MST 中用 \m{(x,y)} 代替了 MST 中的 \m{(u,v)}，其他邊都一樣。
+這種情況下， \m{T-\{(u,v)\}\cup\{(x,y)\}} 是 \m{G} 的一棵次優 MST。
+
+因此我們要證明替換 MST 中的兩條或多條邊，無法得到次優 MST。
+
+令 \m{T} 爲 \m{G} 的 MST，
+假設存在次優 MST \m{T'}， \m{T-T'} 中至少有兩條邊，
+令 \m{T-T'} 中權重最小的邊爲 \m{(u,v)}。
+如果將 \m{(u,v)} 加入 \m{T'}，會形成環路 \m{c}。
+這個環路包含 \m{T'-T} 中的某條邊 \m{(x,y)} （否則， \m{T} 會形成環路）。
+
+我們要證明 \m{\omega(x,y)>\omega(u,v)}。
+用反證法，先假設 \m{\omega(x,y)<\omega(u,v)}。
+假設所有邊的權重都不同，因此不用考慮 \m{\omega(x,y)=\omega(u,v)} 的情況。
+如果將 \m{(x,y)} 加入 \m{T}，會形成環路 \m{c'}，
+此環路中必定包含 \m{T-T'} 中的某條邊 \m{(u',v')} （否則， \m{T'} 會形成環路）。
+因此， \m{T''=T-\{(u',v')\}\cup\{(x,y)\}} 會形成生成樹，
+同時必須滿足 \m{\omega(u',v')<\omega(x,y)}，
+否則 \m{T''} 的權重會小於 \m{T} 的權重， \m{T} 就不是 MST 了。
+因此 \m{\omega(u',v')<\omega(x,y)<\omega(u,v)}，
+但這與假設不符： \m{(u,v)} 是 \m{T-T'} 中權重最小的邊。
+
+由於 \m{(u,v)} 和 \m{(x,y)} 在同一個環路 \m{c} 上，
+如果我們將 \m{(u,v)} 加入 \m{T'}，
+ \m{T'-\{(x,y)\}\cup\{(u,v)\}} 是一棵生成樹，且其權重小於 \m{\omega(T')}。
+進一步， \m{T'} 與 \m{T} 不同（僅差一條邊）。
+因此，我們找到了一棵生成樹，且其權重小於 \m{\omega(T')}，但這棵樹不是 \m{T}。
+因此， \m{T'} 不是次優 MST。
+\stopANSWER
+
+\startigBase[continue]\startitem
+設 \m{T} 爲 \m{G} 的一棵 MST，
+對於任意兩個節點 \m{u,v\in V}，
+設 \m{\max[u,v]} 表示樹 \m{T} 中從節點 \m{u} 到節點 \m{v} 的簡單路徑上權重最大的邊，
+請給出一個 \m{O(V^2)} 時間複雜度的算法來計算 \m{\max[u,v]}。
+\stopitem\stopigBase
+
+\startANSWER
+我們可以在 \m{O(V^2)} 時間內找到所有 \m{u,v\in V} 的 \m{\max[u,v]}。
+用何種方法並不重要，廣度優先、深度優先，或者其他方式都行。
+
+下面給出廣度優先和深度優先的僞碼。
+但僞碼與第 22 章的僞碼有點區別，我們不需要計算 \m{d} 和 \m{f} 的值，
+我們使用表 \m{\max} 本身來記錄是否訪問過一個節點。
+當且僅當 \m{u=v} 或者還沒有訪問過節點 \m{v} 時，纔有 \m{\max[u,v]=NIL}。
+注意，由於我們是訪問無向圖生成樹的邊，因此可以保證從 \m{u} 開始可以訪問到所有節點。
+在節 22.3 中的 \ALGO{DFS} 中的“restart”就沒有必要了。
+僞碼中假設每個節點的鄰接鏈表僅包含生成樹 \m{T} 中的邊。
+
+\CLRSH{BFS-FILL-MAX(G, T, w)}
+\startCLRS
+let max be a new table with an entry max[u,v] for each u, v in G.V
+for each vertex u in G.V
+	for each vertex v in G.V
+		max[u,v] = NIL
+	Q = empty
+	ENQUEUE(Q,u)
+	while Q not empty
+		x = DEQUEUE(Q)
+		for each v in G.Adj[x]
+			if max[u,v] == NIL and v != u
+				if x == u or w(x,v) > max[u,x]
+					max[u,v] = (x,v)
+				else
+					max[u,v] = max[u,x]
+				ENQUEUE(Q,v)
+return max
+\stopCLRS
+
+\CLRSH{DFS-FILL-MAX(G, T, w)}
+\startCLRS
+let max be a new table with an entry max[u,v] for each u, v in G.V
+for each vertex u in G.V
+	for each vertex v in G.V
+		max[u,v] = NIL
+	DFS-FILL-MAX-VISIT(G, u, u, max)
+return max
+\stopCLRS
+
+\CLRSH{DFS-FILL-MAX-VISIT(G, u, x, max)}
+\startCLRS
+for each vertex v in G.Adj[x]
+	if max[u,v] == NIL and v != u
+		if x == u or w(x,v) > max[u,x]
+			max[u,v] = w(x,v)
+		else
+			max[u,v] = max[u,x]
+		DFS-FILL-MAX-VISIT(G, u, v, max)
+\stopCLRS
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個有效算法來計算圖 \m{G} 的次優最小生成樹。
+\stopitem\stopigBase
+
+\startANSWER
+在 b）中，我們已證明，只要替換最小生成樹中的一個邊就可以得到一棵次優 MST。
+假如用邊 \m{(u,v)\notin T} 替換 \m{(x,y)\in T} 得到次優 MST \m{T'}，
+則 \m{\omega(T')=\omega(T)-\omega(x,y)+\omega(u,v)}。
+如果確定了 \m{(u,v)}，則要使 \m{\omega(T')} 最小，需要在 \m{T} 中找到
+從 \m{u} 到 \m{v} 的唯一路徑上權值最大的邊。
+如果我們已經計算除了 \m{T} 上的 \m{\max} 表（見 c）），
+那麼我們就可以根據 \m{\max[u,v]} 直接找到這條邊了。
+剩下唯一要做的就是找到邊 \m{(u,v)\notin T}，使得 \m{\omega(\max[u,v])-\omega(u,v)} 最小。
+因此，尋找次優 MST 的算法如下：
+
+\startigNum[n]
+\item 計算最小生成樹 \m{T}，時間 \m{O(E+V\lg V)}，
+使用 Prim 算法（用 Fibonacci 堆實現優先隊列）。
+由於 \m{|E|<|V|^2}，因此運行時間爲 \m{O(V^2)}。
+
+\item 用 MST 計算表 \m{\max}，參見 c）。時間爲 \m{O(V^2)}。
+
+\item 找到邊 \m{(u,v)\notin T}，使得 \m{\omega(\max[u,v])-\omega(u,v)} 最小。
+時間 \m{O(E)}，即 \m{O(V^2)}。
+
+\item 根據上一步結果， \m{T'=T-\{\max[u,v]\}\cup\{(u,v)\}} 即爲所求次優 MST。
+\stopigNum
+
+總時間爲 \m{O(V^2)}。
+\stopANSWER
 
 \stopPROBLEM
 

@@ -529,6 +529,235 @@ for each vertex v in G.Adj[x]
 
 \stopPROBLEM
 
+%p23-2
+\startPROBLEM[problem:23-2]
+（Minimum spanning tree in sparse graphs）
+對於非常稀疏的圖 \m{G=(V,E)} 來說，
+我們可以對 Prim 算法進行進一步改善，
+改善後的時間將優於使用 Fibonacci 堆時的 \m{O(E+V\lg V)} 的運行時間。
+改善所用的方法就是對圖 \m{G} 進行預處理來減少節點的數量，
+然後在減少節點數量後的圖 \m{G} 上運行 Prim 算法。
+具體來說，對於每個節點 \m{u}，
+我們選擇與節點 \m{u} 鄰接的邊中權重最小的 \m{(u,v)}，
+將其加入到正在構建的最小生成樹裏。
+然後對所有選擇的邊進行收縮（請參閱\refsection{appendix_graphs}的內容）。
+不過，我們不是一條一條地收縮每條邊，
+而是首先找出有哪些節點連接到了同一個新節點。
+然後創建一個新的圖，
+這個圖就如每次收縮這樣一條邊所得出的一樣，
+但是我們通過“重新命名”來實現。
+重新命名是根據每條邊的端點所在的節點集合來進行。
+原始圖中的多條邊可能被重命名爲同樣的名。
+在這種情況下，
+重名的邊中只有一條邊留下，
+這條邊對應原始邊中最小權重的邊。
+
+在初始時，我們把將要構建的最小生成樹 \m{T} 設爲空，
+對於每條邊 \m{(u,v)\in E}，對其屬性進行如下初始化操作：
+ \m{(u,v).orig = (u,v)}， \m{(u,v).c=\omega(u,v)}。
+我們使用 \m{orig} 屬性來引用原始圖中與收縮後的圖的邊相關的邊。
+屬性 \m{c} 記錄邊的權重，隨着邊的收縮，
+我們根據上面選擇邊權重的方法來更新這個屬性。
+下面的 \ALGO{MST-REDUCE} 算法以圖 \m{G} 和樹 \m{T} 作爲輸入，
+返回一個收縮後的圖 \m{G'} 和更新後的屬性 \m{orig'} 與 \m{c'}。
+該算法同時選出圖 \m{G} 中的邊來構成最小生成樹 \m{T}。
+
+\CLRSH{MST-REDUCE(G,T)}
+\startCLRS
+for each v in G.V
+	v.mark = FALSE
+	MAKE-SET(v)
+for each u in G.V
+	if u.mark == FALSE
+		choose v in G.Adj[u] such that (u,v).c is minimized
+		UNION(u,v)
+		T = T merge (u,v).orig
+		u.mark = v.mark = TRUE
+G'.V = {FIND-SET(v): v in G.V}
+G'.E = empty
+for each (x,y) in G.E
+	u = FIND-SET(x)
+	v = FIND-SET(y)
+	if (u,v) notin G'.E
+		G'.E = G'.E merge {(u,v)}
+		(u,v).orig' = (x,y).orig
+		(u,v).c' = (x,y).c
+	else if (x,y).c < (u,v).c'
+		(u,v).orig' = (x,y).orig
+		(u,v).c' = (x,y).c
+construct adjacency lists G': Adj for G'
+return G' and T
+\stopCLRS
+
+\startigBase[a]\startitem
+設 \m{T} 爲算法 \ALGO{MST-REDUCE} 所返回的邊的集合，
+設 \m{A} 爲調用 \ALGO{MST-Prim(G',c',r)} 所生成的圖 \m{G'} 的最小生成樹，
+這裏 \m{c'} 是 \m{G'.E} 中邊的權重屬性，
+ \m{r} 是 \m{G'.V} 中的任意節點。
+證明： \m{T\cup \{(x,y).orig': (x,y)\in A\}} 是圖 \m{G} 的一棵最小生成樹。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明： \m{|G'.V|\le |V|/2}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+請說明如何實現算法 \ALGO{MST-REDUCE}，
+才能讓其運行時間爲 \m{O(E)}。
+（\hint 使用簡單的數據結構）
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定運行 \ALGO{MST-REDUCE} 算法 \m{k} 次，
+使用前一次輸出的圖 \m{G'} 作爲下一次的輸入圖 \m{G}，
+並在 \m{T} 中將邊累積起來。
+證明：算法運行 \m{k} 次的總時間爲 \m{O(kE)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定在運行 \ALGO{MST-REDUCE} 算法 \m{k} 次後，
+就如在本題的 d）部分那樣，
+我們通過調用算法 \ALGO{MST-Prim(G',c',r)} 來運行 Prim 算法，
+這裏圖 \m{G'} 是最後一個階段所返回的圖，
+其權重屬性爲 \m{c'}， \m{r} 是 \m{G'.V} 中的任意節點。
+請說明如何選擇 \m{k}，才能使整體運行時間爲 \m{O(E\lg \lg V)}。
+並證明所選擇的 \m{k} 使得總體漸進運行時間最短。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+要想使這種帶預處理的 Prim 算法的運行時間在漸進意義上由於不帶預處理的 Prim 算法，
+ \m{|E|} 和 \m{|V|} 要滿足什麼關係？
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p23-3
+\startPROBLEM
+（Bottleneck spanning tree）
+無向圖 \m{G} 的{\EMP 瓶頸生成樹} \m{T} 是 \m{G} 的一棵生成樹，
+其最大邊的權重是 \m{G} 的所有生成樹中最小的。
+我們稱瓶頸生成樹 \m{T} 的值是 \m{T} 中權重最大邊的權重值。
+\startigBase[a]\startitem
+證明：最小生成樹是瓶頸生成樹。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+本題的 a）部分顯示，找出一棵瓶頸生成樹並不比找出一棵最小生成樹更難。
+在本題餘下的部分，我們來演示如何在線性時間內找到一棵瓶頸生成樹。
+
+\startigBase[continue]\startitem
+請給出一個線性時間的算法，
+在給定圖 \m{G} 和整數 \m{b} 的情況下，
+能夠判斷瓶頸生成樹的值是否最大不超過 \m{b}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+使用本題 b）部分的算法，設計一個瓶頸生成樹問題的線性時間算法，
+該算法將以 b）部分的算法作爲子程序。
+（\hint 考慮使用一個子程序對邊的集合進行收縮，
+就如同\refproblem{23-2} 中所描述的 \ALGO{MST-REDUCE} 算法一樣。）
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p23-4
+\startPROBLEM
+（Alternative minimum-spanning-tree algorithms）
+在本題中，我們給出三種不同算法的僞碼。
+每種算法的輸入都是一個連通圖和一個權重函數，
+返回值都是一個邊的集合 \m{T}。
+對於每種算法，要麼證明 \m{T} 是一棵最小生成樹，
+要麼證明 \m{T} 不是一棵最小生成樹。
+同時給出每種算法的最有效的實現
+（不管該算法是否能夠計算出最小生成樹）。
+
+\startigBase[a]\startitem
+\CLRSH{MAYBE-MST-A(G,w)}
+
+\startCLRS
+sort the edges into nonincreasing order of edge weights w
+T = E
+for each edge e, taken in nonincreasing order by weight
+	if T - {e} is a connected graph
+		T = T - {e}
+return T
+\stopCLRS
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+\CLRSH{MAYBE-MST-B(G,w)}
+
+\startCLRS
+T = empty
+for each edge e, taken in arbitrary order
+	if T merge {e} has no cycles
+		T = T merge {e}
+return T
+\stopCLRS
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+\CLRSH{MAYBE-MST-C(G,w)}
+
+\startCLRS
+T = empty
+for each edge e, taken in arbitrary order
+	T = T merge {e}
+	if T has a cycle c
+		let e' be a maximum-weight edge on c
+		T = T - {e'}
+return T
+\stopCLRS
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
 \stopsubject%Problems
 
 \stopchapter

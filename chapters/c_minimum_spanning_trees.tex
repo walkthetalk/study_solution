@@ -606,7 +606,7 @@ return G' and T
 \stopitem\stopigBase
 
 \startANSWER
-\TODO{略。}
+\m{G'.V} 中每個節點至少包含 \m{G.V} 中的兩個節點。
 \stopANSWER
 
 \startigBase[continue]\startitem
@@ -616,7 +616,7 @@ return G' and T
 \stopitem\stopigBase
 
 \startANSWER
-\TODO{略。}
+用鄰接集合。
 \stopANSWER
 
 \startigBase[continue]\startitem
@@ -627,7 +627,7 @@ return G' and T
 \stopitem\stopigBase
 
 \startANSWER
-\TODO{略。}
+根據上一項可知。
 \stopANSWER
 
 \startigBase[continue]\startitem
@@ -641,7 +641,9 @@ return G' and T
 \stopitem\stopigBase
 
 \startANSWER
-\TODO{略。}
+Prim 算法運行時間爲 \m{O(E+V\lg V)}。
+運行 \m{k} 次 \ALGO{MST-REDUCE} 後 \m{V'= V 2^{-k}}。
+當 \m{k = \lg \lg V} 時，總運行時間 \m{O(kE) + O(E+V'\lg V')} 才爲 \m{O(E\lg \lg V)}。
 \stopANSWER
 
 \startigBase[continue]\startitem
@@ -650,7 +652,7 @@ return G' and T
 \stopitem\stopigBase
 
 \startANSWER
-\TODO{略。}
+即 \m{O(E\lg\lg V) < O(E + V\lg V)}，得 \m{E < \frac{V\lg V}{\lg\lg V}}。
 \stopANSWER
 
 \stopPROBLEM
@@ -660,13 +662,15 @@ return G' and T
 （Bottleneck spanning tree）
 無向圖 \m{G} 的{\EMP 瓶頸生成樹} \m{T} 是 \m{G} 的一棵生成樹，
 其最大邊的權重是 \m{G} 的所有生成樹中最小的。
-我們稱瓶頸生成樹 \m{T} 的值是 \m{T} 中權重最大邊的權重值。
+我們將 \m{T} 中權重最大邊的權重值稱作瓶頸生成樹 \m{T} 的值。
 \startigBase[a]\startitem
 證明：最小生成樹是瓶頸生成樹。
 \stopitem\stopigBase
 
 \startANSWER
-\TODO{略。}
+給 MST 添加一條邊必然形成一個環路，然後再去掉一個邊形成另一棵生成樹。
+添加的邊的權重肯定大於環路中其他邊的權重。
+新生成樹的值不可能小於 MST 的值。
 \stopANSWER
 
 本題的 a）部分顯示，找出一棵瓶頸生成樹並不比找出一棵最小生成樹更難。
@@ -679,7 +683,8 @@ return G' and T
 \stopitem\stopigBase
 
 \startANSWER
-\TODO{略。}
+用 \ALGO{DFS} 搜索，跳過權重大於 \m{b} 的邊，看最終是否可以遍歷所有節點。
+（等效於刪除權重大於 \m{b} 的邊後，圖是否仍然連通）
 \stopANSWER
 
 \startigBase[continue]\startitem
@@ -690,7 +695,7 @@ return G' and T
 \stopitem\stopigBase
 
 \startANSWER
-\TODO{略。}
+二分法搜索 \m{b}。
 \stopANSWER
 \stopPROBLEM
 
@@ -719,7 +724,7 @@ return T
 \stopitem\stopigBase
 
 \startANSWER
-\TODO{略。}
+是 MST。
 \stopANSWER
 
 \startigBase[continue]\startitem
@@ -735,7 +740,7 @@ return T
 \stopitem\stopigBase
 
 \startANSWER
-\TODO{略。}
+不是 MST。
 \stopANSWER
 
 \startigBase[continue]\startitem
@@ -753,7 +758,7 @@ return T
 \stopitem\stopigBase
 
 \startANSWER
-\TODO{略。}
+是 MST。
 \stopANSWER
 
 \stopPROBLEM

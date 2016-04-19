@@ -1,27 +1,21 @@
 input clrs_graph;
 
 %% global data
-save frame;
-path frame;
-frame := fullcircle scaled .5cm;
+declare_graph(G, true, .5cm, fullcircle scaled .5cm);
 
-save nodes;
-pair nodes[];
-nodes[ASCII("a")] := (0,0.73);
-nodes[ASCII("b")] := (-1,-1);
-nodes[ASCII("c")] := (1,-1);
+graph_add_vertex_a(G)
+	("a", (0,0.73))
+	("b", (-1,-1))
+	("c", (1,-1));
+graph_add_edge_a(G)
+	("ab")
+	("bc");
+graph_add_curve_edge_a(G)
+	("ac", 30,-30)
+	("ca", 30,-30);
 
 beginfig(1);
-
-for i := ASCII("a") upto ASCII("c"):
-	nodes[i] := nodes[i] * .5cm;
-	draw graph_node(nodes)(frame, char(i));
-endfor;
-
-drawarrow graph_line(nodes)(frame, "a", "b");
-drawarrow graph_line(nodes)(frame, "b", "c");
-drawarrow graph_curve(nodes)(frame, "a", "c", .1cm);
-drawarrow graph_curve(nodes)(frame, "c", "a", -.1cm);
+draw graph_img(G);
 endfig;
 
 end;

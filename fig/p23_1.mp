@@ -1,81 +1,48 @@
 input clrs_graph;
 
-vardef graph_simple_line@#(expr snode, enode, lbl) :=
-save spos, epos, mpos;
-pair spos, epos, mpos;
-spos := nodes[ASCII(snode)];
-epos := nodes[ASCII(enode)];
-mpos := (spos + epos) / 2;
-draw (spos--epos);
-label@#(lbl, mpos);
-enddef;
-
-vardef graph_fat_line@#(expr snode, enode, lbl) :=
-save spos, epos, mpos;
-pair spos, epos, mpos;
-spos := nodes[ASCII(snode)];
-epos := nodes[ASCII(enode)];
-mpos := (spos + epos) / 2;
-draw (spos--epos) withpen pencircle scaled .1cm withcolor .5white;
-draw (spos--epos);
-label@#(lbl, mpos);
-enddef;
-
 %% global data
-save frame;
-path frame;
-frame := fullcircle scaled .5cm;
+declare_graph(G, false, 1cm, fullcircle scaled .5cm);
 
-save nodes;
-pair nodes[];
-nodes[ASCII("a")] := (0,0);
-nodes[ASCII("b")] := (1,-1);
-nodes[ASCII("c")] := (0,-1);
-nodes[ASCII("d")] := (1,0);
-for i := ASCII("a") upto ASCII("d"):
-	nodes[i] := nodes[i] * 1cm;
-endfor;
+graph_add_vertex_a(G)
+	("a", (0,0))
+	("b", (1,-1))
+	("c", (0,-1))
+	("d", (1,0));
+graph_add_edge_with_weight_a(G)
+	("ab", 0.5, 90, 1)
+	("bc", 0.5, 270, 2)
+	("ac", 0.5, 180, 3)
+	("bd", 0.5, 0, 5)
+	("ad", 0.5, 90, 4);
+
+vardef draw_edge_background_n(suffix G)(expr sidx, eidx)text _remain :=
+	draw graph_edge_path_n(G)(sidx, eidx) withpen pencircle scaled .25cm withcolor .7white;
+	if not __emptytext(_remain) :
+		draw_edge_background_n(G)_remain;
+	fi;
+enddef;
+
+vardef draw_edge_background_a(suffix G)(expr seidx)text _remain :=
+	draw_edge_background_n(G)(ASCII substring(0,1)of seidx,
+				ASCII substring(1,2)of seidx);
+	if not __emptytext(_remain):
+		draw_edge_background_a(G)_remain;
+	fi;
+enddef;
 
 beginfig(1);
-graph_fat_line.rt("a","b", "1");
-graph_fat_line.bot("b","c", "2");
-graph_simple_line.lft("a","c", "3");
-graph_simple_line.rt("b","d", "5");
-graph_fat_line.top("a","d", "4");
-
-for i := ASCII("a") upto ASCII("d"):
-	fill frame shifted nodes[i] withcolor white;
-	draw frame shifted nodes[i];
-	label(char(i), nodes[i]);
-endfor;
+draw_edge_background_a(G)("ad")("ab")("bc");
+draw graph_img(G);
 endfig;
 
 beginfig(2);
-graph_fat_line.rt("a","b", "1");
-graph_simple_line.bot("b","c", "2");
-graph_fat_line.lft("a","c", "3");
-graph_simple_line.rt("b","d", "5");
-graph_fat_line.top("a","d", "4");
-
-for i := ASCII("a") upto ASCII("d"):
-	fill frame shifted nodes[i] withcolor white;
-	draw frame shifted nodes[i];
-	label(char(i), nodes[i]);
-endfor;
+draw_edge_background_a(G)("ad")("ab")("ac");
+draw graph_img(G);
 endfig;
 
 beginfig(3);
-graph_fat_line.rt("a","b", "1");
-graph_fat_line.bot("b","c", "2");
-graph_simple_line.lft("a","c", "3");
-graph_fat_line.rt("b","d", "5");
-graph_simple_line.top("a","d", "4");
-
-for i := ASCII("a") upto ASCII("d"):
-	fill frame shifted nodes[i] withcolor white;
-	draw frame shifted nodes[i];
-	label(char(i), nodes[i]);
-endfor;
+draw_edge_background_a(G)("ab")("bd")("bc");
+draw graph_img(G);
 endfig;
 
 end;

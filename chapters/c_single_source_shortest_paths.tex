@@ -1,4 +1,4 @@
-\startcomponent c_sigle_source_shortest_paths
+\startcomponent c_single_source_shortest_paths
 
 \startchapter[
   title={Single-Source Shortest Paths},
@@ -574,6 +574,33 @@ Newman 教授覺得子集發現了 Dijkstra 算法的一個更簡單的證明。
 \startsection[
   title={Proofs of shortest-paths properties},
 ]
+
+%e24.5-1
+\startEXERCISE
+圖 24-2 中有兩棵最短路徑樹，請給出與其不同的另外兩棵最短路徑樹。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[nx=2]
+{\externalfigure[output/e24_5_1-1]}{a}
+{\externalfigure[output/e24_5_1-2]}{b}
+\stopcombination
+\stopANSWER
+
+%e24.5-2
+\startEXERCISE
+\m{G=(V,E)} 是一個帶權重的有向圖，
+權重函數爲 \m{\omega:E\rightarrow R}。
+設 \m{s\in V} 爲某個源節點。
+請舉出一個例子，使得圖 \m{G} 滿足下列條件：
+對於每條邊 \m{(u,v)\in E}，
+存在一棵根節點爲 \m{s} 的包含邊 \m{(u,v)} 的最短路徑樹，
+也包含一棵根節點爲 \m{s} 的不包含邊 \m{(u,v)} 的最短路徑樹。
+\stopEXERCISE
+
+\startANSWER
+\stopANSWER
+
 \stopsection
 
 \startsubject[

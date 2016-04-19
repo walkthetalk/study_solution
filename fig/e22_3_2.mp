@@ -1,7 +1,9 @@
 input clrs_graph;
+input clrs_graph_BDSEARCH;
 
 %% global data
 declare_graph(G, true, 1cm, fullcircle scaled .5cm);
+declare_graph_vertex_remark(G);
 
 graph_add_vertex_a(G)
 	("q", (0,0))
@@ -37,17 +39,17 @@ draw graph_img(G);
 endfig;
 
 beginfig(2);
-graph_add_vertex_user_a(G)
-	("q", 90, "1,16")
-	("r", 90, "17,20")
-	("s", 135, "2,7")
-	("t", 180, "8,15")
-	("u", 45, "18,19")
-	("v", 135, "3,6")
-	("w", 0, "4,5")
-	("x", 180, "9,12")
-	("y", 315, "13,14")
-	("z", 180, "10,11");
+graph_add_vertex_remark_a(G)
+	("q", 90, (1,16))
+	("r", 90, (17,20))
+	("s", 135, (2,7))
+	("t", 180, (8,15))
+	("u", 45, (18,19))
+	("v", 135, (3,6))
+	("w", 0, (4,5))
+	("x", 180, (9,12))
+	("y", 315, (13,14))
+	("z", 180, (10,11));
 
 graph_assign_edge_color_a(G)(red)
 	("qs")
@@ -62,6 +64,7 @@ graph_assign_edge_color_a(G)(blue)("qw");
 graph_assign_edge_color_a(G)(black)("ws")("yq")("zx");
 graph_assign_edge_pattern_a(G)(evenly)("ry")("uy");
 
+graph_loop_vertex(G, draw_vertex_remark);
 draw graph_img(G);
 endfig;
 

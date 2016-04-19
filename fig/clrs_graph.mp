@@ -19,9 +19,6 @@ color	G.V[]fillcolor;
 string	G.V[]id;
 color	G.V[]idcolor;
 
-numeric G.V[]usr_dir;
-string	G.V[]usr;
-
 path	G.E[][]way;
 
 numeric G.E[][]weight_pos;
@@ -119,7 +116,7 @@ def __label(expr vdegree) :=
 		__label(vdegree - 360)
 	elseif (vdegree <= 22.5):
 		label.rt
-	elseif (22.5 <= vdegree) and (vdegree <= 67.5):
+	elseif (vdegree <= 67.5):
 		label.urt
 	elseif (vdegree <= 112.5):
 		label.top
@@ -135,6 +132,36 @@ def __label(expr vdegree) :=
 		label.lrt
 	elseif (vdegree < 360):
 		label.rt
+	fi
+enddef;
+
+vardef __vertex_remark(suffix G, remark_fn)(expr idx, vdegree) :=
+	save position; pair position;
+	position := __intersectionpoint(G)(idx, vdegree);
+	save p; picture p;
+	p := remark_fn(G)(idx);
+	if (vdegree < 0):
+		__pic(G, remark_fn)(vdegree + 360)
+	elseif (vdegree >= 360):
+		__pic(G, remark_fn)(vdegree - 360)
+	elseif (vdegree <= 22.5):
+		p shifted (position - (ulcorner p + llcorner p)/2)
+	elseif (vdegree <= 67.5):
+		p shifted (position - llcorner p)
+	elseif (vdegree <= 112.5):
+		p shifted (position - (llcorner p + lrcorner p)/2)
+	elseif (vdegree <= 157.5):
+		p shifted (position - lrcorner p)
+	elseif (vdegree <= 202.5):
+		p shifted (position - (urcorner p + lrcorner p)/2)
+	elseif (vdegree <= 247.5):
+		p shifted (position - urcorner p)
+	elseif (vdegree <= 292.5):
+		p shifted (position - (ulcorner p + urcorner p)/2)
+	elseif (vdegree <= 337.5):
+		p shifted (position - ulcorner p)
+	elseif (vdegree < 360):
+		p shifted (position - (ulcorner p + llcorner p)/2)
 	fi
 enddef;
 
@@ -190,12 +217,6 @@ draw image(
 
 	% vertex name
 	label(TEX(G.V[vidx]id), vpos) withcolor if known G.V[vidx]idcolor: G.V[vidx]idcolor else: black fi;
-	if known G.V[vidx]usr:
-		save vdegree;
-		numeric vdegree;
-		vdegree := G.V[vidx]usr_dir;
-		__label(vdegree) (TEX(G.V[vidx]usr), __intersectionpoint(G)(vidx, vdegree));
-	fi;
 );
 enddef;
 
@@ -304,11 +325,6 @@ image(
 )
 enddef;
 
-vardef graph_add_vertex_user_n(suffix G)(expr idx, usrdir, info) :=
-	G.V[idx]usr_dir := usrdir;
-	G.V[idx]usr := info;
-enddef;
-
 vardef graph_assign_edge_color_n(suffix G)(expr colour)(expr sidx, eidx)text _remain :=
 	G.E[sidx][eidx]clr := colour;
 	if not __emptytext(_remain):
@@ -361,13 +377,6 @@ vardef graph_add_curve_edge_a(suffix G)(expr seidx, sdegree, edegree)text _remai
 	graph_add_curve_edge_n(G)(ASCII substring(0,1)of seidx, ASCII substring(1,2)of seidx, sdegree, edegree);
 	if not __emptytext(_remain):
 		graph_add_curve_edge_a(G)_remain;
-	fi;
-enddef;
-
-vardef graph_add_vertex_user_a(suffix G)(expr idx, usrdir, info)text _remain :=
-	graph_add_vertex_user_n(G)(ASCII idx, usrdir, info);
-	if not __emptytext(_remain):
-		graph_add_vertex_user_a(G)_remain;
 	fi;
 enddef;
 

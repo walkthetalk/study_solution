@@ -18,6 +18,6 @@ enddef;
 
 vardef draw_DF(suffix G)(expr idx) :=
 	if known G.V[idx]df.dv and known G.V[idx]df.fv:
-		draw __graph_vertex_remark(G)(idx, graph_vertex_ext.edge_weight(G)(idx)(deg), __graph_DF(G)(idx));
+		draw __graph_vertex_remark(G)(idx, graph_vertex_ext.df(G)(idx)(deg), __graph_DF(G)(idx));
 	fi;
 enddef;

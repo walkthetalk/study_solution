@@ -25,7 +25,7 @@ G_set_EDGEWEIGHT(G)
 	("ad", 0.5, 90, 4);
 
 vardef draw_edge_background_n(suffix G)(expr sidx, eidx)text _remain :=
-	draw graph_edge_path_n(G)(sidx, eidx) withpen pencircle scaled .25cm withcolor .7white;
+	draw __graph_edge_path(G)(sidx, eidx) withpen pencircle scaled .25cm withcolor .7white;
 	if not __emptytext(_remain) :
 		draw_edge_background_n(G)_remain;
 	fi;

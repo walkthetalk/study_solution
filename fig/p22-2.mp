@@ -3,9 +3,9 @@ input clrs_graph;
 vardef outer_frame(suffix G)(expr lbls) :=
 image(
 	save p; path p;
-	p := graph_vertex_position_a(G)(substring(0,1) of lbls);
+	p := G_V_position(G)(substring(0,1) of lbls);
 	for i := 1 upto (length(lbls) - 1):
-		p := p -- graph_vertex_position_a(G)(substring(i,i+1) of lbls);
+		p := p -- G_V_position(G)(substring(i,i+1) of lbls);
 	endfor;
 	p := p -- cycle;
 

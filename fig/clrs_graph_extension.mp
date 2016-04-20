@@ -122,7 +122,7 @@ enddef;
 
 vardef __graph_edge_remark(suffix G)(expr sidx, eidx, _pos, _deg, p) :=
 	save _road; path _road;
-	_road := graph_edge_path_n(G)(sidx, eidx);
+	_road := __graph_edge_path(G)(sidx, eidx);
 	save position; pair position;
 	position := point (arctime ((arclength _road) * _pos) of _road) of _road;
 	p shifted __pic_shift(p, _deg, position)

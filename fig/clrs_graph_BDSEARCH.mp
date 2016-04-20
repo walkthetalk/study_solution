@@ -1,30 +1,23 @@
 %% please input clrs_graph first
-vardef declare_graph_vertex_remark(suffix G) :=
-pair G.V[]df;
-numeric G.V[]remark_dir;
+vardef declare_graph_DF(suffix G) :=
+declare_graph_vertex_ext.df(G)("numeric deg, numeric dv, numeric fv");
 enddef;
 
-vardef graph_add_vertex_remark_n(suffix G)(expr idx, usrdir, info) :=
-	G.V[idx]remark_dir := usrdir;
-	G.V[idx]df := info;
+vardef G_set_DF(suffix G)(expr idx, _deg, _d, _f)text _remain :=
+	G_set_V_ext.df(G)(idx, _deg, _d, _f)_remain;
 enddef;
 
-vardef graph_add_vertex_remark_a(suffix G)(expr idx, usrdir, info)text _remain :=
-	graph_add_vertex_remark_n(G)(ASCII idx, usrdir, info);
-	if not __emptytext(_remain):
-		graph_add_vertex_remark_a(G)_remain;
-	fi;
-enddef;
-
-vardef graph_vertex_remark(suffix G)(expr idx) :=
+vardef __graph_DF(suffix G)(expr idx) :=
 image(
-	label(TEX(decimal(xpart G.V[idx]df) & "," & decimal(ypart G.V[idx]df)),
+	label(TEX(decimal(G_V_ext.df(G)(idx)(dv))
+		& ","
+		& decimal(G_V_ext.df(G)(idx)(fv))),
 		(0,0));
 )
 enddef;
 
-vardef draw_vertex_remark(suffix G)(expr idx) :=
-	if known G.V[idx]df:
-		draw __vertex_remark(G, graph_vertex_remark)(idx, G.V[idx]remark_dir);
+vardef draw_DF(suffix G)(expr idx) :=
+	if known G.V[idx]df.dv and known G.V[idx]df.fv:
+		draw __graph_vertex_remark(G)(idx, G_V_ext.edge_weight(G)(idx)(deg), __graph_DF(G)(idx));
 	fi;
 enddef;

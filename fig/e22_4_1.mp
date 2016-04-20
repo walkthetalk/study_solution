@@ -1,8 +1,8 @@
 input clrs_graph;
 
 %% global data
-declare_graph(G, true, 1cm, fullcircle scaled .5cm);
-graph_add_vertex_a(G)
+declare_graph(G, true, true, 1cm, fullcircle scaled .5cm);
+G_add_V(G)
 	("m", (0,0))
 	("n", (2,0))
 	("o", (4,0))
@@ -17,7 +17,7 @@ graph_add_vertex_a(G)
 	("x", (1,-3))
 	("y", (3,-3))
 	("z", (5,-3));
-graph_add_edge_a(G)
+G_add_E(G)
 	("mx")
 	("mq")
 	("mr")

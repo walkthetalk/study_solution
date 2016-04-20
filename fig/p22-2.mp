@@ -16,9 +16,9 @@ image(
 enddef;
 
 %% global data
-declare_graph(G, false, 1cm, fullcircle scaled .5cm);
+declare_graph(G, false, true, 1cm, fullcircle scaled .5cm);
 
-graph_add_vertex_a(G)
+G_add_V(G)
 	("a", (0,0))
 	("b", (1,1))
 	("c", (1,-1))
@@ -43,7 +43,7 @@ graph_add_vertex_a(G)
 	("v", (8,-2))
 	("w", (11,-2));
 
-graph_add_edge_a(G)
+G_add_E(G)
 	("ab")
 	("ac")
 	("ad")
@@ -87,19 +87,19 @@ string bridges, artpoints, commonpoints;
 % bridges
 bridges := "dehjeknoqtqw";
 for i := 0 step 2 until (length bridges - 1):
-	draw graph_edge_path_a(G)(substring(i,i+2)of bridges) withpen (pencircle scaled .25cm) withcolor .3 white;
+	draw G_E_path(G)(substring(i,i+2)of bridges) withpen (pencircle scaled .25cm) withcolor .3 white;
 endfor;
 
 % commonpoints
 commonpoints := "abcfgijlmprswuv";
 for i := 0 upto (length commonpoints - 1):
-	graph_assign_vertex_color_a(G)(white,white)(substring(i,i+1)of commonpoints);
+	G_set_V_color(G)(white,white)(substring(i,i+1)of commonpoints);
 endfor;
 
 % artpoints
 artpoints := "deknoqtwh";
 for i := 0 upto (length artpoints - 1):
-	graph_assign_vertex_color_a(G)(black,black)(substring(i,i+1)of artpoints);
+	G_set_V_color(G)(black,black)(substring(i,i+1)of artpoints);
 endfor;
 
 draw graph_img(G);

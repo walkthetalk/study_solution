@@ -1,11 +1,12 @@
 input clrs_graph;
+input clrs_graph_extension;
 input clrs_graph_BDSEARCH;
 
 %% global data
-declare_graph(G, true, 1cm, fullcircle scaled .5cm);
-declare_graph_vertex_remark(G);
+declare_graph(G, true, true, 1cm, fullcircle scaled .5cm);
+declare_graph_DF(G);
 
-graph_add_vertex_a(G)
+G_add_V(G)
 	("q", (0,0))
 	("r", (3,0))
 	("s", (-1.5,-1))
@@ -17,7 +18,7 @@ graph_add_vertex_a(G)
 	("y", (2,-2))
 	("z", (1,-3));
 
-graph_add_edge_a(G)
+G_add_E(G)
 	("qs")
 	("qw")
 	("ws")
@@ -30,7 +31,7 @@ graph_add_edge_a(G)
 	("ru")
 	("ry")
 	("uy");
-graph_add_curve_edge_a(G)
+G_add_curveE(G)
 	("yq", -30, 30)
 	("zx", -45, 45);
 
@@ -39,19 +40,19 @@ draw graph_img(G);
 endfig;
 
 beginfig(2);
-graph_add_vertex_remark_a(G)
-	("q", 90, (1,16))
-	("r", 90, (17,20))
-	("s", 135, (2,7))
-	("t", 180, (8,15))
-	("u", 45, (18,19))
-	("v", 135, (3,6))
-	("w", 0, (4,5))
-	("x", 180, (9,12))
-	("y", 315, (13,14))
-	("z", 180, (10,11));
+G_set_DF(G)
+	("q",  90,  1,16)
+	("r",  90, 17,20)
+	("s", 135,  2, 7)
+	("t", 180,  8,15)
+	("u",  45, 18,19)
+	("v", 135,  3, 6)
+	("w",   0,  4, 5)
+	("x", 180,  9,12)
+	("y", 315, 13,14)
+	("z", 180, 10,11);
 
-graph_assign_edge_color_a(G)(red)
+G_set_E_color(G)(red)
 	("qs")
 	("sv")
 	("vw")
@@ -60,11 +61,11 @@ graph_assign_edge_color_a(G)(red)
 	("xz")
 	("ty")
 	("ru");
-graph_assign_edge_color_a(G)(blue)("qw");
-graph_assign_edge_color_a(G)(black)("ws")("yq")("zx");
-graph_assign_edge_pattern_a(G)(evenly)("ry")("uy");
+G_set_E_color(G)(blue)("qw");
+G_set_E_color(G)(black)("ws")("yq")("zx");
+G_set_E_pattern(G)(evenly)("ry")("uy");
 
-graph_loop_vertex(G, draw_vertex_remark);
+graph_loop_vertex(G, draw_DF);
 draw graph_img(G);
 endfig;
 

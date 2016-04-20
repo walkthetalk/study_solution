@@ -1,11 +1,11 @@
 input TEX;
 
-vardef declare_graph(suffix G)(expr is_directed_graph, _gsize, _frame) :=
+vardef declare_graph(suffix G)(expr is_directed_graph, is_char_id, _gsize, _frame) :=
 %save vertexs;
 boolean G.is_directed;
+boolean G.is_charid;
 numeric G.V[]adj;
 numeric G.E[][]next;
-numeric G.E[][]weight;
 
 % for display
 path G.frame;
@@ -21,9 +21,6 @@ color	G.V[]idcolor;
 
 path	G.E[][]way;
 
-numeric G.E[][]weight_pos;
-numeric G.E[][]weight_dir;
-
 color	G.E[][]clr;
 picture	G.E[][]pat;
 
@@ -33,9 +30,18 @@ numeric G.V.num;
 pair G.E.seq[];
 numeric G.E.num;
 
+G.is_charid := is_char_id;
 G.is_directed := is_directed_graph;
 G.V.num := 0;
 G.E.num := 0;
+enddef;
+
+vardef __graph_vertex_id(suffix G)(expr idx) :=
+	if G.is_charid:
+		(ASCII idx)
+	else:
+		idx
+	fi
 enddef;
 
 vardef __graph_add_vertex(suffix G)(expr idx, position) :=
@@ -135,33 +141,30 @@ def __label(expr vdegree) :=
 	fi
 enddef;
 
-vardef __vertex_remark(suffix G, remark_fn)(expr idx, vdegree) :=
-	save position; pair position;
-	position := __intersectionpoint(G)(idx, vdegree);
-	save p; picture p;
-	p := remark_fn(G)(idx);
-	if (vdegree < 0):
-		__pic(G, remark_fn)(vdegree + 360)
-	elseif (vdegree >= 360):
-		__pic(G, remark_fn)(vdegree - 360)
-	elseif (vdegree <= 22.5):
-		p shifted (position - (ulcorner p + llcorner p)/2)
-	elseif (vdegree <= 67.5):
-		p shifted (position - llcorner p)
-	elseif (vdegree <= 112.5):
-		p shifted (position - (llcorner p + lrcorner p)/2)
-	elseif (vdegree <= 157.5):
-		p shifted (position - lrcorner p)
-	elseif (vdegree <= 202.5):
-		p shifted (position - (urcorner p + lrcorner p)/2)
-	elseif (vdegree <= 247.5):
-		p shifted (position - urcorner p)
-	elseif (vdegree <= 292.5):
-		p shifted (position - (ulcorner p + urcorner p)/2)
-	elseif (vdegree <= 337.5):
-		p shifted (position - ulcorner p)
-	elseif (vdegree < 360):
-		p shifted (position - (ulcorner p + llcorner p)/2)
+vardef __pic_shift(expr _p, _deg, _pos) :=
+
+	if (_deg < 0):
+		__pic_shift(_p, _deg + 360, _pos)
+	elseif (_deg >= 360):
+		__pic_shift(_p, _deg - 360, _pos)
+	elseif (_deg <= 22.5):
+		(_pos - (ulcorner _p + llcorner _p)/2)
+	elseif (_deg <= 67.5):
+		(_pos - llcorner _p)
+	elseif (_deg <= 112.5):
+		(_pos - (llcorner _p + lrcorner _p)/2)
+	elseif (_deg <= 157.5):
+		(_pos - lrcorner _p)
+	elseif (_deg <= 202.5):
+		(_pos - (urcorner _p + lrcorner _p)/2)
+	elseif (_deg <= 247.5):
+		(_pos - urcorner _p)
+	elseif (_deg <= 292.5):
+		(_pos - (ulcorner _p + urcorner _p)/2)
+	elseif (_deg <= 337.5):
+		(_pos - ulcorner _p)
+	elseif (_deg < 360):
+		(_pos - (ulcorner _p + llcorner _p)/2)
 	fi
 enddef;
 
@@ -190,18 +193,6 @@ draw image(
 		withcolor	if known G.E[sidx][eidx]clr:	G.E[sidx][eidx]clr else: black	fi
 		dashed		if known G.E[sidx][eidx]pat:	evenly	else:	blankpicture	fi;
 );
-enddef;
-
-vardef __draw_graph_edge_weight(suffix G)(expr sidx, eidx) :=
-if known G.E[sidx][eidx]weight:
-	draw image(
-		save _road; path _road;
-		_road := graph_edge_path_n(G)(sidx, eidx);
-		save _pos; pair _pos;
-		_pos := point (arctime ((arclength _road) * G.E[sidx][eidx]weight_pos) of _road) of _road;
-		graph_label(G.E[sidx][eidx]weight_dir)(TEX(__num_to_str(G.E[sidx][eidx]weight)), _pos);
-	);
-fi;
 enddef;
 
 vardef __draw_graph_vertex(suffix G)(expr idx) :=
@@ -250,16 +241,6 @@ vardef graph_add_edge_n(suffix G)(expr sidx, eidx)text _remain :=
 
 	if not __emptytext(_remain):
 		graph_add_edge_n(G) _remain;
-	fi;
-enddef;
-
-vardef graph_add_edge_with_weight_n(suffix G)(expr sidx, eidx, pos, deg, _weight)text _remain :=
-	graph_add_edge_n(G)(sidx,eidx);
-	G.E[sidx][eidx]weight := _weight;
-	G.E[sidx][eidx]weight_pos := pos;
-	G.E[sidx][eidx]weight_dir := deg;
-	if not __emptytext(_remain):
-		graph_add_edge_with_weight_n(G)_remain;
 	fi;
 enddef;
 
@@ -320,30 +301,29 @@ enddef;
 vardef graph_img(suffix G) :=
 image(
 	graph_loop_edge(G, __draw_graph_edge);
-	graph_loop_edge(G, __draw_graph_edge_weight);
 	graph_loop_vertex(G, __draw_graph_vertex);
 )
 enddef;
 
-vardef graph_assign_edge_color_n(suffix G)(expr colour)(expr sidx, eidx)text _remain :=
+vardef graph_set_edge_color_n(suffix G)(expr colour)(expr sidx, eidx)text _remain :=
 	G.E[sidx][eidx]clr := colour;
 	if not __emptytext(_remain):
-		graph_assign_edge_color_n(G)(colour)_remain;
+		graph_set_edge_color_n(G)(colour)_remain;
 	fi;
 enddef;
 
-vardef graph_assign_edge_pattern_n(suffix G)(expr pattern)(expr sidx, eidx)text _remain :=
+vardef graph_set_edge_pattern_n(suffix G)(expr pattern)(expr sidx, eidx)text _remain :=
 	G.E[sidx][eidx]pat := pattern;
 	if not __emptytext(_remain):
-		graph_assign_edge_pattern_n(G)(pattern)_remain;
+		graph_set_edge_pattern_n(G)(pattern)_remain;
 	fi;
 enddef;
 
-vardef graph_assign_vertex_color_n(suffix G)(expr fclr, iclr)(expr idx)text _remain :=
+vardef graph_set_vertex_color_n(suffix G)(expr fclr, iclr)(expr idx)text _remain :=
 	G.V[idx]fillcolor := fclr;
 	G.V[idx]idcolor := iclr;
 	if not __emptytext(_remain):
-		graph_assign_vertex_color_n(G)(fclr, iclr)_remain;
+		graph_set_vertex_color_n(G)(fclr, iclr)_remain;
 	fi;
 enddef;
 
@@ -364,15 +344,6 @@ vardef graph_add_edge_a(suffix G)(expr seidx)text _remain :=
 	fi;
 enddef;
 
-vardef graph_add_edge_with_weight_a(suffix G)(expr seidx, pos, deg, _weight)text _remain :=
-	graph_add_edge_with_weight_n(G)(ASCII substring(0,1)of seidx,
-					ASCII substring(1,2)of seidx,
-					pos, deg, _weight);
-	if not __emptytext(_remain):
-		graph_add_edge_with_weight_a(G)_remain;
-	fi;
-enddef;
-
 vardef graph_add_curve_edge_a(suffix G)(expr seidx, sdegree, edegree)text _remain :=
 	graph_add_curve_edge_n(G)(ASCII substring(0,1)of seidx, ASCII substring(1,2)of seidx, sdegree, edegree);
 	if not __emptytext(_remain):
@@ -380,24 +351,24 @@ vardef graph_add_curve_edge_a(suffix G)(expr seidx, sdegree, edegree)text _remai
 	fi;
 enddef;
 
-vardef graph_assign_edge_color_a(suffix G)(expr colour)(expr seidx)text _remain :=
-	graph_assign_edge_color_n(G)(colour)(ASCII substring(0,1)of seidx, ASCII substring(1,2)of seidx);
+vardef graph_set_edge_color_a(suffix G)(expr colour)(expr seidx)text _remain :=
+	graph_set_edge_color_n(G)(colour)(ASCII substring(0,1)of seidx, ASCII substring(1,2)of seidx);
 	if not __emptytext(_remain):
-		graph_assign_edge_color_a(G)(colour)_remain;
+		graph_set_edge_color_a(G)(colour)_remain;
 	fi;
 enddef;
 
-vardef graph_assign_edge_pattern_a(suffix G)(expr pattern)(expr seidx)text _remain :=
-	graph_assign_edge_pattern_n(G)(pattern)(ASCII substring(0,1)of seidx, ASCII substring(1,2)of seidx);
+vardef graph_set_edge_pattern_a(suffix G)(expr pattern)(expr seidx)text _remain :=
+	graph_set_edge_pattern_n(G)(pattern)(ASCII substring(0,1)of seidx, ASCII substring(1,2)of seidx);
 	if not __emptytext(_remain):
-		graph_assign_edge_pattern_a(G)(pattern)_remain;
+		graph_set_edge_pattern_a(G)(pattern)_remain;
 	fi;
 enddef;
 
-vardef graph_assign_vertex_color_a(suffix G)(expr fclr, iclr)(expr idx) :=
+vardef graph_set_vertex_color_a(suffix G)(expr fclr, iclr)(expr idx) :=
 	save i;
 	for i := 0 upto (length idx - 1):
-		graph_assign_vertex_color_n(G)(fclr, iclr)(ASCII substring(i,i+1)of idx);
+		graph_set_vertex_color_n(G)(fclr, iclr)(ASCII substring(i,i+1)of idx);
 	endfor;
 enddef;
 
@@ -415,4 +386,86 @@ enddef;
 
 vardef graph_edge_path_a(suffix G)(expr seidx) :=
 	graph_edge_path_n(G)(ASCII substring(0,1)of seidx,ASCII substring(1,2)of seidx)
+enddef;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% short var %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+vardef G_add_V(suffix G)text _remain :=
+	if G.is_charid:
+		graph_add_vertex_a(G)_remain;
+	else:
+		graph_add_vertex_n(G)_remain;
+	fi;
+enddef;
+
+vardef G_add_E(suffix G)text _remain :=
+	if G.is_charid:
+		graph_add_edge_a(G)_remain;
+	else:
+		graph_add_edge_n(G)_remain;
+	fi;
+enddef;
+
+vardef G_add_curveE(suffix G)text _remain :=
+	if G.is_charid:
+		graph_add_curve_edge_a(G)_remain;
+	else:
+		graph_add_curve_edge_n(G)_remain;
+	fi;
+enddef;
+
+vardef G_set_E_color(suffix G)text _remain :=
+	if G.is_charid:
+		graph_set_edge_color_a(G)_remain;
+	else:
+		graph_set_edge_color_n(G)_remain;
+	fi;
+enddef;
+
+vardef G_set_E_pattern(suffix G)text _remain :=
+	if G.is_charid:
+		graph_set_edge_pattern_a(G)_remain;
+	else:
+		graph_set_edge_pattern_n(G)_remain;
+	fi;
+enddef;
+
+vardef G_set_V_color(suffix G)text _remain :=
+	if G.is_charid:
+		graph_set_vertex_color_a(G)_remain;
+	else:
+		graph_set_vertex_color_n(G)_remain;
+	fi;
+enddef;
+
+vardef G_V_path(suffix G)(text _remain) :=
+	if G.is_charid:
+		graph_vertex_path_a(G)(_remain)
+	else:
+		graph_vertex_path_n(G)(_remain)
+	fi
+enddef;
+
+vardef G_V_position(suffix G)(text _remain) :=
+	if G.is_charid:
+		graph_vertex_position_a(G)(_remain)
+	else:
+		graph_vertex_position_n(G)(_remain)
+	fi
+enddef;
+
+vardef G_E_link(suffix G)(text _remain) :=
+	if G.is_charid:
+		graph_edge_link_a(G)(_remain)
+	else:
+		graph_edge_link_n(G)(_remain)
+	fi
+enddef;
+
+vardef G_E_path(suffix G)(text _remain) :=
+	if G.is_charid:
+		graph_edge_path_a(G)(_remain)
+	else:
+		graph_edge_path_n(G)(_remain)
+	fi
 enddef;

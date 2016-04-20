@@ -13,13 +13,12 @@ G_add_E(G)
 	("ab")
 	("ac")
 	("bc");
-G_set_EDGEWEIGHT(G)
+G_set_E.edge_weight(G)
 	("ab", 0.5, 225, -1)
 	("ac", 0.5, 315, -3)
 	("bc", 0.5, 90, -2);
 
 beginfig(1);
-graph_loop_edge(G, draw_EDGEWEIGHT);
 draw graph_img(G);
 endfig;
 

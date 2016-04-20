@@ -22,7 +22,7 @@ G_add_E(G)
 	("cf")
 	("ce");
 
-G_set_EDGEWEIGHT(G)
+G_set_E.edge_weight(G)
 	("ab", 0.5, 90, 1)
 	("bc", 0.5, 90, 1)
 	("ad", 0.5, 225, 3)
@@ -32,7 +32,6 @@ G_set_EDGEWEIGHT(G)
 	("ce", 0.5, 90, 5);
 
 beginfig(1);
-graph_loop_edge(G, draw_EDGEWEIGHT);
 draw graph_img(G);
 draw ((-0.5,-0.5)--(2.5,-0.5)) scaled 1.5cm dashed evenly;
 endfig;

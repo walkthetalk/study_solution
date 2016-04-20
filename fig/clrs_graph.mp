@@ -26,8 +26,11 @@ picture	G.E[][]pat;
 
 string	G.V.draw_fn[];
 numeric	G.V.draw_fn_num;
+string	G.E.draw_fn[];
+numeric	G.E.draw_fn_num;
 
 G.V.draw_fn_num := 0;
+G.E.draw_fn_num := 0;
 
 % for enumeration
 numeric G.V.seq[];
@@ -41,11 +44,17 @@ G.V.num := 0;
 G.E.num := 0;
 
 __graph_add_vertex_draw_func(G)("__draw_graph_vertex");
+__graph_add_edge_draw_func(G)("__draw_graph_edge");
 enddef;
 
 vardef __graph_add_vertex_draw_func(suffix G)(expr _fn) :=
 	G.V.draw_fn_num := G.V.draw_fn_num + 1;
 	G.V.draw_fn[G.V.draw_fn_num] := _fn;
+enddef;
+
+vardef __graph_add_edge_draw_func(suffix G)(expr _fn) :=
+	G.E.draw_fn_num := G.E.draw_fn_num + 1;
+	G.E.draw_fn[G.E.draw_fn_num] := _fn;
 enddef;
 
 vardef __GV_id(expr idx) :=
@@ -389,7 +398,7 @@ enddef;
 vardef graph_loop_edge(suffix G, edge_fn) :=
 	save i;
 	for i := 1 upto G.E.num:
-		edge_fn(G)(xpart G.E.seq[i], ypart G.E.seq[i]);
+		scantokens(edge_fn)(G)(xpart G.E.seq[i], ypart G.E.seq[i]);
 	endfor;
 enddef;
 
@@ -408,7 +417,11 @@ enddef;
 vardef graph_img(suffix G) :=
 image(
 	save i; numeric i;
-	graph_loop_edge(G, __draw_graph_edge);
+
+	for i := 1 upto G.E.draw_fn_num:
+		graph_loop_edge(G, G.E.draw_fn[i]);
+	endfor;
+
 	for i := 1 upto G.V.draw_fn_num:
 		graph_loop_vertex(G, G.V.draw_fn[i]);
 	endfor;

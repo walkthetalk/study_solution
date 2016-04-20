@@ -13,13 +13,12 @@ G_add_E(G)
 	("ab")
 	("ac")
 	("bc");
-G_set_EDGEWEIGHT(G)
+G_set_E.edge_weight(G)
 	("ab", 0.5, 135, 10)
 	("ac", 0.5, 45, 2)
 	("bc", 0.5, 270, 2);
 
 beginfig(1);
-graph_loop_edge(G, draw_EDGEWEIGHT);
 draw graph_img(G);
 draw ((1,0.5)--(1,-1.5)) scaled 1cm dashed evenly;
 endfig;

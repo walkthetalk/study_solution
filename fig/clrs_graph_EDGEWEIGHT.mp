@@ -1,10 +1,7 @@
 %% please input clrs_graph first
 vardef declare_graph_EDGEWEIGHT(suffix G) :=
 declare_graph_edge_ext.edge_weight(G)("numeric position, numeric deg, numeric weight");
-enddef;
-
-vardef G_set_EDGEWEIGHT(suffix G)(expr seidx, _pos, _deg, _w)text _remain :=
-	graph_set_edge_ext.edge_weight(G)(seidx, _pos, _deg, _w)_remain;
+__graph_add_edge_draw_func(G)("__graph_draw.edge_weight");
 enddef;
 
 vardef __graph_EDGEWEIGHT(suffix G)(expr sidx, eidx) :=
@@ -13,7 +10,7 @@ image(
 )
 enddef;
 
-vardef draw_EDGEWEIGHT(suffix G)(expr sidx, eidx) :=
+vardef __graph_draw.edge_weight(suffix G)(expr sidx, eidx) :=
 	if known graph_edge_ext.edge_weight(G)(sidx, eidx)(weight):
 		draw __graph_edge_remark(G)(sidx, eidx,
 				graph_edge_ext.edge_weight(G)(sidx, eidx)(position),

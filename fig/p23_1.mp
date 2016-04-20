@@ -17,7 +17,7 @@ G_add_E(G)
 	("ac")
 	("bd")
 	("ad");
-G_set_EDGEWEIGHT(G)
+G_set_E.edge_weight(G)
 	("ab", 0.5, 90, 1)
 	("bc", 0.5, 270, 2)
 	("ac", 0.5, 180, 3)
@@ -42,19 +42,16 @@ enddef;
 beginfig(1);
 draw_edge_background_a(G)("ad")("ab")("bc");
 draw graph_img(G);
-graph_loop_edge(G, draw_EDGEWEIGHT);
 endfig;
 
 beginfig(2);
 draw_edge_background_a(G)("ad")("ab")("ac");
 draw graph_img(G);
-graph_loop_edge(G, draw_EDGEWEIGHT);
 endfig;
 
 beginfig(3);
 draw_edge_background_a(G)("ab")("bd")("bc");
 draw graph_img(G);
-graph_loop_edge(G, draw_EDGEWEIGHT);
 endfig;
 
 end;

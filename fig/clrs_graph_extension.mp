@@ -162,7 +162,7 @@ vardef __graph_set_edge_ext_e@#(suffix G)(expr seidx, _a, _b, _c, _d, _e) :=
 	____graph_set_edge_ext@#(G)(seidx, 4, _e);
 enddef;
 
-vardef graph_set_edge_ext@#(suffix G)(text abc)text _remain :=
+vardef G_set_E@#(suffix G)(text abc)text _remain :=
 	save pn; numeric pn; pn := G@#.paranum;
 	if pn = 1:
 		__graph_set_edge_ext_a@#(G)(abc);
@@ -179,7 +179,7 @@ vardef graph_set_edge_ext@#(suffix G)(text abc)text _remain :=
 	fi;
 
 	if not __emptytext(_remain) :
-		graph_set_edge_ext@#(G)_remain;
+		G_set_E@#(G)_remain;
 	fi;
 enddef;
 

@@ -9,15 +9,15 @@ enddef;
 
 vardef __graph_DF(suffix G)(expr idx) :=
 image(
-	label(TEX(decimal(G_V_ext.df(G)(idx)(dv))
+	label(TEX(decimal(graph_vertex_ext.df(G)(idx)(dv))
 		& ","
-		& decimal(G_V_ext.df(G)(idx)(fv))),
+		& decimal(graph_vertex_ext.df(G)(idx)(fv))),
 		(0,0));
 )
 enddef;
 
 vardef draw_DF(suffix G)(expr idx) :=
 	if known G.V[idx]df.dv and known G.V[idx]df.fv:
-		draw __graph_vertex_remark(G)(idx, G_V_ext.edge_weight(G)(idx)(deg), __graph_DF(G)(idx));
+		draw __graph_vertex_remark(G)(idx, graph_vertex_ext.edge_weight(G)(idx)(deg), __graph_DF(G)(idx));
 	fi;
 enddef;

@@ -51,7 +51,7 @@ vardef __graph_vertex_remark(suffix G)(expr idx, vdegree, p) :=
 enddef;
 
 vardef ____graph_set_vertex_ext@#(suffix G)(expr idx, _idx, _a) :=
-	G.V[__graph_vertex_id(G)(idx)]@#.scantokens(G@#.paraname[_idx]) := _a;
+	G.V[__GV_id(idx)]@#.scantokens(G@#.paraname[_idx]) := _a;
 enddef;
 
 vardef __graph_set_vertex_ext_a@#(suffix G)(expr idx, _a) :=
@@ -105,7 +105,7 @@ vardef G_set_V_ext@#(suffix G)(text abc)text _remain :=
 	fi;
 enddef;
 
-vardef G_V_ext@#(suffix G)(expr idx)(suffix _var) :=
+vardef graph_vertex_ext@#(suffix G)(expr idx)(suffix _var) :=
 	G.V[idx]@#._var
 enddef;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% edge extension %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -128,38 +128,38 @@ vardef __graph_edge_remark(suffix G)(expr sidx, eidx, _pos, _deg, p) :=
 	p shifted __pic_shift(p, _deg, position)
 enddef;
 
-vardef ____graph_set_edge_ext@#(suffix G)(expr sidx, eidx, _idx, _a) :=
-	G.E[__graph_vertex_id(G)(sidx)][__graph_vertex_id(G)(eidx)]@#.scantokens(G@#.paraname[_idx]) := _a;
+vardef ____graph_set_edge_ext@#(suffix G)(expr seidx, _idx, _a) :=
+	G.E[__GE_sid(seidx)][__GE_eid(seidx)]@#.scantokens(G@#.paraname[_idx]) := _a;
 enddef;
 
-vardef __graph_set_edge_ext_a@#(suffix G)(expr sidx, eidx, _a) :=
-	____graph_set_edge_ext@#(G)(sidx, eidx, 0, _a);
+vardef __graph_set_edge_ext_a@#(suffix G)(expr seidx, _a) :=
+	____graph_set_edge_ext@#(G)(seidx, 0, _a);
 enddef;
 
-vardef __graph_set_edge_ext_b@#(suffix G)(expr sidx, eidx, _a, _b) :=
-	____graph_set_edge_ext@#(G)(sidx, eidx, 0, _a);
-	____graph_set_edge_ext@#(G)(sidx, eidx, 1, _b);
+vardef __graph_set_edge_ext_b@#(suffix G)(expr seidx, _a, _b) :=
+	____graph_set_edge_ext@#(G)(seidx, 0, _a);
+	____graph_set_edge_ext@#(G)(seidx, 1, _b);
 enddef;
 
-vardef __graph_set_edge_ext_c@#(suffix G)(expr sidx, eidx, _a, _b, _c) :=
-	____graph_set_edge_ext@#(G)(sidx, eidx, 0, _a);
-	____graph_set_edge_ext@#(G)(sidx, eidx, 1, _b);
-	____graph_set_edge_ext@#(G)(sidx, eidx, 2, _c);
+vardef __graph_set_edge_ext_c@#(suffix G)(expr seidx, _a, _b, _c) :=
+	____graph_set_edge_ext@#(G)(seidx, 0, _a);
+	____graph_set_edge_ext@#(G)(seidx, 1, _b);
+	____graph_set_edge_ext@#(G)(seidx, 2, _c);
 enddef;
 
-vardef __graph_set_edge_ext_d@#(suffix G)(expr sidx, eidx, _a, _b, _c, _d) :=
-	____graph_set_edge_ext@#(G)(sidx, eidx, 0, _a);
-	____graph_set_edge_ext@#(G)(sidx, eidx, 1, _b);
-	____graph_set_edge_ext@#(G)(sidx, eidx, 2, _c);
-	____graph_set_edge_ext@#(G)(sidx, eidx, 3, _d);
+vardef __graph_set_edge_ext_d@#(suffix G)(expr seidx, _a, _b, _c, _d) :=
+	____graph_set_edge_ext@#(G)(seidx, 0, _a);
+	____graph_set_edge_ext@#(G)(seidx, 1, _b);
+	____graph_set_edge_ext@#(G)(seidx, 2, _c);
+	____graph_set_edge_ext@#(G)(seidx, 3, _d);
 enddef;
 
-vardef __graph_set_edge_ext_e@#(suffix G)(expr sidx, eidx, _a, _b, _c, _d, _e) :=
-	____graph_set_edge_ext@#(G)(sidx, eidx, 0, _a);
-	____graph_set_edge_ext@#(G)(sidx, eidx, 1, _b);
-	____graph_set_edge_ext@#(G)(sidx, eidx, 2, _c);
-	____graph_set_edge_ext@#(G)(sidx, eidx, 3, _d);
-	____graph_set_edge_ext@#(G)(sidx, eidx, 4, _e);
+vardef __graph_set_edge_ext_e@#(suffix G)(expr seidx, _a, _b, _c, _d, _e) :=
+	____graph_set_edge_ext@#(G)(seidx, 0, _a);
+	____graph_set_edge_ext@#(G)(seidx, 1, _b);
+	____graph_set_edge_ext@#(G)(seidx, 2, _c);
+	____graph_set_edge_ext@#(G)(seidx, 3, _d);
+	____graph_set_edge_ext@#(G)(seidx, 4, _e);
 enddef;
 
 vardef graph_set_edge_ext@#(suffix G)(text abc)text _remain :=
@@ -183,6 +183,6 @@ vardef graph_set_edge_ext@#(suffix G)(text abc)text _remain :=
 	fi;
 enddef;
 
-vardef G_E_ext@#(suffix G)(expr sidx, eidx)(suffix _var) :=
+vardef graph_edge_ext@#(suffix G)(expr sidx, eidx)(suffix _var) :=
 	G.E[sidx][eidx]@#._var
 enddef;

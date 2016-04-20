@@ -36,11 +36,27 @@ G.V.num := 0;
 G.E.num := 0;
 enddef;
 
-vardef __graph_vertex_id(suffix G)(expr idx) :=
+vardef __GV_id(expr idx) :=
 	if G.is_charid:
 		(ASCII idx)
 	else:
 		idx
+	fi
+enddef;
+
+vardef __GE_sid(expr seidx) :=
+	if G.is_charid:
+		(ASCII substring(0,1)of seidx)
+	else:
+		(xpart seidx)
+	fi
+enddef;
+
+vardef __GE_eid(expr seidx) :=
+	if G.is_charid:
+		(ASCII substring(1,2)of seidx)
+	else:
+		(ypart seidx)
 	fi
 enddef;
 

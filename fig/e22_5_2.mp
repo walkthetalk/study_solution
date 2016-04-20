@@ -48,7 +48,6 @@ G_set_DF(G)
 	("y", 315, 13,14)
 	("z", 180, 10,11);
 
-graph_loop_vertex(G, draw_DF);
 draw graph_img(G);
 endfig;
 
@@ -72,7 +71,6 @@ G_set_E_color(G)(blue)
 G_set_E_color(G)(green)
 	("zx")("xz");
 
-graph_loop_vertex(G, draw_DF);
 draw graph_img(G);
 endfig;
 

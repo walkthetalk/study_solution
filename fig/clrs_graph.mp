@@ -24,6 +24,11 @@ path	G.E[][]way;
 color	G.E[][]clr;
 picture	G.E[][]pat;
 
+string	G.V.draw_fn[];
+numeric	G.V.draw_fn_num;
+
+G.V.draw_fn_num := 0;
+
 % for enumeration
 numeric G.V.seq[];
 numeric G.V.num;
@@ -34,6 +39,13 @@ G.is_charid := is_char_id;
 G.is_directed := is_directed_graph;
 G.V.num := 0;
 G.E.num := 0;
+
+__graph_add_vertex_draw_func(G)("__draw_graph_vertex");
+enddef;
+
+vardef __graph_add_vertex_draw_func(suffix G)(expr _fn) :=
+	G.V.draw_fn_num := G.V.draw_fn_num + 1;
+	G.V.draw_fn[G.V.draw_fn_num] := _fn;
 enddef;
 
 vardef __GV_id(expr idx) :=
@@ -389,13 +401,16 @@ vardef graph_loop_vertex(suffix G, vertex_fn) :=
 		numeric idx;
 		idx := G.V.seq[i];
 
-		vertex_fn(G)(idx);
+		scantokens(vertex_fn)(G)(idx);
 	endfor;
 enddef;
 
 vardef graph_img(suffix G) :=
 image(
+	save i; numeric i;
 	graph_loop_edge(G, __draw_graph_edge);
-	graph_loop_vertex(G, __draw_graph_vertex);
+	for i := 1 upto G.V.draw_fn_num:
+		graph_loop_vertex(G, G.V.draw_fn[i]);
+	endfor;
 )
 enddef;

@@ -1,6 +1,7 @@
 %% please input clrs_graph first
 vardef declare_graph_DF(suffix G) :=
 declare_graph_vertex_ext.df(G)("numeric deg, numeric dv, numeric fv");
+__graph_add_vertex_draw_func(G)("draw_DF");
 enddef;
 
 vardef G_set_DF(suffix G)(expr idx, _deg, _d, _f)text _remain :=

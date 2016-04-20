@@ -65,7 +65,6 @@ G_set_E_color(G)(blue)("qw");
 G_set_E_color(G)(black)("ws")("yq")("zx");
 G_set_E_pattern(G)(evenly)("ry")("uy");
 
-graph_loop_vertex(G, draw_DF);
 draw graph_img(G);
 endfig;
 

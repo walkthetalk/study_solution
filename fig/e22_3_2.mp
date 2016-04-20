@@ -40,7 +40,7 @@ draw graph_img(G);
 endfig;
 
 beginfig(2);
-G_set_DF(G)
+G_set_V.df(G)
 	("q",  90,  1,16)
 	("r",  90, 17,20)
 	("s", 135,  2, 7)

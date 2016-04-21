@@ -63,7 +63,7 @@ G_set_E_color(G)(red)
 	("ru");
 G_set_E_color(G)(blue)("qw");
 G_set_E_color(G)(black)("ws")("yq")("zx");
-G_set_E_pattern(G)(evenly)("ry")("uy");
+G_set_E_pattern(G)(GEP_dashedvenly)("ry")("uy");
 
 draw graph_img(G);
 endfig;

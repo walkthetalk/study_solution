@@ -51,7 +51,7 @@ vardef __graph_vertex_remark(suffix G)(expr idx, vdegree, p) :=
 enddef;
 
 vardef ____graph_set_vertex_ext@#(suffix G)(expr idx, _idx, _a) :=
-	G.V[__GV_id(idx)]@#.scantokens(G@#.paraname[_idx]) := _a;
+	G.V[__get_id(idx)]@#.scantokens(G@#.paraname[_idx]) := _a;
 enddef;
 
 vardef __graph_set_vertex_ext_a@#(suffix G)(expr idx, _a) :=
@@ -105,6 +105,10 @@ vardef G_set_V@#(suffix G)(text abc)text _remain :=
 	fi;
 enddef;
 
+vardef GVext@#(text _list) :=
+	; G_set_V@#(____G)(____VID, _list);
+enddef;
+
 vardef graph_vertex_ext@#(suffix G)(expr idx)(suffix _var) :=
 	G.V[idx]@#._var
 enddef;
@@ -129,7 +133,7 @@ vardef __graph_edge_remark(suffix G)(expr sidx, eidx, _pos, _deg, p) :=
 enddef;
 
 vardef ____graph_set_edge_ext@#(suffix G)(expr seidx, _idx, _a) :=
-	G.E[__GE_sid(seidx)][__GE_eid(seidx)]@#.scantokens(G@#.paraname[_idx]) := _a;
+	G.E[__get_sid(seidx)][__get_eid(seidx)]@#.scantokens(G@#.paraname[_idx]) := _a;
 enddef;
 
 vardef __graph_set_edge_ext_a@#(suffix G)(expr seidx, _a) :=
@@ -181,6 +185,10 @@ vardef G_set_E@#(suffix G)(text abc)text _remain :=
 	if not __emptytext(_remain) :
 		G_set_E@#(G)_remain;
 	fi;
+enddef;
+
+vardef GEext@#(text _list) :=
+	; G_set_E@#(____G)(____EID, _list);
 enddef;
 
 vardef graph_edge_ext@#(suffix G)(expr sidx, eidx)(suffix _var) :=

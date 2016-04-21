@@ -34,6 +34,7 @@ enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% vertex extension %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 vardef declare_graph_vertex_ext@#(suffix G)(expr _paralist):=
+	boolean G@#.is_vertex; G@#.is_vertex := true;
 	__save_para_list@#(G)(_paralist);
 	save i; numeric i; i := 0;
 	forever:
@@ -114,6 +115,7 @@ vardef graph_vertex_ext@#(suffix G)(expr idx)(suffix _var) :=
 enddef;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% edge extension %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 vardef declare_graph_edge_ext@#(suffix G)(expr _paralist):=
+	boolean G@#.is_edge; G@#.is_edge := true;
 	__save_para_list@#(G)(_paralist);
 	save i; numeric i; i := 0;
 	forever:
@@ -193,4 +195,24 @@ enddef;
 
 vardef graph_edge_ext@#(suffix G)(expr sidx, eidx)(suffix _var) :=
 	G.E[sidx][eidx]@#._var
+enddef;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+vardef G_set_ext@#(suffix G)(text abc) text _remain :=
+	if known G@#.is_edge:
+		G_set_E@#(G)(abc);
+	else:
+		G_set_V@#(G)(abc);
+	fi;
+	if not __emptytext(_remain) :=
+		G_set_ext@#(G)(abc);
+	fi;
+enddef;
+
+vardef Gext@#(text _list) :=
+	if known G@#.is_edge:
+		GEext@#(_list);
+	else:
+		GVext@#(_list);
+	fi
 enddef;

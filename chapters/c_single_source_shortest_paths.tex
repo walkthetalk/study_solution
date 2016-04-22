@@ -599,6 +599,101 @@ Newman 教授覺得自己發現了 Dijkstra 算法的一個更簡單的證明。
 \stopEXERCISE
 
 \startANSWER
+也許只有存在權重爲 0 的邊才行。
+
+\externalfigure[output/e24_5_2-1]
+\stopANSWER
+
+%e24.5-3
+\startEXERCISE
+對引理 24.10 的證明進行改善，使其可以處理最短路徑權重爲 \m{\infty} 和 \m{-\infty} 的情況。
+附引理 24.10：
+
+（三角不等式）設 \m{G=(V,E)} 爲一個帶權重的有向圖，
+其權重函數爲 \m{\omega: E\rightarrow R}，源節點爲 \m{s}。
+那麼對於所有的邊 \m{(u,v)\in E}，有
+\startformula
+\delta(s,v) \le \delta(s,u) + \omega(u,v)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+如果從 \m{s} 無法到達 \m{v}，但從 \m{s} 可以到達 \m{u}，
+則肯定無法從 \m{u} 到達 \m{v}。
+
+\m{\infty + x = \infty}
+\stopANSWER
+
+%e24.5-4
+\startEXERCISE
+設 \m{G=(V,E)} 是一個帶權重的有向圖，
+權重函數爲 \m{\omega:E\rightarrow R}。
+設 \m{s\in V} 爲某個源節點。
+調用 \ALGO{INITIALIZE-SINGLE-SOURCE(G,s)} 對其進行初始化。
+證明：如果一系列鬆弛操作將 \m{s.\pi} 的值設爲一個非空值，
+則圖 \m{G} 包含一個權重爲負值的環路。
+\stopEXERCISE
+
+\startANSWER
+假定是遍歷節點 \m{u} 的時候設置 \m{s.\pi}，
+那麼 \m{\delta(s,u) + \delta(u,s) < 0}，命題得證。
+\stopANSWER
+
+%e24.5-5
+\startEXERCISE
+設 \m{G=(V,E)} 是一個帶權重的有向圖，沒有負值環路。
+設 \m{s\in V} 爲源節點。
+對於節點 \m{v\in V-\{s\}}，如果從源節點 \m{s} 可達，
+我們允許 \m{v.\pi} 是節點 \m{v} 在任意一條最短路徑上的前驅；
+如果不可達，則 \m{v.\pi} 爲 NIL。
+請舉出一個圖例和一種 \m{\pi} 的賦值，
+使得 \m{G_\pi} 中形成一條環路。
+（根據引理 24.16，這樣的一種賦值不可能由一系列鬆弛操作生成。）
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e24_5_5-1]
+\stopANSWER
+
+%e24.5-6
+\startEXERCISE
+設 \m{G=(V,E)} 爲一個帶權重的有向圖，
+權重函數爲 \m{\omega: E\rightarrow R}，
+且不包含權重爲負值的環路。
+設 \m{s\in V} 爲源節點，
+假定圖 \m{G} 由 \ALGO{INITIALIZE-SINGLE-SOURCE(G,s)} 進行初始化。
+證明：對於每個節點 \m{v\in V_\pi}， \m{G_\pi} 中存在一條從源節點 \m{s} 到節點 \m{v} 的路徑，
+並且該性質在任何鬆弛操作序列中維持爲不變式。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e24.5-7
+\startEXERCISE
+設 \m{G=(V,E)} 爲一個帶權重的有向圖，
+且不包含權重爲負值的環路。
+設 \m{s\in V} 爲源節點，
+假定圖 \m{G} 由 \ALGO{INITIALIZE-SINGLE-SOURCE(G,s)} 進行初始化。
+證明：對於所有節點 \m{v\in V_\pi}，
+存在一個由 \m{|V|-1} 個鬆弛步驟所組成的鬆弛序列來生成 \m{v.d=\delta(s,v)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e24.5-8
+\startEXERCISE
+設 \m{G=(V,E)} 爲一個帶權重的有向圖，
+且包含一個從源節點 \m{s} 可達的權重爲負值的環路。
+請說明如何構造一個 \m{E} 的鬆弛操作的無線序列，
+使得每一步鬆弛操作都能更新一個最短路徑的估值。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
 \stopANSWER
 
 \stopsection
@@ -606,6 +701,119 @@ Newman 教授覺得自己發現了 Dijkstra 算法的一個更簡單的證明。
 \startsubject[
   title={Problems},
 ]
+
+%p24-1
+\startPROBLEM
+（Yen’s improvement to Bellman-Ford）
+設 \ALGO{BELLMAN-FORD} 算法的輸入圖爲 \m{G=(V,E)}，
+在第一遍鬆弛前，
+我們給 \m{V} 的所有節點賦予一個隨機的線性次序 \m{v_1,v_2,\ldots,v_{|V|}}。
+然後，將 \m{E} 劃分爲 \m{E_f\cup E_b}，
+這裏 \m{E_f=\{(v_i,v_j)\in E: i<j\}}， \m{E_b=\{(v_i,v_j)\in E: i > j\}}。
+（假定圖 \m{G} 不包含自循環，
+因此一條邊要麼屬於 \m{E_f}，要麼屬於 \m{E_b}。）
+定義 \m{G_f=(V,E_f)} 和 \m{G_b=(V,E_b)}。
+\startigBase[a]\startitem
+證明： \m{G_f} 是無環的，且其拓撲排序爲 \m{\langle v_1,v_2,\ldots,v_{|V|}\rangle}；
+ \m{G_b} 是無環的，且其拓撲排序爲 \m{\langle v_{|V|},v_{|V|-1},\ldots,v_1\rangle}。
+\stopitem\stopigBase
+
+\startANSWER
+如果有環會違反節點編號的大小關係。
+\stopANSWER
+
+假定用以下方式實現每一邊鬆弛操作：
+以 \m{v_1,v_2,\ldots,v_{|V|}} 的次序訪問所有節點，
+並對從每個節點發出的 \m{E_f} 進行鬆弛操作。
+然後，再以次序 \m{\langle v_{|V|},v_{|V|-1},\ldots,v_1\rangle} 訪問所有節點，
+並對從每個節點發出的 \m{E_b} 進行鬆弛操作。
+
+\startigBase[continue]\startitem
+證明：在上述操作方式下，如果 \m{G} 不包含從源節點 \m{s} 可達的負權重環路，
+則在 \m{\lceil |V|/2\rceil} 邊鬆弛操作後，
+對於所有節點 \m{v\in V}，有 \m{v.d=\delta(s,v)}。
+\stopitem\stopigBase
+
+\startANSWER
+令一個 FB 塊爲 \m{f_1 \ldots f_i b_1\ldots b_j}，
+其中 \m{f_1,\ldots,f_i\in E_f}， \m{b_1,\ldots,b_j\in E_b}。
+一個 FB 塊也可以只包含 \m{f_1\ldots f_i} 或者 \m{b_1\ldots b_j}。
+對於任一條從 \m{s} 到 \m{x} 的最短路徑 \m{P}，
+令其所含不相交的 FB 塊數目最小爲 \m{B(P)}。
+則 \m{|P| < |V|}， \m{B(P)\le \lceil |V|/2\rceil}。
+
+每次遍歷時，可以完成一個 FB 塊中邊的鬆弛操作。
+最多遍歷 \m{\lceil |V|/2\rceil} 次，
+就可以完成對任一最短路徑中所有邊的鬆弛操作。
+\stopANSWER
+
+\startigBase[continue]\startitem
+上述算法是否改善了 \ALGO{BELLMAN-FORD} 算法的漸進運行時間？
+\stopitem\stopigBase
+
+\startANSWER
+每次遍歷時間不變，但遍歷次數減半，漸進時間不變。
+\stopANSWER
+\stopPROBLEM
+
+%p24-2
+\startPROBLEM
+（Nesting boxes）
+假定有很多維度爲 \m{d} 的盒子，
+對於盒子 \m{x=\langle x_1,x_2,\ldots,x_d\rangle} 和 \m{x=\langle y_1,y_2,\ldots,y_d\rangle} 而言，
+如果集合 \m{\{1,2,\ldots,d\}} 存在一個排列 \m{\pi}，
+使得 \m{x_{\pi(1)} < y_1, x_{\pi(2)} < y_2, \ldots, x_{\pi(d)} < y_d}，
+則稱盒子 \m{x} {\EMP 嵌套}在盒子 \m{y} 裏面。
+
+\startigBase[a]\startitem
+證明嵌套關係是傳遞的。
+\stopitem\stopigBase
+
+\startANSWER
+假定有三個 \m{d} 維的盒子 \m{X}、 \m{Y} 和 \m{Z} 分別爲：
+ \m{\langle x_1,x_2,\ldots,x_d\rangle}、 \m{\langle y_1,y_2,\ldots,y_d\rangle} 和 \m{\langle z_1,z_2,\ldots,z_d\rangle}。
+存在 \m{\pi_1} 和 \m{\pi_2} 使得 \m{x_{\pi_1(i)}<y_i} 和 \m{y_{\pi_2(i)}<z_i} 對所有 \m{1\le i\le d} 都成立。
+令 \m{\pi_3(i)=\pi_1(\pi_2(i))}，可以使得 \m{x_{\pi_3(i)}=x_{\pi_1(\pi_2(i))} < y_{\pi_2(i)} < z_i}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+給定兩個同維度的盒子 \m{x} 和 \m{y}，
+請給出一個有效算法來判斷 \m{x} 是否嵌套在 \m{y} 裏面。
+\stopitem\stopigBase
+
+\startANSWER
+可以先對兩個盒子各自按非遞減順序排序，需要時間 \m{O(d\lg d)}。
+然後比較排序後兩個數組中的對應元素即可，比較所需時間爲 \m{O(d)}。
+總時間爲 \m{O(d\lg d)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定有一組 \m{n} 個 \m{d} 維的盒子 \m{\{B_1,B_2,\ldots,B_n\}}。
+請給出一個有效算法來找出最長序列 \m{\langle B_{i_1},B_{i_2},\ldots,B_{i_k}\rangle}，
+使得盒子 \m{B_{i_j}} 嵌套在盒子 \m{B_{i_{j+1}}} 裏，
+其中 \m{j=1,2,\ldots,k-1}。
+請以 \m{d} 和 \m{n} 來表述算法的運行時間。
+\stopitem\stopigBase
+
+\startANSWER
+首先對 \m{n} 個盒子進行排序，所用時間 \m{O(nd\lg d)}。
+其次構建有向無環圖 \m{G=(V,E)}，用時 \m{O(n^2 d}，
+其中 \m{v_i\in V} 代表盒子 \m{B_i}， \m{1\le i\le n}。
+圖中的邊 \m{v_i,v_j} 代表盒子 \m{B_i} 嵌套在盒子 \m{B_j} 裏。
+
+然後爲 \m{G} 增加一個節點 \m{s}，並爲每個 \m{v_i} 增加邊 \m{(s,v_i}。
+然後再增加一個節點 \m{t}，並爲每個 \m{v_i} 增加邊 \m{(v_i,t)}。
+所用時間 \m{O(n)}。
+
+現在問題轉化爲：尋找從 \m{s} 到 \m{t} 的最長路徑。
+所用時間爲 \m{O(n^2)}。
+
+最後將結果轉換爲 \m{B_i} 序列，用時 \m{O(n)}。
+
+總時間爲 \m{O(n^2 d + nd\lg d)}。
+\stopANSWER
+
+\stopPROBLEM
 
 \stopsubject%Problems
 

@@ -11,11 +11,11 @@ G_auto_V(G) "b" Gposition (1,-1);
 G_auto_V(G) "c" Gposition (0,-1);
 G_auto_V(G) "d" Gposition (1,0);
 
-G_auto_E(G) "ab" Gext.edge_weight (0.5, 90, 1);
-G_auto_E(G) "bc" Gext.edge_weight (0.5, 270, 2);
-G_auto_E(G) "ac" Gext.edge_weight (0.5, 180, 3);
-G_auto_E(G) "bd" Gext.edge_weight (0.5, 0, 5);
-G_auto_E(G) "ad" Gext.edge_weight (0.5, 90, 4);
+G_auto_E(G) "ab" Gdisp(edge_weight) (0.5,  90) Gdata(edge_weight) (1);
+G_auto_E(G) "bc" Gdisp(edge_weight) (0.5, 270) Gdata(edge_weight) (2);
+G_auto_E(G) "ac" Gdisp(edge_weight) (0.5, 180) Gdata(edge_weight) (3);
+G_auto_E(G) "bd" Gdisp(edge_weight) (0.5,   0) Gdata(edge_weight) (5);
+G_auto_E(G) "ad" Gdisp(edge_weight) (0.5,  90) Gdata(edge_weight) (4);
 
 vardef draw_edge_background_n(suffix G)(expr sidx, eidx)text _remain :=
 	draw __graph_edge_path(G)(sidx, eidx) withpen pencircle scaled .25cm withcolor .7white;

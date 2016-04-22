@@ -10,9 +10,9 @@ G_auto_V(G) "a" Gposition (0,0);
 G_auto_V(G) "b" Gposition (-0.7,-1);
 G_auto_V(G) "c" Gposition (2,-0.6);
 
-G_auto_E(G) "ab" Gext.edge_weight (0.5, 135, 10);
-G_auto_E(G) "ac" Gext.edge_weight (0.5, 45, 2);
-G_auto_E(G) "bc" Gext.edge_weight (0.5, 270, 2);
+G_auto_E(G) "ab" Gdisp(edge_weight) (0.5, 135) Gdata(edge_weight) (10);
+G_auto_E(G) "ac" Gdisp(edge_weight) (0.5,  45) Gdata(edge_weight) (2);
+G_auto_E(G) "bc" Gdisp(edge_weight) (0.5, 270) Gdata(edge_weight) (2);
 
 beginfig(1);
 draw graph_img(G);

@@ -13,13 +13,13 @@ G_auto_V(G) "d" Gposition (0,-1);
 G_auto_V(G) "e" Gposition (1,-1);
 G_auto_V(G) "f" Gposition (2,-1);
 
-G_auto_E(G) "ab" Gext.edge_weight (0.5, 90, 1);
-G_auto_E(G) "bc" Gext.edge_weight (0.5, 90, 1);
-G_auto_E(G) "ad" Gext.edge_weight (0.5, 225, 3);
-G_auto_E(G) "be" Gext.edge_weight (0.5, 225, 1);
-G_auto_E(G) "ef" Gext.edge_weight (0.5, 90, 5);
-G_auto_E(G) "cf" Gext.edge_weight (0.5, 315, 4);
-G_auto_E(G) "ce" Gext.edge_weight (0.5, 90, 5);
+G_auto_E(G) "ab" Gdisp(edge_weight) (0.5,  90) Gdata(edge_weight) (1);
+G_auto_E(G) "bc" Gdisp(edge_weight) (0.5,  90) Gdata(edge_weight) (1);
+G_auto_E(G) "ad" Gdisp(edge_weight) (0.5, 225) Gdata(edge_weight) (3);
+G_auto_E(G) "be" Gdisp(edge_weight) (0.5, 225) Gdata(edge_weight) (1);
+G_auto_E(G) "ef" Gdisp(edge_weight) (0.5,  90) Gdata(edge_weight) (5);
+G_auto_E(G) "cf" Gdisp(edge_weight) (0.5, 315) Gdata(edge_weight) (4);
+G_auto_E(G) "ce" Gdisp(edge_weight) (0.5,  90) Gdata(edge_weight) (5);
 
 beginfig(1);
 draw graph_img(G);

@@ -1,6 +1,6 @@
 %% please input clrs_graph first
 vardef declare_graph_EDGEWEIGHT(suffix G) :=
-declare_graph_edge_ext.edge_weight(G)("numeric position, numeric deg, numeric weight");
+declare_graph_edge_ext_with_disp.edge_weight(G)("numeric weight");
 __graph_add_edge_draw_func(G)("__graph_draw.edge_weight");
 enddef;
 

@@ -181,30 +181,33 @@ def __label(expr vdegree) :=
 enddef;
 
 vardef __pic_shift(expr _p, _deg, _pos) :=
-
+	save ret; pair ret;
 	if (_deg < 0):
-		__pic_shift(_p, _deg + 360, _pos)
+		ret := __pic_shift(_p, _deg + 360, _pos);
 	elseif (_deg >= 360):
-		__pic_shift(_p, _deg - 360, _pos)
+		ret := __pic_shift(_p, _deg - 360, _pos);
 	elseif (_deg <= 22.5):
-		(_pos - (ulcorner _p + llcorner _p)/2)
+		ret := (_pos - (ulcorner _p + llcorner _p)/2);
 	elseif (_deg <= 67.5):
-		(_pos - llcorner _p)
+		ret := (_pos - llcorner _p);
 	elseif (_deg <= 112.5):
-		(_pos - (llcorner _p + lrcorner _p)/2)
+		ret := (_pos - (llcorner _p + lrcorner _p)/2);
 	elseif (_deg <= 157.5):
-		(_pos - lrcorner _p)
+		ret := (_pos - lrcorner _p);
 	elseif (_deg <= 202.5):
-		(_pos - (urcorner _p + lrcorner _p)/2)
+		ret := (_pos - (urcorner _p + lrcorner _p)/2);
 	elseif (_deg <= 247.5):
-		(_pos - urcorner _p)
+		ret := (_pos - urcorner _p);
 	elseif (_deg <= 292.5):
-		(_pos - (ulcorner _p + urcorner _p)/2)
+		ret := (_pos - (ulcorner _p + urcorner _p)/2);
 	elseif (_deg <= 337.5):
-		(_pos - ulcorner _p)
+		ret := (_pos - ulcorner _p)
 	elseif (_deg < 360):
-		(_pos - (ulcorner _p + llcorner _p)/2)
-	fi
+		ret := (_pos - (ulcorner _p + llcorner _p)/2);
+	fi;
+	%message "::::::::: " & decimal(_deg) & " - " & decimal(xpart ((0,.2cm) rotated _deg)) & ", " & decimal(ypart ((0,.2cm) rotated _deg));
+	ret := ret + ((3bp, 0) rotated _deg);
+	ret
 enddef;
 
 vardef __intersectionpoint(suffix G)(expr idx, degree) :=

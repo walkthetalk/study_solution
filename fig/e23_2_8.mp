@@ -5,18 +5,14 @@ input clrs_graph_EDGEWEIGHT;
 %% global data
 declare_graph(G, false, true, 1cm, fullcircle scaled .5cm);
 declare_graph_EDGEWEIGHT(G);
-G_add_V(G)
-	("a", (0,0))
-	("b", (-0.7,-1))
-	("c", (2,-0.6));
-G_add_E(G)
-	("ab")
-	("ac")
-	("bc");
-G_set_E.edge_weight(G)
-	("ab", 0.5, 135, 10)
-	("ac", 0.5, 45, 2)
-	("bc", 0.5, 270, 2);
+
+G_auto_V(G) "a" Gposition (0,0);
+G_auto_V(G) "b" Gposition (-0.7,-1);
+G_auto_V(G) "c" Gposition (2,-0.6);
+
+G_auto_E(G) "ab" Gext.edge_weight (0.5, 135, 10);
+G_auto_E(G) "ac" Gext.edge_weight (0.5, 45, 2);
+G_auto_E(G) "bc" Gext.edge_weight (0.5, 270, 2);
 
 beginfig(1);
 draw graph_img(G);

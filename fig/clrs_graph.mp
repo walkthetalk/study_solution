@@ -521,6 +521,27 @@ vardef G_V_path(suffix G)(expr idx) :=
 	__graph_vertex_path(G)(__get_id(idx))
 enddef;
 
+vardef G_vid_minmax(suffix G)(suffix min_vid, max_vid) :=
+	min_vid := G.V.seq[1];
+	max_vid := G.V.seq[1];
+
+	save i; numeric i;
+	for i := 2 upto G.V.num:
+		save tmp; numeric tmp;
+		tmp := G.V.seq[i];
+		if tmp < min_vid:
+			min_vid := tmp;
+		fi;
+		if tmp > max_vid:
+			max_vid := tmp;
+		fi;
+	endfor;
+enddef;
+
+vardef G_vid_cnt(suffix G) :=
+	G.V.num
+enddef;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % @ edge_fn: (suffix G)(expr sidx, eidx)
 vardef graph_loop_edge(suffix G, edge_fn) :=

@@ -222,7 +222,12 @@ L^{(n-1)} = W^{n-1} = L^{(0)}\cdot W^{n-1}
 \stopEXERCISE
 
 \startANSWER
-每一行進行遞增排序。
+\startCLRS
+for each edge (u,v) in G.E
+	for s in G.V
+		if L[s][u] + w(u,v) == L[s][v]
+			PI[s][v] = u
+\stopCLRS
 \stopANSWER
 
 %e25.1-7
@@ -294,6 +299,14 @@ return TRUE
 \startsection[
   title={Shortest paths and matrix multiplication},
 ]
+
+%e25.2-1
+\startEXERCISE
+\stopEXERCISE
+
+\startANSWER
+\stopANSWER
+
 \stopsection
 
 \startsection[

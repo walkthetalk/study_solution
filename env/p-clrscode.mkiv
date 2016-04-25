@@ -141,11 +141,11 @@ function commands.clrsalgo(algoname)
 			tex.sprint(tex.ctxcatcodes, word)
 		end
 		if postfix ~= "" then
-			tex.sprint(tex.ctxcatcodes, "\\!" .. postfix .. "\\!")
+			tex.sprint(tex.ctxcatcodes, "\\!\\allowbreak " .. postfix .. "\\!")
 		end
 	end
 	if args then
-		tex.sprint(tex.ctxcatcodes, args)
+		tex.sprint(tex.ctxcatcodes, "\\allowbreak " .. args)
 	end
 	tex.sprint(tex.ctxcatcodes, "}")
 end

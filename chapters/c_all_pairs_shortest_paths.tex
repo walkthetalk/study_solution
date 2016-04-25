@@ -4,9 +4,309 @@
   title={All-Pairs Shortest Paths},
 ]
 
+%e25.1-1
+\startEXERCISE
+圖 25-2 爲一帶權重有向圖，
+在其上運行算法 \ALGO{SLOW-ALL-PAIRS-SHORTEST-PATHS}。
+給出循環的每次迭代所計算出的矩陣。
+然後用算法 \ALGO{FASTER-ALL-PAIRS-SHORTEST-PATHS} 重新做一遍。
+附圖 25-2：
+
+\externalfigure[output/e25_1_1-1]
+\stopEXERCISE
+
+\startANSWER
+慢速版本：
+
+\startcombination[2*3]
+{\startformula
+
+L^{(1)} = \left(\startmatrix
+\NC 0\NC \infty\NC \infty\NC \infty\NC -1\NC \infty \NR
+\NC 1\NC 0\NC \infty\NC 2\NC \infty\NC \infty \NR
+\NC \infty\NC 2\NC 0\NC \infty\NC \infty\NC -8 \NR
+\NC -4\NC \infty\NC \infty\NC 0\NC 3\NC \infty \NR
+\NC \infty\NC 7\NC \infty\NC \infty\NC 0\NC \infty \NR
+\NC \infty\NC 5\NC 10\NC \infty\NC \infty\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+L^{(2)} = \left(\startmatrix
+\NC 0\NC 6\NC \infty\NC \infty\NC -1\NC \infty \NR
+\NC -2\NC 0\NC \infty\NC 2\NC 0\NC \infty \NR
+\NC 3\NC -3\NC 0\NC 4\NC \infty\NC -8 \NR
+\NC -4\NC 10\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 8\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 6\NC 5\NC 10\NC 7\NC \infty\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+L^{(3)} = \left(\startmatrix
+\NC 0\NC 6\NC \infty\NC 8\NC -1\NC \infty \NR
+\NC -2\NC 0\NC \infty\NC 2\NC -3\NC \infty \NR
+\NC -2\NC -3\NC 0\NC -1\NC 2\NC -8 \NR
+\NC -4\NC 2\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 5\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 3\NC 5\NC 10\NC 7\NC 5\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+L^{(4)} = \left(\startmatrix
+\NC 0\NC 6\NC \infty\NC 8\NC -1\NC \infty \NR
+\NC -2\NC 0\NC \infty\NC 2\NC -3\NC \infty \NR
+\NC -5\NC -3\NC 0\NC -1\NC -3\NC -8 \NR
+\NC -4\NC 2\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 5\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 3\NC 5\NC 10\NC 7\NC 2\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+L^{(5)} = \left(\startmatrix
+\NC 0\NC 6\NC \infty\NC 8\NC -1\NC \infty \NR
+\NC -2\NC 0\NC \infty\NC 2\NC -3\NC \infty \NR
+\NC -5\NC -3\NC 0\NC -1\NC -6\NC -8 \NR
+\NC -4\NC 2\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 5\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 3\NC 5\NC 10\NC 7\NC 2\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}
+{}{}
+\stopcombination
+
+快速版本：
+
+\startcombination[2*2]
+{\startformula
+
+L^{(1)} = \left(\startmatrix
+\NC 0\NC \infty\NC \infty\NC \infty\NC -1\NC \infty \NR
+\NC 1\NC 0\NC \infty\NC 2\NC \infty\NC \infty \NR
+\NC \infty\NC 2\NC 0\NC \infty\NC \infty\NC -8 \NR
+\NC -4\NC \infty\NC \infty\NC 0\NC 3\NC \infty \NR
+\NC \infty\NC 7\NC \infty\NC \infty\NC 0\NC \infty \NR
+\NC \infty\NC 5\NC 10\NC \infty\NC \infty\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+L^{(2)} = \left(\startmatrix
+\NC 0\NC 6\NC \infty\NC \infty\NC -1\NC \infty \NR
+\NC -2\NC 0\NC \infty\NC 2\NC 0\NC \infty \NR
+\NC 3\NC -3\NC 0\NC 4\NC \infty\NC -8 \NR
+\NC -4\NC 10\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 8\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 6\NC 5\NC 10\NC 7\NC \infty\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+L^{(4)} = \left(\startmatrix
+\NC 0\NC 6\NC \infty\NC 8\NC -1\NC \infty \NR
+\NC -2\NC 0\NC \infty\NC 2\NC -3\NC \infty \NR
+\NC -5\NC -3\NC 0\NC -1\NC -3\NC -8 \NR
+\NC -4\NC 2\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 5\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 3\NC 5\NC 10\NC 7\NC 2\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+L^{(8)} = \left(\startmatrix
+\NC 0\NC 6\NC \infty\NC 8\NC -1\NC \infty \NR
+\NC -2\NC 0\NC \infty\NC 2\NC -3\NC \infty \NR
+\NC -5\NC -3\NC 0\NC -1\NC -6\NC -8 \NR
+\NC -4\NC 2\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 5\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 3\NC 5\NC 10\NC 7\NC 2\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}
+\stopcombination
+\stopANSWER
+
+%e25.1-2
+\startEXERCISE
+爲什麼要求對於所有 \m{1\le i\le n}，必須滿足 \m{\omega_{ii} = 0}？
+\stopEXERCISE
+
+\startANSWER
+這樣才能保證遞歸式 25.2 的正確性。附遞歸式 25.2：
+\startformula
+l_{ij}^{(m)} = \min(l_{ij}^{(m-1)}, \min_{1\le k\le n}\{l_{ik}^{(m-1)} + \omega_{kj}\})
+=\min_{1\le k\le n}\{l_{ik}^{(m-1)} + \omega_{kj}\}
+\stopformula
+\stopANSWER
+
+%e25.1-3
+\startEXERCISE
+在最短路徑算法中使用的矩陣 \m{L^{(0)}} 對應傳統矩陣乘法裏的什麼？
+\startformula
+L^{(0)} = \left(\startmatrix
+\NC 0 \NC \infty \NC \infty \NC \ldots \NC \infty \NR
+\NC \infty \NC 0 \NC \infty \NC \ldots \NC \infty \NR
+\NC \infty \NC \infty \NC 0 \NC \ldots \NC \infty \NR
+\NC \vdots \NC \vdots \NC \vdots \NC \ddots \NC \vdots \NR
+\NC \infty \NC \infty \NC \infty \NC \ldots \NC 0 \NR
+\stopmatrix\right)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+單位矩陣。將單位矩陣中加法所用的 \m{0} 換成 \m{\min} 所用的 \m{\infty}，
+將乘法所用的 \m{1} 換成加法所用的 \m{0}。
+\startformula
+I = \left(\startmatrix
+\NC 1 \NC 0 \NC 0 \NC \ldots \NC 0 \NR
+\NC 0 \NC 1 \NC 0 \NC \ldots \NC 0 \NR
+\NC 0 \NC 0 \NC 1 \NC \ldots \NC 0 \NR
+\NC \vdots \NC \vdots \NC \vdots \NC \ddots \NC \vdots \NR
+\NC 0 \NC 0 \NC 0 \NC \ldots \NC 1 \NR
+\stopmatrix\right)
+\stopformula
+\stopANSWER
+
+%e25.1-4
+\startEXERCISE
+證明：由 \ALGO{EXTEND-SHORTEST-PATHS} 所定義的矩陣乘法滿足結合律。
+\stopEXERCISE
+
+\startANSWER
+\m{\min} 和 \m{+} 都滿足結合律。
+\stopANSWER
+
+%e25.1-5
+\startEXERCISE
+說明如何將單源最短路徑問題表示爲矩陣和向量的乘積，
+並解釋該乘積的計算過程如何對應 \ALGO{BELLMAN-FORD} 算法？
+（請參閱\refsection{24.1}）
+\stopEXERCISE
+
+\startANSWER
+\startformula
+L^{(n-1)} = W^{n-1} = L^{(0)}\cdot W^{n-1}
+\stopformula
+其中 \m{L^{(0)}} 是單位矩陣， \m{l_{ij}^{(n-1)} = \delta(i,j)}。
+即矩陣中第 \m{i} 行第 \m{j} 列的元素表示
+從第 \m{i} 個節點到第 \m{j} 個節點的最短路徑權重。
+第 \m{i} 行元素表示從第 \m{i} 個節點出發到達其他各個節點的最短路徑權重。
+
+矩陣“相乘” \m{C=A\cdot B}，
+ \m{C} 中第 \m{i} 行元素是由 \m{A} 中第 \m{i} 行元素“乘以”矩陣 \m{B} 得到。
+由於我們只需要 \m{C} 中第 \m{i} 行元素，因此也只需要 \m{A} 中第 \m{i} 行元素。
+
+所以源節點爲 \m{i} 的單源最短路徑就是 \m{L_{i}^{(0)} \cdot W^{n-1}}，
+其中 \m{L_{i}^{(0)}} 就是 \m{L^{(0)}} 的第 \m{i} 行元素，是一個向量，
+此向量中第 \m{i} 個元素是 \m{0}，其他元素都是 \m{\infty}。
+
+自左至右進行“乘法”操作與 \ALGO{BELLMAN-FORD} 的運行過程一樣。
+向量對應的就是 \ALGO{BELLMAN-FORD} 算法中的 \m{d}。
+
+\startigBase[2]
+\item 一開始向量中只有源節點所處位置元素爲 \m{0}，其他均爲 \m{\infty}，
+與 \ALGO{INITIALIZE-SINGLE-SOURCE} 相同。
+\item 每次向量“乘以” \m{W} 就會對所有邊進行一遍鬆弛操作。
+\item 一共執行 \m{n-1} 次乘法，即 \m{n-1} 邊鬆弛操作。
+\stopigBase
+\stopANSWER
+
+%e25.1-6
+\startEXERCISE
+假定我們還希望在本節討論的算法裏計算出最短路徑上的節點。
+說明如何在 \m{O(n^3)} 時間內從已經計算出的
+最短路徑權重矩陣 \m{L} 計算出前驅矩陣 \m{\prod}。
+\stopEXERCISE
+
+\startANSWER
+\startCLRS
+for each edge (u,v) in G.E
+	for s in G.V
+		if L[s][u] + w(u,v) == L[s][v]
+			PI[s][v] = u
+\stopCLRS
+\stopANSWER
+
+%e25.1-7
+\startEXERCISE
+我們可以用計算最短路徑權重的辦法來計算最短路徑上的節點。
+定義 \m{\pi_{ij}^{(m)}} 爲從 \m{i} 到 \m{j} 的至多
+包含 \m{m} 條邊的任意最小權重路徑上節點 \m{j} 的前驅。
+請修改 \ALGO{EXTEND-SHORTEST-PATHS} 和 \ALGO{SLOW-ALL-PAIRS-SHORTEST-PATHS}，
+使其在計算出矩陣 \m{L^{(1)},L^{(2)},\ldots,L^{(n-1)}} 的同時，
+計算出矩陣 \m{\prod^{(1)},\prod^{(2)},\ldots,\prod^{(n-1)}}。
+\stopEXERCISE
+
+\startANSWER
+更新 \m{L} 的同時更新對應的 \m{\prod} 即可。
+\stopANSWER
+
+%e25.1-8
+\startEXERCISE
+本節討論的 \ALGO{FASTER-ALL-PAIRS-SHORTEST-PATHS} 要求
+我們保存 \m{\lceil \lg (n-1)\rceil} 個矩陣，
+由於每個矩陣有 \m{n^2} 個元素，總存儲空間需求爲 \m{\Theta(n^2\lg n)}。
+請修改算法，使其僅僅使用兩個 \m{n\times n} 矩陣，
+從而將存儲空間降至 \m{\Theta(n^2)}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{FASTER-ALL-PAIRS-SHORTEST-PATHS(W)}
+\startCLRS
+n = W.rows
+L[1] = W
+m = 1
+i = 1
+while m < n-1
+	L[(i+1) mod 2] = EXTEND-SHORTEST-PATHS(L[i mod 2],L[i mod 2])
+	m = 2m
+	i = i + 1
+return L[i mod 2]
+\stopCLRS
+\stopANSWER
+
+%e25.1-9
+\startEXERCISE
+修改 \ALGO{FASTER-ALL-PAIRS-SHORTEST-PATHS}，
+使其可以判斷一個圖是否包含負權重環路。
+\stopEXERCISE
+
+\startANSWER
+爲算法添加以下內容，若返回 FALSE 則代表有負權重環路，否則沒有：
+\startCLRS
+for i = 1 upto n
+	for each edge(u,v) in G.E
+		if L[i][v] > L[i][u] + w(u,v)
+			return FALSE
+return TRUE
+\stopCLRS
+或者也可以通過判斷對角線上的元素是否有負值，
+不過需要計算 \m{W^n}，而不是 \m{W^{n-1}}。
+\stopANSWER
+
+%e25.1-10
+\startEXERCISE
+給出一個有效算法，可以找出圖中所有負權重環路的最短長度（邊的條數）。
+\stopEXERCISE
+
+\startANSWER
+在計算 \m{W^m} 時，一旦對角線出現負值， \m{m} 即爲所求。
+\stopANSWER
+
 \startsection[
   title={Shortest paths and matrix multiplication},
 ]
+
+%e25.2-1
+\startEXERCISE
+\stopEXERCISE
+
+\startANSWER
+\stopANSWER
+
 \stopsection
 
 \startsection[

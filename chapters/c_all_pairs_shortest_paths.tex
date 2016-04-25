@@ -550,7 +550,7 @@ for each edge (u,v) in G.E
 \startEXERCISE
 假定我們可以在 \m{f(|V|,|E|)} 的時間內計算出一個有向無環圖的傳遞閉包，
 其中 \m{f} 是一個自變量爲 \m{|V|} 和 \m{|E|} 的單調遞增函數。
-證明：計算一個通用的有向圖 \m{G=(V,E)} 的傳遞閉包 \m{G^*=(V,E^*)} 的
+證明：對於一個常規的有向圖 \m{G=(V,E)}，計算其傳遞閉包 \m{G^*=(V,E^*)} 的
 時間複雜度爲 \m{f(|V|,|E|)+O(V+E^*)}。
 \stopEXERCISE
 
@@ -577,6 +577,16 @@ for each edge (u,v) in G.E
 \startsection[
   title={Johnson’s algorithm for sparse graphs},
 ]
+
+%e25.3-1
+\startEXERCISE
+請在圖 25-2 上使用 Johnson 算法來找到所有節點對之間的最短路徑。
+給出算法計算出 \m{h} 和 \m{\hat{\omega}}。
+\stopEXERCISE
+
+\startANSWER
+\stopANSWER
+
 \stopsection
 
 \startsubject[

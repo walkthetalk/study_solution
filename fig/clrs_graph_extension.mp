@@ -106,7 +106,7 @@ vardef __G_set_V@#(suffix G)(expr pid_off, pid_num)(text abc)text _remain :=
 	fi;
 
 	if not __emptytext(_remain) :
-		__G_set_V@#(G)_remain;
+		__G_set_V@#(G)(pid_off, pid_num)_remain;
 	fi;
 enddef;
 

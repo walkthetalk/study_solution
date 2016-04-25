@@ -86,9 +86,9 @@ vardef output_maxtrix(suffix G, L)(expr idx) :=
 	save texstring; string texstring; texstring := "";
 
 	message "\startformula";
-	message "L^{(" & decimal(idx) & ")} = \left(\startmatrix";
+	message "D^{(" & decimal(idx) & ")} = \left(\startmatrix";
 
-	texstring := texstring & "L^{(" & decimal(idx) & ")} = ";
+	texstring := texstring & "D^{(" & decimal(idx) & ")} = ";
 	texstring := texstring & "\left(\startmatrix" & char(10);
 	for i := minvid upto maxvid:
 		save linestr; string linestr; linestr := "";

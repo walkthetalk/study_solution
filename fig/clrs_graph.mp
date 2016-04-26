@@ -74,14 +74,22 @@ vardef __graph_new_vertex(suffix G)(expr idx) :=
 	G.V[idx]is_in := true;
 enddef;
 
-vardef __graph_add_adj(suffix G)(expr sidx, eidx) :=
+vardef ____graph_add_adj(suffix G)(expr sidx, eidx) :=
 	if unknown G.V[sidx]adj:
 		G.V[sidx]adj := eidx;
 	else:
-		save tmp;
-		tmp := G.V[sidx]adj;
+		%message "add adj for " & decimal(sidx) & " with orignal adj " & decimal(G.V[sidx]adj);
+		G.E[sidx][eidx]next := G.V[sidx]adj;
 		G.V[sidx]adj := eidx;
-		G.V[sidx][eidx]next := tmp;
+	fi;
+
+	if not G.is_directed:
+		if unknown G.V[eidx]adj:
+			G.V[eidx]adj := sidx;
+		else:
+			G.E[eidx][sidx]next := G.V[eidx]adj;
+			G.V[eidx]adj := sidx;
+		fi;
 	fi;
 enddef;
 
@@ -129,12 +137,7 @@ vardef __graph_new_edge(suffix G)(expr sidx, eidx) :=
 	__graph_edge_add_pat(G)(sidx, eidx, GEP_default);
 enddef;
 
-vardef __graph_add_curve_edge(suffix G)(expr sidx, eidx, sdegree, edegree) :=
-	__graph_add_adj(G)(sidx, eidx);
-	if not G.is_directed:
-		__graph_add_adj(G)(eidx, sidx);
-	fi;
-
+vardef ____graph_add_curve(suffix G)(expr sidx, eidx, sdegree, edegree) :=
 	G.E[sidx][eidx]way := __graph_curve(G)(sidx, eidx, sdegree, edegree);
 	if not G.is_directed:
 		G.E[eidx][sidx]way := G.E[sidx][eidx]way;
@@ -400,7 +403,8 @@ enddef;
 %% (1,2) | ("ab")
 vardef G_add_E(suffix G)(text _plist)text _remain :=
 	__graph_new_edge(G)(__extract_sid(_plist), __extract_eid(_plist));
-	__graph_add_curve_edge(G)(__extract_sid(_plist), __extract_eid(_plist), 0, 0);
+	____graph_add_adj(G)(__extract_sid(_plist), __extract_eid(_plist));
+	____graph_add_curve(G)(__extract_sid(_plist), __extract_eid(_plist), 0, 0);
 
 	if not __emptytext(_remain):
 		G_add_E(G) _remain;
@@ -411,7 +415,8 @@ enddef;
 %% ((0,1), 30, -30) | ("ab", 30, -30)
 vardef G_add_curveE(suffix G)(expr seidx, sdegree, edegree)text _remain :=
 	__graph_new_edge(G)(__get_sid(seidx), __get_eid(seidx));
-	__graph_add_curve_edge(G)(__get_sid(seidx), __get_eid(seidx), sdegree, edegree);
+	____graph_add_adj(G)(__get_sid(seidx), __get_eid(seidx));
+	____graph_add_curve(G)(__get_sid(seidx), __get_eid(seidx), sdegree, edegree);
 
 	if not __emptytext(_remain):
 		G_add_curveE(G) _remain;
@@ -440,6 +445,7 @@ def G_auto_E(suffix G) expr e :=
 	def ____E := ____G.E[____sid][____eid] enddef;
 	if not __graph_has_edge(____G)(____sid, ____eid):
 		__graph_new_edge(____G)(____sid, ____eid);
+		____graph_add_adj(____G)(____sid, ____eid);
 	fi;
 enddef;
 
@@ -450,7 +456,7 @@ enddef;
 
 %% edge ext property
 def Gpath expr p :=
-	; __graph_add_curve_edge(____G)(____sid, ____eid, xpart p, ypart p);
+	; ____graph_add_curve(____G)(____sid, ____eid, xpart p, ypart p);
 enddef;
 
 def Gpattern expr p :=
@@ -551,38 +557,35 @@ vardef graph_loop_edge(suffix G, edge_fn) :=
 	endfor;
 enddef;
 
-def graph_for_each_edge(suffix G)(suffix sid, eid) :=
-	begingroup;
+vardef graph_for_each_edge(suffix G)(suffix sid, eid)(text _t) :=
 	save ____lv, sid, eid;
 	numeric ____lv, sid, eid;
 	for ____lv := 1 upto G.E.num:
 		sid := xpart G.E.seq[____lv];
-		eid := ypart G.E.seq[____lv]
+		eid := ypart G.E.seq[____lv];
+		_t;
+	endfor;
 enddef;
 
-def graph_for_each_vertex(suffix G)(suffix vid) :=
-	begingroup;
+vardef graph_for_each_vertex(suffix G)(suffix vid)(text _t) :=
 	save ____lv, vid;
 	numeric ____lv, vid;
 	for ____lv := 1 upto G.V.num:
 		vid := G.V.seq[____lv];
-enddef;
-
-def graph_for_each_adj_vertex(suffix G)(expr uid)(suffix vid) :=
-	begingroup;
-	save vid; numeric vid;
-	forever:
-		exitif unknown G.V[uid]adj;
-		if unknown vid:
-			vid := G.V[uid]adj;
-		else:
-			vid := G.E[uid][vid]next;
-		fi;
-enddef;
-
-def graph_endfor :=
+		_t;
 	endfor;
-	endgroup
+enddef;
+
+def graph_for_each_adj_vertex(suffix G)(expr uid)(suffix vid)(text _t) :=
+	save vid; numeric vid;
+	if known G.V[uid]adj:
+		vid := G.V[uid]adj;
+		forever:
+			_t;
+			exitif unknown G.E[uid][vid]next;
+			vid := G.E[uid][vid]next;
+		endfor;
+	fi;
 enddef;
 
 % @ vertex_fn: (suffix G)(numeric idx)

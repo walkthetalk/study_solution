@@ -74,19 +74,20 @@ vardef COPY_WEIGHT_MATRIX(suffix G)(suffix L) :=
 enddef;
 
 vardef INITIALIZE_SINGLE_SOURCE(suffix G)(suffix delta, pi)(expr s) :=
-	graph_for_each_vertex(G)(vid);
+	graph_for_each_vertex(G)(vid)(
 		delta[vid] := infinity;
 		pi[vid] := -1;
-	graph_forend;
+	);
 	delta[s] := 0;
 enddef;
 
-vardef GRELAX(suffix G)(suffix delta, pi)(expr uid, vid) :=
+vardef GRELAX(suffix G, Omega)(suffix delta, pi)(expr uid, vid) :=
+	%message "GRELAX uid: " & decimal(uid) & "," & decimal(vid);
 	save newdelta; numeric newdelta;
-	if (delta[uid] = infinity or unknown graph_edge_ext.edge_weight(G)(uid, vid)(weight)):
+	if (delta[uid] = infinity):
 		newdelta := infinity;
 	else:
-		newdelta := delta[uid] + graph_edge_ext.edge_weight(G)(uid, vid)(weight)
+		newdelta := delta[uid] + Omega[uid][vid];
 	fi;
 	if delta[vid] > newdelta:
 		delta[vid] := newdelta;
@@ -94,74 +95,100 @@ vardef GRELAX(suffix G)(suffix delta, pi)(expr uid, vid) :=
 	fi;
 enddef;
 
-vardef BELLMAN_FORD(suffix G)(suffix delta, pi)(expr s) :=
+vardef BELLMAN_FORD(suffix G, Omega)(suffix delta, pi)(expr s) :=
 	save ret; boolean ret; ret := true;
 	INITIALIZE_SINGLE_SOURCE(G)(delta, pi)(s);
 	save n; numeric n;
 	for n := 1 upto (G_vid_cnt(G) - 1):
-		graph_for_each_edge(G)(sid, eid);
-			GRELAX(G)(delta, pi)(sid, eid);
-		graph_forend;
+		graph_for_each_edge(G)(sid, eid)(
+			GRELAX(G, Omega)(delta, pi)(sid, eid);
+		);
 	endfor;
-	graph_for_each_edge(G)(sidx, eidx);
-		exitif not ret;
-		if (delta[eidx] > delta[sidx]
-			+ graph_edge_ext.edge_weight(G)(sidx, eidx)(weight)):
+	graph_for_each_edge(G)(sidx, eidx)(
+		if (delta[eidx] > (delta[sidx] + Omega[sidx][eidx])):
 			ret := false;
+			exitif true;
 		fi;
-	graph_forend;
+	);
 	ret
 enddef;
 
-vardef DIJKSTRA(suffix G)(suffix delta,pi)(expr s) :=
+vardef DIJKSTRA(suffix G, Omega)(suffix delta,pi)(expr s) :=
+	%message "DIJKSTRA for " & decimal(s);
 	INITIALIZE_SINGLE_SOURCE(G)(delta, pi)(s);
 	save S; boolean S[];
 	save vcnt; numeric vcnt; vcnt := G_vid_cnt(G);
-	save vid_min, vid_max; numeric vid_min, mid_max;
-	G_vid_minmax(G)(vid_min, vid_max);
 	forever:
 		exitif vcnt <= 0;
 
 		save uid; numeric uid;
-		graph_for_each_vertex(G)(vid);
+		graph_for_each_vertex(G)(vid)(
 			if unknown S[vid]:
-				uid := vid;
-			elseif delta[vid] < delta[uid]:
-				uid := vid;
+				if unknown uid:
+					uid := vid;
+				elseif delta[vid] < delta[uid]:
+					%message "compare: " & decimal(delta[vid]) & " " & decimal(delta[uid]);
+					uid := vid;
+				fi;
 			fi;
-		graph_forend;
+		);
 		S[uid] := true;
-		graph_for_each_adj_vertex(G)(uid)(vid);
-			GRELAX(G)(delta, pi)(uid, vid);
-		graph_forend;
+		%message "cnt " & decimal(vcnt) & ", uid " & decimal(uid);
+		graph_for_each_adj_vertex(G)(uid)(vid)(
+			%message "--------------" & decimal(uid) & "," & decimal(vid);
+			GRELAX(G, Omega)(delta, pi)(uid, vid);
+		);
 
 		vcnt := vcnt - 1;
 	endfor;
+	%output_vector(G)(delta)("dijkstra delta:");
 enddef;
 
-vardef JOHNSON(suffix G, Gp) :=
+vardef JOHNSON(suffix G, Gp)(suffix Dret) :=
+	save omega; numeric omega[][];
+	COPY_WEIGHT_MATRIX(Gp)(omega);
+	%output_maxtrix(Gp)(omega)("copy omega is:");
 	numeric delta[]; numeric pi[];
-	if BELLMAN_FORD(Gp)(delta, pi)(0) = false:
+	if ((BELLMAN_FORD(Gp, omega)(delta, pi)(0)) = false):
 		message "the input graph contains a negative-weight cycle"
 	else:
+		save eich; numeric eich[];
+		graph_for_each_vertex(Gp)(vid)(
+			eich[vid] := delta[vid];
+		);
+		%output_vector(Gp)(pi)("\pi");
+		output_vector(Gp)(eich)("h");
 		numeric hat_omega[][];
-		graph_for_each_edge(G)(sidx, eidx);
-			hat_omega[sid][eid] := graph_edge_ext.edge_weight(G)(sidx, eidx)(weight) + delta[eidx] - delta[sidx];
-		graph_forend;
-		numeric hat_delta[][];
-		graph_for_each_vertex(G)(uid);
-			DIJKSTA(G)(hat_delta[uid])(uid);
-			graph_for_each_vertex(G)(vid);
-				hat_delta[uid][vid] := hat_delta[uid][vid]
-				+ delta[vid] - delta[uid];
-			graph_forend;
-		graph_forend;
+		graph_for_each_edge(Gp)(sidx, eidx)(
+			%message "omega[" & decimal(sidx) & "][" & decimal(eidx) & "] is " & decimal(omega[sidx][eidx]);
+			if eich[sidx] = infinity:
+				hat_omega[sidx][eidx] := omega[sidx][eidx];
+			else:
+				hat_omega[sidx][eidx] := omega[sidx][eidx] + eich[sidx] - eich[eidx];
+			fi;
+			%message decimal(sidx) & "," & decimal(eidx) & ": " & decimal(hat_omega[sidx][eidx]);
+		);
+		output_maxtrix(G)(hat_omega)("\hat{\omega}");
+		graph_for_each_vertex(G)(uid)(
+			save hat_delta; numeric hat_delta[];
+			DIJKSTRA(G, hat_omega)(hat_delta, pi)(uid);
+			%message "hat_delta for " & decimal(uid);
+			%output_vector(G)(hat_delta)("\hat{\delta}");
+			graph_for_each_vertex(G)(vid)(
+				if hat_delta[vid] = infinity:
+					Dret[uid][vid] := infinity;
+				else:
+					Dret[uid][vid] := hat_delta[vid] + eich[vid] - eich[uid];
+				fi;
+			);
+		);
+		%output_maxtrix(G)(Dret)("D");
+
 	fi;
 enddef;
 
-vardef output_maxtrix(suffix G, L)(expr idx) :=
-%image(
-	message "the output matrix for " & decimal(idx) & " is:";
+vardef output_vector(suffix G)(suffix V)(expr header) :=
+	message "the output matrix for " & header & " is:";
 
 	save minvid, maxvid; numeric minvid, maxvid;
 	G_vid_minmax(G)(minvid, maxvid);
@@ -169,19 +196,59 @@ vardef output_maxtrix(suffix G, L)(expr idx) :=
 	save texstring; string texstring; texstring := "";
 
 	message "\startformula";
-	message "D^{(" & decimal(idx) & ")} = \left(\startmatrix";
+	message header & " = \left(\startmatrix";
 
-	texstring := texstring & "D^{(" & decimal(idx) & ")} = ";
+	texstring := texstring & header & " = ";
+	texstring := texstring & "\left(\startmatrix" & char(10);
+	for i := minvid upto maxvid:
+		save linestr; string linestr; linestr := "";
+		%for j := minvid upto maxvid:
+			save tmp; string tmp; tmp := "";
+			if known V[i]:
+				if V[i] = infinity:
+					tmp := "\infty";
+				else:
+					tmp := decimal(V[i]);
+				fi;
+			else:
+				tmp := "\infty";
+			fi;
+			linestr := linestr & "\NC " & tmp;
+		%endfor;
+		linestr := linestr & " \NR";
+		message linestr;
+		texstring := texstring & linestr & char(10);
+	endfor;
+
+	message "\stopmatrix\right)";
+	texstring := texstring & "\stopmatrix\right)";
+	%label(TEX("$ " & texstring & " $"), (0,0));
+
+	message "\stopformula";
+enddef;
+
+vardef output_maxtrix(suffix G)(suffix M)(expr header) :=
+	message "the output matrix for " & header & " is:";
+
+	save minvid, maxvid; numeric minvid, maxvid;
+	G_vid_minmax(G)(minvid, maxvid);
+	save i,j; numeric i,j;
+	save texstring; string texstring; texstring := "";
+
+	message "\startformula";
+	message header & " = \left(\startmatrix";
+
+	texstring := texstring & header & " = ";
 	texstring := texstring & "\left(\startmatrix" & char(10);
 	for i := minvid upto maxvid:
 		save linestr; string linestr; linestr := "";
 		for j := minvid upto maxvid:
 			save tmp; string tmp; tmp := "";
-			if known L[idx][i][j]:
-				if L[idx][i][j] = infinity:
+			if known M[i][j]:
+				if M[i][j] = infinity:
 					tmp := "\infty";
 				else:
-					tmp := decimal(L[idx][i][j]);
+					tmp := decimal(M[i][j]);
 				fi;
 			else:
 				tmp := "\infty";
@@ -198,7 +265,6 @@ vardef output_maxtrix(suffix G, L)(expr idx) :=
 	%label(TEX("$ " & texstring & " $"), (0,0));
 
 	message "\stopformula";
-%)
 enddef;
 
 beginfig(1);
@@ -207,13 +273,13 @@ draw graph_img(G);
 %drawoptions();
 endfig;
 
-message "FLOYD_WARSHALL all pairs shortest paths:";
-save L; numeric L[][][];
-FLOYD_WARSHALL(G)(L);
+message "JOHNSON all pairs shortest paths:";
+save L; numeric L[][];
+JOHNSON(G,Gp)(L);
 
-save idx; numeric idx;
-for idx := 1 upto G_vid_cnt(G):
-	output_maxtrix(G, L)(idx);
-endfor;
+%save idx; numeric idx;
+%for idx := 1 upto G_vid_cnt(G):
+%	output_maxtrix(G, L)(idx);
+%endfor;
 
 end;

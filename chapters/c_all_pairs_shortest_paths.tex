@@ -581,10 +581,36 @@ for each edge (u,v) in G.E
 %e25.3-1
 \startEXERCISE
 請在圖 25-2 上使用 Johnson 算法來找到所有節點對之間的最短路徑。
-給出算法計算出 \m{h} 和 \m{\hat{\omega}}。
+給出算法計算出 \m{h} 和 \m{\hat{\omega}}。附圖 25-2：
+
+\externalfigure[output/e25_3_1-1]
 \stopEXERCISE
 
 \startANSWER
+\startcombination[2*1]
+{\startformula
+h = \left(\startmatrix
+\NC 0 \NR
+\NC -5 \NR
+\NC -3 \NR
+\NC 0 \NR
+\NC -1 \NR
+\NC -6 \NR
+\NC -8 \NR
+\stopmatrix\right)
+\stopformula}{}
+
+{\startformula
+\hat{\omega} = \left(\startmatrix
+\NC \infty\NC \infty\NC \infty\NC \infty\NC 0\NC \infty \NR
+\NC 3\NC \infty\NC \infty\NC 0\NC \infty\NC \infty \NR
+\NC \infty\NC 5\NC \infty\NC \infty\NC \infty\NC 0 \NR
+\NC 0\NC \infty\NC \infty\NC \infty\NC 8\NC \infty \NR
+\NC \infty\NC 4\NC \infty\NC \infty\NC \infty\NC \infty \NR
+\NC \infty\NC 0\NC 2\NC \infty\NC \infty\NC \infty \NR
+\stopmatrix\right)
+\stopformula}{}
+\stopcombination
 \stopANSWER
 
 \stopsection

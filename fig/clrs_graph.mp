@@ -551,6 +551,40 @@ vardef graph_loop_edge(suffix G, edge_fn) :=
 	endfor;
 enddef;
 
+def graph_for_each_edge(suffix G)(suffix sid, eid) :=
+	begingroup;
+	save ____lv, sid, eid;
+	numeric ____lv, sid, eid;
+	for ____lv := 1 upto G.E.num:
+		sid := xpart G.E.seq[____lv];
+		eid := ypart G.E.seq[____lv]
+enddef;
+
+def graph_for_each_vertex(suffix G)(suffix vid) :=
+	begingroup;
+	save ____lv, vid;
+	numeric ____lv, vid;
+	for ____lv := 1 upto G.V.num:
+		vid := G.V.seq[____lv];
+enddef;
+
+def graph_for_each_adj_vertex(suffix G)(expr uid)(suffix vid) :=
+	begingroup;
+	save vid; numeric vid;
+	forever:
+		exitif unknown G.V[uid]adj;
+		if unknown vid:
+			vid := G.V[uid]adj;
+		else:
+			vid := G.E[uid][vid]next;
+		fi;
+enddef;
+
+def graph_endfor :=
+	endfor;
+	endgroup
+enddef;
+
 % @ vertex_fn: (suffix G)(numeric idx)
 vardef graph_loop_vertex(suffix G, vertex_fn) :=
 	save i;

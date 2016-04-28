@@ -51,11 +51,100 @@
 \m{u} 只能扇入或只能扇出，因此只能是既無扇入亦無扇出。
 \stopANSWER
 
+%e26.1-4
+\startEXERCISE
+設 \m{f} 爲網絡中的一個流， \m{\alpha} 爲一實數，
+將 \m{\alpha f} 稱爲{\EMP 標量流積（scalar flow product）}，
+是從 \m{V\times V} 到 \m{R} 的函數，定義如下：
+\startformula
+(\alpha f)(u,v) = \alpha \cdot f(u,v)
+\stopformula
+證明：網絡中的流形成一個{\EMP 凸集（convex set）}。
+也就是說，證明：如果 \m{f_1} 和 \m{f_2} 爲兩個流，
+則 \m{\alpha f_1 + (1-\alpha)f_2} 也是一個流，這裏 \m{0\le \alpha \le 1}。
+\stopEXERCISE
+
+\startANSWER
+\m{0\le \alpha f_1 + (1-\alpha)f_2 \le \max(f_1,f_2)}。
+\stopANSWER
+
+%e26.1-5
+\startEXERCISE
+將最大流問題表述爲一個線性規劃問題。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \max \NC (\sum_{v\in V}f(s,v) - \sum_{v\in V}f(v,s)) \NR
+\NC s.t. \NC 0\le f(u,v) \le c(u,v) \NR
+\NC \NC \sum_{v\in V}f(v,u) - \sum_{v\in V}f(u,v) = 0 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e26.1-6
+\startEXERCISE
+Adam 教授有兩個兒子，可不幸的是，他們互相討厭對方。
+隨着時間的推移，問題變得如此嚴重，
+他們不僅不願意一起到學校，
+而且都拒絕走對方當天所走過的街區。
+兩個孩子並不在意自己走的路徑與對方所走的路徑在街角交叉。
+幸運的是，教授的房子和學校都位於街角。
+但除此之外，教授不能肯定是否可以在滿足上述條件的情況下
+把兩個小孩送到同一所學校。
+教授有一份小鎮的地圖，試說明如何將這個問題轉換爲一個最大流問題，
+以便決定是否可以將孩子送到同一所學校。
+\stopEXERCISE
+
+\startANSWER
+每條路的容量都是 1，最大流必須大於 1。
+\stopANSWER
+
+%e26.1-7
+\startEXERCISE
+假定除邊的容量外，流網絡還有{\EMP 節點容量}。
+即對於每個節點 \m{v}，有一個極限值 \m{l(v)}，
+這是可以流經此節點的最大流量。
+請說明如何將一個帶有節點容量的流網絡 \m{G=(V,E)} 轉換
+爲一個等價的但沒有節點容量的流網絡 \m{G'=(V',E')}，
+使得 \m{G'} 中的最大流與 \m{G} 中的最大流取值相同。
+圖 \m{G'} 裏有多少個節點和多少條邊？
+\stopEXERCISE
+
+\startANSWER
+將每個節點 \m{v} 轉換成一條邊 \m{v,v‘}，其容量爲 \m{l(v)}。
+ \m{V' = 2V}， \m{E'=V+E}。
+\stopANSWER
+
 \stopsection
 
 \startsection[
   title={The Ford-Fulkerson method},
 ]
+
+%e26.2-1
+\startEXERCISE
+證明式 26.6 中的和值等於式 26.7 中的和值。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC |f\uparrow f'| \NC = \sum_{v\in V_1}f(s,v) - \sum_{v\in V_2}f(v,s)
+  + \sum_{v\in V_1\cup V_2}f'(s,v) - \sum_{v\in V_1\cup V_2}f'(v,s) \NR
+\NC \NC = \sum_{v\in V}f(s,v) - \sum_{v\in V}f(v,s)
+  + \sum_{v\in V}f'(s,v) - \sum_{v\in V}f'(v,s) \NR
+\NC \NC = |f| + |f'| \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e26.2-2
+\startEXERCISE
+在圖 26-1（b）中，橫跨切割（\m{\{s,v_2,v_4\}}， \m{\{v_1,v_3,t\}}）的流是多少？
+該切割的容量又是多少？
+\stopEXERCISE
+
+\startANSWER
+\stopANSWER
+
 \stopsection
 
 \startsection[

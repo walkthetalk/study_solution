@@ -139,10 +139,46 @@ Adam 教授有兩個兒子，可不幸的是，他們互相討厭對方。
 %e26.2-2
 \startEXERCISE
 在圖 26-1（b）中，橫跨切割（\m{\{s,v_2,v_4\}}， \m{\{v_1,v_3,t\}}）的流是多少？
-該切割的容量又是多少？
+該切割的容量又是多少？附圖 26-1：
+
+\externalfigure[output/e26_2_2-1]
 \stopEXERCISE
 
 \startANSWER
+\startformula
+f(s,t) = f(s,v_1) + f(v_2,v_1) + f(v_4,v_3) + f(v_4,t) - f(v_3,v_2) = 19
+\stopformula
+
+\startformula
+f(s,t) = c(s,v_1) + c(v_2,v_1) + c(v_4,v_3) + c(v_4,t) = 31
+\stopformula
+\stopANSWER
+
+%e26.2-3
+\startEXERCISE
+在圖 26-1（a）所示的流網絡上演示 \ALGO{EDMONDS-KARP} 的執行過程。
+附圖 26-1（a）：
+
+\externalfigure[output/e26_2_3-1]
+\stopEXERCISE
+
+\startANSWER
+\startcombination[nx=2]
+{\externalfigure[output/e26_2_3-2]}{}
+{\externalfigure[output/e26_2_3-3]}{}
+\stopcombination
+\startcombination[nx=2]
+{\externalfigure[output/e26_2_3-4]}{}
+{\externalfigure[output/e26_2_3-5]}{}
+\stopcombination
+\startcombination[nx=2]
+{\externalfigure[output/e26_2_3-6]}{}
+{\externalfigure[output/e26_2_3-7]}{}
+\stopcombination
+\startcombination[nx=2]
+{\externalfigure[output/e26_2_3-8]}{}
+{\externalfigure[output/e26_2_3-9]}{}
+\stopcombination
 \stopANSWER
 
 \stopsection

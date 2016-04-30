@@ -53,7 +53,7 @@ enddef;
 vardef __graph_vertex_remark(suffix G)(expr idx, vdegree, p) :=
 	save position; pair position;
 	position := __intersectionpoint(G)(idx, vdegree);
-	p shifted __pic_shift(p, vdegree, position)
+	p shifted __pic_shift(p, vdegree, position, 0)
 enddef;
 
 vardef ____graph_set_vertex_ext@#(suffix G)(expr idx, _idx, _a) :=
@@ -156,7 +156,20 @@ vardef __graph_edge_remark(suffix G)(expr sidx, eidx, _pos, _deg, p) :=
 	_road := __graph_edge_path(G)(sidx, eidx);
 	save position; pair position;
 	position := point (arctime ((arclength _road) * _pos) of _road) of _road;
-	p shifted __pic_shift(p, _deg, position)
+	if G.edge_remark_by_edge_dir:
+		save tmp; numeric tmp;
+		tmp := angle (direction (arctime ((arclength _road) * _pos) of _road) of _road);
+		if tmp < 0: tmp := tmp + 360; fi;
+		if (tmp > 90) and (tmp < 270):
+			tmp := tmp - 180;
+		fi;
+		if tmp < 0: tmp := tmp + 360; fi;
+		%message decimal(sidx) & "," & decimal(eidx) & ": " & decimal(_pos) & "-" & decimal(_deg) & "-" & decimal(tmp);
+		(p rotated tmp) shifted __pic_shift(p, _deg, position, tmp)
+	else:
+		%message decimal(sidx) & "," & decimal(eidx) & ": " & decimal(_pos) & "-" & decimal(_deg) & "-" & decimal(0);
+		p shifted __pic_shift(p, _deg, position, 0)
+	fi
 enddef;
 
 
@@ -236,6 +249,10 @@ enddef;
 
 vardef graph_edge_ext@#(suffix G)(expr sidx, eidx)(suffix _var) :=
 	G.E[sidx][eidx]@#._var
+enddef;
+
+def G_VAR(suffix G, ext)(expr sidx, eidx)(suffix _var) :=
+	G.E[sidx][eidx]ext._var
 enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

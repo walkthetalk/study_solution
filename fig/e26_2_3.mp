@@ -43,7 +43,7 @@ vardef COPY_WEIGHT_MATRIX(suffix G)(suffix L) :=
 enddef;
 
 vardef BFS(suffix G, M)(suffix P)(expr sid, eid) :=
-	message "BFS enter";
+	%message "BFS enter";
 	P[sid] := eid;
 	save ret; boolean ret; ret := false;
 	save remainvertex; numeric remainvertex; remainvertex := G_vid_cnt(G) - 1;
@@ -70,11 +70,11 @@ vardef BFS(suffix G, M)(suffix P)(expr sid, eid) :=
 			fi;
 		);
 		exitif not newv;
-		message "remain is " & decimal(remainvertex);
+		%message "remain is " & decimal(remainvertex);
 		exitif remainvertex = 0;
-		message "remain is " & decimal(remainvertex) & "----";
+		%message "remain is " & decimal(remainvertex) & "----";
 	endfor;
-	message "BFS return";
+	%message "BFS return";
 
 	ret
 enddef;
@@ -218,7 +218,7 @@ vardef FORD_FULKENSON(suffix G)(expr sid, eid) :=
 				draw_img_main(G)(flow);
 	endfor;
 
-	draw_img_main(G)(flow);
+	%draw_img_main(G)(flow);
 enddef;
 
 beginfig(1);

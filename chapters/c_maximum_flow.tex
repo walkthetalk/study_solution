@@ -389,6 +389,144 @@ f_p(u,v)=\startcases
 \startsection[
   title={Maximum bipartite matching},
 ]
+
+%e26.3-1
+\startEXERCISE
+在圖 26-8（c）上運行算法 \ALGO{FORD-FULKERSON}，
+給出每次流量遞增後的殘存網絡。
+將集合 \m{L} 中的節點從上至下編號 1～5，
+集合 \m{R} 中的編號從上至下編號 6～9。
+對於每次迭代，選擇字典次序最小的增廣路徑。
+附圖 26-8（c）：
+
+\externalfigure[output/e26_3_1-1]
+\stopEXERCISE
+
+\startANSWER
+\startcombination[nx=4]
+{\externalfigure[output/e26_3_1-2]}{}
+{\externalfigure[output/e26_3_1-3]}{}
+{\externalfigure[output/e26_3_1-4]}{}
+{\externalfigure[output/e26_3_1-5]}{}
+\stopcombination
+\startcombination[nx=4]
+{\externalfigure[output/e26_3_1-6]}{}
+{\externalfigure[output/e26_3_1-7]}{}
+{\externalfigure[output/e26_3_1-8]}{}
+{}{}
+\stopcombination
+\stopANSWER
+
+%e26.3-2
+\startEXERCISE
+證明定理 26.10。
+附定理 26.10：
+
+如果容量函數 \m{c} 只能取整數值，
+則 \ALGO{FORD-FULKERSON} 所生成的最大流 \m{f} 滿足： \m{|f|} 是整數值。
+而且，對於所有節點 \m{u} 和 \m{v}， \m{f(u,v)} 的值都是整數。
+\stopEXERCISE
+
+\startANSWER
+算法 \ALGO{FORD-FULKERSON} 中增廣路徑中邊的最小容量肯定是整數，
+流的容量每次的變化都是整數，因此最終的最大流 \m{|f|} 是整數，且任一邊的流量都是整數。
+\stopANSWER
+
+%e26.3-3
+\startEXERCISE
+設 \m{G=(V,E)} 是一個二分圖，
+其節點劃分爲 \m{V=L\cup R}，設 \m{G'=(V',E')} 爲其對應的流網絡。
+在 \ALGO{FORD-FULKERSON} 執行過程中，
+對在 \m{G'} 中找出的任意增廣路徑的長度給出一個適當的上界。
+\stopEXERCISE
+
+\startANSWER
+根據定義，殘存網絡 \m{G'_{f}} 的增廣路徑是 \m{s\leadsto t} 的簡單路徑。
+在 \m{G} 中不存在兩端均在 \m{L} 或 \m{R} 中的邊，
+ \m{G'} 和 \m{G'_f} 中也沒有這樣的邊。
+只有 \m{s} 連接 \m{L} 中的節點， \m{R} 中的節點連接到 \m{t}。
+ \m{G'} 中的邊均從 \m{L} 到 \m{R}，
+而 \m{G'_f} 中的邊則可能從 \m{R} 到 \m{L}。
+所以增廣路徑只能是：
+\startformula
+s\rightarrow L\rightarrow R\rightarrow \ldots \rightarrow L\rightarrow R\rightarrow t
+\stopformula
+在 \m{L} 和 \m{R} 中來回穿梭，但每個節點只能通過一次。
+總節點數爲 \m{2 + 2\times \min(|L|,|R|)}。
+因此增廣路徑的長度上限爲 \m{2\times \min(|L|,|R|) + 1}。
+\stopANSWER
+
+%e26.3-4
+\startEXERCISE\DIFFICULT
+{\EMP 完全匹配（perfect matching）}指包含圖中所有節點的匹配。
+設 \m{G=(V,E)} 是節點劃分爲 \m{V=L\cup R} 的無向二分圖，
+其中 \m{|L|=|R|}。
+對於任意 \m{X\subseteq V}，定義 \m{X} 的{\EMP 鄰居（neighborhood）}爲：
+\startformula
+N(X)=\{y\in V:\exists x\in X, (x,y)\in E\}
+\stopformula
+即集合中的元素由 \m{X} 中的節點可達。
+請證明 Hall 定理：
+
+圖 \m{G} 中存在一個完全匹配當且僅當對於每個子集 \m{A\subseteq L}，
+有 \m{|A|\le |N(A)|}。
+\stopEXERCISE
+
+\startANSWER
+先證明：如果存在完全匹配，則對於任一 \m{A\subseteq L}，有 \m{|A|\le |N(A)|}。
+
+根據完全匹配的定義， \m{L} 中的每個節點都連接到了 \m{R} 中的節點，且互不相同。
+即 \m{|A|\le |N(A)|}。
+
+現在看另一面：如果所有 \m{A\subseteq L}，都有 \m{|A|\le |N(A)|}，
+則存在完全匹配。
+
+如果 \m{|L|=|R|=1}，很顯然存在完全匹配，
+即 \m{G} 中只有一條邊。假定上述假設對 \m{|L|=|R|=1,2,\ldots,n-1} 均成立。
+當 \m{|L|=|R|=n} 時，分兩種情況考慮：
+
+第一種情況：對於所有 \m{A\subseteq L}，都有 \m{|A|<|N(A)|}。
+在 \m{L} 中任取一個節點 \m{u}，然後在 \m{R} 中選取 \m{u} 的任一鄰居，
+然後將這兩個點從 \m{G} 中移除。
+剩下的爲圖 \m{G'}，仍然能保證：對於所有 \m{A\subseteq L}，都有 \m{|A|\le |N(A)|}。
+由於在 \m{G'} 中， \m{|L|=|R|=n-1}，根據歸納假設，有完全匹配 \m{M'}，
+在此基礎上添加 \m{(u,v)}，即爲 \m{G} 的完全匹配。
+
+第二種情況：至少存在一個 \m{A\subset L}，滿足 \m{|A|=|N(A)|}。
+根據歸納假設，在 \m{A} 和 \m{N(A)} 間存在完全匹配 \m{M_A}。
+從 \m{G} 中移除 \m{A} 和 \m{N(A)}。
+在剩下的 \m{G'} 中，仍然滿足：對於所有 \m{B\subseteq L - A}，都有 \m{|B|\le |N(B)|}。
+用反證法。假如 \m{|B|>|N(B)|}，那麼 \m{|A\cup B|>|N(A\cup B)|}，顯然矛盾。
+因此， \m{G'} 有完全匹配 \m{M'}。
+結合 \m{M_A} 和 \m{M'}，就可以得到 \m{G} 的完全匹配。
+\stopANSWER
+
+%e26.3-5
+\startEXERCISE\DIFFICULT
+將圖 \m{G=(V,E)} 中的節點劃分爲 \m{V=L\cup R}，
+如果二分圖中的每個節點 \m{v} 的度數都是 \m{d}，
+則稱該二分圖是 {\EMP \m{d} 正則的（\m{d}-regular）}。
+對於每個 \m{d} 正則的二分圖，都有 \m{|L|=|R|}。
+證明：
+每個 \m{d} 正則二分圖的匹配基數都是 \m{|L|}。
+（\hint 證明對應的流網絡最小切割的容量爲 \m{|L|}）
+\stopEXERCISE
+
+\startANSWER
+\m{L} 的總出度與 \m{R} 的總入度相同，每個節點的度數又都相同，所以 \m{|L|=|R|}。
+
+最大匹配的基數就是 \m{G'} 中最大流的值。
+定義 \m{G'} 的一個流：
+\startformula
+f(u,v)=\startcases
+\NC 1/d \MC \text{如果 \m{(u,v)\in E}} \NR
+\NC 1 \MC \text{如果 \m{u=s} 或者 \m{v=t}} \NR
+\NC 0 \MC \text{其他} \NR
+\stopcases
+\stopformula
+則 \m{f} 是 \m{G'} 的一個流，其值就是完全匹配的基數。
+\stopANSWER
+
 \stopsection
 
 \startsection[

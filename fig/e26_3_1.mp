@@ -1,28 +1,37 @@
 input clrs_graph;
-input clrs_graph_extension;
-input clrs_graph_EDGEWEIGHT;
-input clrs_graph_FLOW;
 
 %% global data
-declare_graph(G, true, false, 2cm, fullcircle scaled .5cm);
-declare_graph_FLOW(G);
+declare_graph(G, true, false, 1cm, fullcircle scaled .5cm);
 
 G_auto_V(G) 0 Gposition (0,0)   Gid "s";
-G_auto_V(G) 1 Gposition (1,0.5);
-G_auto_V(G) 2 Gposition (1,-0.5);
-G_auto_V(G) 3 Gposition (2,0.5);
-G_auto_V(G) 4 Gposition (2,-0.5);
-G_auto_V(G) 5 Gposition (3,0)   Gid "t";
+G_auto_V(G) 1 Gposition (1,2);
+G_auto_V(G) 2 Gposition (1,1);
+G_auto_V(G) 3 Gposition (1,0);
+G_auto_V(G) 4 Gposition (1,-1);
+G_auto_V(G) 5 Gposition (1,-2);
+G_auto_V(G) 6 Gposition (2,1.5);
+G_auto_V(G) 7 Gposition (2,0.5);
+G_auto_V(G) 8 Gposition (2,-0.5);
+G_auto_V(G) 9 Gposition (2,-1.5);
+G_auto_V(G) 10 Gposition (3,0)   Gid "t";
 
-G_auto_E(G) (0,1) Gdisp(edge_weight) (0.5,  135) Gdata(edge_weight) (16);
-G_auto_E(G) (1,3) Gdisp(edge_weight) (0.5,   90) Gdata(edge_weight) (12);
-G_auto_E(G) (3,5) Gdisp(edge_weight) (0.5,   45) Gdata(edge_weight) (20);
-G_auto_E(G) (0,2) Gdisp(edge_weight) (0.5, -135) Gdata(edge_weight) (13);
-G_auto_E(G) (2,1) Gdisp(edge_weight) (0.5,  180) Gdata(edge_weight) ( 4);
-G_auto_E(G) (3,2) Gdisp(edge_weight) (0.5,  -45) Gdata(edge_weight) ( 9);
-G_auto_E(G) (2,4) Gdisp(edge_weight) (0.5,  -90) Gdata(edge_weight) (14);
-G_auto_E(G) (4,3) Gdisp(edge_weight) (0.5,    0) Gdata(edge_weight) ( 7);
-G_auto_E(G) (4,5) Gdisp(edge_weight) (0.5,  -45) Gdata(edge_weight) ( 4);
+G_auto_E(G) (0,1);
+G_auto_E(G) (0,2);
+G_auto_E(G) (0,3);
+G_auto_E(G) (0,4);
+G_auto_E(G) (0,5);
+G_auto_E(G) (6,10);
+G_auto_E(G) (7,10);
+G_auto_E(G) (8,10);
+G_auto_E(G) (9,10);
+G_auto_E(G) (1,6);
+G_auto_E(G) (2,6);
+G_auto_E(G) (2,8);
+G_auto_E(G) (3,7);
+G_auto_E(G) (3,8);
+G_auto_E(G) (3,9);
+G_auto_E(G) (4,8);
+G_auto_E(G) (5,8);
 
 vardef COPY_WEIGHT_MATRIX(suffix G)(suffix L) :=
 	save min_vid, max_vid; numeric min_vid, max_vid;
@@ -31,10 +40,8 @@ vardef COPY_WEIGHT_MATRIX(suffix G)(suffix L) :=
 	save i,j; numeric i,j;
 	for i := min_vid upto max_vid:
 		for j := min_vid upto max_vid:
-			if i = j:
-				L[i][j] := 0;
-			elseif known graph_edge_ext.edge_weight(G)(i,j)(weight):
-				L[i][j] := graph_edge_ext.edge_weight(G)(i,j)(weight);
+			if __graph_has_edge(G)(i,j):
+				L[i][j] := 1;
 			else:
 				L[i][j] := 0;
 			fi;
@@ -85,7 +92,11 @@ image(
 		graph_for_each_vertex(G)(eidx)(
 			if known flow[sidx][eidx]:
 				if flow[sidx][eidx] > 0:
-					G_VAR(G, flow)(sidx, eidx)(flow) := flow[sidx][eidx];
+					% we must use tmp var for sidx, eidx
+					% or we can't get work code
+					% the deep reason maybe the for loop in graph_for_each_xxx
+					save i,j; numeric i,j; i := sidx; j := eidx;
+					draw G_E_link(G)(i,j) withpen pencircle scaled 5bp withcolor .8white;
 				fi;
 			fi;
 		);
@@ -106,9 +117,7 @@ enddef;
 vardef img_flow(suffix G)(suffix M)(suffix P)(expr sidx, eidx) :=
 image(
 	save Gp;
-	declare_graph(Gp, true, false, 2cm, fullcircle scaled .5cm);
-	declare_graph_EDGEWEIGHT(Gp);
-	Gp.edge_remark_by_edge_dir := true;
+	declare_graph(Gp, true, false, 1cm, fullcircle scaled .5cm);
 
 	graph_for_each_vertex(G)(vid)(
 		G_auto_V(Gp) vid Gposition G.V[vid]pos  if known G.V[vid]id: Gid G.V[vid]id fi;
@@ -118,13 +127,7 @@ image(
 		graph_for_each_vertex(Gp)(eid)(
 			if M[sid][eid] > 0:
 				G_auto_E(Gp) (sid,eid)
-					if M[eid][sid] > 0: Gpath (15,-15) fi
-					Gdisp(edge_weight) (0.5,  if (xpart G.V[sid]pos) < (xpart G.V[eid]pos):
-							90
-						else:
-							-90
-						fi)
-					Gdata(edge_weight) (M[sid][eid]);
+					if M[eid][sid] > 0: Gpath (15,-15) fi;
 			fi;
 		);
 	);
@@ -225,6 +228,6 @@ beginfig(1);
 draw graph_img(G);
 endfig;
 
-FORD_FULKENSON(G)(0,5);
+FORD_FULKENSON(G)(0,10);
 
 end;

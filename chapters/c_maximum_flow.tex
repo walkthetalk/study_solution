@@ -532,6 +532,31 @@ f(u,v)=\startcases
 \startsection[
   title={Push-relabel algorithms},
 ]
+
+%e26.4-1
+\startEXERCISE
+證明：算法 \ALGO{INITIALIZE-PREFLOW(G,s)} 終止後，
+有 \m{s.e\le -|f^*|}，其中 \m{f^*} 是流網絡 \m{G} 的一個最大流。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+s.e = -\sum_{(s,v)\in E}c(s,v)
+\stopformula
+\stopANSWER
+
+%e26.4-2
+\startEXERCISE
+說明如何實現通用的推送-重貼標籤算法，
+使得每個重貼標籤的操作成本爲 \m{O(V)}，
+每個推送操作的成本爲 \m{O(1)}，
+並且可以在 \m{O(1)} 時間內選擇一個合適的操作，
+從而使得整個算法運行時間爲 \m{O(V^2E)}。
+\stopEXERCISE
+
+\startANSWER
+\stopANSWER
+
 \stopsection
 
 \startsection[

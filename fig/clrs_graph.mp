@@ -258,6 +258,20 @@ draw image(
 );
 enddef;
 
+vardef __vertex_idstr(suffix G)(expr idx) :=
+	save _idstring; string _idstring;
+	if known G.V[idx]id:
+		_idstring := G.V[idx]id;
+	else:
+		if G.is_charid:
+			_idstring := "$" & char(idx) & "$";
+		else:
+			_idstring := "$v_{" & decimal(idx) & "}$";
+		fi;
+	fi;
+	_idstring
+enddef;
+
 vardef __draw_graph_vertex(suffix G)(expr idx) :=
 draw image(
 	save vpos; pair vpos;
@@ -270,17 +284,7 @@ draw image(
 	draw vpath;
 
 	% vertex name
-	save _idstring; string _idstring;
-	if known G.V[idx]id:
-		_idstring := G.V[idx]id;
-	else:
-		if G.is_charid:
-			_idstring := "$" & char(idx) & "$";
-		else:
-			_idstring := "$v_{" & decimal(idx) & "}$";
-		fi;
-	fi;
-	label(TEX(_idstring), vpos) withcolor if known G.V[idx]idcolor: G.V[idx]idcolor else: black fi;
+	label(TEX(__vertex_idstr(G)(idx)), vpos) withcolor if known G.V[idx]idcolor: G.V[idx]idcolor else: black fi;
 );
 enddef;
 

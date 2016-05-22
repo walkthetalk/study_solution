@@ -4,6 +4,26 @@
   title={Multithreaded Algorithms},
 ]
 
+%e27.1-1
+\startEXERCISE
+假設 \ALGO{P-FIB} 中第 4 行派生調用 \ALGO{P-FIB(n-2)}，
+而不是像源程序中使用普通調用的方法，則漸進工作量、
+持續時間和並行度各是多少？
+附 \ALGO{P-FIB}：
+
+\CLRSH{P-FIB(n)}
+\startCLRS
+if n <= 1
+	return n
+else
+	x = spawn P-FIB(n-1)
+	y = P-FIB(n-2)
+	sync
+	return x + y
+\stopCLRS
+\stopEXERCISE
+
+
 \startsection[
   title={The basics of dynamic multithreading},
 ]

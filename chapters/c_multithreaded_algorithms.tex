@@ -23,6 +23,73 @@ else
 \stopCLRS
 \stopEXERCISE
 
+\startANSWER
+沒有變化。
+\stopANSWER
+
+%e27.1-2
+\startEXERCISE
+請畫出運行 \ALGO{P-FIB(5)} 的計算有向無環圖。
+假設計算中的每個鏈消耗單位時間，
+則該計算的工作量、持續時間和並行度各是多少？
+如何在 3 個處理器上調度這個計算有向無環圖，
+要求使用貪心調度並用執行中的時間步給每個鏈做標記。
+\stopEXERCISE
+
+\startANSWER
+工作量： \m{T_1 = 29}。
+
+持續時間： \m{T_{\infty} = 10}。
+
+並行度： \m{T_1 / T_{\infty} \approx 2.9}。
+
+\externalfigure[output/e27_1_2-1][factor=fit]
+\stopANSWER
+
+%e27.1-3
+\startEXERCISE
+證明：貪心調度可以達到下面的時間界，
+該時間界稍微強於定理 27.1 給出的界：
+\startformula
+T_p \le \frac{T_1 - T_{\infty}}{P} + T_{\infty}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\m{T_{\infty}} 已經包括了所有非完全步和完全步。
+在有 \m{P} 個處理器的系統上，一個完全步會分配 \m{P} 個線程。
+回顧 \m{P\times T_P \ge T_1}： \m{P} 個處理器所完成的工作量至少與一個處理完完成的一樣多。
+
+在定理 27.1 中，我們分別計算完全步和非完全步的界，
+現在我們嘗試另一種方法。
+
+根據定義， \m{T_{\infty}} 是計算圖中最長路徑。
+在此路徑上，每一個節點都代表分配一個線程：
+如果準備好執行的線程數少於 \m{P}，則是非完全步，否則是完全步。
+
+一個完全步可以分配 \m{kP+j} 股，其中 \m{0\le j < P}， \m{k\ge 1}，
+如果 \m{j = 0}，則（可能）可以分解成一個完全步以及後續多個個完全步，
+否則（可能）可以分解成一個非完全步以及後續多個完全步。
+我們稱第一個非完全步爲{\EMP 僞}非完全步，第一個完全步爲{\EMP 僞}完全步。
+所有非完全步、僞非完全步和僞完全步的總數 \m{\le T_{\infty}}，
+在任何一個點上我們分配的股數都不會多於 \m{P}。
+
+\m{T_1 - T_{\infty}} 就是最長路徑之外的所有股數。
+其中每一股都屬於下面四種情況之一：
+ \m{T_i}，非完全步中的股；
+ \m{T_{pi}}，僞非完全步中的股；
+ \m{T_{pc}}，僞完全步中的股；
+ \m{T_c}，在僞完全步或僞非完全步之後所執行的分配 \m{P} 個線程所得股。
+
+\m{|T_i| + |T_{pi}| + |T_{pc}| \ge T_{\infty}}，
+最長路徑中的每一股都屬於這三個集合中的一個。
+這意味着剩下的那個集合 \m{|T_c|\le T_1 - T_{\infty}}，
+根據上面所述， \m{|T_c|} 是 \m{P} 的倍數。
+
+\startformula
+\frac{|T_c|}{P} + T_{\infty}\le \frac{T_1 - T_{\infty}}{P} + T_{\infty}
+\stopformula
+\stopANSWER
 
 \startsection[
   title={The basics of dynamic multithreading},

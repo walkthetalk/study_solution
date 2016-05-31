@@ -1,0 +1,94 @@
+\startsection[
+  title={Multithreadedmatrix multiplication},
+]
+
+%e27.2-1
+\startEXERCISE[exercise:27.2-1]
+請畫出在 \m{2\times 2} 矩陣上計算 \ALGO{P-SQUARE-MATRIX-MULTIPLY} 的計算有向無環圖，
+並在圖中標出與算法執行中的股對應的所有頂點。
+根據慣例，派生調用和普通調用的邊指向下，連接邊水平指向右，返回邊指向上。
+假設每股消耗單位時間，
+試分析該計算的工作量、持續時間和並行度。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e27_2_1-1]
+\stopANSWER
+
+%e27.2-2
+\startEXERCISE
+對 \ALGO{P-MATRIX-MULTIPLY-RECURSIVE} 過程，重做\refexercise{27.2-1}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e27.2-3
+\startEXERCISE
+請給出工作量爲 \m{\Theta(n^3)}，
+而持續時間僅爲 \m{\Theta(\lg n)} 的兩個 \m{n\times n} 矩陣相乘的多線程算法僞碼，
+並分析該算法。
+\stopEXERCISE
+
+\startANSWER
+根據\refexercise{27.1-6}，矢量相乘用時 \m{\Theta(\lg n)}，
+因此矩陣相乘爲：
+\startformula
+T_{\infty} = \Theta(\lg n) + \Theta(\lg n) + \Theta(\lg n) = \Theta(\lg n)
+\stopformula
+\stopANSWER
+
+%e27.2-4
+\startEXERCISE
+請給出 \m{p\times q} 矩陣和 \m{q\times r} 矩陣相乘的一個有效多線程算法的僞碼。
+即使 \m{p}、 \m{q} 或 \m{r} 中任意一個爲 1，
+你的算法也要有好的並行性能。分析該算法。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+T_{\infty} = \Theta(\min\{\lg p, \lg q, \lg r\})
+\stopformula
+\stopANSWER
+
+%e27.2-5
+\startEXERCISE
+請給出原地轉置 \m{n\times n} 矩陣的一個有效的多線程算法僞碼，
+使用分治法原地將 \m{n\times n} 矩陣遞歸地劃分爲 4 個 \m{n/2\times n/2} 子矩陣。
+分析該算法。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+M = \left(\startmatrix
+\NC A \NC B \NR
+\NC C \NC D \NR
+\stopmatrix\right)
+\stopformula
+
+\startformula
+M^T = \left(\startmatrix
+\NC A^T \NC C^T \NR
+\NC B^T \NC D^T \NR
+\stopmatrix\right)
+\stopformula
+
+\startformula\startmathalignment
+\NC T_{\infty}(n) \NC = T_{\infty}(n/2) + \Theta(1) \NR
+\NC T_{\infty}(n) \NC = \Theta(\lg n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e27.2-6
+\startEXERCISE
+請給出 \ALGO{FLOYD-WARSHALL} （參見\refsection{floyd_warshall}）的一個有效多線程實現的僞碼，
+該算法在帶權圖上計算所有點對間的最短路徑。
+分析該算法。
+\stopEXERCISE
+
+\startANSWER
+兩個循環均可平行化， \m{T_{\infty} = \Theta(n\lg n)}。
+\stopANSWER
+
+\stopsection

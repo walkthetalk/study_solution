@@ -1,0 +1,272 @@
+\startsection[
+  title={The Floyd-Warshall algorithm},
+  reference=section:floyd_warshall,
+]
+
+%e25.2-1
+\startEXERCISE
+在圖 25-2 所示的帶權重有向圖上運行算法 \ALGO{FLOYD-WARSHALL}，
+給出外層循環的每一次迭代所成城的矩陣 \m{D^{(k)}}。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[2*3]
+{\startformula
+
+D^{(1)} = \left(\startmatrix
+\NC 0\NC \infty\NC \infty\NC \infty\NC -1\NC \infty \NR
+\NC 1\NC 0\NC \infty\NC 2\NC 0\NC \infty \NR
+\NC \infty\NC 2\NC 0\NC \infty\NC \infty\NC -8 \NR
+\NC -4\NC \infty\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC \infty\NC 7\NC \infty\NC \infty\NC 0\NC \infty \NR
+\NC \infty\NC 5\NC 10\NC \infty\NC \infty\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+D^{(2)} = \left(\startmatrix
+\NC 0\NC \infty\NC \infty\NC \infty\NC -1\NC \infty \NR
+\NC 1\NC 0\NC \infty\NC 2\NC 0\NC \infty \NR
+\NC 3\NC 2\NC 0\NC 4\NC 2\NC -8 \NR
+\NC -4\NC \infty\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 8\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 6\NC 5\NC 10\NC 7\NC 5\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+D^{(3)} = \left(\startmatrix
+\NC 0\NC \infty\NC \infty\NC \infty\NC -1\NC \infty \NR
+\NC 1\NC 0\NC \infty\NC 2\NC 0\NC \infty \NR
+\NC 3\NC 2\NC 0\NC 4\NC 2\NC -8 \NR
+\NC -4\NC \infty\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 8\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 6\NC 5\NC 10\NC 7\NC 5\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+D^{(4)} = \left(\startmatrix
+\NC 0\NC \infty\NC \infty\NC \infty\NC -1\NC \infty \NR
+\NC -2\NC 0\NC \infty\NC 2\NC -3\NC \infty \NR
+\NC 0\NC 2\NC 0\NC 4\NC -1\NC -8 \NR
+\NC -4\NC \infty\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 5\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 3\NC 5\NC 10\NC 7\NC 2\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+D^{(5)} = \left(\startmatrix
+\NC 0\NC 6\NC \infty\NC 8\NC -1\NC \infty \NR
+\NC -2\NC 0\NC \infty\NC 2\NC -3\NC \infty \NR
+\NC 0\NC 2\NC 0\NC 4\NC -1\NC -8 \NR
+\NC -4\NC 2\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 5\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 3\NC 5\NC 10\NC 7\NC 2\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}{\startformula
+
+D^{(6)} = \left(\startmatrix
+\NC 0\NC 6\NC \infty\NC 8\NC -1\NC \infty \NR
+\NC -2\NC 0\NC \infty\NC 2\NC -3\NC \infty \NR
+\NC -5\NC -3\NC 0\NC -1\NC -6\NC -8 \NR
+\NC -4\NC 2\NC \infty\NC 0\NC -5\NC \infty \NR
+\NC 5\NC 7\NC \infty\NC 9\NC 0\NC \infty \NR
+\NC 3\NC 5\NC 10\NC 7\NC 2\NC 0 \NR
+\stopmatrix\right)
+
+\stopformula}{}
+\stopcombination
+\stopANSWER
+
+%e25.2-2
+\startEXERCISE
+說明如何使用\refsection{25.1} 的技術來計算傳遞閉包。
+\stopEXERCISE
+
+\startANSWER
+將 \ALGO{EXTEND-SHORTEST-PATHS} 中的“\m{\min}”換成“\m{\lor}”，
+將“\m{+}”換成“\m{\land}”。
+\stopANSWER
+
+%e25.2-3
+\startEXERCISE
+請修改 \ALGO{FLOYD-WARSHALL} 算法，
+以便根據式 25.6 和 25.7 計算出矩陣 \m{\prod^{(k)}}。
+再請嚴格證明：
+對於所有節點 \m{i\in V}，
+前驅子圖 \m{G_{\pi,i}} 是一棵根節點爲 \m{i} 的最短路徑樹。
+（\hint 爲了證明 \m{G_{\pi,i}} 無環，
+可以首先證明：根據 \m{G_{\pi,i}} 的定義，
+ \m{\pi_{ij}^{(k)} = l} 蘊含 \m{d_{ij}^{(k)}\ge d_{il}^{(ik)} + \omega_{lj}}。
+然後，再採用引理 24.16 的證明。）
+附式 25.6：
+\startformula
+\pi_{ij}^{(0)} = \startcases
+\NC NIL \MC \text{若 \m{i=j} 或 \m{\omega_{ij} = \infty}} \NR
+\NC i \MC \text{若 \m{i\ne j} 且 \m{\omega_{ij} < \infty}} \NR
+\stopcases
+\stopformula
+
+式 25.7：
+\startformula
+\pi_{ij}^{(k)} = \startcases
+\NC \pi_{ij}^{(k-1)} \MC \text{若 \m{d_{ij}^{(k-1)} \le d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
+\NC \pi_{kj}^{(k-1)} \MC \text{若 \m{d_{ij}^{(k-1)} > d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
+\stopcases
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{FLOYD-WARSHALL(W)}
+\startCLRS
+n = W.rows
+D[0] = W
+for i = 1 to n
+	for j = 1 to n
+		if d[0][i][j] != infinity
+			pi[0][i][j] = i
+		else
+			pi[0][i][j] = NIL
+for k = 1 to n
+	for i = 1 to n
+		for j = 1 to n
+			d[k][i][j] = min(d[k-1][i][j], d[k-1][i][k] + d[k-1][k][j])
+			if d[k-1][i][j] <= d[k-1][i][k] + d[k-1][k][j]
+				pi[k][i][j] = pi[k-1][i][j]
+			else
+				pi[k][i][j] = pi[k-1][k][j]
+return D[n], Pi[n]
+\stopCLRS
+
+最短路徑樹的證明略。
+\stopANSWER
+
+%e25.2-4
+\startEXERCISE
+如前所述， \ALGO{FLOYD-WARSHALL} 的空間需求爲 \m{\Theta(n^3)}，
+因爲要計算 \m{d_{ij}^{(k)}}，其中 \m{i,j,k=1,2,\ldots,n}。
+請證明下面算法的正確性，下面算法跟 \ALGO{FLOYD-WARSHALL} 的區別就是沒有上標了，
+其空間需求可以降低到 \m{\Theta(n^2)}。
+
+\CLRSH{FLOYD-WARSHALL'(W)}
+\startCLRS
+n = W.rows
+D = W
+for k = 1 to n
+	for i = 1 to n
+		for j = 1 to n
+			d[i][j] = min(d[i][j], d[i][k] + d[k][j])
+return D
+\stopCLRS
+\stopEXERCISE
+
+\startANSWER
+就這個動態規劃算法而言，下一個狀態只跟上一個狀態有關，沒有必要保存其他狀態。
+\stopANSWER
+
+%e25.2-5
+\startEXERCISE
+假定我們修改式 25.7 對等式的處理辦法如下：
+\startformula
+\pi_{ij}^{(k)} = \startcases
+\NC \pi_{ij}^{(k-1)} \MC \text{若 \m{d_{ij}^{(k-1)} < d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
+\NC \pi_{kj}^{(k-1)} \MC \text{若 \m{d_{ij}^{(k-1)} \ge d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
+\stopcases
+\stopformula
+請問這種前驅矩陣 \m{\prod} 的定義正確嗎？
+\stopEXERCISE
+
+\startANSWER
+正確。
+\stopANSWER
+
+%e25.2-6
+\startEXERCISE
+我們怎樣才能使用 \ALGO{FLOYD-WARSHALL} 算法的輸出來檢測負權重環路？
+\stopEXERCISE
+
+\startANSWER
+在算法最後再跑一遍循環，如果還有矩陣元素可以更新，則表明有負權重環路。
+\stopANSWER
+
+%e25.2-7
+\startEXERCISE
+在算法 \ALGO{FLOYD-WARSHALL} 中構建最短路徑的另一種辦法是使用 \m{\phi_{ij}^{(k)}}，
+其中 \m{i,j,k=1,2,\ldots,n}，
+ \m{\phi_{ij}^{(k)}} 是從節點 \m{i} 到節點 \m{j} 的最短路徑上編號最大的中間節點，
+這條路徑上中間所有節點都取自集合 \m{\{1,2,\ldots,k\}}。
+請給出 \m{\phi_{ij}^{(k)}} 的一個遞歸公式，
+並修改 \ALGO{FLOYD-WARSHALL} 計算 \m{\phi_{ij}^{(k)}}。
+然後重寫 \ALGO{PRINT-ALL-PAIRS-SHORTEST-PATH}，
+其輸入爲矩陣 \m{\Phi=(\phi_{ij}^{(n)})}。
+矩陣 \m{\Phi} 與\refsection{15.2} 所討論的鏈式矩陣乘法中的表格有哪些相似之處？
+\stopEXERCISE
+
+\startANSWER
+\startformula
+\phi_{ij}^{(k)} = \startcases
+\NC \phi_{ij}^{(k-1)} \MC \text{若 \m{d_{ij}^{(k-1)} \le d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
+\NC k \MC \text{若 \m{d_{ij}^{(k-1)} > d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
+\stopcases
+\stopformula
+
+\CLRSH{PRINT-ALL-PAIRS-SHORTEST-PATH(\phi, i, j)}
+\startCLRS
+if i == j
+	print i
+else if phi[i][j] = NIL
+	print no path from i to j exist
+else
+	PRINT-ALL-PAIRS-SHORTEST-PATH(phi, i, phi[i][j])
+	print phi[i][j]
+	PRINT-ALL-PAIRS-SHORTEST-PATH(phi, phi[i][j], i)
+\stopCLRS
+\stopANSWER
+
+%e25.2-8
+\startEXERCISE
+給出一個 \m{O(VE)} 時間複雜度的算法來計算有向圖 \m{G=(V,E)} 的傳遞閉包。
+\stopEXERCISE
+
+\startANSWER
+\startCLRS
+for each vertex s in G.V
+	R[s][s] = 1
+for each edge (u,v) in G.E
+	for each vertex s in G.V
+		if R[s][u] = 1
+			R[s][v] = 1
+\stopCLRS
+\stopANSWER
+
+%e25.2-9
+\startEXERCISE
+假定我們可以在 \m{f(|V|,|E|)} 的時間內計算出一個有向無環圖的傳遞閉包，
+其中 \m{f} 是一個自變量爲 \m{|V|} 和 \m{|E|} 的單調遞增函數。
+證明：對於一個常規的有向圖 \m{G=(V,E)}，計算其傳遞閉包 \m{G^*=(V,E^*)} 的
+時間複雜度爲 \m{f(|V|,|E|)+O(V+E^*)}。
+\stopEXERCISE
+
+\startANSWER
+先計算 \m{G} 的強連通分量圖 \m{G_{SCC}}，用時 \m{O(V+E)}。
+在這個過程中需要記錄 \m{G} 中的節點與 \m{G_{SCC}} 中節點的關係，
+對於 \m{G} 中任一節點 \m{v}，都可以通過一個函數 \m{g(v)} 得到 \m{G_{SCC}} 中與其對應的節點。
+
+然後在圖 \m{G_{SCC}} 上運行算法找到其傳遞閉包。
+用時 \m{O(f(|V|,|E|)}。
+剩下的就是將 \m{G_{SCC}} 的傳遞閉包轉換回 \m{G} 的傳遞閉包。
+
+當且僅當 \m{G} 的傳遞閉包中有邊 \m{(u,v)} 時，
+ \m{G_{SCC}} 的傳遞閉包中纔有 \m{(g(u),g(v)}。
+據此，我們可以遍歷 \m{G_{SCC}} 的傳遞閉包中的邊 \m{(a,b)}，
+對於每個邊 \m{(a,b)}，找到所有的 \m{x\in g^{-1}(a)} 和 \m{y\in g^{-1}(b)}。
+那麼 \m{(x,y)} 就屬於 \m{E^*}。用時爲 \m{O(E^*)}。
+
+由於 \m{E<E^*}，所以總時間爲 \m{O(V+E) + O(f(|V|,|E|)) + O(E^*) = O(f(|V|,|E|) + V + E^*)}。
+\stopANSWER
+
+\stopsection
+

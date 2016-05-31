@@ -1,0 +1,149 @@
+\startsubject[
+  title={Problems},
+]
+
+%p25-1
+\startPROBLEM
+（Transitive closure of a dynamic graph）
+假定我們希望給有向圖 \m{G=(V,E)} 插入新邊的時候維持其傳遞閉包，
+即在插入每條邊後，更新圖的傳遞閉包。
+假定圖 \m{G} 開始時不包含任何邊，並且傳遞閉包用布爾矩陣來表示。
+\startigBase[a]\startitem
+說明給圖 \m{G} 加入一條新邊時，
+如何在 \m{O(V^2)} 時間內更新圖 \m{G=(V,E)} 的傳遞閉包 \m{G^*=(V,E^*)}。
+\stopitem\stopigBase
+
+\startANSWER
+令 \m{T} 爲圖 \m{G} 的傳遞閉包矩陣：
+\startformula
+T[i,j] = \startcases
+\NC 1 \MC if i = j \NR
+\NC 0 \MC otherwise \NR
+\stopcases
+\stopformula
+
+\CLRSH{TRANSITIVE-CLOSURE-UPDATE(u,v)}
+\startCLRS
+for i = 1 upto |V|
+	for j = 1 upto |V|
+		if T[i,u] == 1 and T[v,j] == 1
+			T[i,j] = 1
+\stopCLRS
+
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個圖 \m{G} 與一條邊 \m{e}，
+使得將 \m{e} 插入 \m{G} 時，不管使用什麼算法，
+更新其傳遞閉包的時間複雜度都是 \m{\Omega(V^2)}。
+\stopitem\stopigBase
+
+\startANSWER
+假定圖 \m{G} 中只有一條從 \m{v_1} 到 \m{v_n} 的一條直線：
+ \m{v_1\rightarrow v_2\rightarrow \ldots \rightarrow v_n}，
+其中 \m{n=|V|}。在插入新邊之前， \m{T} 中只有 \m{n(n+1)/2} 個 \m{1}，
+即對角線及上半部分的元素。
+插入新邊後，變成了一個環路，任意兩點間均可達，
+即 \m{T} 中會有 \m{n^2} 個 \m{1}。
+新增加的 \m{1} 個數爲 \m{n^2-n(n+1)/2 = n(n-1)/2}。
+因此無論用什麼算法時間都會是 \m{\Omega(n^2)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+描述一個有效的算法，
+使得在將邊加入到圖 \m{G} 中時更新傳遞閉包。
+對於任意 \m{n} 次插入的序列，
+算法總運行時間爲 \m{\sum_{i=1}^{n}t_i=O(V^3)}，
+其中 \m{t_i} 是插入第 \m{i} 條邊時更新傳遞閉包所用的時間。
+請證明你的算法確實達到了這個時間效率。
+\stopitem\stopigBase
+
+\startANSWER
+如果用 a）中的方式插入 \m{\Theta(V^2)} 條邊，則總時間爲 \m{\Theta(V^4)}。
+
+\CLRSH{TRANSITIVE-CLOSURE-UPDATE'(u,v)}
+\startCLRS
+for i = 1 upto |V|
+	if T[i,u] == 1 and T[i,v] == 0
+		for j = 1 upto |V|
+			if T[v,j] == 1
+				T[i,j] = 1
+\stopCLRS
+
+前兩行執行時間爲 \m{O(nV)=O(V^3)}。
+後三行執行時間爲 \m{O(V)}，共執行 \m{O(V^2)} 次，
+因爲這三行執行一遍至少會將 \m{T[i,v]} 改成 \m{1}，
+而整個矩陣只有 \m{O(V^2)} 個元素，也就是說最後三行最多執行 \m{O(V^2)} 次。
+所以總時間爲 \m{O(V^3)}。
+\stopANSWER
+
+%p25-2
+\startPROBLEM
+（Shortest paths in \m{\epsilon}-dense graphs）
+對於圖 \m{G=(V,E)} 而言，如果 \m{|E|=\Theta(V^{1+\epsilon})}，
+則圖 \m{G} 爲{\EMP \m{\epsilon} 稠密圖}，其中 \m{\epsilon} 爲某個常數，
+且 \m{0<\epsilon \le 1}。
+如果在 \m{\epsilon} 稠密圖的最短路徑算法中使用 \m{d} 叉最小堆
+（請參閱\refproblem{6-2}），
+則能使算法的運行時間相當於基於 Fibonacci 堆的算法的運行時間，
+卻無需引入後者所用的複雜數據結構。
+
+\startigBase[a]\startitem
+\ALGO{INSERT}、 \ALGO{EXTRACT-MIN}、 \ALGO{DECREASE-KEY} 的漸進運行時間是多少？
+請以 \m{d} 和元素個數 \m{n} 爲參數來表示。
+如果選擇 \m{d=\Theta(n^\alpha)}，其中 \m{0<\alpha\le 1}，
+這些運行時間又是多少？
+與 Fibonacci 堆的攤還代價相比如何？
+\stopitem\stopigBase
+
+\startANSWER
+\ALGO{INSERT}： \m{\Theta(\log_d n = \Theta(1/\alpha)}
+
+\ALGO{EXTRACT-MIN}： \m{\Theta(d\log_d n) = \Theta(n^\alpha / \alpha)}
+
+\ALGO{DECREASE-KEY}： \m{\Theta(\log_d n) = \Theta(1/\alpha)}
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明如何在 \m{O(E)} 時間內，
+在一個 \m{\epsilon} 稠密的有向圖中計算除單源最短路徑，
+這裏界定該圖不包含權重爲負值的邊。
+（\hint 選一個以 \m{\epsilon} 爲自變量的函數作爲 \m{d}）
+\stopitem\stopigBase
+
+\startANSWER
+用算法 \ALGO{DIJKSTRA}，如果 \m{d=V^\epsilon}，則：
+\startformula\startmathalignment
+\NC \NC O(d\log_d V\cdot V + \log_d V\cdot E) \NR
+\NC = \NC O(V^\epsilon \cdot V/\epsilon + E / \epsilon) \NR
+\NC = \NC O((V^{1+\epsilon} + E)/\epsilon) \NR
+\NC = \NC O((E+E)/\epsilon) \NR
+\NC = \NC O(E) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明如何在 \m{O(VE)} 時間內，
+在一個 \m{\epsilon} 稠密的有向圖中計算除所有節點對之間的最短路徑，
+這裏假定該圖不包含權重爲負值的邊。
+\stopitem\stopigBase
+
+\startANSWER
+運行 \m{|V|} 次 \ALGO{DIJKSTRA}，根據 b）可知總時間爲 \m{O(VE)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明如何在 \m{O(VE)} 時間內，
+在一個 \m{\epsilon} 稠密的有向圖中計算除所有節點對之間的最短路徑，
+這裏假定圖中可以包含權重爲負值的邊，
+但不包含權重爲負值的環路。
+\stopitem\stopigBase
+
+\startANSWER
+用 \ALGO{JOHNSON} 重新計算權重，總時間爲 \m{O(VE)}。
+\stopANSWER
+
+\stopPROBLEM
+
+\stopsubject%Problems
+

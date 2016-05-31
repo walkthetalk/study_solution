@@ -1,0 +1,220 @@
+
+\startsection[
+  title={The basics of dynamic multithreading},
+]
+
+%e27.1-1
+\startEXERCISE
+假設 \ALGO{P-FIB} 中第 4 行派生調用 \ALGO{P-FIB(n-2)}，
+而不是像源程序中使用普通調用的方法，則漸進工作量、
+持續時間和並行度各是多少？
+附 \ALGO{P-FIB}：
+
+\CLRSH{P-FIB(n)}
+\startCLRS
+if n <= 1
+	return n
+else
+	x = spawn P-FIB(n-1)
+	y = P-FIB(n-2)
+	sync
+	return x + y
+\stopCLRS
+\stopEXERCISE
+
+\startANSWER
+沒有變化。
+\stopANSWER
+
+%e27.1-2
+\startEXERCISE
+請畫出運行 \ALGO{P-FIB(5)} 的計算有向無環圖。
+假設計算中的每個鏈消耗單位時間，
+則該計算的工作量、持續時間和並行度各是多少？
+如何在 3 個處理器上調度這個計算有向無環圖，
+要求使用貪心調度並用執行中的時間步給每個鏈做標記。
+\stopEXERCISE
+
+\startANSWER
+工作量： \m{T_1 = 29}。
+
+持續時間： \m{T_{\infty} = 10}。
+
+並行度： \m{T_1 / T_{\infty} \approx 2.9}。
+
+\externalfigure[output/e27_1_2-1][factor=fit]
+\stopANSWER
+
+%e27.1-3
+\startEXERCISE[exercise:27.1-3]
+證明：貪心調度可以達到下面的時間界，
+該時間界稍微強於定理 27.1 給出的界：
+\startformula
+T_p \le \frac{T_1 - T_{\infty}}{P} + T_{\infty}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\m{T_{\infty}} 已經包括了所有非完全步和完全步。
+在有 \m{P} 個處理器的系統上，一個完全步會分配 \m{P} 個線程。
+回顧 \m{P\times T_P \ge T_1}： \m{P} 個處理器所完成的工作量至少與一個處理完完成的一樣多。
+
+在定理 27.1 中，我們分別計算完全步和非完全步的界，
+現在我們嘗試另一種方法。
+
+根據定義， \m{T_{\infty}} 是計算圖中最長路徑。
+在此路徑上，每一個節點都代表分配一個線程：
+如果準備好執行的線程數少於 \m{P}，則是非完全步，否則是完全步。
+
+一個完全步可以分配 \m{kP+j} 股，其中 \m{0\le j < P}， \m{k\ge 1}，
+如果 \m{j = 0}，則（可能）可以分解成一個完全步以及後續多個個完全步，
+否則（可能）可以分解成一個非完全步以及後續多個完全步。
+我們稱第一個非完全步爲{\EMP 僞}非完全步，第一個完全步爲{\EMP 僞}完全步。
+所有非完全步、僞非完全步和僞完全步的總數 \m{\le T_{\infty}}，
+在任何一個點上我們分配的股數都不會多於 \m{P}。
+
+\m{T_1 - T_{\infty}} 就是最長路徑之外的所有股數。
+其中每一股都屬於下面四種情況之一：
+ \m{T_i}，非完全步中的股；
+ \m{T_{pi}}，僞非完全步中的股；
+ \m{T_{pc}}，僞完全步中的股；
+ \m{T_c}，在僞完全步或僞非完全步之後所執行的分配 \m{P} 個線程所得股。
+
+\m{|T_i| + |T_{pi}| + |T_{pc}| \ge T_{\infty}}，
+最長路徑中的每一股都屬於這三個集合中的一個。
+這意味着剩下的那個集合 \m{|T_c|\le T_1 - T_{\infty}}，
+根據上面所述， \m{|T_c|} 是 \m{P} 的倍數。
+
+\startformula
+\frac{|T_c|}{P} + T_{\infty}\le \frac{T_1 - T_{\infty}}{P} + T_{\infty}
+\stopformula
+\stopANSWER
+
+%e27.1-4
+\startEXERCISE
+構造一個計算有向無環圖，使得在相同數目的處理器上，
+一個貪心調度器的一次執行時間是某個貪心調度器的某次執行時間的幾乎兩倍。
+描述這兩種執行是如何進行的。
+\stopEXERCISE
+
+\startANSWER
+關鍵路徑的股數是另一條路徑的將近兩倍。
+\stopANSWER
+
+%e27.1-5
+\startEXERCISE
+Karan 教授在處理器數爲 4、 10 和 64 的理想並行計算機上，
+使用一個貪心調度器分別測試了他的確定多線程算法，
+他的三次運行結果分別爲 \m{T_4 = 80} 秒、 \m{T_{10} = 42} 秒
+和 \m{T_{64} = 10} 秒。
+說明是教授在說謊，還是實驗不合適。
+（\hint 使用工作量定律 27.2、持續時間定律 27.3，
+以及從\refexercise{27.1-3} 得到的不等式 27.5。）
+
+附工作量定律 27.2：
+\startformula
+T_P \ge T_1 / P
+\stopformula
+
+附持續時間定律 27.3：
+\startformula
+T_P \ge T_{\infty}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+根據持續時間定律可知 \m{T_{\infty}\le T_P = \min(80,42,10) = 10}。
+根據工作量定律可知 \m{80 \ge T_1 / 4}，即 \m{T_1 \le 320}。
+所以：
+\startformula
+T_1 + 9 T_{\infty} \le 320 + 9 \times 10 = 410
+\stopformula
+
+但根據\refexercise{27.1-3} 的不等式 27.5：
+\startformula
+T_{10} \le \frac{T_1 - T_{\infty}}{10} + T_{\infty}
+\stopformula
+可得： \m{T_1 + 9 T_{\infty} \ge 420}，
+得出矛盾。
+\stopANSWER
+
+%e27.1-6
+\startEXERCISE[exercise:27.1-6]
+請給出一個計算 \m{n\times n} 階矩陣和 \m{n} 維向量相乘的多線程算法，
+要求並行度爲 \m{\Theta(n^2/\lg n)}，
+工作量爲 \m{\Theta(n^2)}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{VEC-TIMES-VEC(a,b,l,r)}
+\startCLRS
+if l == r
+	return a[l] * b[l]
+m = floor((l + r) / 2)
+spawn sum_l = VEC-TIMES-VEC(a, b, l, m)
+spawn sum_r = VEC-TIMES-VEC(a, b, m+1, r)
+sync
+return sum_l + sum_r
+\stopCLRS
+
+\CLRSH{MATRIX-TIMES-VEC(a, b, c)}
+\startCLRS
+parallel for i = 1 to n
+	c[i] = VEC-TIMES-VEC(a[i], b, 1, n)
+\stopCLRS
+\stopANSWER
+
+%e27.1-7
+\startEXERCISE[exercise:27.1-7]
+考慮下面原地完成 \m{n\times n} 階矩陣轉置的多線程僞碼：
+
+\CLRSH{P-TRANSPOSE(A)}
+\startCLRS
+n = A.rows
+parallel for j = 2 to n
+	parallel for i = 1 to j-1
+		exchange a[j][j] with a[j][i]
+\stopCLRS
+試分析這個算法的工作量、持續時間和並行度。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC T_1 \NC = \frac{n(n-1)}{2} = \Theta(n^2) \NR
+\NC T_{\infty} \NC = \Theta(\lg n) + \Theta(\lg n) + \Theta(1) = \Theta(\lg n) \NR
+\NC T_1 / T_{\infty} \NC = \Theta(n^2/\lg n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e27.1-8
+\startEXERCISE
+假設將 \ALGO{P-TRANSPOSE} （見\refexercise{27.1-7}）中第 3 行的 {\EMP parallel for} 循環替換成
+普通的 {\EMP for} 循環。
+請分析改變後算法的工作量、持續時間和並行度。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC T_1 \NC = \Theta(n^2) \NR
+\NC T_{\infty} \NC = \Theta(\lg n) + \Theta(n) = \Theta(n) \NR
+\NC T_1 / T_{\infty} \NC = \Theta(n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e27.1-9
+\startEXERCISE
+假定 \m{T_P = T_1 / P + T_{\infty}}，
+在多少個處理器的並行機上才能使國際象棋程序的兩個版本運行速度一樣快？
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC T_1/P + T_{\infty} \NC = T_{1}'/P + T_{\infty}' \NR
+\NC T_1 + P T_{\infty} \NC = T_{1}' + P T_{\infty}' \NR
+\NC 2048 + P \NC = 1024 + 8P \NR
+\NC P \NC = 1024 / 7 \NR
+\NC P \NC \approx 146 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\stopsection

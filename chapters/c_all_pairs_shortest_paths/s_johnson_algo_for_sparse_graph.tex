@@ -1,0 +1,125 @@
+\startsection[
+  title={Johnson’s algorithm for sparse graphs},
+]
+
+%e25.3-1
+\startEXERCISE
+請在圖 25-2 上使用 Johnson 算法來找到所有節點對之間的最短路徑。
+給出算法計算出 \m{h} 和 \m{\hat{\omega}}。附圖 25-2：
+
+\externalfigure[output/e25_3_1-1]
+\stopEXERCISE
+
+\startANSWER
+\startcombination[2*1]
+{\startformula
+h = \left(\startmatrix
+\NC 0 \NR
+\NC -5 \NR
+\NC -3 \NR
+\NC 0 \NR
+\NC -1 \NR
+\NC -6 \NR
+\NC -8 \NR
+\stopmatrix\right)
+\stopformula}{}
+
+{\startformula
+\hat{\omega} = \left(\startmatrix
+\NC \infty\NC \infty\NC \infty\NC \infty\NC 0\NC \infty \NR
+\NC 3\NC \infty\NC \infty\NC 0\NC \infty\NC \infty \NR
+\NC \infty\NC 5\NC \infty\NC \infty\NC \infty\NC 0 \NR
+\NC 0\NC \infty\NC \infty\NC \infty\NC 8\NC \infty \NR
+\NC \infty\NC 4\NC \infty\NC \infty\NC \infty\NC \infty \NR
+\NC \infty\NC 0\NC 2\NC \infty\NC \infty\NC \infty \NR
+\stopmatrix\right)
+\stopformula}{}
+\stopcombination
+\stopANSWER
+
+%e25.3-2
+\startEXERCISE
+在算法 \ALGO{JOHNSON} 裏，給集合 \m{V} 加入了新節點 \m{s}，
+形成了新集合 \m{V'}，這樣做的目的是什麼？
+\stopEXERCISE
+
+\startANSWER
+爲了使所有節點都可達。
+\stopANSWER
+
+%e25.3-3
+\startEXERCISE
+假定對於所有的邊 \m{(u,v)\in E}，
+我們有 \m{\omega(u,v)\ge 0}。
+請問權重函數 \m{\omega} 和 \m{\hat{\omega}} 之間是什麼關係？
+\stopEXERCISE
+
+\startANSWER
+\m{h(u)=h(v)=0}， \m{\omega=\hat{\omega}}。
+\stopANSWER
+
+%e25.3-4
+\startEXERCISE
+Greenstreet 教授聲稱，
+他有一種新方法給邊的權重重新賦值，比 \ALGO{JOHNSON} 算法中的更簡單。
+設 \m{\omega^*=\min_{(u,v)\in E}\{\omega(u,v)\}}，
+只要對所有的邊 \m{(u,v)\in E}，
+定義 \m{\hat{\omega}(u,v)=\omega(u,v)-\omega^*} 即可。
+請問這種方法錯在哪？
+\stopEXERCISE
+
+\startANSWER
+這樣 \m{\hat{\omega}(p)=\omega(p)-(k-1)\omega^*}，
+也就是說與路徑上的邊數有關了。
+對於一個路徑而言， \m{\omega^*} 最小，不能說明這條路徑最短。
+\stopANSWER
+
+%e25.3-5
+\startEXERCISE
+假定在一個權重函數爲 \m{\omega} 的有向圖 \m{G} 上運行 \ALGO{JOHNSON}。
+證明：如果圖 \m{G} 包含一條權重爲 0 的環路 \m{c}，
+那麼對於環路 \m{c} 上的每條邊 \m{(u,v)}， \m{\hat{\omega}(u,v)=0}。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \delta(s,v) \le \NC \delta(s,u) + \omega(u,v) \NR
+\NC \delta(s,u) \le \NC \delta(s,v) + (0 - \omega(u,v)) \NR
+\stopmathalignment\stopformula
+根據上面兩式，有 \m{\delta(s,v) = \delta(s,u) + \omega(u,v)}。
+因此 \m{\hat{\omega(u,v)} = \omega(u,v) + \delta(s,u) - \delta(s,v) = 0}。
+\stopANSWER
+
+%e25.3-6
+\startEXERCISE
+Michener 教授聲稱，
+沒有必要在 \ALGO{JOHNSON} 的第 1 行創建一個新的源節點。
+他主張可以使用 \m{G'=G}，並設 \m{s} 爲任意節點。
+請給出一個帶權重的有向圖例子，
+如果按這種方法做會導致錯誤的結果。
+然後證明：如果圖 \m{G} 是強連通的（每個節點都可以從其他每個節點到達），
+那麼使用這位教授的方法不影響結果的正確性。
+\stopEXERCISE
+
+\startANSWER
+假定 \m{\infty-\infty} 未定義，而不是 0。
+令 \m{G=(V,E)}，其中 \m{V=\{s,u\}}， \m{E=\{(u,s)\}}，
+且 \m{\omega(u,s)=0}。也就是說 \m{G} 中只有一條邊。
+
+從 \m{s} 開始運行 \ALGO{BELLMAN-FORD} 時，
+ \m{h(s)=\delta(s,s)=0}， \m{h(u)=\delta(s,u)=\infty}。
+在重新給權重賦值時， \m{\hat{\omega}(u,s)=0+\infty-0=\infty}。
+從而計算出 \m{\hat{\delta}(u,s)=\infty}， \m{d_{us}=\infty+0-\infty\ne 0}。
+但由於 \m{\delta(u,s)=0}，所以結果是錯的。
+
+而如果 \m{G} 是強連通的，則對於所有節點 \m{v\in V}，
+都有 \m{h(v)=\delta(s,v)<\infty}。
+因此，根據三角不等式，對於所有 \m{(u,v)\in E}，
+都有 \m{h(v)\le h(u)+\omega(u,v)}，從而有 \m{\hat{\omega}(u,v)=\omega(u,v)+h(u)-h(v)\ge 0}。
+滿足算法 \ALGO{JOHNSON} 的要求。
+後面 \m{\hat{\delta}(u,v)<\infty} 對所有 \m{(u,v)\in E} 也成立。
+最後 \m{d_{uv}=\hat{\delta}(u,v)+h(v)-h(u) < \infty} 也成立。
+\stopANSWER
+
+\stopsection
+

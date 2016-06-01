@@ -1,0 +1,353 @@
+\startsubject[
+  title={Problems},
+]
+
+%p9-1
+\startPROBLEM
+（找出最大的 \m{i} 個元素並排序）
+給定一個包含 \m{n} 個元素的集合，
+我們希望利用基於比較的算法找出最大的 \m{i} 個元素並排序。
+請找出下列各種方法中，具有最佳漸進最壞情況運行時間的算法，
+以 \m{n} 和 \m{i} 來表示算法的運行時間：
+\startigBase[a]
+\startitem
+對輸入數據排序，並找出最大的 \m{i} 個數；
+\stopitem
+
+\startANSWER
+\startformula
+O(n\lg{n} + i)
+\stopformula
+\stopANSWER
+
+\startitem
+對輸入數據建立一個最大優先對列，並調用 \ALGO{EXTRACT-MAX} 過程 \m{i} 次；
+\stopitem
+
+\startANSWER
+\startformula
+O(n + i\lg{n})
+\stopformula
+\stopANSWER
+
+\startitem
+利用一個順序統計量算法找到第 \m{i} 大的元素，然後用他作爲主元劃分輸入數列，
+再對最大的 \m{i} 個數排序。
+\stopitem
+
+\startANSWER
+\startformula
+O(n + i\lg{i})
+\stopformula
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+%p9-2
+\startPROBLEM
+（Weighted median）
+有 \m{n} 個互異元素 \m{x_1,x_2,\ldots,x_n}，其權重分別爲 \m{w_1,w_2,\ldots,w_n}，
+且 \m{\sum_{i=1}^{n}w_i=1}，{\EMP 帶權中位數}（較小的那個） \m{x_k} 滿足下列條件：
+\startformula
+\sum_{x_i<x_k}w_i < \frac{1}{2}
+\stopformula
+和
+\startformula
+\sum_{x_i>x_k}w_i \le \frac{1}{2}
+\stopformula
+
+例如，如果這些元素爲 \m{0.1,0.35,0.05,0.1,0.15,0.05,0.2}，
+且每個元素的權重與其值相等（即， \m{w_i=x_i}， \m{i=1,2,\ldots,7}），
+則中位數爲 0.1，但帶權中位數爲 0.2。
+\startigBase[a]
+\startitem
+討論：如果 \m{x_i} 的權重 \m{w_i=1/n}，其中 \m{i=1,2,\ldots,n}，則帶權中位數就是中位數。
+\stopitem
+
+\startANSWER
+如果所有權重均爲 \m{1/n}，則小於中位數的元素權重和爲 \m{\left\lfloor \frac{n-1}{2}\right\rfloor \frac{1}{n}}，
+大於中位數的元素權重和爲 \m{\left\lceil \frac{n-1}{2}\right\rceil \frac{1}{n}}。
+滿足帶權中位數的要求。
+\stopANSWER
+
+\startitem
+如何在最壞情況下以時間 \m{O(n\lg{n})} 計算 \m{n} 個元素的帶權中位數。
+\stopitem
+
+\startANSWER
+先對輸入進行排序，從左至右進行掃描，並累加各元素的權重，一旦權重累計值等於或超過 \m{1/2}，則對應元素即爲所求。
+\stopANSWER
+
+\startitem
+如何利用線性時間的中位數算法（如\refsection{linear_selection}中的 \ALGO{SELECT}）在最壞情況下能以時間 \m{\Theta(n)} 計算帶權中位數。
+\stopitem
+
+\startANSWER
+與 \ALGO{SELECT} 類似，只是目標不再是主元的位置，而是主元兩側元素權重的和。
+\stopANSWER
+\stopigBase
+
+郵局位置問題（post-office location problem）定義如下：
+有 \m{n} 個點 \m{p_1,p_2,\ldots,p_n}，其權重分別爲 \m{w_1,w_2,\ldots,w_n}。
+我們要找到一個點 \m{p} （不必非得是輸入中的元素），
+以使 \m{\sum_{i=1}^{n}w_i d(p,p_i)} 最小，
+其中 \m{d(a,b)} 是點 \m{a} 和點 \m{b} 間的距離。
+\startigBase[a,continue]
+\startitem
+討論：帶權中位數是解決一維郵局位置問題最好的方法，
+其中所有點都是實數， \m{d(a,b)=|a-b|}。
+\stopitem
+
+\startANSWER
+參考\refexercise{oil_well}，
+假定我們得到了最終答案，就是帶權中位數。
+這時無論是將結果左移還是右移，都將離加權和小於 \m{1/2} 的元素越來越近，
+而離加權和大於 \m{1/2} 的元素越來越遠，從而增大 \m{\sum_{i=1}^{n}w_i d(p,p_i)}。
+\stopANSWER
+
+\startitem
+如何解決二維郵局位置問題？其中每個點都是 \m{(x,y)} 坐標，
+兩個點 \m{a=(x_1,y_1)} 和 \m{b=(x_2,y_2)} 的距離爲{\EMP 曼哈頓距離（Manhattan distance）}，
+即 \m{d(a,b)=|x_1-x_2| + |y_1 - y_2|}。
+\stopitem
+
+\startANSWER
+根據曼哈頓距離的定義，可以將其分成相互獨立的兩部分 \m{d_x(a,b)=|x_1-x_2|} 和 \m{d_y(a,b)=|y_1-y_2|}，
+要想 \m{\sum_{i=1}^{n}w_i d(p,p_i)} 最小，即 \m{\sum_{i=1}^{n}w_i d_x(p,p_i)} 和 \m{\sum_{i=1}^{n}w_i d_y(p,p_i)} 都最小（\m{d_x} 和 \m{d_y} 均大於零）。
+因此我們只需針對 x 坐標和 y 坐標分別找出其帶權中位數即爲所求。
+\stopANSWER
+\stopigBase
+
+\stopPROBLEM
+
+%e9-3
+\startPROBLEM
+（Small order statistics）
+我們已經知道，用 \ALGO{SELECT} 找出 \m{n} 個元素中的第 \m{i} 個順序統計量，
+最壞情況所用的時間滿足 \m{T(n)=\Theta(n)}，
+但是 \m{\Theta} 所隱含的常數因子非常大。
+當 \m{i} 相對 \m{n} 比較小時，
+我們可以重新實現他，並將 \ALGO{SELECT} 作爲子過程，以減少最壞情況下的比較次數。
+\startigBase[a]
+\startitem
+設計一個算法，可以找出 \m{n} 個元素中第 \m{i} 小的元素，所用比較次數 \m{U_i(n)} 滿足：
+\startformula
+U_i(n)=\startmathcases
+\NC T(n) \NC 若 \m{i\ge n/2}； \NR
+\NC \left\lfloor n/2 \right\rfloor + U_i(\left\lceil n/2 \right\rceil) + T(2i) \NC 否則。 \NR
+\stopmathcases
+\stopformula
+（\hint 相互獨立的\m{\left\lfloor n/2\right\rfloor} 對元素比較開始，
+然後在規模更小的子集上進行遞迴）
+\stopitem
+
+\startANSWER
+修改過的 \ALGO{SELECT}，不但能找到第 \m{i} 個順序統計量，同時會劃分數列，找到 \m{i-1} 個更小的元素。
+\startigNum
+\item 如果 \m{i\ge n/2}，直接調用 \ALGO{SELECT}；
+\item 否則，將數列劃分成一對對元素，每一對元素間進行比較；
+\item 選取每一對元素中較小的那個，但是跟蹤另外一個（即保持成對的關聯）；
+\item 遞迴查找較小元素集合中的最小的 \m{i} 個元素，這樣連同每個元素所對應的元素，一共有 \m{2i} 個元素；
+\item 前 \m{i} 個順序統計量肯定在這 \m{2i} 個元素中，在這 \m{2i} 個元素上調用 \ALGO{SELECT}。結果即爲所求。
+\stopigNum
+其中第三步會將較小元素集合劃分成兩部分 \m{S_1} 和 \m{S_2}，
+在較大元素集合中分別對應 \m{B_1} 和 \m{B_2}，
+則 \m{S_1} 和 \m{B_1} 中的元素個數均爲 \m{i}，四個集合元素總數爲 \m{n}。
+由於 \m{S_2} 和 \m{B_2} 中的元素均大於 \m{S_1} 中的所有元素，
+即 \m{S_2} 和 \m{B_2} 中的元素在所有 \m{n} 個元素中排序的序號均大於 \m{i}。
+所以前 \m{i} 個順序統計量肯定在 \m{S_1} 和 \m{B_1} 中。
+\stopANSWER
+
+\startitem
+證明：如果 \m{i<n/2}，則 \m{U_i(n)=n+O(T(2i)\lg(n/i))}。
+\stopitem
+
+\startANSWER
+代入法：
+\startformula\startmathalignment
+\NC U_i(n)
+    \NC = \lfloor n/2 \rfloor + U_i(\lceil n/2 \rceil) + T(2i) \NR
+\NC \NC = \lfloor n/2 \rfloor + \lceil n/2 \rceil +
+             \O(T(2i)\lg(\lfloor n/2 \rfloor / i)) + T(2i) \NR
+\NC \NC = n + O(T(2i)\lg(n/i)) + T(2i) \NR
+\NC \NC = n + O(T(2i)\lg(n/i)) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startitem
+證明：如果 \m{i} 是小於 \m{n/2} 的常數，則 \m{U_i(n)=n+O(\lg{n})}。
+\stopitem
+
+\startANSWER
+\startformula\startmathalignment
+\NC U_i(n)
+    \NC = n + O(T(2i)\lg(n/i)) \NR
+\NC \NC = n + O(O(1)\lg(n/i)) \NR
+\NC \NC = n + O(\lg{n} - \lg{i}) \NR
+\NC \NC = n + O(\lg{n} - O(1)) \NR
+\NC \NC = n + O(\lg{n}) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startitem
+證明：如果 \m{i=n/k}，其中 \m{k\ge 2}，則 \m{U_i(n)=n+O(T(2n/k)\lg{k})}。
+\stopitem
+
+\startANSWER
+\startformula\startmathalignment
+\NC U_i(n)
+    \NC = n + O(T(2i)\lg(n/i)) \NR
+\NC \NC = n + O(T(2n/k)\lg(n/(n/k))) \NR
+\NC \NC = n + O(T(2n/k)\lg{k}) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+\startPROBLEM
+（Alternative analysis of randomized selection）
+在這個問題中，我們時用指示器隨機變量來分析 \ALGO{RANDOMIZED-SELECT} 過程，
+與節7.4.2 中分析 \ALGO{RANDOMIZED-QUICKSORT} 的方法類似。
+
+在快速排序的分析總，我們假設所有元素互異，
+並且將輸入數列 \m{A} 中的元素重命名爲 \m{z_1,z_2,\ldots,z_n}，
+其中 \m{z_i} 是第 \m{i} 小元素。
+因此，調用 \ALGO{RANDOMIZED-SELECT(A, 1, n, k)} 返回 \m{z_k}。
+
+對於 \m{1\le i < j \le n}，令
+\startformula
+X_{ijk}=I\{\text{在查找 \m{z_k} 的算法執行過程中會比較 \m{z_i} 和 \m{z_j}}\}
+\stopformula
+
+\startigBase[a]
+\startitem
+給出 \m{E[X_{ijk}]} 的表達式。
+（\hint 達式的值可能會隨 \m{i}、 \m{j} 和 \m{k} 的不同而不同。）
+\stopitem
+
+\startANSWER
+與快速排序的分析類似，盡管需要考慮 \m{k}。
+如果 \m{z_i} 和 \m{z_j} 中任意一個是包含 \m{i}、 \m{j} 和 \m{k} 的最小區間中的第一個，
+則要比較 \m{z_i} 和 \m{z_j}。準確的表達式依賴於 \m{k} 與 \m{i}、 \m{j} 的相對位置：
+\startformula
+E[X_{ijk}] = \startmathcases
+\NC 2 / (k - i + 1) \MC \text{若 } i < j \le k \NR
+\NC 2 / (j - i + 1) \MC \text{若 } i \le k \le j \NR
+\NC 2 / (j - k + 1) \MC \text{若 } k \le i < j \NR
+\stopmathcases
+\stopformula
+\stopANSWER
+
+\startitem
+在數列 \m{A} 中查找 \m{z_k} 時，令 \m{X_k} 指示總的比較次數。證明：
+\startformula
+E[X_k] \le 2 \left(
+       \sum_{i=1}^k \sum_{j=k}^n \frac{1}{j - i + 1} +
+       \sum_{j=k+1}^n \frac{j - k - 1}{j - k + 1} +
+       \sum_{i=1}^{k-2} \frac{k - i - 1}{k - i + 1}
+       \right)
+\stopformula
+\stopitem
+
+\startANSWER
+\startformula\startmathalignment
+\NC E[X_k]
+    \NC = \sum_{i=1}^{n-1}   \sum_{j=i+1}^n E[X_{ijk}] \NR
+\NC \NC = \sum_{i=1}^k       \sum_{j=i+1}^n E[X_{ijk}]
+            + \sum_{i=k+1}^{n-1} \sum_{j=i+1}^n E[X_{ijk}] \NR
+\NC \NC = \sum_{i=1}^k \left(\sum_{j=i+1}^{k-1}E[X_{ijk}]
+                                 + \sum_{j=k}^nE[X_{ijk}] \right)
+            + \sum_{i=k+1}^{n-1}\sum_{j=i+1}^nE[X_{ijk}] \NR
+\NC \NC = \sum_{i=1}^k       \sum_{j=i+1}^{k-1} E[X_{ijk}]
+            + \sum_{i=1}^k       \sum_{j=k}^n       E[X_{ijk}]
+            + \sum_{i=k+1}^{n-1} \sum_{j=i+1}^n     E[X_{ijk}] \NR
+\NC \NC = \sum_{i=1}^{k-2}   \sum_{j=i+1}^{k-1} E[X_{ijk}]
+            + \sum_{i=1}^k       \sum_{j=k}^n       E[X_{ijk}]
+            + \sum_{i=k+1}^{n-1} \sum_{j=i+1}^n     E[X_{ijk}] \NR
+\NC \NC = \sum_{i=1}^{k-2}   \sum_{j=i+1}^{k-1} \frac{2}{k - i + 1}
+            + \sum_{i=1}^k       \sum_{j=k}^n       \frac{2}{j - i + 1}
+            + \sum_{i=k+1}^{n-1} \sum_{j=i+1}^n     \frac{2}{j - k + 1} \NR
+\NC \NC = 2\left(
+                \sum_{i=1}^k       \sum_{j=k}^n       \frac{1}{j - i + 1}
+              + \sum_{i=k+1}^{n-1} \sum_{j=i+1}^n     \frac{1}{j - k + 1}
+              + \sum_{i=1}^{k-2}   \sum_{j=i+1}^{k-1} \frac{1}{k - i + 1}
+              \right) \NR
+\NC \NC = 2\left(
+                \sum_{i=1}^k       \sum_{j=k}^n       \frac{1}{j - i + 1}
+              + \sum_{i=k+1}^{n-1} \sum_{j=i+1}^n     \frac{1}{j - k + 1}
+              + \sum_{i=1}^{k-2}   \frac{k - i - 1}{k - i + 1}
+              \right) \NR
+\NC \NC = 2\left(
+                \sum_{i=1}^k       \sum_{j=k}^n       \frac{1}{j - i + 1}
+              + \sum_{j=k+2}^n     \sum_{i=k+1}^{j-1} \frac{1}{j - k + 1}
+              + \sum_{i=1}^{k-2}   \frac{k - i - 1}{k - i + 1}
+              \right) \qquad \text{(見下面)} \NR
+\NC \NC = 2\left(
+                \sum_{i=1}^k       \sum_{j=k}^n       \frac{1}{j - i + 1}
+              + \sum_{j=k+2}^n     \frac{j - k - 1}{j - k + 1}
+              + \sum_{i=1}^{k-2}   \frac{k - i - 1}{k - i + 1}
+              \right) \NR
+\NC \NC \le 2\left(
+                \sum_{i=1}^k       \sum_{j=k}^n       \frac{1}{j - i + 1}
+              + \sum_{j=k+1}^n     \frac{j - k - 1}{j - k + 1}
+              + \sum_{i=1}^{k-2}   \frac{k - i - 1}{k - i + 1}
+              \right) \NR
+\stopmathalignment\stopformula
+
+其中帶注釋的那一步：
+\startformula\startmathalignment
+\NC   \NC [k+1 \le i \le n - 1][i+1 \le j \le n] \NR
+\NC = \NC [k+1 \le i < i + 1 < j \le n] \NR
+\NC = \NC [k + 1 < j \le n][k + 1 \le i < j] \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startitem
+證明 \m{E[X_k]\le 4n}。
+\stopitem
+
+\startANSWER
+後兩項的和：
+\startformula
+\sum_{j=k+1}^n\frac{j-k-1}{j-k+1} + \sum_{i=1}^{k-2}\frac{k-i-1}{k-i+1}
+   \le \sum_{j=k+1}^n 1 + \sum_{i=1}^{k-2} 1
+   = n - k + k - 2
+   \le n
+\stopformula
+對於第一項，則可由下列矩陣來說明：
+\startformula\startmatrix
+\NC i\backslash j  \NC k \NC k+1 \NC \ldots \NC n-1 \NC n \NR
+\NC k  \NC 1 \NC \frac{1}{2} \NC \ldots \NC \frac{1}{n-k} \NC \frac{1}{n-k+1} \NR
+\NC k-1\NC \frac{1}{2} \NC \frac{1}{3} \NC \ldots \NC \frac{1}{n-k+1} \NC \frac{1}{n-k+2} \NR
+\NC \cdots \NC \cdots \NC \cdots\NC \ddots \NC \cdots \NC \cdots \NR
+\NC 2  \NC \frac{1}{k-1} \NC \frac{1}{k}   \NC \ldots \NC \frac{1}{n-2} \NC \frac{1}{n-1} \NR
+\NC 1  \NC \frac{1}{k}   \NC \frac{1}{k+1} \NC \ldots \NC \frac{1}{n-1} \NC \frac{1}{n}   \NR
+\stopmatrix\stopformula
+上面矩陣中，行坐標爲 \m{i=k,k-1,\ldots,1}，列坐標爲 \m{j=k,k+1,\ldots,n}，
+矩陣元素即爲 \m{\frac{1}{j - i + 1}}。
+左下到右上斜對角線上的元素相同均爲 \m{\frac{1}{m}} 的形式，其中 \m{m=1,2,\ldots,n}。
+每個 \m{\frac{1}{m}} 的個數都小於等於 \m{m}。因此整個矩陣元素的和小於 \m{n}。
+
+因此：
+\startformula
+E[X_k]\le
+  2\left(\sum_{i=1}^k       \sum_{j=k}^n       \frac{1}{j - i + 1}
+       + \sum_{j=k+1}^n     \frac{j - k - 1}{j - k + 1}
+       + \sum_{i=1}^{k-2}   \frac{k - i - 1}{k - i + 1}
+   \right) \le 2(n+n) = 4n
+\stopformula
+\stopANSWER
+
+\startitem
+證明：假設數列 \m{A} 中的所有元素互異，則 \ALGO{RANDOMIZED-SELECT} 的期望運行時間爲 \m{O(n)}。
+\stopitem
+
+\startANSWER
+\ALGO{RANDOMIZED-SELECT} 中的運算跟比較次數成線性關系，
+而比較次數的期望值又和 \m{n} 成線性關系，
+因此期望運行時間爲線性的 \m{O(n)}。
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+\stopsubject%Problems

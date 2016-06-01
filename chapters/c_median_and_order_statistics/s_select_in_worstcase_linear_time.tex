@@ -1,0 +1,235 @@
+\startsection[
+  title={Selection in worst-case linear time},
+  reference=section:linear_selection,
+]
+
+\startEXERCISE
+在算法 \ALGO{SELECT} 中，輸入元素被分爲每組 5 個元素。
+如果他們被分爲每組 7 個元素，該算法人然會是線性時間嗎？
+證明：如果分成每組 3 個元素， \ALGO{SELECT} 的運行時間不是線性的。
+\stopEXERCISE
+
+\startANSWER
+每組 7 個元素仍然是線性的。每次劃分時，小於或大於 \m{x} 的元素數組至少爲：
+\startformula
+4 \left(\left\lceil \frac{1}{2} \left\lceil \frac{n}{7} \right\rceil \right\rceil
+           - 2 \right) \ge \frac{2n}{7} - 8
+\stopformula
+
+劃分將問題規模減小爲最大 \m{5n/7+8}。則有如下遞迴式：
+\startformula
+T(n) = \startmathcases
+ \NC O(1) \MC \text{若 } n < n_0 \NR
+ \NC T(\lceil n/7 \rceil) + T(5n/7 + 8) + O(n) \MC \text{若 } n \ge n_0 \NR
+\stopmathcases
+\stopformula
+
+猜測 \m{T(n)\le cn}，令非遞迴項爲 \m{an}：
+\startformula\startmathalignment
+\NC T(n) \NC \le c\lceil n/7 \rceil + c(5n/7 + 8) + an \NR
+\NC \NC \le cn/7 + c + 5cn/7 + 8c + an \NR
+\NC \NC = 6cn/7 + 9c + an \NR
+\NC \NC = cn + (-cn/7 + 9c + an) \NR
+\NC \NC \le cn \NR
+\NC \NC = O(n) \NR
+\stopmathalignment\stopformula
+
+當 \m{(-cn/7 + 9c + an) \le 0} 時，最後一步成立。因此：
+\startformula\startmathalignment[n=1]
+\NC -cn/7 + 9c + an \le 0 \NR
+\NC \Downarrow \NR
+\NC c(n/7 - 9) \ge an \NR
+\NC \Downarrow \NR
+\NC \frac{c(n - 63)}{7} \ge an \NR
+\NC \Downarrow \NR
+\NC c \ge \frac{7an}{n - 63} \NR
+\stopmathalignment\stopformula
+
+如果令 \m{n_0=126}， \m{n\le n_0}，則 \m{n/(n-63)\le 2}。因此只需 \m{c\ge 14a} 即可。
+
+而對於 3 個一組，則大於或小於中位數的中位數的元素數目至少爲：
+\startformula
+2 \left(\left\lceil \frac{1}{2} \left\lceil \frac{n}{3} \right\rceil \right\rceil
+           - 2 \right) \ge \frac{n}{3} - 4
+\stopformula
+
+遞迴式如下：
+\startformula
+T(n) = T(\lceil n/3 \rceil) + T(2n/3 + 4) + O(n)
+\stopformula
+
+用代入法證明 \m{T(n)=\omega(n)}。猜測 \m{T(n) > cn}，令非遞迴項爲 \m{an}：
+\startformula\startmathalignment
+\NC T(n) \NC > c\lceil n/3 \rceil + c(2n/3 + 2) + an \NR
+\NC \NC > cn/3 + c + 2cn/3 + 2c + an \NR
+\NC \NC = cn + 3c + an \qquad c>0,a>0,n>0\NR
+\NC \NC > cn \NR
+\NC \NC = \omega(n) \NR
+\stopmathalignment\stopformula
+
+上式對所有 \m{c>0} 都成立。
+\stopANSWER
+
+% e9.3-2
+\startEXERCISE[exercise:partition_1_4]
+分析 \ALGO{SELECT}，並證明：
+如果 \m{n\ge 140}，則至少 \m{\lceil n/4 \rceil} 個元素大於中位數的中位數 \m{x}，
+至少 \m{\lceil n/4 \rceil} 個元素小於 \m{x}。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment[n=1]
+\NC \frac{3n}{10} - 6 \ge \left\lceil \frac{n}{4} \right\rceil \NR
+\NC \Downarrow \NR
+\NC \frac{3n}{10} - 6 \ge \frac{n}{4} + 1 \NR
+\NC \Downarrow \NR
+\NC \frac{3n}{10} - 7 \ge \frac{n}{4} \NR
+\NC \Downarrow \NR
+\NC 12n - 280 \ge 10n \NR
+\NC \Downarrow \NR
+\NC 2n \ge 280 \NR
+\NC \Downarrow \NR
+\NC n \ge 140 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e9.3-3
+\startEXERCISE
+假設所有元素都是互異的，說明在最壞情況下，
+如何才能使快速排序的運行時間爲 \m{O(n\lg{n})}。
+\stopEXERCISE
+
+\startANSWER
+用 \ALGO{SELECT} 的方式重寫 \ALGO{PARTITION}，
+則時間變爲 \m{O(n)}；
+但是當 \m{n} 足夠大時，最小的劃分將是整個輸入的四分之一（參見\refexercise{partition_1_4}）。
+遞迴式爲：
+\startformula
+T(n)=T(n/4)+T(3n/4)+O(n)
+\stopformula
+由\refexercise{partition_alpha} 可知，解爲 \m{\Theta(n\lg{n})}。
+
+這樣我們就可以改善快速排序的漸進時間，雖然常數因子太大以致不太實用。
+
+另一種方式就是在線性時間內找到中位數（用 \ALGO{SELECT}）並以此進行劃分，
+這樣會得到一個均勻的劃分。
+\stopANSWER
+
+%e9.3-4
+\startEXERCISE\DIFFICULT
+對一個包含 \m{n} 個元素的集合，
+假設一個算法只使用比較來確定第 \m{i} 小的元素，證明：
+無需額外的比較操作，他也能找到小於他的 \m{i-1} 個元素和大於他的 \m{n-i} 個元素。
+\stopEXERCISE
+
+\startANSWER
+爲了找到第 \m{i} 小的元素，任何一個算法都需要通過某種方式找到小於他的 \m{i-1} 個元素，
+以及大於他的 \m{n-i} 個元素。
+
+通過比較可以將輸入劃分成兩個集合，小於目標元素的在一個集合中，大於目標元素的在另一個集合中，
+這兩個集合即爲所求。（快速排序中的劃分）
+\stopANSWER
+
+%e9.3-5
+\startEXERCISE
+假設你已經有了一個最壞情況下是線性時間的用於求解中位數的“黑箱”子過程。
+設計一個能在線性時間內解決任意順序統計量的選擇問題算法。
+\stopEXERCISE
+
+\startANSWER
+如果 \m{i=\left\lceil n/2\right\rceil}，則只需調用一次子過程，顯然是線性時間。
+否則，只需針對所劃分成的兩部分中的一個調用子過程（視 \m{i} 的大小而定），
+因此有如下遞迴式：
+\startformula
+T(n)=T(n/2)+O(n)
+\stopformula
+
+由主定理可知上限爲 \m{O(n)}。
+\stopANSWER
+
+%e9.3-6
+\startEXERCISE
+對一個包含 \m{n} 個元素的集合來說，第 \m{k} 個{\EMP 分位數}是指
+能把排序後的集合分成 \m{k} 個大小相同的集合的 \m{k-1} 個順序統計量。
+給出一個能找出某一集合的 \m{k} 分位數的 \m{O(n\lg{k})} 時間的算法。
+\stopEXERCISE
+
+\startANSWER
+\startigNum
+\item 如果 \m{k=1}，則返回空；
+\item 如果 \m{k} 是偶數，我們先找到中位數，用中位數將集合劃分成兩部分，
+然後對兩個規模爲 \m{\left\lfloor n/2 \right\rfloor} 的子問題求解，最後加上中位數即可；
+\item 如果 \m{k} 是奇數，則先找到 \m{\left\lfloor k/2\right\rfloor} 和 \m{\left\lceil k/2\right\rceil} 兩個邊界，
+然後對兩個規模均小於 n/2 的子問題求解。
+\stopigNum
+
+最壞情況的遞迴式爲：
+\startformula
+T(n,k)=2T(\left\lfloor n/2\right\rfloor,k/2)+O(n)
+\stopformula
+其解爲 \m{O(n\lg{k})}。
+
+如果 \m{n=ak+k-1}，其中 \m{a} 爲正整數，毫無疑問，所有子集合元素個數均爲 \m{a}，
+否則需要注意舍入問題，所有子集合元素個數差異不能超過 1。
+\stopANSWER
+
+%e9.3-7
+\startEXERCISE
+設計一個 \m{O(n)} 時間的算法，對於一個給定的包含 \m{n} 個互異元素的結合 \m{S} 和一個正整數 \m{k\le n}，
+該算法能夠確定 \m{S} 中最接近中位數的 \m{k} 個元素。
+\stopEXERCISE
+
+\startANSWER
+\startigNum
+\item 先在線性時間內找出中位數；
+\item 計算出其他所有元素與中位數的差異；
+\item 在上一步結果中，以線性時間找出第 \m{k} 個順序統計量，
+\item 距離小於等於第 \m{k} 個順序統計量的元素即爲所求。
+\stopigNum
+\stopANSWER
+
+%e9.3-8
+\startEXERCISE[exercise:9.3-8]
+設 \m{X[1..n]} 和 \m{Y[1..n]} 爲兩個有序數列，
+每個都包含 \m{n} 個元素。
+請設計一個 \m{O(\lg{n})} 時間的算法來找出數列 \m{X} 和 \m{Y} 中所有 \m{2n} 個元素的中位數。
+\stopEXERCISE
+
+\startANSWER
+\startigNum
+\item 如果 \m{n=1}，我們選擇小的那個；
+\item 否則，分別找出兩個數列的中位數；
+\item 中位數較小的那個數列留下大於中位數的元素，另一個數列留下小於其中位數的元素，
+這樣問題規模就變爲 \m{\left\lfloor n/2 \right\rfloor}；
+\item 求兩個新數列的中位數。
+\stopigNum
+
+遞迴式爲：
+\startformula
+T(n)=T(n/2) + O(n)
+\stopformula
+\stopANSWER
+
+%e9.3-9
+\startEXERCISE[exercise:oil_well]
+Olay 教授是一家石油公司的顧問。
+這家公司正在計劃建造一條從東到西的大型輸油管道，
+這一管道將穿越一個有 \m{n} 口油井的油田。
+公司希望每口油井都有一條管道支線沿着最短路徑連接到主管道（方向或南或北），如下圖所示。
+給定每口油井的 \m{x} 和 \m{y} 坐標，
+教授應該如何選擇主管道的最優位置，使得各支線的總長度最小？
+證明：該最優位置可以在線性時間內確定。
+
+\externalfigure[output/e9_3_9-1]
+\stopEXERCISE
+
+\startANSWER
+只需關心 \m{y} 坐標， \m{x} 坐標沒有影響。
+如果 \m{n} 是奇數，則選取所有油井 \m{y} 坐標的中位數，作爲主管道的 \m{y} 坐標，
+即主管道穿過此油井。這樣主管道兩側的油井數目相同。
+對於任兩口油井而言，只要主管道在他們中間通過，那麼這兩口油井的支線管道總長度是不變的。
+
+如果 \m{n} 是偶數，則需要所有油井 \m{y} 坐標的兩個中位數，主管道的 \m{y} 坐標在這兩個 \m{y} 坐標中間即可。
+\stopANSWER
+
+\stopsection

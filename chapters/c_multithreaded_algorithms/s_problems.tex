@@ -2,4 +2,162 @@
   title={Problems},
 ]
 
+%p27-1
+\startPROBLEM
+（Implementing parallel loops using nested parallelism）
+考慮下面多線程算法，將兩個 \m{n} 元素數列 \m{A[1..n]} 和 \m{B[1..n]} 相加，
+並將結果存放在 \m{C[1..n]} 中：
+
+\CLRSH{SUM-ARRAYS(A,B,C)}
+\startCLRS
+parallel for i = 1 to A.length
+	C[i] = A[i] + B[i]
+\stopCLRS
+
+\startigBase[a]\startitem
+按照 \ALGO{MAT-VEC-MAIN-LOOP} 的樣式，
+使用嵌套並行（spawn 和 sync）改寫 \ALGO{SUM-ARRAYS} 中的並行循環。
+分析你的實現的並行度。
+\stopitem\stopigBase
+
+\startANSWER
+\CLRSH{MAT-VEC-MAIN-LOOP(A,B,C,l,r)}
+\startCLRS
+if l == r
+	c[l] = A[l] + B[l]
+mid = (l + r) / 2
+spawn MAT-VEC-MAIN-LOOP(A,B,C, l, mid)
+MAT-VEC-MAIN-LOOP(A,B,C, mid+1, r)
+sync
+\stopCLRS
+
+\CLRSH{SUM-ARRAYS(A,B,C)}
+\startCLRS
+len = A.length
+MAT-VEC-MAIN-LOOP(A,B,C, 1, len)
+\stopCLRS
+\stopANSWER
+
+考慮並行循環的另一種實現方式，其中包含了一個指定的 grainsize：
+
+\CLRSH{SUM-ARRAYS'(A,B,C)}
+\startCLRS
+n = A.length
+grainsize = ?		// to be determined
+r = /BTEX \m{\left\lceil n / grainsize \right\rceil} /ETEX
+for k = 0 to r-1
+	spawn /BTEX \CLRSH{ADD-SUBARRAY(A,B,C,k\cdot grainsize + 1, \min((k+1)\cdot grainsize, n))} /ETEX
+sync
+\stopCLRS
+
+\CLRSH{ADD-SUBARRAY(A,B,C,i,j)}
+\startCLRS
+for k = i to j
+	C[k] = A[k] + B[k]
+\stopCLRS
+
+\startigBase[continue]\startitem
+假定置 \m{grainsize = 1}，上述實現的並行度是多少？
+\stopitem\stopigBase
+
+\startANSWER
+\m{T_1 = \Theta(n), T_{\infty} = \Theta(n), T_1/T_{\infty} = 1}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出 \ALGO{SUM-ARRAYS'} 的持續時間公式，用 \m{n} 和 \m{grainsize} 表示，
+求解 \m{grainsize}，使得並行度最大。
+\stopitem\stopigBase
+
+\startANSWER
+\m{grainsize = \sqrt{n}, T_{\infty} = n/grainsize + grainsize = 2\sqrt{n}}。
+\stopANSWER
+
+\stopPROBLEM
+
+%p27-2
+\startPROBLEM
+（Saving temporary space in matrix multiplication）
+ \ALGO{P-MATRIX-MULTIPLY-RECURSIVE} 的缺點是需要分配一個 \m{n\times n} 的臨時矩陣 \m{T}，
+不利於 \m{\Theta} 記號中的常數因子。
+然而 \ALGO{P-MATRIX-MULTIPLY-RECURSIVE} 有很高的並行度。
+例如，如果胡略符號 \m{\Theta} 中的常數因子，
+對於 \m{1000\times 1000} 的矩陣相乘，
+其並行度接近 \m{1000^3 / 10^2 = 10^7}，
+因爲 \m{\lg 1000 \approx 10}。
+絕大多數並行計算機的處理器數目都遠小於 1000 萬。
+
+\startigBase[a]\startitem
+描述一個多線程算法，該算法不需要臨時矩陣 \m{T} 且持續時間以 \m{\Theta(n)} 增長。
+（\hint 根據 \ALGO{P-MATRIX-MULTIPLY-RECURSIVE} 中的方法，
+計算 \m{C=C+AB}，但可以並行初始化 \m{C} 並且，
+注意在合適的地方插入 sync 語句。）
+\stopitem\stopigBase
+
+\startANSWER
+並行初始化 \m{C=0}，用時 \m{\Theta(\lg n)}，
+在第 4 個 spawn \m{c_{11} = c_{11} + a_{11}\cdot b_{11}} 後插入 sync，
+ \m{T_{\infty}(n) = 2T_{\infty}(n/2) + \Theta(\lg n) = \Theta(n)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出該算法的工作量和持續時間的遞歸式，並求解。
+\stopitem\stopigBase
+
+\startANSWER
+\m{T_1 = \Theta(n^3), T_{\infty} = \Theta(n)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+分析該算法的並行度。
+忽略符號 \m{\Theta} 中的常數因子，
+估算 \m{1000\times 1000} 矩陣上的並行度。
+並與 \ALGO{P-MATRIX-MULTIPLY-RECURSIVE} 的並行度進行比較。
+\stopitem\stopigBase
+
+\startANSWER
+並行度： \m{T_1/T_{\infty} = \Theta(n^2) = 1000^2 = 10^6}。
+
+絕大多數計算機的處理器個數遠小於 100 萬。
+\stopANSWER
+\stopPROBLEM
+
+%p27-3
+\startPROBLEM
+（Multithreaded matrix algorithms）
+\startigBase[a]\startitem
+參考\refsection{solve_system_of_linear_equation} 中的 \ALGO{LU-DECOMPOSITION}，
+給出其多線程實現的僞碼。使其儘可能並行，分析其工作量、持續時間和並行度。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+對\refsection{solve_system_of_linear_equation} 中的 \ALGO{LUP-DECOMPOSITION} 做同樣處理。
+\stopitem\stopigBase
+\stopPROBLEM
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+對\refsection{solve_system_of_linear_equation} 中的 \ALGO{LUP-SOLVE} 做同樣處理。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+參考等式 28.13 對稱正定矩陣求逆，對其做同樣處理。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
 \stopsubject%Problems

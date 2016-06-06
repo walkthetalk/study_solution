@@ -1,0 +1,90 @@
+\section{Performance of quicksort}
+
+\startEXERCISE
+用代入法證明：正如本節開頭所提到的那樣，遞迴式 \m{T(n)=T(n-1)+\Theta(n)} 的解爲：
+\startformula
+T(n)=\Theta(n^2)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+令 \m{\Theta(n)} 爲 \m{c_2 n}，猜測 \m{T(n)\le c_1 n^2}：
+\startformula\startmathalignment
+\NC T(n) \NC=   T(n-1) + c_2n \NR
+\NC      \NC\le c_1(n-1)^2 + c_2n \NR
+\NC      \NC=   c_1n^2 - 2c_1n + c_1 + c_2n \qquad (2c_1 > c_2, n \ge c_1/(2c_1 - c_2))\NR
+\NC      \NC\le c_1n^2 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+當數列 \m{A} 包含的元素都具有相同值時， \ALGO{QUICKSORT} 的時間復雜度時什麼？
+\stopEXERCISE
+
+\startANSWER
+時間復雜度爲 \m{\Theta(n^2)}，因爲 \ALGO{PARTITION} 時總有一邊爲空（參見\refexercise{same_partition}）。
+\stopANSWER
+
+\startEXERCISE
+證明：當數列 \m{A} 包含的元素不同，且按降序排列時， \ALGO{QUICKSORT} 的時間復雜度爲 \m{\Theta(n^2)}。
+\stopEXERCISE
+
+\startANSWER
+\ALGO{PARTITION} 總是返回 \m{p}，即總有一邊是空。
+遞迴式仍爲 \m{T(n)=T(n-1)+\Theta(n)}。
+（即使 {\EMP if} 塊內執行不到， {\EMP for} 循環的執行次數不變，仍是 \m{\Theta(n)}。）
+\stopANSWER
+
+\startEXERCISE
+銀行一般會按照交易時間記錄某一賬戶的交易情況。
+但是，很多人卻希望收到的銀行張但是按照支票號碼的順序排列。
+這是因爲，人們通常都是按照支票號碼的順序來開出支票的，
+而商人也通常都是根據支票號碼的順序兌付支票。
+這一問題是將按交易時間排序的序列轉換成按支票號排序的序列，
+他實質上是一個對幾乎有序的輸入序列進行排序的問題。
+請證明：在這個問題上， \ALGO{INSERTION-SORT} 的性能往往要優於 \ALGO{QUICKSORT}。
+\stopEXERCISE
+
+\startANSWER
+\ALGO{INSERTION-SORT} 的時間復雜度爲 \m{\Theta(n+d)}，其中 \m{d} 爲逆序對的數目。
+在本例中， \m{d} 的值幾乎爲 0，因此插入排序的時間幾乎是線性的。
+
+而在基本有序的情況下，大部分 \m{PARTITION} 都會出現一邊爲空的情況。
+從而使得 \ALGO{QUICKSORT} 所用時間復雜度接近 \m{\Theta(n^2)}。
+\stopANSWER
+
+\startEXERCISE
+假設快速排序的每一層所做的劃分比例都是 \m{1-\alpha : \alpha}，
+其中 \m{0<\alpha\le 1/2} 且爲常數。
+證明：在相應的遞迴樹中，葉子節點的最小深度大約是 \m{-\lg{n}/\lg{\alpha}}，
+最大深度大約是 \m{-\lg{n}/\lg(1-\alpha)}（無需考慮整數舍入問題）。
+\stopEXERCISE
+
+\startANSWER
+樹的最小深度是 \m{n\alpha^x\le 1} 的解：
+\startformula\startmathalignment[n=1]
+\NC n\alpha^x \le 1 \NR
+\NC \Downarrow \NR
+\NC \alpha^x \le \frac 1 n \NR
+\NC \Downarrow \NR
+\NC x \ge \log_{\alpha}\frac{1}{n} \NR
+\NC \Downarrow \NR
+\NC \log_{\alpha}\frac{1}{n} = \log_{1/\alpha}
+                             = \frac{\lg{n}}{\lg(1/\alpha)}
+                             = - \frac{\lg{n}}{\lg{\alpha}} \NR
+\stopmathalignment\stopformula
+
+類似，最大深度爲 \m{\log_{1/(1-\alpha)}n = - \frac{\lg{n}}{\lg(1-\alpha)}}。
+\stopANSWER
+
+\startEXERCISE[exercise:const_part_probability]\DIFFICULT
+證明：在一個隨機輸入數列上，對於任何常數 \m{0<\alpha\le 1/2}，
+ \ALGO{PARTITION} 產生比 \m{1-\alpha : \alpha} 更平衡的劃分的概率約爲 \m{1-2\alpha}。
+\stopEXERCISE
+
+\startANSWER
+將元素劃分成三部分，最小的 \m{\alpha n} 個元素、最大的 \m{\alpha n} 個元素，
+還有 \m{(1-2\alpha)n} 個中間值元素。
+只有當 \ALGO{PARTITION} 所選的主元處於最後一個集合中時，所的劃分才比 \m{1-\alpha : \alpha} 更平衡。
+其概率爲 \m{(1-2\alpha)n / n = (1-2\alpha)}。
+\stopANSWER

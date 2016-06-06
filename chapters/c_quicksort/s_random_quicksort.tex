@@ -1,0 +1,34 @@
+\startsection[
+  reference=section:rand_quicksort,
+  title={A randomized version of quicksort},
+]
+
+\startEXERCISE
+爲什麼我們分析隨機化算法的期望運行時間，而不是其最壞運行時間？
+\stopEXERCISE
+
+\startANSWER
+因爲最壞情況不會由特定輸入觸發，而時隨機的。
+即無法以可信的方式觸發最壞情況，但是他以一定概率包含在期望運行時間內。
+\stopANSWER
+
+\startEXERCISE
+在 \ALGO{RANDOMIZED-QUICKSORT} 的運行過程中，
+在最壞情況下，隨機數生成器 \ALGO{RANDOM} 被調用了多少次？
+在最好情況下呢？
+以 \m{\Theta} 符號的形式給出答案。
+\stopEXERCISE
+
+\startANSWER
+最壞情況下，調用 \ALGO{RANDOM} 的次數爲：
+\startformula
+T(n)=T(n-1)+1=n=\Theta(n)
+\stopformula
+而最好情況則爲：
+\startformula
+T(n)=2T(n/2)+1=\Theta(n)
+\stopformula
+不用驚訝，因爲至少由三分之一的元素都會用作主元。
+\stopANSWER
+
+\stopsection

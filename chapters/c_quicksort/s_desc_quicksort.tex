@@ -1,0 +1,69 @@
+\startsection[
+  reference=section:desc_quicksort,
+  title={Description of quicksort},
+]
+
+\startEXERCISE
+參照圖 7-1 的方法，說明 \ALGO{PARTITION} 在數列 \m{A = \langle 13, 19, 9, 5, 12, 8, 7, 4, 21, 2, 6, 11 \rangle} 上的操作過程。
+\stopEXERCISE
+
+\startANSWER
+{\externalfigure[output/e7_1_1-1]}
+{\externalfigure[output/e7_1_1-2]}
+{\externalfigure[output/e7_1_1-3]}
+{\externalfigure[output/e7_1_1-4]}
+{\externalfigure[output/e7_1_1-5]}
+{\externalfigure[output/e7_1_1-6]}
+{\externalfigure[output/e7_1_1-7]}
+{\externalfigure[output/e7_1_1-8]}
+{\externalfigure[output/e7_1_1-9]}
+{\externalfigure[output/e7_1_1-10]}
+{\externalfigure[output/e7_1_1-11]}
+{\externalfigure[output/e7_1_1-12]}
+{\externalfigure[output/e7_1_1-13]}
+\stopANSWER
+
+\startEXERCISE[exercise:same_partition]
+當數列 \m{A[p..r]} 中的元素都相同時， \ALGO{PARTITION} 返回的 \m{q} 值是多少？
+修改 \ALGO{PARTITION}，使得當數列 \m{A[p..r]} 中所有元素的值都相同時， \m{q=\lfloor (p+r)/2\rfloor}。
+\stopEXERCISE
+
+\startANSWER
+元素都相同時返回的值爲 \m{r}。
+
+\CLRSH{PARTITION'(A, p, r)}
+\startCLRS
+x = A[r]
+i = p - 1
+for j = p to r - 1
+	if A[j] <= x
+		i = i + 1
+		exchange A[i] with A[j]
+i = i + 1
+exchange A[i] with A[r]
+
+if i = r
+	return ⌊(p + r) / 2⌋
+return i
+\stopCLRS
+\stopANSWER
+
+\startEXERCISE
+證明：在規模爲 \m{n} 的子數列上， \ALGO{PARTITION} 的時間復雜度爲 \m{\Theta(n)}。
+\stopEXERCISE
+
+\startANSWER
+{\EMP for} 循環的次數爲 \m{r - 1 - p = \Theta(n)}。
+最壞情況下，每次循環都會執行 {\EMP if} 塊，需要常數時間；循環外的語句也需要常數隨時間。
+因此時間復雜度爲 \m{\Theta(n)}。
+\stopANSWER
+
+\startEXERCISE
+修改 \ALGO{QUICKSORT}，使其能以非遞增方式配需。
+\stopEXERCISE
+
+\startANSWER
+只需修改 \ALGO{PARTITION} 中第 4 行的比較條件。
+\stopANSWER
+
+\stopsection

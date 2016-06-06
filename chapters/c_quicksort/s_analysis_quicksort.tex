@@ -1,0 +1,132 @@
+\section{Analysis of quicksort}
+
+\startEXERCISE
+證明遞迴式：
+\startformula
+T(n) = \max_{0 \le q \le n-1} (T(q) + T(n-q-1)) + \Theta(n)
+\stopformula
+的解爲 \m{T(n)=\Omega(n^2)}。
+\stopEXERCISE
+
+\startANSWER
+猜測 \m{T(n)\ge cn^2-2n}：
+\startformula\startmathalignment
+\NC T(n) \NC=   \max_{0 \le q \le n-1} (T(q) + T(n-q-1)) + \Theta(n) \NR
+\NC      \NC\ge \max_{0 \le q \le n-1} (cq^2 - 2q + c(n-q-1)^2 - 2n - 2q -1) + \Theta(n) \NR
+\NC      \NC\ge c\max_{0 \le q \le n-1} (q^2 + (n-q-1)^2 - (2n + 4q + 1)/c) + \Theta(n) \NR
+\NC      \NC\ge cn^2 - c(2n-1) + \Theta(n) \NR
+\NC      \NC\ge cn^2 - 2cn + 2c \qquad (c \le 1) \NR
+\NC      \NC\ge cn^2 - 2n \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明：在最好情況下，快速排序的運行時間爲 \m{\Omega(n\lg{n})}。
+\stopEXERCISE
+
+\startANSWER
+最好情況下運行時間爲：
+\startformula
+T(n)=2T(n/2)+\Theta(n)
+\stopformula
+由主定理解得 \m{T(n)=\Theta(n\lg{n})}。
+\stopANSWER
+
+\startEXERCISE
+證明：在 \m{q=0, 1, \ldots, n-1} 區間內，當 \m{q=0} 或 \m{q=n-1} 時，
+ \m{q^2+(n-q-1)^2} 取得最大值。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC f(q)  \NC= q^2 + (n - q - 1)^2 \NR
+\NC f'(q) \NC= 2q - 2(n - q - 1) = 4q - 2n + 2 \NR
+\NC f''(q)\NC= 4 \NR
+\stopmathalignment\stopformula
+當 \m{q=\frac{1}{2}n-\frac{1}{4}} 時， \m{f'(q)=0}。
+\m{f'(q)} 是連續的。
+由於 \m{\forall q : f''(q) > 0}，所以在 \m{f'(q) =0} 的左邊 \m{f'(q)<0}，
+在 \m{f'(q) =0} 的右邊 \m{f'(q)>0}。
+即 \m{f(q)} 在 \m{f'(q)=0} 時取得最小值，左邊遞減，右邊遞增。
+所以 \m{q} 取兩端的值時， \m{f(q)} 取得最大值。
+\stopANSWER
+
+\startEXERCISE
+證明： \ALGO{RANDOMIZED-QUICKSORT} 期望運行時間時 \m{\Omega(n\lg{n})}。
+\stopEXERCISE
+
+\startANSWER
+與比較次數期望值的推理類似，只是方向不同：
+\startformula\startmathalignment
+\NC E[X] \NC=   \sum_{i=1}^{n-1} \sum_{j=i+1}^n \frac{2}{j-i+1} \NR
+\NC      \NC=   \sum_{i=1}^{n-1} \sum_{k=1}^{n-i} \frac{2}{k + 1} \qquad (k \ge 1) \NR
+\NC      \NC\ge \sum_{i=1}^{n-1} \sum_{k=1}^{n-i} \frac{2}{2k} \NR
+\NC      \NC\ge \sum_{i=1}^{n-1} \Omega(\lg{n}) \NR
+\NC      \NC=   \Omega(n\lg{n}) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+當輸入數據已經“幾乎有序”時，插入排序速度很快。
+在實際應用中，我們可以利用這一特點來提高快速排序的速度。
+當堆一個長度小於 \m{k} 的子數列調用快速排序時，讓他直接返回。
+當上層的快速排序調用返回後，對整個數組運行插入排序來完成排序過程。
+證明：這一排序算法的期望時間復雜度爲 \m{O(nk+n\lg(n/k))}。
+分別從理論和實踐的角度說明我們應該如何選擇 \m{k}。
+\stopEXERCISE
+
+\startANSWER
+在所推薦的算法中，遞迴在 \m{\lg(n/k)} 層處終止，
+期望運行時間爲 \m{O(n\lg(n/k))}。
+但是還有 \m{n/k} 個，（最大）長度爲 \m{k}，沒有排序的子數列。
+由插入排序的性質可知，他會將一個個子數列按順序排序。
+即所有子數列的時間復雜度是相同的： \m{\frac{n}{k}O(k^2)=O(nk)}。
+
+理論上，求解 \m{k} 時我們可以忽略常數因子：
+\startformula\startmathalignment[n=1]
+\NC n\lg{n} \ge nk + n\lg{n/k} \NR
+\NC \Downarrow \NR
+\NC \lg{n} \ge k + \lg{n} - \lg{k} \NR
+\NC \Downarrow \NR
+\NC \lg{k} \ge k \NR
+\stopmathalignment\stopformula
+但這是不可能的。
+
+而如果加上常數因子，則：
+\startformula\startmathalignment[n=1]
+\NC c_qn\lg{n} \ge c_ink + c_qn\lg(n/k) \NR
+\NC \Downarrow \NR
+\NC c_q\lg{n} \ge c_ik + c_q\lg{n} - c_q\lg{k} \NR
+\NC \Downarrow \NR
+\NC \lg{k} \ge \frac{c_i}{c_q}k \NR
+\stopmathalignment\stopformula
+這意味着有解。進一步，可能還要考慮低階項。
+
+在實踐中，應當通過實驗來確定 \m{k}。
+\stopANSWER
+
+\startEXERCISE[exercise:random_three_median]
+考慮對 \ALGO{PARTITION} 過程做這樣的修改：
+從數列 \m{A} 中隨機選出三個元素，
+並用這三個元素的中位數（即這三個元素按大小排在中間的值）對數組進行劃分。
+求以 \m{\alpha} 的函數形式表示的、最壞劃分比例爲 \m{\alpha:(1-\alpha)} 的近似概率，
+其中 \m{0<\alpha<1}。
+\stopEXERCISE
+
+\startANSWER
+簡單起見，假定可以重復選擇同一元素。同樣假定 \m{0<\alpha\le 1/2}。
+
+將元素按大小分成三部分，最小的 \m{\alpha n} 個元素，最大的 \m{\alpha n} 個元素，
+還有大小處於中間的 \m{1-2\alpha n} 個元素。
+任選一元素位於最小那部分中的概率爲 \m{\alpha n/n = \alpha}。
+如果恰好有兩個元素在最小的那部分中，其概率爲 \m{\alpha^2(1-\alpha)}。
+如果三個元素均在最小的那部分中，其概率爲 \m{\alpha^3}。
+前者共有三種可能（三個元素中任一元素不在最小那部分中），後者只有一種可能，
+總的概率爲 \m{3\alpha^2(1-\alpha)+\alpha^3 = 3\alpha^2-2\alpha^3}。
+最小那部分與最大那部分類似，將前面所列情況中最大、最小互換，其概率不變。
+這樣這些情況總的概率爲 \m{(3\alpha^2-2\alpha^3) \times 2 = 6\alpha^2-4\alpha^3}。
+這些情況所得劃分均比 \m{\alpha:(1-\alpha)} 要糟糕，所以更好劃分的概率爲：
+\startformula
+1 - 6\alpha^2 + 4\alpha^3
+\stopformula
+\stopANSWER

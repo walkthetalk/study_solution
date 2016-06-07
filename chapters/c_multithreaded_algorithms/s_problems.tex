@@ -160,4 +160,101 @@ for k = i to j
 \stopANSWER
 \stopPROBLEM
 
+%p27-4
+\startPROBLEM
+（Multithreading reductions and prefix computations eduction）
+數列 \m{x[1..n]} 的 \m{\otimes} {\EMP 歸約}（\m{\otimes}-reduction）
+就是 \m{y=x[1]\otimes x[2]\otimes\cdots x[n]} 的值，
+其中 \m{\otimes} 滿足結合律。
+
+下面程序以串行方式計算子數列 \m{x[i..j]} 的 \m{\otimes} 歸約：
+
+\CLRSH{REDUCE(x,i,j)}
+\startCLRS
+y=x[i]
+for k = i+1 to j
+	y = y /BTEX \m{\otimes}/ETEX x[k]
+return y
+\stopCLRS
+
+\startigBase[a]\startitem
+應用嵌套並行實現一個多線程算法 \ALGO{P-REDUCE}，
+工作量爲 \m{\Theta(n)}，要求持續時間爲 \m{\Theta(\lg n)}。
+分析該算法。
+\stopitem\stopigBase
+
+\startANSWER
+\CLRSH{P-REDUCE(x,i,j)}
+\startCLRS
+if i == j
+	return x[i]
+else if i + 1 == j
+	return x[i] /BTEX \m{\otimes}/ETEX x[j]
+mid = (i + j) / 2
+spawn y1 = P-REDUCE(x, i, mid)
+y2 = P-REDUCE(x, mid + 1, j)
+sync
+return y1 /BTEX \m{\otimes}/ETEX y2
+\stopCLRS
+\stopANSWER
+
+另一個相關問題，在數列 \m{x[1..n]} 上求解 \m{\otimes} {\EMP 前綴計算}
+（\m{\otimes}-prefix computation），
+有時也稱 \m{\otimes} {\EMP 掃描}（\m{\otimes}-scan），
+其中 \m{\otimes} 滿足結合律。
+ \m{\otimes} 掃描產生數列 \m{y[1..n]}：
+\startformula\startmathalignment
+\NC y[1] \NC = x[1] \NR
+\NC y[2] \NC = x[1] \otimes x[2] \NR
+\NC y[3] \NC = x[1] \otimes x[2] \otimes x[3] \NR
+\NC      \NC \vdots \NR
+\NC y[n] \NC = x[1] \otimes x[2] \otimes x[3] \otimes \cdots \otimes x[n] \NR
+\stopmathalignment\stopformula
+也就是說，通過運算法 \m{\otimes} 計算出 \m{x} 所有前綴的”和“。
+下面串行 SCAN 過程會計算出一組 \m{\otimes} 前綴：
+
+\CLRSH{SCAN(x)}
+\startCLRS
+n = x.length
+let y[1..n] be a new array
+y[1] = x[1]
+for i = 2 to n
+	y[i] = y[i-1] /BTEX \m{\otimes} /ETEX x[i]
+return y
+\stopCLRS
+
+遺憾地是，無法直接進行多線程 SCAN。
+例如，將 for 循環改爲 parallel for 循環會產生競爭，
+因爲循環體的每一步迭代都依賴前一個迭代。
+下面的 \ALGO{P-SCAN-1} 可以並行計算 \m{\otimes} 前綴，
+儘管十分低效：
+
+\CLRSH{P-SCAN-1(x)}
+\startCLRS
+n = x.length
+let y[1..n] be a new array
+P-SCAN-1-AUX(x, y, 1, n)
+return y
+\stopCLRS
+
+\CLRSH{P-SCAN-1-AUX(x, y, i, j)}
+\startCLRS
+parallel for l = i to j
+	y[l] = P-REDUCE(x, 1, l)
+\stopCLRS
+
+\startigBase[continue]\startitem
+分析 \ALGO{P-SCAN-1} 的工作量、持續時間和並行度。
+\stopitem\stopigBase
+
+\startANSWER
+\startformula\startmathalignment
+\NC T_1 \NC = \Theta(n^2) \NR
+\NC T_{\infty} \NC = \Theta(\lg n) + \Theta(\lg n) = \Theta(\lg n) \NR
+\NC T_1 / T_{\infty} \NC = \Theta(n^2/\lg n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\stopPROBLEM
+
 \stopsubject%Problems

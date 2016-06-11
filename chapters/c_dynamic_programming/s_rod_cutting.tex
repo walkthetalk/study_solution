@@ -1,0 +1,141 @@
+\startsection[
+  title={Rod cutting},
+]
+
+%e15.1-1
+\startEXERCISE
+由公式 15.3 和初始條件 \m{T(0)=1}，證明公式 15.4 成立。
+
+附公式 15.3：
+\startformula
+T(n) = 1 + \sum_{j=0}^{n-1} T(j)
+\stopformula
+
+附公式 15.4：
+\startformula
+T(n) = 2^n
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\m{n=0} 時顯然成立。
+
+如果 \m{n\le i} 時成立，則 \m{n=i+1} 時有：
+\startformula\startmathalignment
+\NC T(i+1) \NC = 1 + \sum_{j=0}^{i} T(j) \NR
+\NC        \NC = 1 + \sum_{j=0}^{i} 2^j \NR
+\NC        \NC = 1 + 2^{i+1} - 1 \NR
+\NC        \NC = 2^{i+1} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e15.1-2
+\startEXERCISE
+下面描述的“貪心”策略，可以用來解決鋼條切割問題，請舉出反例證明此策略並不能保證得到最優方案。
+
+定義鋼條的長度為 \m{i}，{\EMP 密度}為 \m{p_i / i}，即每英寸的價值。
+貪心策略將長度為 \m{n} 的鋼條切下長度為 \m{i} （\m{1\le i \le n}）的壹段，其密度最高。
+接下來繼續使用相同的策略切割長度為 \m{n-i} 的剩余部分。
+\stopEXERCISE
+
+\startANSWER
+假設密度有三種，\m{d_a, d_b, d_c}，其中 \m{d_a > d_b > d_c}。
+對應的鋼條長度為 \m{l_a, l_b, l_c}，其中 \m{l_a + l_c = 2 l_b}。
+則對於長度為 \m{2 l_b} 的鋼條，按“貪心”策略，應切割成長度為 \m{l_a} 和 \m{l_c} 的兩段。
+其價值為 \m{l_a d_a + l_c d_c}；而如果切割成長度均為 \m{l_b} 的兩段，價值為 \m{2 l_b d_b}。
+若“貪心”策略的結果不是最優解，需要滿足 \m{l_a d_a + l_c d_c < 2 l_b d_b}。
+
+\startformula\startmathalignment
+\NC l_a d_a + l_c d_c \NC < 2 l_b d_b \NR
+\NC l_a d_a + l_c d_c \NC < (l_a + l_c) d_b \NR
+\NC l_a d_a + l_c d_c \NC < l_a d_b + l_c d_b \NR
+\NC l_a (d_a - d_b)   \NC < l_c (d_b - d_c) \NR
+\stopmathalignment\stopformula
+
+令 \m{l_a = 3, l_c = 2, d_a = 5, d_b = 4, d_c = 2}，滿足上式，鋼條長度為 5，即為反例。
+\stopANSWER
+
+%e15.1-3
+\startEXERCISE
+我們修改壹下鋼條切割問題，除了切下的鋼條段具有不同價格 \m{p_i} 外，
+每次切割還要付出固定成本 \m{c}。
+這樣，切割方案的收益就等於鋼條段價格之和減去切割的成本。
+設計壹個動態規劃算法解決修改後的鋼條切割問題。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{EXTENDED2-BOTTOM-UP-CUT-ROD(p, n)}
+\startCLRS
+let r[0..n] and s[0..n] be new arrays
+r[0] = 0
+for j = 1 to n
+	q = -∞
+	for i = 1 to j
+		if q < p[i] + r[j - i] - c
+			q = p[i] + r[j - i] - c
+			s[j] = i
+	r[j] = q
+return r and s
+\stopCLRS
+\stopANSWER
+
+%e15.1-4
+\startEXERCISE
+修改\ALGO{MEMOIZED-CUR-ROD}，使之不僅返回最優收益值，還返回切割方案。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{MEMOIZED-CUT-ROD'(p, n)}
+\startCLRS
+let r[0..n] and s[0..n] be a new arrays
+for i = 0 to n
+	r[i] = -∞
+return MEMOIZED-CUT-ROD-AUX'(p, n, r, s) and s
+\stopCLRS
+
+\CLRSH{MEMOIZED-CUT-ROD-AUX'(p, n, r, s)}
+\startCLRS
+if r[n] >= 0
+	return r[n]
+if n == 0
+	q = 0
+else
+	q = -∞
+	for i = 1 to n
+		tmp = p[i] + MEMOIZED-CUT-ROD-AUX'(p, n-i, r, s)
+		if q < tmp
+			q = tmp
+			s[n] = i
+r[n] = q
+return q
+\stopCLRS
+\stopANSWER
+
+%e15.1-5
+\startEXERCISE
+Fibonacci 數列可以用遞迴式（3.22）定義。
+設計一個 \m{O(n)} 時間的動態規劃算法計算第 n 個 Fibonacci 數。
+畫出子問題圖。圖中有多少頂點和邊？
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{Fibonacci(n)}
+\startCLRS
+let F[0..n] be a new array
+F[0] = 1
+F[1] = 1
+for i = 2 to n
+	F[i] = F[i - 1] + F[i - 2]
+return F[n]
+\stopCLRS
+
+圖中有 n 個節點，數列中的每個元素是一個節點。
+所有邊都是由稍大的子問題指向稍小的子問題：
+如由 F[2] 起始的兩條邊分別指向 F[1] 和 F[0]。
+邊的總數爲 \m{
+  \left\lfloor \frac{n}{2} \right\rfloor
++ \left\lfloor \frac{n-1}{2} \right\rfloor
++ n}。
+\stopANSWER
+
+\stopsection

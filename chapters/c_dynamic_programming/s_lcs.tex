@@ -1,0 +1,120 @@
+\startsection[
+  title={Longest common subsequence},
+  reference=section:lcs,
+]
+
+%e15.4-1
+\startEXERCISE
+求 \m{\langle 1,0,0,1,0,1,0,1\rangle} 和 \m{\langle 0,1,0,1,1,0,1,1,0\rangle} 的一個 LCS。
+\stopEXERCISE
+
+\startANSWER
+LCS 爲 \m{\langle 1,0,0,1,1,0\rangle}。
+
+\externalfigure[output/e15_4_1-1]
+\stopANSWER
+
+%e15.4-2
+\startEXERCISE
+設計僞碼，利用完整的表 \m{c} 及
+原始序列 \m{X=\langle x_1, x_2, \ldots, x_m \rangle}
+和 \m{Y=\langle y_1, y_2, \ldots, y_n\rangle} 來重構 LCS，
+要求運行時間爲 \m{O(m+n)}，不能使用表 \m{b}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{PRINT-LCS(c, X, Y, i, j)}
+\startCLRS
+if i == 0 or j == 0
+	return
+if X[i] == Y[j]
+	PRINT-LCS(c, X, Y, i-1, j-1)
+	printf X[i]
+elseif c[i-1, j] >= c[i, j-1]
+	PRINT-LCS(c, X, Y, i-1, j)
+else
+	PRINT-LCS(c, X, Y, i, j-1)
+\stopCLRS
+\stopANSWER
+
+%e15.4-3
+\startEXERCISE
+設計 \ALGO{LCS-LENGTH} 帶備忘的版本，運行時間爲 \m{O(mn)}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{LCS-LENGTH(X, Y, c, i, j)}
+\startCLRS
+if c[i, j] >= 0
+	return c[i, j]
+if i == 0 or j == 0
+	c[i, j] = 0
+	return 0
+if X[i] == Y[j]
+	c[i, j] = LCS-LENGTH(X, Y, c, i-1, j-1) + 1
+else
+	c[i, j] = max(LCS-LENGTH(X, Y, c, i-1, j), LCS-LENGTH(X, Y, c, i, j-1))
+return c[i, j]
+\stopCLRS
+\stopANSWER
+
+%e15.4-4
+\startEXERCISE
+說明如何只使用表 c 中 \m{2 \times \min(m,n)} 個表項及 \m{O(1)} 的額外空間來計算 LCS 的長度。
+然後說明如何只用 \m{\min(m,n)} 個表項及 \m{O(1)} 的額外空間完成相同的工作。
+\stopEXERCISE
+
+\startANSWER
+選取元素個數少的序列作爲 Y。
+計算 c 中某一行的值時，僅需要上一行的值。
+
+進一步優化後，計算 \m{c[i,j]} 時，僅需保留
+\m{c[i, k], 1\le k < j-1}、
+\m{c[i-1, k], k \ge j-1} 即可。
+\stopANSWER
+
+%e15.4-5
+\startEXERCISE
+給定一個含 \m{n} 個數的序列，
+設計一個時間復雜度爲 \m{O(n^2)} 的算法，
+求其最長單調遞增子序列。
+\stopEXERCISE
+
+\startANSWER
+排序後的序列與原序列的 LCS 即爲所求。
+排序時間爲 \m{n\lg n}，求 LCS 需時間 \m{O(n^2)}，總共爲 \m{O(n^2)}。
+\stopANSWER
+
+%e15.4-6
+\startEXERCISE\DIFFICULT
+給定一個含 \m{n} 個數的序列，
+設計一個時間復雜度爲 \m{O(n\lg n)} 的算法，
+求其最長單調遞增子序列。
+（{\EMP 提示：}一個長度爲 \m{i} 的候選子序列的尾元素
+至少不比長度爲 \m{i-1} 候選子序列的尾元素小。
+因此，可以在輸入序列中將候選子序列鏈接起來。）
+\stopEXERCISE
+
+\startANSWER
+參考 \goto{Dynamic Programming – a Quick Review}
+[url(http://www.csie.ntu.edu.tw/~kmchao/seq06fall/dp.pdf)] 中 2.2 節。
+
+\CLRSH{LIS_LENGTH(X)}
+\startCLRS
+BESTEND[]	// 所有長度爲 k 的子序列中最小的尾元素
+		// 單調遞增
+len = 1
+BESTEND[1] = X[1]
+for i = 2 to X.len
+	if X[i] > BESTEND[len]
+		len = len + 1
+		BESTEND[len] = X[i]
+	else
+		// 查找大於 X[i] 的最小元素的位置
+		pos = BI-SEARCH(BESTEND, len, X[i])
+		BESTEND[pos] = X[i]
+return len
+\stopCLRS
+\stopANSWER
+
+\stopsection

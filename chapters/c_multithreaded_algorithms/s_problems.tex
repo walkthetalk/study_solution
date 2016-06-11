@@ -255,6 +255,311 @@ parallel for l = i to j
 \stopmathalignment\stopformula
 \stopANSWER
 
+使用嵌套並行能更有效的計算 \m{\otimes} 前綴，過程如下：
+
+\CLRSH{P-SCAN-2(x)}
+\startCLRS
+n = x.length
+let y[1..n] be a new array
+P-SCAN-2-AUX(x,y,1,n)
+return y
+\stopCLRS
+
+\CLRSH{P-SCAN-2-AUX(x,y,i,j)}
+\startCLRS
+if i == j
+	y[i] = x[i]
+else
+	k = /BTEX \m{\left\lfloor (i+j)/2 \right\rfloor} /ETEX
+	spawn P-SCAN-2-AUX(x, y, i, k)
+	P-SCAN-2-AUX(x, y, k+1, j)
+	sync
+	parallel for l = k+1 to j
+		/BTEX \m{y[l] = y[k] \otimes y[l]} /ETEX
+\stopCLRS
+
+\startigBase[continue]\startitem
+論證 \ALGO{P-SCAN-2} 是正確的，並分析其工作量、持續時間和並行度。
+\stopitem\stopigBase
+
+\startANSWER
+\startformula\startmathalignment
+\NC T_1 \NC = 2T_1(n/2) + \Theta(n) = \Theta(n\lg n) \NR
+\NC T_{\infty} \NC = T_{\infty}(n/2) + \Theta(\lg n) = \Theta(\lg^2 n) \NR
+\NC T_1 / T_{\infty} \NC = \Theta(n / \lg n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+我們可以遍歷兩遍數據來計算 \m{\otimes} 前綴，
+從而改進 \ALGO{P-SCAN-1} 和 \ALGO{P-SCAN-2}。
+第一趟，收集不同的連續子數列 \m{x} 的“和”，
+存入臨時數列 \m{t} 中；
+第二趟，使用 \m{t} 中的“和”計算最終結果 \m{y}。
+下面的僞碼實現了這種策略，但省去了一些算式：
+
+\CLRSH{P-SCAN-3(x)}
+\startCLRS
+n = x.length
+let y[1..n] and t[1..n] be new arrays
+y[1] = x[1]
+if n > 1
+	P-SCAN-UP(x, t, 2, n)
+	P-SCAN-DOWN(x[1], x, t, y, 2, n)
+return y
+\stopCLRS
+
+\CLRSH{P-SCAN-UP(x, t, i, j)}
+\startCLRS
+if i == j
+	return x[i]
+else
+	k = /BTEX \m{\left\lfloor (i+j)/2 \right\rfloor} /ETEX
+	t[k] = spawn P-SCAN-UP(x, t, i, k)
+	right = P-SCAN-UP(x, t, k+1, j)
+	sync
+	return ____		// fill in the blank
+\stopCLRS
+
+\CLRSH{P-SCAN-DOWN(v, x, t, y, i, j)}
+\startCLRS
+if i == j
+	/BTEX \m{y[i] = v\otimes x[i]} /ETEX
+else
+	k = /BTEX \m{\left\lfloor (i+j)/2 \right\rfloor}/ETEX
+	spawn P-SCAN-DOWN(____, x, t, y, i, k)		// fill in the blank
+	P-SCAN-DOWN(____, x, t, y, k+1, j)		// fill in the blank
+	sync
+\stopCLRS
+
+\startigBase[continue]\startitem
+對 \ALGO{P-SCAN-UP} 第 8 行、 \ALGO{P-SCAN-DOWN} 第 5 行和第 6 行中的三個缺省算式填空。
+然後，論證 \ALGO{P-SCAN-3} 的正確性。
+（\hint 證明傳給 \ALGO{P-SCAN-DOWN(v,x,t,y,i,j)} 的 \m{v} 滿足 \m{v=x[1]\otimes x[2]\otimes\cdots\otimes x[i-1]}）
+\stopitem\stopigBase
+
+\startANSWER
+\m{t[k] \times right}
+
+\m{v}
+
+\m{t[k]}
+\stopANSWER
+
+\startigBase[continue]\startitem
+分析 \ALGO{P-SCAN-3} 的工作量、持續時間和並行度。
+\stopitem\stopigBase
+
+\startANSWER
+\startformula\startmathalignment
+\NC T_1 \NC = \Theta(n) \NR
+\NC T_{\infty} \NC = \Theta(\lg n) \NR
+\NC T_1 / T_{\infty} \NC = \Theta(n / \lg n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\stopPROBLEM
+
+%p27-5
+\startPROBLEM
+（Multithreading a simple stencil calculation）
+計算科學中有很多這樣一類算法，
+填充數列中的元素，所填值取決於已計算出的相鄰元素以及其他一些信息
+（計算過程中這些信息保持不變）。
+這種計算過程中臨近元素保持不變的模式稱爲{\EMP 模板（stencil）}計算。
+例如，\refsection{lcs} 提供了一個計算最長公共子序列的模板算法，
+其中 \m{c[i,j]} 的值僅取決於 \m{c[i-1,j]}、 \m{c[i,j-1]} 和 \m{c[i-1,j-1]} 以及
+兩個給定輸入串中的元素 \m{x_i} 和 \m{y_j}。
+輸入的序列是固定不變的，
+但算法需要填充二維數列 \m{c}，
+先填充 \m{c[i-1,j]}、 \m{c[i,j-1]} 和 \m{c[i-1,j-1]}，然後再填充 \m{c[i,j]}。
+
+本題中，我們探討如何在一個 \m{n\times n} 數列 \m{A} 上使用嵌套並行實現一個簡單的模板計算，
+其中存入 \m{A[i,j]} 的值僅取決於 \m{A[i',j']}，
+其中 \m{i'\le i}， \m{j'\le j} （當然 \m{i'\neq i} 或者 \m{j'\neq j}）。
+換句話說，一個元素的值僅取決於上面和左面臨近元素的值，
+以及數列外一些靜態信息。
+此外，整個過程中假設，
+一旦計算 \m{A[i,j]} 時所需的元素都已填寫完，
+就可以在 \m{\Theta(1)} 的時間內填入 \m{A[i,j]}。
+（與\refsection{lcs} 中的 \ALGO{LCS-LENGTH} 一樣）
+
+將 \m{n\times n} 數列 \m{A} 劃分爲 \m{n/2\times n/2} 的子數列：
+\startformula
+A = \left[\startmatrix
+\NC A_{11} \NC A_{12} \NR
+\NC A_{21} \NC A_{22} \NR
+\stopmatrix\right]
+\stopformula
+
+現在看到，可以遞歸地填入子數列 \m{A_{11}} 中的元素，
+因爲他並不依賴其他三個子數列。
+一旦填完 \m{A_{11}}，就可以遞歸地並行填入 \m{A_{12}} 和 \m{A_{21}} 中的元素，
+這是因爲他們都依賴於 \m{A_{11}}，但彼此無依賴關係。
+最後遞歸地填入 \m{A_{22}}。
+
+\startigBase[a]\startitem
+基於上面討論，給出分治算法 \ALGO{SIMPLE-STENCIL} 的多線程僞碼，
+來執行這個簡單模板計算。
+（不用擔心基礎情形的處理，這取決於特定的模板。）
+給出並求解對應規模 \m{n} 的工作量和持續時間的遞歸式。
+並行度是多少？
+\stopitem\stopigBase
+
+\startANSWER
+\CLRSH{SIMPLE-STENCIL(A)}
+\startCLRS
+SIMPLE-STENCIL(A11)
+spawn SIMPLE-STENCIL(A12)
+SIMPLE-STENCIL(A21)
+sync
+SIMPLE-STENCIL(A22)
+\stopCLRS
+
+\startformula\startmathalignment
+\NC T_1 \NC = \Theta(n^2) \NR
+\NC T_{\infty} \NC = 3T_{\infty}(n/2) + \Theta(1) = \Theta(n^{\lg 3}) \approx \Theta(n^{1.58}) \NR
+\NC T_1 / T_{\infty} \NC = \Theta(n^{2/\lg 3}) \approx \Theta(n^{1.26}) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startigBase[continue]\startitem
+修改上面 a）的答案，將 \m{n\times n} 的數列劃分成 9 個 \m{n/3 \times n/3} 子數列，
+遞歸下去使其儘可能地並行。
+分析該算法，與 a）相比，並行度如何？
+\stopitem\stopigBase
+
+\startANSWER
+\startCLRS
+11
+spawn 12
+21
+sync
+spawn 13
+spawn 22
+31
+sync
+spawn 23
+32
+sync
+33
+\stopCLRS
+
+\startformula\startmathalignment
+\NC T_1 \NC = \Theta(n^2) \NR
+\NC T_{\infty} \NC = 5T_{\infty}(n/3) + \Theta(1) = \Theta(n^{\lg_{3}5}) \approx \Theta(n^{1.46}) \NR
+\NC T_1 / T_{\infty} \NC = \Theta(n^{2/\lg_{3}5}) \approx \Theta(n^{1.37}) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startigBase[continue]\startitem
+對照 a）和 b），進行如下推廣。
+選擇一個整數 \m{b\ge 2}。
+將 \m{n\times n} 數列分爲 \m{b^2} 個子數列，每個大小都是 \m{n/b\times n/b}，
+遞歸下去使其儘可能並行。
+關於 \m{n} 和 \m{b}，
+該算法的工作量、持續時間和並行度各爲多少？
+用這種方法證明：對於任何 \m{b\ge 2}，並行度一定是 \m{o(n)}。
+（\hint 最後一個問題，證明對於任何 \m{b\ge 2}，
+並行度是 \m{n} 的指數，其指數嚴格小於 1。）
+\stopitem\stopigBase
+
+\startANSWER
+\startformula\startmathalignment
+\NC T_1 \NC = \Theta(n^2) \NR
+\NC T_{\infty} \NC = (2b-1) T_{\infty}(n/b) + \Theta(1) = \Theta(n^{\log_{b}(2b-1)}) \NR
+\NC T_1 / T_{\infty} \NC = \Theta(n^{2/\log_{b}(2b-1)}) = \Theta(n^{\log_{2b-1}{b^2}}) \NR
+\stopmathalignment\stopformula
+
+由於 \m{b\ge 2}，\m{b^2 \ge 2b-1}， \m{(b-1)^2\ge 0}，並行度一定是 \m{o(n)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個求解這個簡單模板問題的多線程算法的僞碼，
+使其並行度達到 \m{\Theta(n/\lg n)}。
+使用工作量和持續時間的概念，
+論證該問題事實上有 \m{\Theta(n)} 的固有並行度。
+然而，我們使用分治法的多線程僞碼，實際上達不到這個最大的並行度。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p27-6
+\startPROBLEM
+（Randomized multithreaded algorithms）
+正如使用普通的串行算法一樣，有時想要實現隨機多線程算法。
+本題探討如何修改各種性能度量以處理這些算法的期望行爲。
+另外，要求設計並分析一個隨機快速排序的多線程算法。
+
+\startigBase[a]\startitem
+修改工作量定律（27.2）、持續時間定律（27.3）和貪心調度界（27.4），
+用期望值來表示 \m{T_P}、 \m{T_1} 和 \m{T_{\infty}} 都是隨機變量的情形。
+\stopitem\stopigBase
+
+\startANSWER
+\startformula\startmathalignment
+\NC E[T_P] \NC \ge E[T_1] / P \NR
+\NC E[T_P] \NC \ge E[T_{\infty}] \NR
+\NC E[T_P] \NC \ge E[T_1] / P + E[T_{\infty}] \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startigBase[continue]\startitem
+考慮一個隨機多線程算法，他在 1\% 的時間裏有 \m{T_1 = 10^4} 和 \m{T_{10000} = 1}，
+但在 99\% 的時間裏有 \m{T_1 = T_{10000} = 10^9}。
+說明一個隨機多線程算法的{\EMP 加速比}應該被定義爲 \m{E[T_1]/E[T_P]}，
+而不是 \m{E[T_1/T_P]}。
+\stopitem\stopigBase
+
+\startANSWER
+\startformula\startmathalignment
+\NC E[T_1] \NC \approx E[T_{10000}] \approx 9.9 \times 10^8 \NR
+\NC E[T_1] / E[T_P] \NC = 1 \NR
+\NC E[T_1/T_{10000}] \NC = 10^4 \times 0.01 + 0.99 = 100.99 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明一個隨機多線程算法的{\EMP 並行度}應該定義爲 \m{E[T_1]/E[T_{\infty}]}。
+\stopitem\stopigBase
+
+\startANSWER
+同上題。
+\stopANSWER
+
+\startigBase[continue]\startitem
+使用嵌套並行，多線程化\refsection{rand_quicksort} 中的 \ALGO{RANDOMIZED-QUICKSORT}
+（注意不是並行化 \ALGO{RANDOMIZED-PARTITION}）。
+給出 \ALGO{P-RANDOMIZED-QUICKSORT} 的僞碼。
+\stopitem\stopigBase
+
+\startANSWER
+\CLRSH{RANDOMIZED-QUICKSORT(A, p, r)}
+\startCLRS
+if p < r
+	q = RANDOMIZED-PARTITION(A, p, r)
+	spawn RANDOMIZED-QUICKSORT(A, p, q-1)
+	RANDOMIZED-QUICKSORT(A, q+1, r)
+	sync
+\stopCLRS
+\stopANSWER
+
+\startigBase[continue]\startitem
+分析給出的隨機快速排序的多線程算法。
+（\hint 回顧\refsection{selection_in_expected_linear_time} 中
+關於 \ALGO{RANDOMIZED-SELECT} 的分析。）
+\stopitem\stopigBase
+
+\startANSWER
+\startformula\startmathalignment
+\NC E[T_1] \NC = O(n\lg n) \NR
+\NC E[T_{\infty}] \NC = O(\lg n) \NR
+\NC E[T_1] / E[T_{\infty}] \NC = O(n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
 \stopPROBLEM
 
 \stopsubject%Problems

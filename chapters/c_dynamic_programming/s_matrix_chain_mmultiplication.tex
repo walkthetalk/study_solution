@@ -1,0 +1,109 @@
+\startsection[
+  title={Matrix-chain multiplication},
+  reference=section:15.2,
+]
+
+%e15.2-1
+\startEXERCISE
+對於矩陣規模序列 \m{\langle 5,10,3,12,5,50,6\rangle}，求其矩陣鏈最優括號化方案。
+\stopEXERCISE
+
+\startANSWER
+解決此問題，可以直接用 \ALGO{MATRIX-CHAIN-ORDER(p)}，
+其中 \m{p = \langle 5,10,3,12,5,50,6\rangle}，
+或者直接使用下列方程：
+\startformula
+m[i,j]=\startmathcases
+\NC 0 \MC \text{如果} i = j\NR
+\NC \min_{i\le k < j}\{m[i,k]+m[k+1,j] + p_{i-1} p_k p_j\}\MC \text{如果} i<j\NR
+\stopmathcases
+\stopformula
+其中對於所有 \m{i}，都有 \m{m[i,i] = 0}，可用以計算 \m{m[i,i+1]}。
+
+\externalfigure[output/e15_2_1-1]
+\externalfigure[output/e15_2_1-2]
+
+最終，結果爲 \m{(A_1 A_2)((A_3 A_4)(A_5 A_6))}。
+\stopANSWER
+
+%e15.2-2
+\startEXERCISE
+設計遞迴算法 \ALGO{MATRIX-CHAIN-MULTIPLY(A, s, i, j)}，
+實現矩陣鏈最優代價乘法計算的真正計算過程，
+其輸入參數爲矩陣序列 \m{\langle A_1, A_2, \cdots, A_n \rangle}，
+ \ALGO{MATRIX-CHAIN-ORDER} 得到的表 \m{s}，以及下標 \m{i} 和 \m{j}。
+（初始調用應爲 \ALGO{MATRIX-CHAIN-MULTIPLY(A, s, 1, n)}。）
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{MATRIX-CHAIN-MULTIPLY(A, s, i, j)}
+\startCLRS
+if i == j
+	return A[i]
+else
+	X = MATRIX-CHAIN-MULTIPLY(A, s, i, s[i,j])
+	Y = MATRIX-CHAIN-MULTIPLY(A, s, s[i,j] + 1, j)
+	return MATRIX-MULTIPLY(X, Y)
+\stopCLRS
+\stopANSWER
+
+%e15.2-3
+\startEXERCISE
+用代入法證明遞迴公式（15.6）的結果爲 \m{\Omega(2^n)}。附公式（15.6）：
+\startformula
+P(n) = \startmathcases
+\NC 1 \MC \text{如果} n = 1 \NR
+\NC \sum_{k=1}^{n-1} P(k) P(n-k) \MC \text{如果} n\ge 2 \NR
+\stopmathcases
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+如果對於所有 \m{1\le k \le n}，都有 \m{P(k) \ge 2^k}，則：
+\startformula
+P(n+1) \ge \sum_{k=1}^{n} 2^k 2^{n+1-k} = n 2^{n+1} \ge 2^{n+1}
+\stopformula
+\stopANSWER
+
+%e15.2-4
+\startEXERCISE
+對輸入鏈長度爲 \m{n} 的矩陣鏈乘法問題，描述子問題圖：
+他包含多少個頂點？包含多少條邊？這些邊分別鏈接哪些頂點？
+\stopEXERCISE
+
+\startANSWER
+\TODO{}
+\stopANSWER
+
+%e15.2-5
+\startEXERCISE
+令 \m{R(i,j)} 表示在一次調用 \ALGO{MATRIX-CHAIN-ORDER} 過程中，
+計算其他表項時訪問表項 \m{m[i,j]} 的次數。證明：
+\startformula
+\sum_{i=1}^n\sum_{j=i}^{n} R(i,j) = \frac{n^3 - n}{3}
+\stopformula
+（{\EMP 提示：}證明中可用到公式（A.3）。）
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \sum_{i=1}^n\sum_{j=i}^{n} R(i,j)
+    \NC = \sum_{l=2}^{n} 2(n-l+1)(l-1) \NR
+\NC \NC = 2\sum_{l=1}^{n-1} (n-l) l \NR
+\NC \NC = 2\sum_{l=1}^{n-1} nl - 2\sum_{l=1}^{n-1}l^2 \NR
+\NC \NC = \frac{2n(n-1)n}{2} - \frac{2(n-1)n(2n-1)}{6} \NR
+\NC \NC = \frac{n^3 - n}{3} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e15.2-6
+\startEXERCISE
+證明：對 \m{n} 個元素的表達式進行完全括號化，恰好需要 \m{n-1} 對括號。
+\stopEXERCISE
+
+\startANSWER
+最內層括號括住兩個矩陣，之後每加一對括號會括住一個新的矩陣。
+因此當 \m{n\ge 2} 時，共需要 \m{n-1} 對括號。
+\stopANSWER
+
+\stopsection

@@ -1,0 +1,652 @@
+\startsubject[
+  title={Problems},
+]
+
+%p15-1
+\startPROBLEM
+（Longest simple path in a directed acyclic graph）
+給定一個有向無環圖 \m{G=(V,E)}，
+邊權重爲實數，給定途中兩個頂點 \m{s} 和 \m{t}。
+設計動態規劃算法，求從 \m{s} 到 \m{t} 的最長加權簡單路徑。
+子問題圖是怎樣的？
+算法效率如何？
+\stopPROBLEM
+
+\startANSWER
+\CLRSH{LSP-DAG(G, s, t)}
+\startCLRS
+for each vertex v in V(G)
+	L[v] = 0
+
+for each vertex v in topOrder(G)
+	for each edge (v, w) in E(G)
+		L[w] = max(L[w], L[v] + weight(G, (v, w)))
+
+return L[t]
+\stopCLRS
+
+其中 toporder 爲關鍵所在，爲所有節點排序，保證任何一個有向邊的起始點在結束點的前面。
+\stopANSWER
+
+%p15-2
+\startPROBLEM
+（Longest palindrome subsequence）
+{\EMP 回文}（palindrome）是正序與逆序相同的非空字串。
+例如，所有長度爲 1 的字串、 civic、 racecar、 aibohphobia（害怕回文之意）都是回文。
+
+設計高效算法，求給定輸入字串的最長回文子序列。
+例如，給定輸入 character，算法應該返回 carac。
+算法的運行時間如何？
+\stopPROBLEM
+
+\startANSWER
+設 \m{m} 爲最長回文子序列的長度，則：
+\startformula
+m[i,j] = \startcases
+\NC m[i+1,j-1] + 1 \MC \text{如果 \m{A[i] = A[j]}；} \NR
+\NC \max\{m[i,j-1], m[i+1,j]\} \MC \text{如果 \m{A[i] \ne A[j]}。}\NR
+\stopcases
+\stopformula
+
+\CLRSH{LPS-LENGTH(A)}
+\startCLRS
+n = A.length
+for i = 1 to n
+	m[i,i] = 1
+for l = 2 to n
+	for i = 1 to n - l + 1
+		j = i + l - 1
+		if A[i] == A[j]
+			m[i,j] = m[i+1, j-1] + 1
+			s[i,j] = "↙"
+		else if m[i+1, j] >= m[i, j-1]
+			m[i, j] = m[i+1, j]
+			s[i, j] = "↓"
+		else
+			m[i ,j] = m[i, j-1]
+			s[i, j] = "←"
+return m and s
+\stopCLRS
+\stopANSWER
+
+%p15-3
+\startPROBLEM[problem:15-3]
+（Bitonic euclidean traveling-salesman problem）
+在{\EMP 歐幾裏德旅行商}問題中，給定平面商 \m{n} 個點作爲輸入，
+希望求出連接所有 \m{n} 個點的最短巡遊路線。
+圖 15-11(a) 給出了一個 7 點問題的解。
+此問題是 NP 難問題，因此大家相信他並不存在多項式時間的求解算法（參見第 34 章）。
+
+J.L. Bentley 建議將問題簡化，
+限制巡遊路線爲{\EMP 雙調巡遊}（bitonic tours），
+即從最左邊的點開始，嚴格向右前進，直至最右邊的點，
+然後掉頭嚴格向左前進，直至回到起始點。
+圖 15-11(b) 給出了相同 7 個點的最短雙調巡遊路線。
+問題簡化後，存在一個多項式時間的算法。
+
+設計一個 \m{O(n^2)} 時間的最優雙調巡遊路線算法。
+你可以人外任何兩個點的 \m{x} 坐標均不同，
+且所有實數運算都花費單位時間。
+（\hint 由左至右掃描，對巡遊路線的兩個部分分別維護可能的最優解。）
+\stopPROBLEM
+
+\startANSWER
+\startcombination[2*1]
+{\externalfigure[output/p15_3-1][width=.3\textwidth]}{a}
+{\externalfigure[output/p15_3-2][width=.3\textwidth]}{b}
+\stopcombination
+
+先對所有點按橫坐標進行排序，得到序列 \m{\langle p_1, p_2, \ldots, p_n\rangle}。
+最左端的點爲 \m{p_1}，最右端的點爲 \m{p_n}。
+定義最短雙調路徑爲 \m{B[i,j]}，包括 \m{p_1} 到 \m{p_j} 中所有點，其中 \m{1\le i \le j\le n}。
+此路徑包含兩部分：從 \m{p_i} 到 \m{p_1} 的向左子圖，以及從 \m{p_1} 到 \m{p_j} 的向右子圖。
+根據題意，需要計算 \m{b[n,n]}。
+
+\startformula\startmathalignment
+\NC B[1,2] \NC = |p_1 p_2| \NR
+\NC B[i,j] \NC = B[i, j-1] + |p_{j-1} p_j| \qquad \text{如果 \m{i < j-1}；} \NR
+\NC B[j-1, j] \NC = \min_{k=1}^{j-1}\{B[k,j-1] + |p_k p_j|\} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%p15-4
+\startPROBLEM
+（Printing neatly）
+考慮整齊打印問題，
+即在打印機商用等寬字符打印一段文本。
+輸入文本爲 \m{n} 個單詞的序列，單詞長度分別爲 \m{l_1,l_2,\ldots,l_n} 個字符。
+我們希望將此段文本整齊打印在若幹行商，每行最多 \m{M} 個字符。
+“整齊”的標準是這樣的：
+如果某行包含第 \m{i} 到第 \m{j} （\m{i\le j}）個單詞，且單詞間隔爲一個空格符，
+則行尾的額外空格符數量爲 \m{M-j+i-\sum_{k=i}{j}l_k}，
+此值必須爲非負的，否則一行內無法容納這些單詞。
+我們希望能最小化所有行（最後一行除外）的額外空格數的立方之和。
+設計一個動態規劃算法，在打印機商整齊打印一段 \m{n} 個單詞的文本。
+分析算法的時間、空間復雜性。
+\stopPROBLEM
+
+\startANSWER
+如果某一行包含單詞 \m{i} 到 \m{j}，
+令 \m{\EXTRAS[i,j] = M - j + i - \sum_{k=1}^{j}l_k} 爲此行行尾空格數目。
+需要注意的是， \m{\EXTRAS} 可能是負值。
+
+定義此行的代價爲 \m{\LINECOST[i,j]}，則：
+\startformula
+\LINECOST[i,j] = \startcases
+\NC \infty \MC \text{如果 \m{\EXTRAS[i,j] < 0} （即單詞 \m{i,\ldots,j} 不滿足要求）； }\NR
+\NC 0 \MC \text{如果 \m{j=n} 且 \m{\EXTRAS\ge 0} （最後一行代價爲 0）；} \NR
+\NC (\EXTRAS[i,j])^3 \MC \text{否則。} \NR
+\stopcases
+\stopformula
+
+目標就是使得所有 \m{\LINECOST} 的和最小。
+
+令 \m{C(j)} 爲前 \m{j} 個單詞的最小代價，其中第 \m{j} 個單詞位於一行的末尾，則：
+\startformula\startmathalignment
+\NC C(0) \NC = 0 \NR
+\NC C(j) \NC = \min_{i = 1}^{j}\{C(i-1) + \LINECOST(i, j)\} \NR
+\stopmathalignment\stopformula
+\m{C(n)} 即爲最終結果。
+
+\CLRSH{PRINT_NEATLY(M, l, n)}
+\startCLRS
+C[0] = 0
+for j = 1 to n
+	C[j] = ∞
+	for i = 1 to j
+		lc = linecost(i, j)
+		if lc == ∞
+			break;
+		tmp = C[i-1] + lc
+		if tmp < C[j]
+			C[j] = tmp
+			L[j] = i
+return L
+\stopCLRS
+
+\m{L[n]} 的值爲最後一行第一個單詞的序號，
+即，令 \m{k=L[n]}，則最後一行的單詞爲 \m{l_k,\ldots, l_n}。
+而 \m{L[k]} 的值爲倒數第二行第一個單詞的序號。
+以此類推，我們可以找到每一行的第一個單詞，即可打印出所有單詞。
+
+\m{C} 和 \m{L} 的長度均爲 \m{n+1}，因此空間複雜度爲 \m{O(n)}。
+
+運行時間爲填充 \m{C} 和 \m{L} 的時間，加上遍歷 \m{L} 打印所有單詞的時間。
+其中遍歷 \m{L} 的時間爲 \m{O(n)}。
+填充 \m{C[j]} 時，我們做了 \m{j} 次比較，因此循環所需時間爲 \m{O(n^2)}。
+但是考慮到每一行的單詞數目肯定小於 \m{M/2} （一旦打印長度超過了 \m{M}，
+即可提前退出循環），因此比較所用時間爲 \m{O(M)}。
+從而整體時間爲 \m{O(nM)}。
+\stopANSWER
+
+%p15-5
+\startPROBLEM
+（Edit distance）
+爲將一文本串 \m{x[1..m]} 轉換爲目標串 \m{y[1..n]}，
+我們可以使用多種變換操作。
+我們的目標是：給定 \m{x} 和 \m{y}，
+求將 \m{x} 轉換爲 \m{y} 的一個變換操作序列。
+使用 \m{z} 保存中間結果，假定他足夠大，可寸下中間結果的所有字符。
+初始時， \m{z} 是空的，
+結束時，應有 \m{z[j]=y[j]}，其中 \m{j=1,2,\ldots,n}。
+我們維護兩個下標 \m{i} 和 \m{j}，分別用來索引 \m{x} 和 \m{z}，
+變換操作允許改變 \m{z} 的內容和這兩個下標。
+初始時， \m{i=j=1}。
+在轉換過程中應處理 \m{x} 的所有字符，
+這意味着在變換操作結束時，應有 \m{i=m+1}。
+
+我們可以使用如下 6 種變換操作：
+\startigBase
+\item {\EMP 複製}（copy）——從 \m{x} 複製一個字符到 \m{z}，
+即賦值操作 \m{z[j] = x[i]}，並將兩個下標 \m{i} 和 \m{j} 都增 1。
+此操作處理了 \m{x[i]}。
+
+\item {\EMP 替換}（replace）——將 \m{x} 中的一個字符替換爲另一個字符 \m{c}， \m{z[j]=c}，
+並將兩個下標 \m{i} 和 \m{j} 都增 1。
+此操作處理了 \m{x[i]}。
+
+\item {\EMP 刪除}（delete）——刪除 \m{x} 中一個字符，即將 \m{i} 增 1， \m{j} 不變。
+此操作處理了 \m{x[i]}。
+
+\item {\EMP 插入}（insert）——將字符 \m{c} 插入 \m{z} 中， \m{z[j]=c}，
+將 \m{j} 增 1， \m{i} 不變。此操作未處理 \m{x} 中字符。
+
+\item {\EMP 旋轉}（twiddle，即交換）——將 \m{x} 中下兩個字符複製到 \m{z} 中，
+但交換順序， \m{z[j]=x[i+1]}、 \m{z[j+1]=x[i]}，
+將 \m{i} 和 \m{j} 都增 2。此操作處理了 \m{x[i]} 和 \m{x[i+1]}。
+
+\item {\EMP 終止}（kill）——刪除 \m{x} 中剩餘字符，令 \m{i=m+1}。
+此操作處理了 \m{x} 中所有尚未處理的字符。
+如果執行此操作，則轉換過程結束。
+\stopigBase
+
+下面給出了將源字串 {\tt algorithm} 轉換爲目標字串 {\tt altruistic} 的一種變換操作序列，
+下劃線指出執行一個變換操作後兩個下標的位置，
+注意，還有其他方法完成這個轉換。
+
+\input{tbl/tbl15-5}
+
+每個變換操作都有相應的代價。
+具體代價依賴於特定應用，但我們假定每個操作的代價均爲已知常量。
+我們還假定複製和替換的代價小於刪除和插入的組合代價，否則複製和替換操作就沒有意義了。
+一個給定的變換操作序列的代價爲其中所有變換操作的代價總和。
+在上例中，將 {\tt algorithm} 轉換爲 {\tt altruistic} 的代價爲：
+\m{3 \times \COST(\text{複製})
++ \COST (\text{替換})
++ \COST (\text{刪除})
++ 4 \times \COST (\text{插入})
++ \COST (\text{交換})
++ \COST (\text{終止})}。
+
+\startigNum
+\startitem
+給定兩個字串 \m{x[1..m]} 和 \m{y[1..n]} 以及變換操作的代價，
+ \m{x} 到 \m{y} 的{\EMP 編輯距離}（edit distance）是
+將 \m{x} 轉換爲 \m{y} 所需變換序列的最小代價。
+設計動態規劃算法，求 \m{x[1..m]} 到 \m{y[1..n]} 的編輯距離並打印最優變換序列。
+分析算法的時間、空間複雜度。
+\stopitem
+\stopigNum
+
+\startANSWER
+子問題：將 \m{x[1..i]} 轉換成 \m{y[1..j]}，
+其中 \m{1\le i\le m}， \m{1\le j\le n}，
+其代價爲 \m{D(i,j)}。則：
+\startformula\startmathalignment
+\NC D(0,0) \NC = 0 \NR
+\NC D(i,j) \NC = \min\startcases
+\NC D(i-1,j-1) + \COST(\text{複製}) \MC \text{如果\m{x_i=y_j}；}\NR
+\NC D(i-1,j-1) + \COST(\text{替換}) \MC \text{如果\m{x_i\ne y_j}；}\NR
+\NC D(i-1,j) + \COST(\text{刪除}) \MC \NR
+\NC D(i,j-1) + \COST(\text{插入}) \MC \NR
+\NC D(i-2,j-2) + \COST(\text{交換}) \MC \text{如果\m{[x_{i-1}x_i]=[y_i y_{i-1}]}；}\NR
+\stopcases \NR
+\stopmathalignment\stopformula
+除 \m{D} 外，我們還可以維護一張表用來記錄執行了哪些操作。
+最小代價爲
+\startformula
+\min(D[m,n], \min_{i<m}D[i,n] + \COST[\text{終止}])
+\stopformula
+
+時間、空間複雜度均爲 \m{\Theta(mn)}。
+\stopANSWER
+
+編輯距離問題是 DNA 序列對齊問題的推廣
+（參考其他文獻，如 Setubal 和 Meidanis [310， 3.2 節]）。
+已有多種方法可以通過對齊兩個 DNA 序列來衡量他們的相似度。
+有一種對齊方法是將空格符插入到兩個序列 \m{x} 和 \m{y} 中，
+可以插入到任何位置（包括兩端），
+使得結果序列 \m{x'} 和 \m{y'} 的長度相同，
+但不會在相同的位置出現空格符
+（即不存在位置 \m{j} 使得 \m{x'[j]} 和 \m{y'[j]} 都是空格符）。
+然後爲每個位置“打分”，位置 \m{j} 的分數爲：
+\startigBase
+\item +1，如果 \m{x'[j]=y'[j]} 且不是空格符；
+\item -1，如果 \m{x'[j]\ne y'[j]} 且都不是空格符；
+\item -2， \m{x'[j]} 或 \m{y'[j]} 是空格符；
+\stopigBase
+
+對齊方案的分數爲每個位置的分數之和。
+例如，給定序列 \m{x=\text{\tt GATCGGCAT}} 和 \m{y=\text{\tt CAATGTGAATC}}，
+一種對齊方案爲：
+
+{\tt G ATCG GCAT }
+
+{\tt CAAT GTGAATC}
+
+{\tt -*++*+*+-++*}
+
+其中 + 表示該位置分數爲 +1， - 表示分數爲 -1， * 表示分數爲 -2，
+因此此方案的總分數爲 \m{6\times 1 - 2 \times 1 - 4 \times 2 = -4}。
+
+\startigNum[continue]
+\startitem
+解釋如何將最優對齊問題轉換爲編輯距離問題，
+使用的操作爲變換操作復制、替換、刪除、插入、旋轉和終止的子集。
+\stopitem
+\stopigNum
+
+\startANSWER
+如果 \m{x'[j]=y'[j]} 且不是空格符，則等效爲複製；
+如果 \m{x'[j]} 爲空格， \m{y'[j]} 不是空格，則等效爲插入；
+如果 \m{x'[j]} 不是空格， \m{y'[j]} 是空格，則等效爲刪除；
+如果 \m{x'[j]\ne y'[j]} 且都不是空格符，則等效爲替換。
+\stopANSWER
+
+\stopPROBLEM
+
+%p15-6
+\startPROBLEM
+（Planning a company party）
+一位 CEO 正在向 Stewart 教授諮詢公司聚會的計劃。
+公司的內部結構關係是層次化的，
+即員工按主管——下屬關係構成一棵樹，根節點爲 CEO。
+人事部按“宴會交際能力”爲每個員工打分，分值爲實數。
+爲了使所有參加聚會的員工都感到愉快， CEO 不希望員工及其主管同時出席。
+
+公司主席向 Stewart 教授提供公司結構樹，
+採用 10.4 節介紹的左孩子右兄弟表示法描述。
+樹中每個節點除保存指針外，
+還保存員工的名字和宴會交際評分。
+設計算法，求宴會交際評分之和最大的賓客名單。
+分析算法的時間複雜度。
+\stopPROBLEM
+
+\startANSWER
+令 \m{D[i]} 爲僅邀請 \m{i} 及其下屬的最大得分。
+令 \m{E[i]} 爲僅邀請 \m{i} 的下屬的最大得分。
+則：
+\startformula\startmathalignment
+\NC E[i] \NC = \sum_{j\in C_i}D[j] \NR
+\NC D[i] \NC = \max(E[i], a_i + \sum_{j\in C_i}E[j]) \NR
+\stopmathalignment\stopformula
+
+\m{D[1]} 即爲所求。
+由於 \m{D[i]} 和 \m{E[i]} 僅依賴於 \m{D[j]} 和 \m{E[j]}，
+其中 \m{j} 爲 \m{i} 的下屬，我們可以按樹中自下而上的順序進行計算。
+如果我們知道 \m{i} 的下屬序號均大於 \m{i}，
+則可以按從 \m{n} 到 \m{1} 的順序計算 \m{E[i]}、 \m{D[i]}。
+
+\CLRSH{PLAN-PARTY(A, C)}
+\startCLRS
+for i = n downto 1
+	E[i] = 0
+	D[i] = 0
+	foreach j ∈ C[i]
+		E[i] = E[i] + D[j]
+		D[i] = D[i] + E[j]
+	D[i] = D[i] + A[i]
+	if E[i] > D[i]
+		D[i] = E[i]
+\stopCLRS
+
+第 \m{i} 次迭代中的循環需要 \m{2|C_i|+4} 步，
+總共需要時間 \m{4n + 2\sum_i|C_i|}。
+除 CEO 外，其他員工都有一個直接領導，因此 \m{\sum_i|C_i|=n-1}。
+因此總時間爲 \m{\Theta(n)}。
+\stopANSWER
+
+%p15-7
+\startPROBLEM
+（Viterbi algorithm）
+我們可以通過在有向圖 \m{G=(V,E)} 上使用動態規劃方法實現語音識別。
+對每條邊 \m{(u,v)\in E} 打上標籤 \m{\sigma(u, v)}，
+該聲音來自於有限聲音集 \m{\Sigma}。
+這樣的標籤圖就成爲一個特定人說限定語言的形式化模型。
+圖中從特定頂點 \m{v_0\in V} 開始的每條路徑都對應模型產生的一個可能的語音序列。
+對於一條有向路徑，我們定義其標籤爲路徑中邊上標籤的簡單連接。
+\startigNum
+\startitem
+設計高效算法，對給定的圖 G （邊上帶標籤）、
+特定頂點 \m{v_0} 及 \m{\Sigma} 上的聲音序列
+ \m{s=\langle \sigma_1,\sigma_2,\ldots,\sigma_k\rangle}，
+返回 \m{G} 中從 \m{v_0} 開始的一條路徑， \m{s} 爲該路徑的標籤（如果存在這樣的路徑）。
+否則，算法返回 \ALGO{NO-SUCH-PATH}。
+分析算法的時間複雜度（\hint 你可能發現第 22 章中的概念可用於此題）。
+\stopitem
+\stopigNum
+
+\startANSWER
+\startformula\startmathalignment
+\NC S(i,j) \NC = \bigvee_{k:(v_k,v_i)\in E \land \sigma(v_k,v_i)=\sigma_j} S(k,j-1) \NR
+\NC S(0,0) \NC = 1 \NR
+\NC S(i,0) \NC = 0 \qquad 1\le i \le n-1 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+現在，假定每條邊 \m{(u,v)\in E} 都關聯一個非負概率 \m{p(u,v)}，
+他表示從頂點 \m{u} 開始，經過邊 \m{(u,v)}，產生對應的聲音的概率。
+任何頂點的出射邊的概率之和均爲 1。
+一條路徑的概率定義爲路徑上邊的概率之積。
+對於從 \m{v_0} 開始的一條路徑，
+我們可以將其概率看作從 \m{v_0} 開始進行“隨機遊走”（random walk），
+最後恰巧經過這條路徑的概率。
+所謂“隨機遊走”，是指當位於頂點 \m{u} 時，隨機選擇一條出射邊前進，
+每條邊被選中的概率jiujitsu他所關聯的概率。
+
+\startigNum[continue]
+\startitem
+擴展（a）中的算法，使得返回的路徑從 \m{v_0} 開始、標籤爲 \m{s}，且概率最大。
+分析算法的時間複雜度。
+\stopitem
+\stopigNum
+
+\startANSWER
+\startformula\startmathalignment
+\NC S(i,j) \NC = \max_{k:(v_k,v_i)\in E \land \sigma(v_k,v_i)=\sigma_j}
+  \left{p(v_k,v_i) \times S(k,j-1)\right} \NR
+\NC S(0,0) \NC = 1 \NR
+\NC S(i,0) \NC = 0 \qquad 1\le i \le n-1 \NR
+\NC R(i,j) \NC = \argmax_{k:(v_k,v_i)\in E \land \sigma(v_k,v_i)=\sigma_j}
+  \left{p(v_k,v_i) \times S(k,j-1)\right} \NR
+\stopmathalignment\stopformula
+
+計算每一列時，僅需要考慮左側相鄰列。
+計算一列的時間爲 \m{O(n+e)}，共 \m{k} 列，
+因此總時間爲 \m{O((n+e)\times k)}。
+其中 \m{e} 爲邊的數目， \m{k} 爲輸入序列的長度。
+\stopANSWER
+\stopPROBLEM
+
+%p15-8
+\startPROBLEM
+（Image compression by seam carving）
+給定一副彩色圖像，他由數組 \m{A[1..m,1..n]} 構成，
+每個元素都是包含紅綠藍（RGB）亮度的三元組。
+假如我們希望輕度壓縮這幅圖像。具體而言，
+我們希望從每一行中刪除一個像素，使得圖像變窄一個像素。
+但爲了避免影響視覺效果，我們要求相鄰兩行中刪除的像素必須位於統一列或相鄰列。
+也就是說，刪除的像素構成從頂端行到底端行的一條“接縫”（seam），
+相鄰像素均在垂直或對角線方向上相鄰。
+\startigNum
+\startitem
+證明：可能的接縫數量是 \m{m} 的指數函數，假定 \m{n>1}。
+\stopitem
+\stopigNum
+
+\startANSWER
+窮舉法，第一行有 \m{n} 種選擇，以後每一行都有 3 種選擇（不考慮邊界的特殊性）。
+共 \m{n\times (m-1)^3} 種選擇，命題得證。
+\stopANSWER
+
+\startigNum[continue]
+\startitem
+假定現在對每個像素 \m{A[i,j]}，我們都已計算出其“破壞度” \m{d[i,j]} （實數），
+表示刪除像素 \m{A[i,j]} 對圖像可視效果的破壞程度。
+直觀地，一個像素的破壞度越低，他與相鄰像素的相似度越高。
+再假定一條接縫的破壞度定義爲他包含的像素的破壞度之和。
+設計算法，尋找破壞度最低的接縫。
+分析算法的時間複雜度。
+\stopitem
+\stopigNum
+
+\startANSWER
+定義 \m{a[i,j]}：如果接縫只包含第 1 行到第 \m{i} 行，選擇了 \m{A[i,j]} 作爲接縫時的最小破壞度。
+則：
+\startformula
+a[i,j] = d[i,j] + \min(a[i-1,j-1], a[i-1,j], a[i-1,j+1])
+\stopformula
+注意，對於第一行元素 \m{a[i,j] = d[i,j]}，其他行邊緣像素只有兩種選擇。
+
+算法複雜度爲 \m{O(nm)}。
+\stopANSWER
+
+\stopPROBLEM
+
+%p15-9
+\startPROBLEM
+（Breaking a string）
+某種字串處理語言允許程序員將一個字符串拆分爲兩段。
+由於此操作需要複製字串，因此要話費 \m{n} 個時間單位將長度爲 \m{n} 的字符串拆分爲兩段。
+假定一個程序員希望將一個字串拆分爲多段，
+拆分的順序會影響所花費的總時間。
+例如，假定這個程序員希望將長度爲 20 的字串在第 2 個、第 8 個以及第 10 個字符後進行拆分
+（字符從左至右，從 1 開始編號）。
+如果他按由左至右的順序進行拆分，則第一次拆分花費 20 個時間單位，
+第二次拆分花費 18 個時間單位（在第 8 個字符處拆分 3～20 間的字串），
+第三次拆分花費 12 個時間單位，共花費 50 個時間單位。
+但如果從右至左進行拆分，所花時間爲 20、 10、 8 共 38 個時間單位。
+還可以其他順序進行拆分，如，可以線在第 8 個字符處拆分（時間 20），
+接着在左邊第 2 個字符處拆分（時間 8），
+最後在右邊第 10 個字符處拆分（時間 12），總時間爲 40。
+
+設計算法，對給定的拆分位置，確定拆分順序，使其代價最小。
+更形式化地，給定長度爲 \m{n} 的字串 \m{S} 和拆分點序列 \m{L[1..m]}，
+計算拆分的最小代價，以及最優拆分序列。
+
+\startANSWER
+\startformula
+c[i,j] = L[i,j] + \min_{i<k<j}(c[i,k] + c[k,j]) \qquad \text{\m{k} 爲拆分位置}
+\stopformula
+\stopANSWER
+\stopPROBLEM
+
+%p15-10
+\startPROBLEM
+（Planning an investment strategy）
+你所掌握的算法知識從 Acme 計算機公司獲得了一份令人興奮的工作，
+簽約獎金 1 萬美元。
+你決定利用這筆錢進行投資，目標是 10 年後獲得最大回報。
+你決定請 Amalgamated 投資公司管理你的投資，
+該公司的投資回報規則如下。
+該公司提供 \m{n} 種不同的投資，從 1～\m{n} 編號。
+在第 \m{j} 年，第 \m{i} 種投資的回報率爲 \m{r_{ij}}。
+換句話說，如果你在第 \m{j} 年第 \m{i} 種投資投入 \m{d} 美元，
+那麼在第 \m{j} 年底，你會得到 \m{d r_{ij}} 美元。
+回報率是有保證的，即未來 10 年每種投資的回報率均已知。
+你每年只能做出一次投資決定。
+在每年年底，你既可以將錢繼續投入到上一年選擇的投資種類中，
+也可以轉移到其他投資中（轉移到已有的投資種類，或者新的投資種類）。
+如果跨年時不做投資轉移，
+需要支付 \m{f_1} 美元的費用，
+否則，需要支付 \m{f_2} 美元的費用，其中 \m{f_2 > f_1}。
+
+\startigNum
+\startitem
+如上所述，本題允許你每年將錢投入到多種投資中。
+證明：如果每年都將所有錢投入到單一投資中，存在最優投資策略
+（記住最優投資策略只需最大化 10 年的回報，
+無需關心任何其他目標，如最小化風險）。
+\stopitem
+\stopigNum
+
+\startigNum[continue]
+\startitem
+證明：規劃最優投資策略問題具有最優子結構性質。
+\stopitem
+\stopigNum
+
+\startigNum[continue]
+\startitem
+設計最優投資策略規劃算法，分析算法時間複雜度。
+\stopitem
+\stopigNum
+
+\startANSWER
+令 \m{P_i} 爲第 \m{i} 年拿到的利潤。
+令 \m{S_i} 爲第 \m{i} 年選擇的項目。
+令 \m{r[i,j]} 爲第 \m{i} 項目在第 \m{j} 年的利潤率。
+令 \m{R_j} 爲第 \m{j} 年利潤率最高的項目編號。
+\startformula
+P_i = \max(
+(P_{i-1} - f_1) \times r_{S_{i-1} i},
+(P_{i-1} - f_2) \times r_{R_i i}
+)
+\stopformula
+
+時間複雜度爲 \m{\lg n}。
+\stopANSWER
+
+\startigNum[continue]
+\startitem
+假定 Amalgamated 投資公司在上述規則上又加入了新的限制條款，
+在任何時刻你都不能在任何單一投資種類中投入 15000 美元以上。
+證明：最大化 10 年回報問題不再具有最優子結構性質。
+\stopitem
+\stopigNum
+\stopPROBLEM
+
+%p15-11
+\startPROBLEM
+（Inventory planning）
+Rinky Dink 公司是一家製造溜冰場冰面整修設備的公司。
+這種設備每個月的需求量都在變化，因此公司希望設計一種策略來規劃生產，
+需求是給定的，即他雖然是波動的，但是可預測的。
+公司希望設計接下來 \m{n} 個月的生產計劃。
+對第 \m{i} 個月，公司知道需求 \m{d_i}，
+即該月能夠銷售出去的設備數量。
+令 \m{D=\sum_{i=1}{n} d_i} 爲後 \m{n} 個月的總需求。
+公司僱傭的全職員工，可以提供一個月製造 \m{m} 臺設備的勞動力。
+如果公司希望一個月內製造多於 \m{m} 臺設備，
+可以僱傭額外的兼職勞動力，
+僱傭稱霸爲每製造一臺機器付出 \m{c} 美元。
+而且，如果在月末有設備尚未售出，
+公司還要付出庫存成本。
+保存 \m{j} 臺設備的成本可描述爲一個函數 \m{h(j)}，
+其中 \m{1\le j \le D}、 \m{h(j)\ge 0}，
+且對於所有 \m{1\le j\le D-1}，滿足 \m{h(j)\le h(j+1)}。
+
+設計庫存規劃算法，在滿足所有需求的前提下最小化成本。
+算法運行時間應爲 \m{n} 和 \m{D} 的多項式函數。
+\stopPROBLEM
+
+\startANSWER
+令 \m{L_i} 爲第 \m{i} 月的產品剩餘； \m{C_i} 爲第 \m{i} 月的成本。
+\startformula
+C_i = \startcases
+\NC h(L_{i-1}-d_i) \MC \text{如果 \m{L_{i-1}\ge d_i}；（\m{L_i=L_{i-1}-d_i}）} \NR
+\NC 0 \MC \text{如果 \m{d_i - m\le L_{i-1} \le d_i}；（\m{L_i=0}）} \NR
+\NC c\times (L_{i-1}+m-d_i) \MC \text{如果 \m{L_{i-1} < di - m}；（\m{L_i=0}）} \NR
+\stopcases
+\stopformula
+
+\m{C} 依賴於 \m{L}， \m{L_i} 依賴於 \m{L_{i-1}}。
+\stopANSWER
+
+%p15-12
+\startPROBLEM
+（Signing free-agent baseball players）
+假設你是一支棒球大聯盟球隊的總經理。
+在賽季休季期間，你需要簽入一些自由球員。
+球隊老闆給你的預算爲 \m{X} 美元，
+你可以使用少於 \m{X} 美元來簽入球員，
+但如果超支，球隊老闆就會解僱你。
+
+你正在考慮在 \m{N} 個不同位置簽入球員，
+在每個位置上，有 \m{P} 個該位置的自由球員供你選擇。
+由於你不希望任何位置過於臃腫，
+每個位置最多簽入一名球員，
+如果在某個位置上你沒有簽入新球員，則意味着計劃繼續使用現有球員。
+
+爲了確定一名球員的價值，你決定使用一種稱爲“VORP”，
+或“球員替換價值”（value over replacement player）的統計評價指標（sabermetric）。
+球員的 VORP 值越高，其價值越高。
+但 VORP 值高的球員的簽約費用並不一定比 VORP 值低的球員高，
+因爲還有球員價值之外的因素影響簽約費用。
+
+對於每個可選擇的自由球員，你知道他三方面信息：
+\startigBase
+\item 他打哪個位置；
+\item 他的簽約費用；
+\item 他的 VORP。
+\stopigBase
+
+設計一個球員選擇算法，使得簽約總費用不超過 \m{X} 美元，
+而球員的 VORP 總值最大。
+你可以假定每位球員的簽約費用是 10 萬美元的整數倍。
+算法應輸出簽約球員的 VORP 總值、簽約總費用，以及球員名單。
+分析算法的時間、空間複雜度。
+\stopPROBLEM
+
+\startANSWER
+令 \m{c_{ij}} 爲第 \m{i} 個位置、第 \m{j} 個球員的價碼；
+令 \m{v_{ij}} 爲第 \m{i} 個位置、第 \m{j} 個球員的價值；
+共有 \m{n} 個位置。
+令 \m{f(m,n)} 爲用錢 \m{m} 購買 \m{1..n} 位置球員的最大價值總和。
+
+如果在第 \m{n} 個位置購買球員，則 \m{f(m,n)=f(m,n-1)}；
+否則 \m{f(m,n) = \max_{1\le i\le p \land m > c_{ni}}(v_{ni} + f(m-c_{ni},n-1))}。
+最終 \m{f(m,n)} 是兩種情況中值較大的那個。
+\stopANSWER
+
+\stopsubject%Problems

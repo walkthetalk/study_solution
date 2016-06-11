@@ -1,0 +1,119 @@
+\startsection[
+  title={Optimal binary search trees},
+]
+
+%e15.5-1
+\startEXERCISE
+設計僞碼 \ALGO{CONSTRUCT-OPTIMAL-BST(root)}，
+輸入爲表 root，
+輸出是最優二叉搜索樹的結構。
+例如，對圖 15-10 中的 root 表，應輸出：
+
+\startigBase
+\item \m{k_2} 爲根
+\item \m{k_1} 爲 \m{k_2} 的左孩子
+\item \m{d_0} 爲 \m{k_1} 的左孩子
+\item \m{d_1} 爲 \m{k_1} 的右孩子
+\item \m{k_5} 爲 \m{k_2} 的右孩子
+\item \m{k_4} 爲 \m{k_5} 的左孩子
+\item \m{k_3} 爲 \m{k_4} 的左孩子
+\item \m{d_2} 爲 \m{k_3} 的左孩子
+\item \m{d_3} 爲 \m{k_3} 的右孩子
+\item \m{d_4} 爲 \m{k_4} 的右孩子
+\item \m{d_5} 爲 \m{k_5} 的右孩子
+\stopigBase
+
+與圖 15-9(b) 中的最優二叉搜索樹對應。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{CONSTRUCT-OPTIMAL-BST(root)}
+\startCLRS
+print "k" root[1, n] "是根"
+p<-0
+PRINT-OPTIMAL-BST(root, 1, n)
+\stopCLRS
+
+\CLRSH{PRINT-OPTIMAL-BST(root, i, j)}
+\startCLRS
+if root[i, root[i, j]-1]
+	print "k" root[i, root[i, j]-1] "是k" root[i, j] "的左孩子"
+	PRINT-OPTIMAL-BST(root, i, root[i, j]-1)
+else
+	print "d" p "是k" root[i, j] "的左孩子"
+	p<-p+1
+if root[root[i, j]+1, j]
+	print "k" root[root[i, j]+1, j] "是k" root[i, j] "的右孩子"
+	PRINT-OPTIMAL-BST(root, root[i, j]+1, j)
+else
+	print "d" p "是k" root[i, j] "的右孩子"
+	p<-p+1
+\stopCLRS
+\stopANSWER
+
+%e15.5-2
+\startEXERCISE
+若 7 個關鍵字的概率如下所示，求其最優二叉搜索樹的結構和代價。
+\input{tbl/tbl15.5-2}
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e15_5_2-1]
+\externalfigure[output/e15_5_2-2]
+\externalfigure[output/e15_5_2-3]
+\externalfigure[output/e15_5_2-4]
+\stopANSWER
+
+%e15.5-3
+\startEXERCISE
+假設 \ALGO{OPTIMAL-BST} 不維護表 \m{\omega[i,j]}，
+而是在第 9 行利用公式（15.12）直接計算 \m{\omega(i,j)}，
+然後在第 11 行使用此值。
+如此改動會對漸進時間複雜度有何影響？
+附公式（5-5）：
+\startformula
+\omega(i,j) = \sum_{l=i}^{j}p_l + \sum_{l=i-1}^{j}q_l
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+此改動不會影響算法的漸進時間複雜度。
+就改動本身而言，時間由 \m{\Theta(1)} 變爲 \m{\Theta(j-i)}。
+但是，後面的循環本來就是 \m{\Theta(j-i)}，所以再加一個 \m{\Theta(j-i)}，
+結果還是 \m{\Theta(j-i)}，從而對整個算法而言，時間複雜度沒什麼變化，還是 \m{\Theta(n^3)}。
+\stopANSWER
+
+%e15.5-4
+\startEXERCISE
+Knuth 已經證明，對所有 \m{1\le i < j \le n}，
+存在最優二叉搜索樹，其根滿足 \m{root[i,j-1]\le root[i,j]\le root[i+1,j]}。
+利用這一特性修改算法 \ALGO{OPTIMAL-BST}，
+使得運行時間減少爲 \m{\Theta(n^2)}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{OPTIMAL-BST‘(p, q, n)}
+\startCLRS
+for i = 1 to n + 1
+	e[i, i-1] = q[i-1]
+	w[i, i-1] = q[i-1]
+for l = 1 to n
+	for i = 1 to n - l + 1
+		j = i + l - 1
+		e[i, j] = ∞
+		w[i, j] = w[i, j-1] + p[j] + q[j]
+		for r = root[i, j-1] to root[i+1, j]
+			t = e[i, r-1] + e[r+1, j] + w[i, j]
+			if t < e[i, j]
+				e[i, j] = t
+				root[i, j] = r
+return e and root
+\stopCLRS
+
+計算 \m{root[i,j]} 的時候 r 循環次數爲 \m{root[i+1,j] - root[i, j-1] + 1}。
+則 root 中第 k 層所有元素共需要 r 循環 \m{root[k,1] - root[1,k] + n - k} 次。
+又因爲 \m{1\le root[1,k] \le root[k,1] \le n}，所以每一層的循環次數爲 \m{O(n)}。
+而 \m{0\le k\le n-1}，所以總循環次數爲 \m{O(n^2)}。
+\stopANSWER
+
+\stopsection

@@ -1,0 +1,77 @@
+\startsection[
+  title={Solving systems of linear equations},
+  reference=section:solve_system_of_linear_equation,
+]
+
+%e28.1-1
+\startEXERCISE
+採用正向替換法求解下面方程組：
+\startformula
+\left[\startmatrix
+\NC 1 \NC 0 \NC 0 \NR
+\NC 4 \NC 1 \NC 0 \NR
+\NC -6\NC 5 \NC 1 \NR
+\stopmatrix\right]
+\left[\startmatrix
+\NC x_1 \NR
+\NC x_2 \NR
+\NC x_3 \NR
+\stopmatrix\right]
+=
+\left[\startmatrix
+\NC 3 \NR
+\NC 14 \NR
+\NC -7 \NR
+\stopmatrix\right]
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula
+\left[\startmatrix
+\NC x_1 \NR
+\NC x_2 \NR
+\NC x_3 \NR
+\stopmatrix\right]
+=
+\left[\startmatrix
+\NC 3 \NR
+\NC 2 \NR
+\NC 1 \NR
+\stopmatrix\right]
+\stopformula
+\stopANSWER
+
+%e28.1-2
+\startEXERCISE
+找到下面矩陣的一個 LU 分解：
+\startformula
+\left[\startmatrix
+\NC 4 \NC -5 \NC 6 \NR
+\NC 8 \NC -6 \NC 7 \NR
+\NC 12\NC -7 \NC 12 \NR
+\stopmatrix\right]
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startcombination[3*1]
+{\startformula\startmatrix
+\NC 4 \NC -5 \NC 6 \NR
+\NC 8 \NC -6 \NC 7 \NR
+\NC 12\NC -7 \NC 12 \NR
+\stopmatrix\stopformula}{}
+{\startformula\startmatrix
+\NC 4 \NC -5 \NC 6 \NR
+\NC 2 \NC 4 \NC -5 \NR
+\NC 3 \NC 8 \NC -6 \NR
+\stopmatrix\stopformula}{}
+{\startformula\startmatrix
+\NC 4 \NC -5 \NC 6 \NR
+\NC 2 \NC 4 \NC -5 \NR
+\NC 3 \NC 2 \NC 4 \NR
+\stopmatrix\stopformula}{}
+\stopcombination
+\stopANSWER
+
+\stopsection

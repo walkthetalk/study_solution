@@ -56,22 +56,87 @@
 
 \startANSWER
 \startcombination[3*1]
-{\startformula\startmatrix
+{\externalfigure[output/e28_1_2-1]}{}
+{\externalfigure[output/e28_1_2-2]}{}
+{\externalfigure[output/e28_1_2-3]}{}
+\stopcombination
+
+\startformula
+{\left[\startformula\startmatrix
 \NC 4 \NC -5 \NC 6 \NR
 \NC 8 \NC -6 \NC 7 \NR
 \NC 12\NC -7 \NC 12 \NR
-\stopmatrix\stopformula}{}
-{\startformula\startmatrix
+\stopmatrix\stopformula\right]}{}
+=
+{\left[\startformula\startmatrix
+\NC 1 \NC 0 \NC 0 \NR
+\NC 2 \NC 1 \NC 0 \NR
+\NC 3 \NC 2 \NC 1 \NR
+\stopmatrix\stopformula\right]}{}
+{\left[\startformula\startmatrix
 \NC 4 \NC -5 \NC 6 \NR
-\NC 2 \NC 4 \NC -5 \NR
-\NC 3 \NC 8 \NC -6 \NR
-\stopmatrix\stopformula}{}
-{\startformula\startmatrix
-\NC 4 \NC -5 \NC 6 \NR
-\NC 2 \NC 4 \NC -5 \NR
-\NC 3 \NC 2 \NC 4 \NR
-\stopmatrix\stopformula}{}
+\NC 0 \NC 4 \NC -5 \NR
+\NC 0 \NC 0 \NC 4 \NR
+\stopmatrix\stopformula\right]}{}
+\stopformula
+\stopANSWER
+
+%e28.1-3
+\startEXERCISE
+利用 \ALGO{LUP} 分解求解如下方程組：
+\startformula
+\left[\startmatrix
+\NC 1 \NC 5 \NC 4 \NR
+\NC 2 \NC 0 \NC 3 \NR
+\NC 5 \NC 8 \NC 2 \NR
+\stopmatrix\right]
+\left[\startmatrix
+\NC x_1 \NR
+\NC x_2 \NR
+\NC x_3 \NR
+\stopmatrix\right]
+=
+\left[\startmatrix
+\NC 12 \NR
+\NC 9 \NR
+\NC 5 \NR
+\stopmatrix\right]
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startcombination[3*2]
+{\externalfigure[output/e28_1_3-1][scale=600]}{}
+{\externalfigure[output/e28_1_3-2][scale=600]}{}
+{\externalfigure[output/e28_1_3-3][scale=600]}{}
+{\externalfigure[output/e28_1_3-4][scale=600]}{}
+{\externalfigure[output/e28_1_3-5][scale=600]}{}
+{\externalfigure[output/e28_1_3-6][scale=600]}{}
 \stopcombination
+
+\startformula
+\left[\startmatrix
+\NC 0 \NC 0 \NC 1 \NR
+\NC 1 \NC 0 \NC 0 \NR
+\NC 0 \NC 1 \NC 0 \NR
+\stopmatrix\right]
+\left[\startmatrix
+\NC 1 \NC 5 \NC 4 \NR
+\NC 2 \NC 0 \NC 3 \NR
+\NC 5 \NC 8 \NC 2 \NR
+\stopmatrix\right]
+=
+\left[\startmatrix
+\NC 1 \NC 0 \NC 0 \NR
+\NC 1/5 \NC 1 \NC 0 \NR
+\NC 2/5 \NC -16/17 \NC 1 \NR
+\stopmatrix\right]
+\left[\startmatrix
+\NC 5 \NC 8 \NC 2 \NR
+\NC 0 \NC 17/5 \NC 18/5 \NR
+\NC 0 \NC 0 \NC 95/17 \NR
+\stopmatrix\right]
+\stopformula
 \stopANSWER
 
 \stopsection

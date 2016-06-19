@@ -83,7 +83,7 @@
 
 %e28.1-3
 \startEXERCISE
-利用 \ALGO{LUP} 分解求解如下方程組：
+利用 LUP 分解求解如下方程組：
 \startformula
 \left[\startmatrix
 \NC 1 \NC 5 \NC 4 \NR
@@ -137,6 +137,99 @@
 \NC 0 \NC 0 \NC 95/17 \NR
 \stopmatrix\right]
 \stopformula
+
+\startformula
+\left[\startmatrix
+\left[\startmatrix
+\NC 5 \NC 8 \NC 2 \NR
+\NC 0 \NC 17/5 \NC 18/5 \NR
+\NC 0 \NC 0 \NC 95/17 \NR
+\stopmatrix\right]
+\NC 1 \NC 0 \NC 0 \NR
+\NC 1/5 \NC 1 \NC 0 \NR
+\NC 2/5 \NC -16/17 \NC 1 \NR
+\stopmatrix\right]
+y =
+\left[\startmatrix
+\NC 0 \NC 0 \NC 1 \NR
+\NC 1 \NC 0 \NC 0 \NR
+\NC 0 \NC 1 \NC 0 \NR
+\stopmatrix\right]
+\left[\startmatrix
+\NC 12 \NR
+\NC 9 \NR
+\NC 5 \NR
+\stopmatrix\right]
+=
+\left[\startmatrix
+\NC 5 \NR
+\NC 12 \NR
+\NC 9 \NR
+\stopmatrix\right]
+\stopformula
+
+\startformula
+\left[\startmatrix
+\NC 5 \NC 8 \NC 2 \NR
+\NC 0 \NC 17/5 \NC 18/5 \NR
+\NC 0 \NC 0 \NC 95/17 \NR
+\stopmatrix\right]
+x =
+y =
+\left[\startmatrix
+\NC 5 \NR
+\NC 11 \NR
+\NC 295/17 \NR
+\stopmatrix\right]
+\stopformula
+
+\startformula
+x =
+\left[\startmatrix
+\NC -3/19 \NR
+\NC -1/19 \NR
+\NC 59/19 \NR
+\stopmatrix\right]
+\stopformula
+\stopANSWER
+
+%e28.1-4
+\startEXERCISE
+請描述對角矩陣的 LUP 分解。
+\stopEXERCISE
+
+\startANSWER
+\m{P = I}， \m{L = I}， \m{U = P}。
+\stopANSWER
+
+%e28.1-5
+\startEXERCISE
+請描述置換矩陣的 LUP 分解，並證明其唯一性。
+\stopEXERCISE
+
+\startANSWER
+\m{P = A^T}， \m{L = I}， \m{U = I}。
+\stopANSWER
+
+%e28.1-6
+\startEXERCISE
+證明：對所有 \m{n\ge 1}，存在一個 \m{n\times n} 奇異矩陣，
+具有一個 LU 分解。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e28.1-7
+\startEXERCISE
+在 \ALGO{LU-DECOMPOSITION} 中，
+當 \m{k=n} 時，是否有必要執行最外層的 for 循環迭代？
+ \ALGO{LUP-DECOMPOSITION} 中情況又如何？
+\stopEXERCISE
+
+\startANSWER
+當 \m{k=n} 時，都沒有必要執行最外層的 for 循環。
 \stopANSWER
 
 \stopsection

@@ -1,4 +1,89 @@
 \startsection[
   title={Inverting matrices},
 ]
+
+%e28.2-1
+\startEXERCISE
+設 \m{M(n)} 是兩個 \m{n\times n} 矩陣相乘所用時間，
+ \m{S(n)} 表示求 \m{n\times n} 矩陣平方所需時間。
+證明：求矩陣乘機與求矩陣平方實質上難度相同，
+即一個 \m{M(n)} 時間的矩陣相乘算法意味着一個 \m{O(M(n))} 時間的矩陣平方算法，
+一個 \m{S(n)} 時間的矩陣平方算法意味着一個 \m{O(S(n))} 時間的矩陣相乘算法。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e28.2-2
+\startEXERCISE
+設 \m{M(n)} 是兩個 \m{n\times n} 矩陣相乘所需時間，
+ \m{L(n)} 爲計算一個 \m{n\times n} 矩陣的 LUP 分解所需時間。
+證明：求矩陣乘機運算與計算矩陣 LUP 分解實質上難度相同，
+即一個 \m{M(n)} 時間的矩陣相乘算法意味着一個 \m{O(M(n))} 時間的矩陣 LUP 分解算法，
+一個 \m{L(n)} 時間的矩陣 LUP 分解算法意味着一個 \m{O(L(n))} 時間的矩陣相乘算法。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e28.2-3
+\startEXERCISE
+設 \m{M(n)} 是兩個 \m{n\times n} 矩陣相乘所需時間，
+ \m{D(n)} 表示求 \m{n\times n} 矩陣行列式值所需時間。
+證明：求矩陣乘機運算與求行列式值實質上難度相同，
+即一個 \m{M(n)} 時間的矩陣相乘算法意味着一個 \m{O(M(n))} 時間的行列式算法，
+一個 \m{D(n)} 時間的行列式算法意味着一個 \m{O(D(n))} 時間的矩陣相乘算法。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e28.2-4
+\startEXERCISE
+設 \m{M(n)} 是兩個 \m{n\times n} 布爾矩陣相乘所需時間，
+ \m{T(n)} 爲找出 \m{n\times n} 布爾矩陣的傳遞閉包所需時間（見\refsection{floyd_warshall}）。
+證明：一個 \m{M(n)} 時間的布爾矩陣相乘算法意味着一個 \m{O(M(n)\lg n)} 時間的傳遞閉包算法，
+一個 \m{T(n)} 時間的傳遞閉包算法意味着一個 \m{O(T(n))} 時間的布爾矩陣相乘算法。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e28.2-5
+\startEXERCISE
+當矩陣元素屬於整數模 2 所構成的域時，
+基於定理 28.2 的矩陣求逆算法是否仍然有效？
+請解釋。附定理 28.2：
+
+（矩陣求逆運算不比矩陣乘法運算更難）
+如果能在 \m{M(n)} 時間內計算出兩個 \m{n\times n} 實數矩陣的乘機，
+其中 \m{M(n)=\Omega(n^2)} 且 \m{M(n)} 滿足兩個正則性條件：
+對任意的 \m{k(0\le k\le n)}， \m{M(n+k)=O(M(n))}；
+對某個常數 \m{c<1/2}， \m{M(n/2)\le cM(n)}。
+那麼可以在 \m{O(M(n))} 時間內計算出任何一個 \m{n\times n} 非奇異實數矩陣的逆。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e28.2-6
+\startEXERCISE
+推廣定理 28.2 的矩陣求逆算法，使之哪呢個處理複數矩陣，
+並證明你所給出的推廣是正確的。
+（\hint 用 \m{A} 的{\EMP 共軛轉置矩陣}
+（conjugate transpose） \m{A^*} 來替代 \m{A} 的轉置矩陣，
+把 \m{A} 中的每個元素用其共軛複數來替代就得到 \m{A^*}。
+考慮用{\EMP 埃爾米特}（Hermitian）矩陣來替代對稱矩陣，
+埃爾米特矩陣就是滿足 \m{A=A^*} 的矩陣 \m{A}。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

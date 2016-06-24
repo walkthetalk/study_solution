@@ -2,4 +2,171 @@
   title={Problems},
 ]
 
+%p28-1
+\startPROBLEM[problem:tridiag_linear_equation]
+（Tridiagonal systems of linear equations）
+考察三對角矩陣：
+\startformula
+A=\left[\startmatrix
+\NC 1 \NC -1\NC 0 \NC 0 \NC 0 \NR
+\NC -1 \NC 2\NC -1 \NC 0 \NC 0 \NR
+\NC 0 \NC -1\NC 2 \NC -1 \NC 0 \NR
+\NC 0 \NC 0 \NC -1 \NC 2 \NC -1 \NR
+\NC 0 \NC 0 \NC 0 \NC -1 \NC 2 \NR
+\stopmatrix\right]
+\stopformula
+
+\startigBase[a]\startitem
+求矩陣 \m{A} 的 LU 分解。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+通過正向替換與反響替換求解方程 \m{Ax=\left(\startmatrix
+\NC 1 \NC 1 \NC 1 \NC 1 \NC 1 \NR
+\stopmatrix\right)^T}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+求 \m{A} 的逆矩陣。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+請說明對任意的 \m{n\times n} 對稱正定三對角矩陣 \m{A} 和任意 \m{n} 維向量 \m{b}，
+如何通過運用一個 LU 分解可在 \m{O(n)} 時間內求解方程 \m{Ax=b}。
+論證在最壞情況下，任何基於求 \m{A^{-1}} 的方法在漸進意義下要花費更多時間。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+請說明對任意 \m{n\times n} 非奇異的三對角矩陣 \m{A} 和任意 \m{n} 維向量 \m{b}，
+如何運用一個 LUP 分解在 \m{O(n)} 時間內求解方程 \m{Ax=b}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%28-2
+\startPROBLEM
+（Splines）
+把一組點插值到一條曲線中的一種實用方法是採用{\EMP 三次樣條}（cubic spline）。
+已知 \m{n+1} 個點值對組成的集合 \m{\{(x_i,y_i): i=0,1,\ldots,n\}}，
+其中 \m{x_0<x_1<\ldots<x_n}。
+我們希望擬合出這些點的分段三次曲線（樣條） \m{f(x)}。
+也就是說，曲線 \m{f(x)} 由 \m{n} 個三次多項式組成：
+\startformula
+f_i(x) = a_i + b_i x + c_i x^2 + d_i x^3
+\stopformula
+其中 \m{i = 0,1,\ldots,n-1}，
+如果 \m{x} 落在區間 \m{x_i\le x\le x_{i+1}} 中，
+那麼曲線的值由 \m{f(x) = f_i(x-x_i)} 給出。
+把三次多項是“粘和”在一起的點 \m{x_i} 稱爲{\EMP 結}（knot）。
+簡單起見，假定對 \m{i=0,1,\ldots,n}，有 \m{x_i = i}。
+
+爲了保證 \m{f(x)} 的連續性，我們要求當 \m{i=0,1,\ldots,n-1} 時，
+\startformula\startmathalignment
+\NC f(x_i) \NC = f_i(0) = y_i \NR
+\NC f(x_{i+1}) \NC = f_i(1) = y_{i+1} \NR
+\stopmathalignment\stopformula
+爲保證 \m{f(x)} 足夠光滑，我們還要求當 \m{i=0,1,\ldots,n-2} 時，
+在每個結的一階導數是連續的：
+\startformula
+f'(x_{i+1}) = f'_i(1) = f'_{i+1}(0)
+\stopformula
+
+\startigBase[a]\startitem
+假定當 \m{i=0,1,\ldots,n} 時，
+我們不僅知道點值對 \m{\{(x_i,y_i)\}}，
+而且知道每個結的一階導數 \m{D_i = f'(x_i)}。
+請用值 \m{y_i}、 \m{y_{i+1}}、 \m{D_i} 和 \m{D_{i+1}} 來
+表示每個係數 \m{a_i}、 \m{b_i}、 \m{c_i} 和 \m{d_i}。
+（記住 \m{x_i = i}）
+根據點值對和一階導數計算除 \m{4n} 個係數需要多少時間？
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+如何選擇 \m{f(x)} 在每個結的一階導數仍然是個問題。
+一種方法是要求當 \m{i=0,1,\ldots,n-2} 時，
+二階導數在每個結處連續：
+\startformula
+f''(x_{i+1}) = f''_i(1) = f''_{i+1}(0)
+\stopformula
+在第一個結和最後一個結，
+假設 \m{f''(x_0) = f''(0) = 0} 以及 \m{f''(x_n) = f''_{n-1}(1) = 0}；
+這些假設使 \m{f(x)} 成爲一個{\EMP 自然}三次樣條。
+
+\startigBase[continue]\startitem
+利用二階導數的連續性限制，說明當 \m{i=1,2,\ldots,n-1} 時，
+\startformula
+D_{i-1} + 4D_i + D_{i+1} = 3(y_{i+1} - y_{i-1}) \eqno{28.21}
+\stopformula
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+請說明：
+\startformula\startmathalignment
+\NC 2D_0 + D_1 \NC = 3(y_1 - y_0) \NR
+\NC D_{n-1} + 2D_n \NC = 3(y_n - y_{n-1}) \NR
+\stopmathalignment\stopformula
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+重寫等式（28.21）～（28.23）爲
+包含未知量向量 \m{D=\langle D_0,D_1,\ldots,D_n\rangle} 的矩陣方程。
+你所給的方程中矩陣具有什麼性質？
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+論證：運用自然三次樣條可以在 \m{O(n)} 時間內對一組 \m{n+l} 個點值對組成的集合對
+進行插值（參見\refproblem{tridiag_linear_equation}）。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+請說明當 \m{x_i} 不一定等於 \m{i} 時，
+如何確定出一個自然三次樣條對一組 \m{n+l} 個點 \m{(x_i,y_i)}
+ （滿足 \m{x_0<x_1<\ldots<x_n}）進行插值。
+你必須求解什麼楊的矩陣方程？
+你所給出的算法運行速度有多快？
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
 \stopsubject%Problems

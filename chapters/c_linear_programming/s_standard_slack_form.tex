@@ -2,4 +2,58 @@
   title={Standard and slack forms},
 ]
 
+%e29.1-1
+\startEXERCISE
+如果將式（29.24）～（29.28）中的線性規劃表示成式（29.19）～（29.21）中的緊湊記號形式，
+則 \m{n}、 \m{m}、 \m{A}、 \m{b} 和 \m{c} 分別是什麼？
+附：
+
+\startformula\startmathalignment[n=6,
+  align={right,right,right,middle,left,right}]
+\NC 2x_1 - \NC 3x_2 + \NC 3x_3 \NC     \NC    \NC \qquad (29.24) \NR
+\NC  x_1 + \NC  x_2 - \NC  x_3 \NC \le \NC  7 \NC \qquad (29.25) \NR
+\NC -x_1 - \NC  x_2 + \NC  x_3 \NC \le \NC -7 \NC \qquad (29.26) \NR
+\NC  x_1 - \NC 2x_2 + \NC 2x_3 \NC \le \NC  4 \NC \qquad (29.27) \NR
+\NC  x_1,  \NC  x_2,  \NC  x_3 \NC \ge \NC  0 \NC \qquad (29.28) \NR
+\NC        \NC        \NC c^Tx \NC     \NC    \NC \qquad (29.19) \NR
+\NC        \NC        \NC  Ax  \NC \le \NC  b \NC \qquad (29.20) \NR
+\NC        \NC        \NC   x  \NC \ge \NC  0 \NC \qquad (29.21) \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC n \NC = 3 \NR
+
+\NC m \NC = 3 \NR
+
+\NC A \NC = \left[\startmatrix
+\NC 1 \NC 1 \NC -1 \NR
+\NC -1 \NC -1 \NC 1 \NR
+\NC 1 \NC -2 \NC 2 \NR
+\stopmatrix\right] \NR
+
+\NC b \NC = \left[\startmatrix
+\NC 7 \NR
+\NC -7 \NR
+\NC 4 \NR
+\stopmatrix\right] \NR
+
+\NC c \NC = \left[\startmatrix
+\NC 2 \NR
+\NC -3 \NR
+\NC 3 \NR
+\stopmatrix\right] \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e29.1-2
+\startEXERCISE
+請給出式（29.24）～（29.28）中線性規劃的三個可行解。
+每個解的目標值是多少？
+\stopEXERCISE
+
+\startANSWER
+\stopANSWER
+
 \stopsection

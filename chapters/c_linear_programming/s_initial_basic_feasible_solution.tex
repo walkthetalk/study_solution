@@ -1,4 +1,141 @@
 \startsection[
   title={The initial basic feasible solution},
 ]
+
+%e29.5-1
+\startEXERCISE
+寫出詳細的僞碼實現 \ALGO{INITIALIZE-SIMPLEX} 的第 5 行和第 14 行。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.5-2
+\startEXERCISE
+請說明當 \ALGO{SIMPLEX} 的主題循環部分被 \ALGO{INITIALIZE-SIMPLEX} 運行時，永遠不會返回“無界”。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.5-3
+\startEXERCISE
+假設已知一個標準型的線性規劃 \m{L}，
+並且假設對 \m{L} 與 \m{L} 的對偶問題，
+初始鬆弛型相應的基本解都是可行的。
+請說明 \m{L} 的最優目標值是 0。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.5-4
+\startEXERCISE
+假設在一個線性規劃中嗯我們允許嚴格的不等式。
+請說明在這種情況下，線性規劃基本定理不再成立。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.5-5
+\startEXERCISE
+用 \ALGO{SIMPLEX} 求解下面的線性規劃：
+
+最大化： \m{x_1+3x_2}
+
+滿足約束：
+\startformula\startmathalignment[n=5,
+align={right,right,right,right,middle}]
+\NC  x_1 \NC - \NC  x_2 \NC \le \NC 8 \NR
+\NC -x_1 \NC - \NC  x_2 \NC \le \NC -3 \NR
+\NC -x_1 \NC + \NC 4x_2 \NC \le \NC 2 \NR
+\NC     \NC x_1, \NC x_2 \NC \ge \NC 0 \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.5-6
+\startEXERCISE
+用 \ALGO{SIMPLEX} 求解下面的線性規劃：
+
+最大化： \m{x_1 - 2x_2}
+
+滿足約束：
+\startformula\startmathalignment[n=5,
+align={right,right,right,right,middle}]
+\NC   x_1 \NC + \NC 2x_2 \NC \le \NC 4 \NR
+\NC -2x_1 \NC - \NC 6x_2 \NC \le \NC -12 \NR
+\NC       \NC   \NC  x_2 \NC \le \NC 1 \NR
+\NC     \NC x_1, \NC x_2 \NC \ge \NC 0 \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.5-7
+\startEXERCISE
+用 \ALGO{SIMPLEX} 求解下面的線性規劃：
+
+最大化： \m{x_1 + 3x_2}
+
+滿足約束：
+\startformula\startmathalignment[n=5,
+align={right,right,right,right,middle}]
+\NC  -x_1 \NC + \NC  x_2 \NC \le \NC -1 \NR
+\NC  -x_1 \NC - \NC  x_2 \NC \le \NC -3 \NR
+\NC  -x_1 \NC + \NC 4x_2 \NC \le \NC 2 \NR
+\NC     \NC x_1, \NC x_2 \NC \ge \NC 0 \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.5-8
+\startEXERCISE
+求解式（29.6）～（29.10）給出的線性規劃。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.5-9
+\startEXERCISE
+考慮下面一個變量的線性規劃，我們稱爲 \m{P}：
+
+最大化： \m{tx}
+
+滿足約束：
+\startformula\startmathalignment
+\NC rx \NC \le s \NR
+\NC x \NC \ge 0 \NR
+\stopmathalignment\stopformula
+其中 \m{r}、 \m{s} 和 \m{t} 是任意的實數。
+設 \m{D} 是 \m{P} 的對偶。
+
+敘述對 \m{r}、 \m{s} 和 \m{t} 的哪些值，可以做出如下斷言：
+\startigBase[n]
+\item P 和 D 都具有優先目標值的最優解。
+\item P 是可行的，但 D 是不可行的。
+\item D 是可行的，但 P 是不可行的。
+\item P 和 D 都是不可行的。
+\stopigBase
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

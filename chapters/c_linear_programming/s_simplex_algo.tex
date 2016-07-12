@@ -1,4 +1,108 @@
 \startsection[
   title={The simplex algorithm},
 ]
+
+%e29.3-1
+\startEXERCISE
+請完成引理 29.4 的證明，說明必有 \m{c=c'} 和 \m{v=v'}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.3-2
+\startEXERCISE
+請說明在 \ALGO{SIMPLEX} 的第 12 行對 \ALGO{PIVOT} 的調用永遠不會減小 \m{v} 的值。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.3-3
+\startEXERCISE
+證明：對 \ALGO{PIVOT} 過程給定的鬆弛型和該過程返回的鬆弛型是等價的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.3-4
+\startEXERCISE
+假設把一個標準型的線性規劃 \m{(A,b,c)} 轉換成鬆弛型。
+證明：基本解是可行的當且僅當對 \m{i=1,2,\ldots,m}，有 \m{b_i\ge 0}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.3-5
+\startEXERCISE
+採用 \ALGO{SIMPLEX} 求解下面的線性規劃：
+
+最大化 \m{18x_1 + 12.5x_2}
+
+滿足約束：
+\startformula\startmathalignment[n=5]
+\NC x_1 \NC + \NC x_2 \NC \le \NC 20 \NR
+\NC x_1 \NC   \NC     \NC \le \NC 12 \NR
+\NC     \NC   \NC x_2 \NC \le \NC 16 \NR
+\NC     \NC x_1, \NC x_2 \NC \ge \NC 0 \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.3-6
+\startEXERCISE
+採用 \ALGO{SIMPLEX} 求解下面的線性規劃：
+
+最大化 \m{5x_1 - 3x_2}
+
+滿足約束：
+\startformula\startmathalignment[n=5]
+\NC  x_1 \NC - \NC x_2 \NC \le \NC 1 \NR
+\NC 2x_1 \NC + \NC x_2 \NC \le \NC 2 \NR
+\NC     \NC x_1, \NC x_2 \NC \ge \NC 0 \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.3-7
+\startEXERCISE
+採用 \ALGO{SIMPLEX} 求解下面的線性規劃：
+
+最大化 \m{x_1 + x_2 + x_3}
+
+滿足約束：
+\startformula\startmathalignment[n=7,
+align={right,right,right,right,right,right,right}]
+\NC  2x_1 \NC + \NC 7.5x_2 \NC + \NC  3x_3 \NC \ge \NC 10000 \NR
+\NC 20x_1 \NC + \NC   5x_2 \NC + \NC 10x_3 \NC \ge \NC 30000 \NR
+\NC     \NC x_1, \NC x_2, \NC x_3 \NC      \NC \ge \NC 0 \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.3-8
+\startEXERCISE
+在引理 29.5 的證明中，我們聲明至多存在 \m{\binom{m+n}{n}} 種方法來選取一個基本變量集合 \m{B}。
+給出一個線性規劃的例子，其中有嚴格少於 \m{\binom{m+n}{n}} 種方法來選取此集合 \m{B}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

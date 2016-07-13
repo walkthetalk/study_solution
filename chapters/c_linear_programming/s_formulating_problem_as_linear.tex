@@ -1,4 +1,74 @@
 \startsection[
   title={Formulating problems as linear programs},
 ]
+
+%e29.2-1
+\startEXERCISE
+請將單對最短路徑線性規劃從式（29.44）～（29.46）轉換稱標準型。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.2-2
+\startEXERCISE
+請明確寫出求圖 24-2（a）中從節點 s 到節點 y 的最短路徑的線性規劃。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.2-3
+\startEXERCISE
+在單源最短路徑問題中，我們希望從源點 s 到所有頂點 \m{v\in V} 的最短路徑權值。
+給定圖 G，請寫出一個線性規劃，其解具有如下性質：
+對每個頂點 \m{v\in V}， \m{d_v} 是從 s 到 v 的最短路徑權值。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.2-4
+\startEXERCISE
+請明確寫出求圖 26-1（a）中最大流的線性規劃。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.2-5
+\startEXERCISE
+請重寫最大流式（29.47）～（29.50）的線性規劃，
+使得他只使用 \m{O(V+E)} 個約束。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e29.2-6
+\startEXERCISE
+請寫出一個線性規劃，
+給定一個二部圖 \m{G=(V,E)}，
+其中每條邊 \m{(u,v)\in E} 有一個非負的容量 \m{c(u,v)\ge 0} 和
+一個費用 \m{a(u,v)}。
+與多商品流問題一樣，
+我們已知 \m{k} 種不同商品 \m{K_1,K_2,\ldots,K_k}，
+其中用三元組 \m{K_i=(s_i,t_i,d_i)} 來詳細說明商品 \m{i}。
+與多商品流問題一樣，我們爲商品 \m{i} 定義流 \m{f_i}，
+在邊 \m{(u,v)} 上定義匯聚流 \m{f_{uv}}。
+一個可行流滿足在每條邊 \m{(u,v)} 上匯聚流不超過邊 \m{(u,v)} 的容量。
+一個流的費用是 \m{\sum a(u,v)f_{uv}}，
+目標是尋找具有最小費用的可行流。
+請將這個問題表示爲一個線性規劃。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

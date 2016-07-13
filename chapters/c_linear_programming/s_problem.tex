@@ -1,6 +1,88 @@
-
 \startsubject[
   title={Problems},
 ]
+
+%p29-1
+\startPROBLEM
+（Linear-inequality feasibility）
+給定 \m{m} 個線性不等式，其中有 \m{n} 個變量 \m{x_1,x_2,\ldots,x_n} ，
+{\EMP 線性不等式可行性問題}關注是否有變量的一個設置，能夠同時滿足每個不等式。
+
+\startigBase[a]\startitem
+證明：如果有一個線性規劃的算法，
+那麼可以利用他來解一個線性不等式可行性問題，
+在線性規劃問題中，你用到的變量和約束的個數應該是 \m{n} 和 \m{m} 的多項式。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：如果有一個線性不等式可行性問題的算法，
+那麼可以利用他來求解線性規劃問題。
+在線性不等式可行性問題中，
+你用到的變量和線性不等式的個數應該是 \m{n} 和 \m{m} 的多項式，
+即線性規劃中變量和約束的數目。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p29-2
+\startPROBLEM
+（Complementary slackness）
+{\EMP 互補鬆弛性}描述原始變量值和對偶約束，
+以及對偶變量值與原始約束之間的關係。
+設 \m{\bar{x}} 表示式（29.16）～（29.18）中給出的原始線性規劃的一個可行解，
+ \m{\bar{y}} 表示式（29.83）～（29.85）中給出的對偶線性規劃的可行解。
+互補鬆弛闡述下面的條件是 \m{\bar{x}} 和 \m{\bar{y}} 爲最優的充分必要條件：
+\startformula
+\sum_{i=1}^{m}a_{ij}\bar{y}_i = c_j \text{或者} \bar{x}_j=0, j=1,2,\ldots,n
+\stopformula
+以及
+\startformula
+\sum_{i=1}^{n}a_{ij}\bar{x}_j = b_i \text{或者} \bar{y}_i=0, i=1,2,\ldots,m
+\stopformula
+
+\startigBase[a]\startitem
+對式（29.53)～（29.57）中的線性規劃驗證互補鬆弛性成立。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：對任意原始線性規劃和他相應的對偶，互補鬆弛性成立。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：式（29.16）～（29.18）中給出的原始線性規劃的一個可行解 \m{\bar{x}} 是最優的，
+當且僅當存在值 \m{\bar{y}=(\bar{y}_1,\bar{y}_2,\ldots,\bar{y}_m)} 使得：
+\startigBase[n]\startitem
+\m{\bar{y}} 是式（29.83）～（29.85）中給出的對偶線性規劃的一個可行解。
+\stopitem\stopigBase
+
+\startigBase[continue]\startitem
+對於所有的 \m{j} 有 \m{\sum_{i=1}^{m}a_{ij}\bar{y}_i=c_j}，於是 \m{\bar{x}_j > 0}，以及
+\stopitem\stopigBase
+
+\startigBase[continue]\startitem
+對於所有的 \m{i} 有 \m{\bar{y}_i=0}，於是 \m{\sum_{j=1}^{n}a_{ij}\bar{x}_j < b_i}。
+\stopitem\stopigBase
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
 
 \stopsubject%Problems

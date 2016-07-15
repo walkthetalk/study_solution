@@ -85,4 +85,119 @@
 
 \stopPROBLEM
 
+%p29-3
+\startPROBLEM
+（Integer linear programming）
+{\EMP 整數線性規劃問題}是壹個線性規劃問題，
+外加約束：變量 \m{x} 必須取整數值。
+\refexercise{34.5-3} 說明僅確定壹個整數線性規劃是否有可行解是 NP 難的，
+這意味著這個問題目前沒有已知多項式時間的算法。
+\startigBase[a]\startitem
+證明：弱對偶性（引理 29.8）對整數線性規劃成立。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：對偶性（引理 29.10）對整數線性規劃不總是成立。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+給定壹個標準型的原始線性規劃，
+我們定義 \m{P} 為原始線性規劃的最優目標值，
+ \m{D} 為其對偶問題的最優目標值，
+ \m{IP} 為整數版本的原始問題（即原始問題加上變量取整數值的約束）的最優目標值，
+ \m{ID} 為整數版本的對偶問題的最優目標值。
+假設整數版本的原始線性規劃和其整數版本的對偶線性規劃都是可行的、有界的，
+請說明 \m{IP \le P = D \le ID}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p29-4
+\startPROBLEM
+（Farkas’s lemma）
+設 \m{A} 為壹個 \m{m\times n} 矩陣，
+ \m{c} 為壹個 \m{n} 維向量。
+那麽 Farkas 引理說明正好有壹個系統
+\startformula\startmathalignment
+\NC Ax \NC \le 0 \NR
+\NC c^T x \NC > 0 \NR
+\stopmathalignment\stopformula
+以及
+\startformula\startmathalignment
+\NC A^T y \NC = c \NR
+\NC     y \NC \le 0 \NR
+\stopmathalignment\stopformula
+是可解的，其中 \m{x} 是壹個 \m{n} 維向量，
+ \m{y} 是壹個 \m{m} 維向量。
+證明 Farkas 引理。
+\stopPROBLEM
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%p29-5
+\startPROBLEM
+（Minimum-cost circulation）
+這個問題中，我們考慮\refsection{formulate_as_linear} 中最小代價流問題的壹個變形，
+其中我們沒有給定需求、壹個源點或匯點。
+取而代之，我們像以前壹樣給定壹個流網絡和邊的代價 \m{a(u,v)}。
+如果壹個流在每條邊上滿足容量限制，
+以及在每個頂點上滿足流量守恒條件，則稱他是可行的。
+我們的目標是在所有可行流中，
+找到壹個代價最小的。
+我們把這個問題稱為{\EMP 最小代價流通問題}。
+\startigBase[a]\startitem
+把最小代價流通問題形式化為壹個線性規劃。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+假設對於所有的邊 \m{(u,v)\in E}，
+我們有 \m{a(u,v) > 0}。
+描繪此最小代價流通問題的壹個最優解。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+把最大流問題形式化為壹個最小代價流通問題的線性規劃。
+也就是給定壹個最大流問題的實例 \m{G=(V, E)}，
+其中有源點 \m{s}、匯點 \m{t} 以及邊上的容量限制 \m{c}，
+給定壹個（可能不同的）網絡 \m{G'=(V',E')}，
+具有邊上容量限制 \m{c'}，
+以及邊上的代價 \m{a'}，
+使得妳可以通過創建壹個最小代價流通問題來得到最大流問題的壹個解。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+把單源最短路徑問題形式化為壹個最小代價流通問題的線性規劃。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
 \stopsubject%Problems

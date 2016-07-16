@@ -1,0 +1,52 @@
+\startsection[
+  title={The RSA public-key cryptosystem},
+]
+
+%e31.7-1
+\startEXERCISE
+考慮一個 RSA 密鑰集合，
+其中 \m{p=11,q=29,n=319,e=3}。
+在密鑰中用到的 \m{d} 值應當是多少？
+對消息 \m{M=100} 加密後得到什麼消息？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e31.7-2
+\startEXERCISE
+證明：如果 Alice 的公開指數 \m{e} 等於 3，
+並且對方獲得了 Alice 的祕密指數 \m{d}，
+其中 \m{0<d<\phi(n)}，
+則對方能夠在關於 \m{n} 的位數的多項式時間內
+對 Alice 的模 n 進行分解。
+（儘管不用證明下列結論，
+但你也許會對下列事實感興趣：
+即使條件 \m{e=3} 被去除，
+上述結論仍然成立。參見 Miller[255]。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e31.7-1
+\startEXERCISE
+證明：在如下意義中， RSA 是乘法的：
+\startformula
+P_A(M_1)P_A(M_2) \equiv P_A(M_1 M_2) (\mod n)
+\stopformula
+利用這個事實證明：
+如果對方有一個過程，
+對 \m{\integers_n} 中的用 \m{P_A} 加密的消息，
+他能夠有效地解密出其中的百分之一，
+則他可以運用一種概率性算法，
+以較大概率爲每一條用 \m{P_A} 加密的信息進行解密。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

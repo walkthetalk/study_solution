@@ -1,0 +1,111 @@
+\startsection[
+  title={Modular arithmetic},
+]
+
+%e31.3-1
+\startEXERCISE
+畫出羣\m{(\integers_4, +_4)} 和羣 \m{(\integers_5^\ast, \cdot_5)} 的運算表。
+通過找這兩個羣的元素間的一一對應關係 \alpha，
+滿足 \m{a+b\equiv c (\mod 4)} 當且僅當 \m{\alpha(a)\cdot \alpha(b) \equiv \alpha(c) (\mod 5)}，
+來證明這兩個羣是同構的。
+\stopEXERCISE
+
+\startANSWER
+先找到各自的單位元（Identify） \m{a_0}，再找到 \m{a_1}，使得 \m{a_1^{(2)} = a_0}。
+以此類推，找到 \m{a_2} 和 \m{a_3}。
+
+\startcolumns[n=3, rule=on]
+\startformula\startmathalignment[n=3]
+\NC +_4 \NC \rightarrow \NC \cdot_5 \NR
+\NC 0 \NC \rightarrow \NC 1 \NR
+\NC 1 \NC \rightarrow \NC 3 \NR
+\NC 2 \NC \rightarrow \NC 4 \NR
+\NC 3 \NC \rightarrow \NC 1 \NR
+\stopmathalignment\stopformula
+\column
+\input{tbl/tbl31.3-1-1}
+\column
+\input{tbl/tbl31.3-1-2}
+\stopcolumns
+\stopANSWER
+
+%e31.3-2
+\startEXERCISE
+列出 \m{\integers_9} 和 \m{\integers_{13}^\ast} 的所有子羣。
+\stopEXERCISE
+
+\startANSWER
+\startcolumns[n=2, rule=on]
+\startformula\startmathalignment
+\NC \langle 0 \rangle \NC= \{ 0 \} \NR
+\NC \langle 1 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\NC \langle 2 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\NC \langle 3 \rangle \NC= \{ 0, 3, 6 \} \NR
+\NC \langle 4 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\NC \langle 5 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\NC \langle 6 \rangle \NC= \{ 0, 3, 6 \} \NR
+\NC \langle 7 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\NC \langle 8 \rangle \NC= \{ 0, 1, 2, 3, 4, 5, 6, 7, 8 \} \NR
+\stopmathalignment\stopformula
+\column
+\startformula\startmathalignment
+\NC \langle 1 \rangle \NC= \{ 1 \} \NR
+\NC \langle 2 \rangle \NC= \{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 \} \NR
+\NC \langle 3 \rangle \NC= \{ 1, 3, 9 \} \NR
+\NC \langle 4 \rangle \NC= \{ 1, 3, 4, 9, 10, 12 \} \NR
+\NC \langle 5 \rangle \NC= \{ 1, 5, 8, 12 \} \NR
+\NC \langle 6 \rangle \NC= \{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 \} \NR
+\NC \langle 7 \rangle \NC= \{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 \} \NR
+\NC \langle 8 \rangle \NC= \{ 1, 5, 8, 12 \} \NR
+\NC \langle 9 \rangle \NC= \{ 1, 3, 9 \} \NR
+\NC \langle 10 \rangle \NC= \{ 1, 3, 4, 9, 10, 12 \} \NR
+\NC \langle 11 \rangle \NC= \{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 \} \NR
+\NC \langle 12 \rangle \NC= \{ 1, 12 \} \NR
+\stopmathalignment\stopformula
+\stopcolumns
+\stopANSWER
+
+%e31.3-3
+\startEXERCISE
+證明定理 31.14。附：
+
+定理 31.14 （一個有限羣的非空封閉子集是一個子羣）：如果 \m{(S,\oplus)} 是一個有限羣，
+ \m{S'} 是 \m{S} 的任意一個非空子集並滿足對所有 \m{a,b\in S'}，都有 \m{a\oplus b\in S'}，
+則 \m{(S',\oplus)} 是 \m{(S,\oplus)} 的一個子羣。
+\stopEXERCISE
+
+\startANSWER
+只需證明 \m{S'} 是一個羣即可。
+\startigBase[n]
+\item {\EMP 封閉性}：假設已經滿足；
+\item {\EMP 單位元}：\TODO{}；
+\item {\EMP 結合律}：繼承自 \m{S}，也滿足；
+\item {\EMP 逆元}：\TODO{}。
+\stopigBase
+\stopANSWER
+
+%e31.3-4
+\startEXERCISE
+證明：如果 p 是素數且 e 是正整數，則：
+\startformula
+\phi(p^e) = p^{e-1}(p-1)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula
+\phi(p^e) = p^e (1-\frac{1}{p}) = p^{e-1}(p-1)
+\stopformula
+\stopANSWER
+
+%e31.3-5
+\startEXERCISE
+證明：對任意 \m{n>1} 和任意 \m{a\in\integers_n^\ast}，
+由 \m{f_a(x)=ax \mod n} 所定義的函數 \m{f_a: \integers_n^\ast \rightarrow \integers_n^\ast} 是 \m{\integers_n^\ast} 的一個置換。
+\stopEXERCISE
+
+\startANSWER
+對於任一 a 和 n，每一個 x 都有一個唯一的 y 與其對應，也就是 \m{f(x)} 是一個雙射函數。
+\stopANSWER
+
+\stopsection

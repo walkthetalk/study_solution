@@ -1,0 +1,191 @@
+\startsubject[
+  title={Problems},
+]
+
+%p31-1
+\startPROBLEM
+（Binary gcd algorithm）
+與計算餘數的執行速度相比，
+大多數計算機執行減法運算、
+測試一個二進制整數的奇偶性運算以及
+折半運算的執行速度都要更快些。
+本題所討論的{\EMP 二進制 gcd 算法}中避免了歐幾里德算法中計算餘數的過程。
+
+\startigBase[a]\startitem
+證明：如果 a 和 b 都是偶數，則 \m{\gcd(a,b)=2\cdot \gcd(a/2,b/2)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：如果 a 是奇數， b 是偶數，則 \m{\gcd(a,b)=\gcd(a,b/2)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：如果 a 和 b 都是奇數，則 \m{\gcd(a,b)=\gcd((a-b)/2,b)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+設計一個有效的二進制 \m{\gcd} 算法，
+輸入整數爲 a 和 b （\m{a\ge b}），
+並且算法的運行時間爲 \m{O(\lg a)}。
+假定每個減法運算、測試奇偶性運算以及折半運算都能在單位時間內執行。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p31-2
+\startPROBLEM
+（Analysis of bit operations in Euclid’s algorithm）
+\startigBase[a]\startitem
+考慮用普通的“紙和筆”算法來實現長除法的運算：
+用 a 除以 b，得到商 q 和餘數 r。
+證明：這種算法需要執行 \m{O((1+\lg q)\lg b)} 次位操作。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+定義 \m{\mu(a,b)=(1+\lg a)(1+\lg b)}。
+證明：過程 \ALGO{EUCLID} 在把計算 \m{\gcd(a,b)} 的問題轉化爲
+計算 \m{\gcd(b,a\mod b)} 的問題時，
+所執行的位操作次數至多爲 \m{c(\mu(a,b)-\mu(b,a\mod b)}，
+其中 \m{c>0} 爲某一個足夠大的常數。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明： \ALGO{EUCLID(a,b)} 通常需要執行 \m{O(\mu(a,b))} 次位操作；
+當其輸入爲兩個 \m{\beta} 位數時，
+需要執行的位操作次數爲 \m{O(\beta^2)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p31-3
+\startPROBLEM
+（Three algorithms for Fibonacci numbers）
+在已知 \m{n} 的情況下，
+本題對計算第 \m{n} 個 Fibonacci 數 \m{F_n} 的三種算法的效率進行了比較。
+假定兩個數的加法、減法和乘法的代價都是 \m{O(1)}，與數的大小無關。
+\startigBase[a]\startitem
+證明：基於遞歸式（3.22）計算 \m{F_n} 的直接遞歸方法的運行時間爲 \m{n} 的冪。
+（例如，\refsection{27.1} 的 \ALGO{FIB} 程序。）
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+試說明如何運用記憶法在 \m{O(n)} 時間內計算 \m{F_n}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+試說明如何僅用整數加法和乘法運算，
+就可以在 \m{O(\lg n)} 的時間內計算 \m{F_n}。
+（\hint 考慮如下矩陣及其冪：
+\startformula
+\left[\startmatrix
+\NC 0 \NC 1 \NR
+\NC 1 \NC 1 \NR
+\stopmatrix\right]
+\stopformula）
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+現在假設對兩個 \m{\beta} 位數相加需要 \m{\Theta(\beta)} 時間，
+對兩個 \m{\beta} 位數相乘需要 \m{\Theta(\beta^2)} 時間。
+如果這樣更合理地估計基本算數運算的代價，
+這三種方法的運行時間又是多少？
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p31-4
+\startPROBLEM
+（Quadratic residues）
+設 \m{p} 是一個奇素數。
+如果關於未知量 \m{x} 的方程 \m{x^2=a(\mod p)} 有解，
+則數 \m{a\in \integers_p^*} 就是一個{\EMP 二次餘數}。
+\startigBase[a]\startitem
+證明：對模 \m{p}，恰有 \m{(p-1)/2} 個二次餘數。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+如果 \m{p} 是素數，對 \m{a\in \integers_p^*}，
+定義 {\EMP  Legendre symbol} \m{\left(\frac{a}{p}\right)}，
+若 \m{a} 是對模 \m{p} 的二次餘數，則他等於 1；
+否則他等於 -1。證明：如果 \m{a\in \integers_p^*}，則：
+\startformula
+\left(\frac{a}{p}\right)\equiv a^{(p-1)/2} (\mod p)
+\stopformula
+給出一個有效的算法，
+使其能確定一個給定的數 a 是否對模 p 的二次餘數。
+分析所給算法的效率。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：如果 \m{p} 是形如 \m{4k+3} 的素數，
+且 a 是 \m{\integers_p^*} 中的一個二次餘數，
+則 \m{a^{k+1}\mod p} 是對模 \m{p} 的 \m{a} 的平方根。
+找出一個以 \m{p} 爲模的二次餘數 \m{a} 的平方根需要多長時間？
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+試描述一個有效的隨機算法，
+找出一個以任意素數 \m{p} 爲模的非二次餘數，
+也就是指 \m{\integers_p^*} 中不是二次餘數的成員。
+所給出的算法平均需要執行多少次算數運算？
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+\stopsubject%Problems

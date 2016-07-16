@@ -1,0 +1,62 @@
+\startsection[
+  title={Integer factorization},
+]
+
+%e31.9-1
+\startEXERCISE
+在圖 31-7（a）所示的執行過程中，
+過程 \ALGO{POLLARD-RHO} 在何時輸出 1387 的因子 73？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e31.9-2
+\startEXERCISE
+假設給定函數 \m{f:\integers_n\rightarrow\integers_n} 和
+一個初值 \m{x_0 \in \integers_n}。
+定義 \m{x_i=f(x_{i-1})}， \m{i=1,2,\ldots}。
+令 \m{t} 和 \m{u>0} 是滿足如下算式的最小值：
+\startformula
+x_{t+i}=x_{t+u+i}(i=0,1,\ldots)
+\stopformula
+在 Pollard 的 rho 算法術語中，
+ \m{t} 爲 rho 的尾的長度。
+試寫出一個計算 \m{t} 和 \m{u} 的值的有效算法，
+並分析其運行時間。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e31.9-3
+\startEXERCISE
+爲了發現形如 \m{p^e} 的數（其中 \m{p} 是素數， \m{e>1}）的一個因子，
+ \ALGO{POLLARD-RHO} 要執行多少步？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e31.9-4
+\startEXERCISE\DIFFICULT
+\ALGO{POLLARD-RHO} 的缺點之一是，
+在其遞歸過程的每一步，
+都要計算一個 \m{\gcd}。
+然而，可以對 \m{\gcd} 的計算進行批處理：
+通過累計一行中數個連續的 \m{x_i} 的積，
+然後在 \m{\gcd} 計算中使用該積而不是 \m{x_i}。
+請詳細描述如何實現這一思想，
+爲什麼他是可行的，
+以及在處理一個 \m{\beta} 位數 \m{n} 時，
+所選取的最有效的批處理規模是多大？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

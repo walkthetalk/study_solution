@@ -1,0 +1,246 @@
+\startsection[
+  title={Greatest common divisor},
+]
+
+%e31.2-1
+\startEXERCISE
+證明：由式（31.11）和式（31.12）可推出式（31.13）。附：
+
+\startformula\startmathalignment[n=3,align={right,left,right}]
+\NC a = \NC p_1^{e_1} p_2^{e_2} \ldots p_r^{e_r} \NC (31.11) \NR
+\NC b = \NC p_1^{f_1} p_2^{f_2} \ldots p_r^{f_r} \NC (31.12) \NR
+\NC \gcd(a,b) = \NC p_1^{\min(e_1,f_1)} p_2^{\min(e_2,f_2)} \ldots p_r^{\min(e_r,f_r)} \NC \qquad (31.13) \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+令 \m{d=\gcd(a,b)}，則 d 也可以寫成如下形式：
+\startformula
+d = p_1^{g_1} p_2^{g_2} \ldots p_r^{g_r}
+\stopformula
+
+由於 \m{d|a} 且 \m{d|b}，則：
+\startformula
+p_i^{g_i} | a \qquad p_i^{g_i} | b
+\stopformula
+其中 \m{i=1,2,\ldots,r}。由於 \m{p_i} 爲素數，所以：
+\startformula
+p_i^{g_i} | p_i^{e_i} \qquad p_i^{g_i} | p_i^{f_i}
+\stopformula
+
+所以 \m{g_i\le e_i} 且 \m{g_i\le f_i}，即 \m{g_i=\min(e_i,f_i)}。
+\stopANSWER
+
+%e31.2-2
+\startEXERCISE
+計算 \ALGO{EXTENDED-EUCLID(899, 493)} 的返回值 \m{(d, x, y)}。
+\stopEXERCISE
+
+\startANSWER
+\input{tbl/tbl31.2-2}
+\stopANSWER
+
+%e31.2-3
+\startEXERCISE
+證明：對於所有整數 a、 k 和 n，下式都成立：
+\startformula
+\gcd(a,n) = \gcd(a+kn,n)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+由 \ALGO{EUCLID} 計算最大公約數，
+第一步 \m{a\mod n} 與 \m{(a+kn)\mod n} 的結果相同，
+因此 \ALGO{EUCLID(a, n)} 和 \ALGO{EUCLID(a+kn, n)} 的結果相同。
+\stopANSWER
+
+%e31.2-4
+\startEXERCISE
+以迭代的形式重寫 \ALGO{EUCLID}，要求只能使用常數內存（即，僅存儲常數個整數）。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{ITER-EUCLID(a, b)}
+\startCLRS
+while b != 0
+	tmp = a % b
+	a = b
+	b = tmp
+return a
+\stopCLRS
+\stopANSWER
+
+%e31.2-5
+\startEXERCISE[exercise:euclid_time]
+證明：如果 \m{a > b\ge 0}，則 \ALGO{EUCLID(a, b)} 最多執行 \m{1 + \log_\phi b} 次遞歸調用。
+將這個界改進爲 \m{1+\log_\phi (b/\gcd(a,b))}。
+\stopEXERCISE
+
+\startANSWER
+利用 Fibonacci 序列，即 \m{F_0 = 0}， \m{F_1 = 1}，且：
+\startformula
+F_k = F_{k-1} + F_{k-2} \qquad \text{對於} k\ge 2
+\stopformula
+
+當 k 比較大時，\m{F_{k}} 約爲 \m{\phi^k/\sqrt{5}}。
+其中 \m{\phi} 爲黃金比例，值爲：
+\startformula
+\phi = \frac{1+\sqrt{5}}{2} = 1.61803\ldots
+\stopformula
+
+由 Lamè 定理可知，如果 \m{F_{k+1}>b}，則 \ALGO{EUCLID(a,b)} 執行的遞迴調用少於 k 次。
+ k 是滿足下式的最小整數：
+\startformula
+\frac{\phi_{k+1}}{\sqrt{5}} > b
+\stopformula
+
+即， k 是滿足下式的最小整數：
+\startformula
+k > \log_{\phi}b + \log_{\phi}\sqrt{5} - 1 = \log_{\phi}b + 1.67 - 1 = \log_{\phi}b + 0.67
+\stopformula
+解得 \m{k \le \left\lfloor \log_{\phi}b + \log_{\phi}\sqrt{5} - 1 + 0.5 \right\rfloor}：
+
+因此， \ALGO{EUCLID(a, b)} 最多執行 \m{1 + \log_\phi b} 次遞歸調用。
+
+
+令 \m{d = \gcd(a,b)}，由 \ALGO{EUCLID} 的實現可知， \ALGO{EUCLID(a,b)} 的遞迴調用次數與 \ALGO{EUCLID(a/d, b/d)} 相同。
+將上面的證明過程中的 \m{b} 替換爲 \m{b/d}，即得改進後的界： \m{1+\log_\phi(b/\gcd(a,b))}。
+\stopANSWER
+
+%e31.2-6
+\startEXERCISE
+計算 \ALGO{EXTENDED-EUCLID(F_{k+1}, F_k)} 返回的值，並證明你的結論。
+\stopEXERCISE
+
+\startANSWER
+令 \m{f(k) = 1 - 2 (k\mod 2)}，即如果 k 爲偶數，則 \m{f(k)} 爲 1，否則爲 -1。
+結果爲 \m{(1, f(k) F_k, -f(k) F_{k+1})}。
+
+如果結論對 k 成立，則：
+\startformula\startmathalignment
+\NC EXTEND-EUCLID(F_{k+2}, F_{k+1})
+    =\NC (d, -f(k) F_{k+1}, f(k) F_k - \left\lfloor\frac{F_{k+2}}{F_{k+1}}\right\rfloor (-f(k) F_{k+1})) \NR
+\NC =\NC (d, -f(k) F_{k+1}, f(k) (F_k + \left\lfloor\frac{F_{k+2}}{F_{k+1}}\right\rfloor F_{k+1})) \NR
+\NC =\NC (d, -f(k) F_{k+1}, f(k) F_{k+2}) \NR
+\NC =\NC (d, f(k+1) F_{k+1}, -f(k+1) F_{k+2}) \NR
+\stopmathalignment\stopformula
+即結論對 \m{k+1} 也成立。
+\stopANSWER
+
+%31.2-7
+\startEXERCISE
+通過遞迴爲多於兩個的參數定義函數 \m{\gcd}： \m{\gcd(a_0,a_1,\ldots,a_n) = \gcd(a_0,\gcd(a_1,a_2,\ldots,a_n))}。
+證明函數 \m{\gcd} 的返回值不依賴於參數的順序。
+如何找到整數 \m{x_0,x_1,\ldots,x_n}，使得：
+\startformula
+\gcd(a_0,a_1,\ldots,a_n) = a_0x_0 + a_1x_1 + \ldots + a_nx_n
+\stopformula
+並證明你的算法所執行的除法次數爲：
+\startformula
+O(n + \lg(\max(a_0,a_1,\ldots,a_n)))
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+令 \m{d=\gcd(a_0,a_1,\ldots,a_n)}， \m{d'=\gcd(a_0,\gcd(a_1,a_2,\ldots,a_n))}：
+因此 \m{d} 和 \m{d'} 均是 \m{a_0,a_1,\ldots,a_n} 的公約數。
+由前至後得 \m{d \ge d'}，而由後至前得 \m{d'\ge d}，因此 \m{d' = d}。
+即無論 \m{d'} 中的 \m{a_i} 順序如何，都有 \m{d'=d}。
+
+根據最大公約數的定義，可以寫成如下形式：
+\startformula
+\gcd(a_0,a_1,\ldots,a_n) = a_0x_0 + a_1x_1 + a_2x_2 + \ldots + a_nx_n
+\stopformula
+
+以四個參數爲例：
+\startformula\startmathalignment
+\NC   \NC \gcd(a_0,a_1,a_2,a_3) \NR
+\NC = \NC \gcd(a_0,\gcd(a_1,a_2,a_3)) \NR
+\NC = \NC \gcd(a_0,\gcd(a_1,\gcd(a_2,a_3))) \NR
+\stopmathalignment\stopformula
+根據定理 31.2 可以將 \m{\gcd(a_2,a_3)} 寫爲 \m{a_2x_2 + a_3x_3}。所以：
+\startformula\startmathalignment
+\NC   \NC \gcd(a_0,a_1,a_2,a_3) \NR
+\NC = \NC \gcd(a_0,\gcd(a_1,a_2,a_3)) \NR
+\NC = \NC \gcd(a_0,\gcd(a_1, a_2x_2 + a_3x_3)) \NR
+\stopmathalignment\stopformula
+然後根據定理 31.2 將 \m{\gcd(a_1, a_2x_2 + a_3x_3)} 寫爲：
+\startformula\startmathalignment
+\NC   \NC \gcd(a_1, a_2x_2 + a_3x_3) \NR
+\NC = \NC x_1a_1 + y_1(a_2x_2 + a_3x_3) \NR
+\NC = \NC x_1a_1 + y_1x_2a_2 + y_1x_3a_3 \NR
+\stopmathalignment\stopformula
+因此：
+\startformula\startmathalignment
+\NC   \NC \gcd(a_0, a_1, a_2, a3) \NR
+\NC = \NC \gcd(a_0, x_1a_1 + y_1x_2a_2 + y_1x_3a_3) \NR
+\stopmathalignment\stopformula
+從而：
+\startformula\startmathalignment
+\NC   \NC \gcd(a_0, a_1, a_2, a3) \NR
+\NC = \NC x_0a_0 + y_2(x_1a_1 + y_1x_2a_2 + y_1x_3a_3) \NR
+\NC = \NC x_0a_0 + y_2x_1a_1 + y_1y_2x_2a_2 + y_1y_2x_3a_3 \NR
+\stopmathalignment\stopformula
+
+由\refexercise{euclid_time} 可知： \m{1+\log_\phi (\min(a,b)/\gcd(a,b))}。
+總的次數爲：
+\startformula\startmathalignment[n=3]
+\NC     \NC   \NC 1+\log_\phi\frac{\min(a_0,\gcd(a_1,a_2,\ldots,a_n))}{\gcd(a_0,\gcd(a_1,a_2,\ldots,a_n))} \NR
+\NC     \NC + \NC 1+\log_\phi\frac{\min(a_1,\gcd(a_2,a_3,\ldots,a_n))}{\gcd(a_1,\gcd(a_2,a_3,\ldots,a_n))} \NR
+\NC     \NC + \NC 1+\log_\phi\frac{\min(a_2,\gcd(a_3,a_4,\ldots,a_n))}{\gcd(a_1,\gcd(a_3,a_4,\ldots,a_n))} \NR
+\NC     \NC + \NC \ldots \NR
+\NC     \NC + \NC 1+\log_\phi\frac{\min(a_{n-1},a_n)}{\gcd(a_{n-1},a_n)} \NR
+\NC \le \NC   \NC 1+\log_\phi\frac{\gcd(a_1,a_2,\ldots,a_n)}{\gcd(a_0,\gcd(a_1,a_2,\ldots,a_n))} \NR
+\NC     \NC + \NC 1+\log_\phi\frac{\gcd(a_2,a_3,\ldots,a_n)}{\gcd(a_1,\gcd(a_2,a_3,\ldots,a_n))} \NR
+\NC     \NC + \NC 1+\log_\phi\frac{\gcd(a_3,a_4,\ldots,a_n)}{\gcd(a_1,\gcd(a_3,a_4,\ldots,a_n))} \NR
+\NC     \NC + \NC \ldots \NR
+\NC     \NC + \NC 1+\log_\phi\frac{a_n}{\gcd(a_{n-1},a_n)} \NR
+\NC =   \NC   \NC n-1 + \log_\phi \frac{a_n}{\gcd(a_0,a_1,\ldots,a_n)}\NR
+\NC \le \NC   \NC n-1 + \log_\phi \max(a_0,a_1,\ldots,a_n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%31.2-8
+\startEXERCISE
+定義 \m{\lcm(a_1,a_2,\ldots,a_n)} 爲 n 個整數 \m{a_1,a_2,\ldots,a_n} 的{\EMP 最小公倍數（least common multiple）}，
+即，是所有 \m{a_i} 的倍數，且是最小的非負整數。
+如何利用參數爲兩個的 \m{\gcd} 運算有效的計算 \m{\lcm(a_1,a_2,\ldots,a_n)}？
+\stopEXERCISE
+
+\startANSWER
+令 \m{d = \gcd(a_0,a_1,\ldots,a_n)}：
+\startformula\startmathalignment
+\NC  \NC \lcm(a_0,a_1,\ldots,a_n) \NR
+\NC =\NC d \frac{a_0}{d} \frac{a_1}{d} \ldots \frac{a_n}{d} \NR
+\NC =\NC \frac{\prod_{i=0}^{n}a_i}{d^n} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e31.2-9
+\startEXERCISE
+證明：當且僅當 \m{\gcd(n_1n_2,n_3n_4) = \gcd(n_1n_3,n_2n_4) = 1} 時，
+四個正整數 \m{n_1,n_2,n_3,n_4} 兩兩互素。
+
+更一般地，當且僅當從 \m{n_i} 中導出的 \m{\lceil \lg{k}\rceil} 對整數互素時，
+ \m{n_1,n_2,\ldots,n_k} 兩兩互素。
+\stopEXERCISE
+
+\startANSWER
+如果 \m{n_1,n_2,n_3,n_4} 兩兩互素，則：
+\startformula\startmathalignment[n=1]
+\NC \gcd(n_1,n_3) = \gcd(n_2,n_3) = 1 \NR
+\NC \gcd(n_1 n_2,n_3) = 1 \qquad \gcd(n_1 n_2,n_4) = 1 \qquad \text{（由定理 31.6 可得）} \NR
+\NC \gcd(n_1 n_2, n_3 n_4) = \gcd(n_1 n_3, n_2 n_4) = 1 \qquad \text{（由定理 31.6 可得）} \NR
+\stopmathalignment\stopformula
+
+而如果 \m{\gcd(n_1 n_2, n_3 n_4) = \gcd(n_1 n_3, n_2 n_4) = 1}，則存在整數 x、 y：
+\startformula
+n_1 n_3 x + n_2 n_4 y = 1
+\stopformula
+可以將其看作是 \m{n_1, n_2} 的線性組合，所以 \m{\gcd(n_1,n_2) = 1}。
+同理可得其他，所以 \m{n_1,n_2,n_3,n_4} 兩兩互素。
+
+同理可證更一般地情況。
+\stopANSWER
+
+\stopsection

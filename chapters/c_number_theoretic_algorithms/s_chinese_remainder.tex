@@ -1,0 +1,53 @@
+\startsection[
+  title={The Chinese remainder theorem},
+]
+
+%31.5-1
+\startEXERCISE
+找出所有解，使得 \m{x\equiv 4 (\mod 5)} 和 \m{x\equiv 5 (\mod 11)} 同時成立。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+x \equiv 49 (\mod 55)
+\stopformula
+\input{tbl/tbl31.5-1}
+\stopANSWER
+
+%31.5-2
+\startEXERCISE
+找出被 9、 8、 7 除時，餘數分別爲 1、 2、 3 的所有整數 x。
+\stopEXERCISE
+
+\startANSWER
+由於 \m{\lcm(9,8,7) = 504}，則：
+\startformula
+x \equiv 10 (\mod 504)
+\stopformula
+\stopANSWER
+
+%e1.5-3
+\startEXERCISE
+論證：在定理 31.27 的定義下，如果 \m{\gcd(a,n)=1}，則：
+\startformula
+(a^{-1} \mod n) \leftrightarrow
+  ((a_1^{-1} \mod n_1),(a_2^{-1} \mod n_2),\ldots,(a_k^{-1} \mod n_k))
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\TODO{需要證明}
+\stopANSWER
+
+%31.5-4
+\startEXERCISE[exercise:31.5-4]
+在定理 31.27 的定義下，證明：
+對於任意的多項式 f，方程 \m{f(x)\equiv 0 (\mod n)} 的根的個數
+等於 \m{f(x)\equiv 0 (\mod n_1), f(x)\equiv 0 (\mod n_2), \ldots, f(x) \equiv 0 (\mod n_k)} 中每個方程根的個數的積。
+\stopEXERCISE
+
+\startANSWER
+\TODO{需要證明}
+\stopANSWER
+
+\stopsection

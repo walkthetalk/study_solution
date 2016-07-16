@@ -1,0 +1,91 @@
+\startsection[
+  title={Solving modular linear equations},
+]
+
+%e31.4-1
+\startEXERCISE
+找出方程 \m{35x\equiv 10 (\mod 50)} 的所有解。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+d = 5 \qquad x' = 3 \qquad y' = -2 \qquad x_0 = 6
+\stopformula
+解爲 6、 16、 26、 36、 46。
+\stopANSWER
+
+%e31.4-2
+\startEXERCISE
+證明：只要 \m{\gcd(a,n)=1}，方程 \m{ax\equiv ay (\mod n)} 就意味着 \m{x\equiv y (\mod n)}。
+通過一個 \m{\gcd(a,n)>1} 情況下的反例，
+證明條件 \m{\gcd(a,n)=1} 是必要的。
+\stopEXERCISE
+
+\startANSWER
+由於 \m{ax \equiv ay (\mod n)}，所以 \m{n|a(x-y)}。
+
+而由於 \m{\gcd(a,n)=1}，而根據推論 31.5 得 \m{n|(x-y)}，所以 \m{x\equiv y (\mod n)}。
+
+而如果 \m{\gcd(a,n)>1}，令 \m{a=12, x=6, y=5, n=3}，滿足 \m{ax\equiv ay (\mod n)}，
+但是不滿足 \m{x\equiv y (\mod n)}。
+\stopANSWER
+
+%e31.4-3
+\startEXERCISE
+考察下列過程 \ALGO{MODULAR-LINEAR-EQUIATION-SOLVER} 的第三行的修改：
+
+\CLRSH{MODULAR-LINEAR-EQUATION-SOLVER(a, b, n)}
+\startCLRS
+(d, x', y') = EXTENDED-EUCLID(a, n)
+if d | b
+	x0 = x'(b/d) mod (n/d)
+	for i = 0 to d - 1
+		print (x0 + i(n/d)) mod n
+else print "no solutions"
+\stopCLRS
+能否正確進行？並解釋原因。
+\stopEXERCISE
+
+\startANSWER
+能，因爲 \m{x'(b/d) \mod (n/d)} 和 \m{x'(b/d) \mod n} 對 \m{n/d} 同餘。
+\stopANSWER
+
+%e31.4-4
+\startEXERCISE[exercise:model_zero]\DIFFICULT
+令 p 是一個素數，且 \m{f(x) \equiv f_0 + f_1 x + \ldots + f_t x^t (\mod p)} 是一個 t 次多項式，
+係數 \m{f_i} 是從 \m{\integers_p} 得到的。
+如果 \m{f(a) \equiv 0 (\mod p)}，則將 \m{a\in \integers_p} 稱爲 f 的{\EMP 零元}。
+證明：如果 a 是 f 的一個零元，則對某個 \m{t-1} 次的多項式 \m{g(x)}，
+有 \m{f(x)\equiv (x-a)g(x) (\mod p)}。
+通過對 t 進行歸納來證明：如果 p 是素數， t 次多項式 \m{f(x)} 對模 p 至多有 t 個不同的零元。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment[n=6]
+\NC \NC     f(x)    \NC - (x-a)g(x) \NC \NC \NC \NR
+\NC=\NC     f_0     \NC + f_1 x   \NC + f_2 x^2   \NC + \ldots + f_t x^t           \NC \NR
+\NC \NC - (x-a)(g_0 \NC + g_1 x   \NC + g_2 x^2   \NC + \ldots + g_{t-1}x^{t-1})   \NC \NR
+\NC=\NC     f_0     \NC + f_1 x   \NC + f_2 x^2   \NC + \ldots + f_{t-1}x^{t-1}    \NC + f_t x^t \NR
+\NC \NC             \NC - g_0 x   \NC - g_1 x^2   \NC - \ldots - g_{t-2}x^{t-1}    \NC - g_{t-1} x^t \NR
+\NC \NC     + g_0 a \NC + g_1 a x \NC + g_2 a x^2 \NC + \ldots + g_{t-1} a x^{t-1} \NC \NR
+\NC=\NC (f_0 + g_0 a) \NC + (f_1 - g_0 + g_1 a)x \NC + (f_2 - g_1 + g_2 a)x^2 \NC + \ldots + (f_{t-1} - g_{t-2} + g_{t-1}a)x^{t-1} \NC + (f_t - g_{t-1})x^t \NR
+\stopmathalignment\stopformula
+
+按順序求解 \m{g_i}：
+\startformula\startmathalignment[align={left,left}]
+\NC g_0 \quad \NC (f_0 + g_0 a) \mod p = 0 \NR
+\NC g_1 \NC (f_1 - g_0 + g_1 a) \mod p = 0 \NR
+\NC \vdots \NC \vdots \NR
+\NC g_{t-1} \NC (f_{t-1} - g_{t-2} + g_{t-1} a) \mod p = 0 \NR
+\NC g_t \NC (f_t - g_{t-1}) \mod p = 0 \NR
+\stopmathalignment\stopformula
+
+由 \m{f(x)\equiv(x-a)g(x) (\mod p)} 類推：
+\startformula
+f(x) \equiv (x - a_0)(x - a_1) \ldots (x - a_t) (\mod p)
+\stopformula
+從而 \m{a_0,a_1,\ldots,a_n} 中的任何一個都是零元。
+如果他們兩兩均不相等且爲整數，即最多有 n 個零元。
+\stopANSWER
+
+\stopsection

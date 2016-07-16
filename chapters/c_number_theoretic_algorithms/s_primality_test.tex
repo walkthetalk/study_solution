@@ -1,0 +1,74 @@
+\startsection[
+  title={Primality testing},
+]
+
+%e31.8-1
+\startEXERCISE
+證明：如果一個奇整數 \m{n>1} 不是素數或素數的冪，
+則存在一個以 \m{n} 爲模的 1 的非平凡平方根。
+\stopEXERCISE
+
+\startANSWER
+令 \m{n = (p_1 ^{e_1})(p_2 ^{e_2})\ldots (p_i ^{e_i})}，
+其中 \m{p_1,p_2,\ldots,p_n \ge 3}。
+由於奇整數 \m{n} 不是素數或者素數的冪，
+則 \m{n} 必然是奇合數，
+至少存在兩個不同的奇素銀子，滿足 \m{i\ge 2}，且 \m{p_1 \ne p_2}。
+
+由於 \m{p_1,p_2,\ldots,p_n\ge 3} 爲互不相同的素數，
+所以 \m{p_1^{e_1},p_2^{e_2},\ldots,p_i^{e_i}} 是兩兩互質。
+根據孫子定理：求 \m{x^2\equiv 1 (\mod n)} 的解，
+等價於求方程組 \m{x^2\equiv 1 (\mod p_i^{e_i})} 的解，
+其中 \m{i=1,2,\ldots,k}。
+根據定理 31.34 對於奇素數 \m{p_i}， \m{e_i\ge 1}，
+方程 \m{x^2\equiv 1 (\mod p_i^{e_i})} 有且僅有兩個解，
+又根據\refexercise{31.5-4} 的結論可知：
+由於存在至少兩個素銀子 \m{p_1,p_2}，
+所以至少存在如下兩個方程：
+\startformula
+f(x)=x^2 - 1 \equiv 0 (\mod p_1^{e_1})
+\stopformula
+\startformula
+f(x) = x^2 - 1 \equiv 0 (\mod p_2^{e_2})
+\stopformula
+他們的解的乘積即爲原方程 \m{x^2-1\equiv 0 (\mod n)} 的解，
+數目不少於 4，出去平凡根 \m{\pm 1} 外，
+肯定還存在非平凡根。
+\stopANSWER
+
+%e31.8-2
+\startEXERCISE
+可以把歐拉定理稍微加強爲如下形式：對所有 \m{a\in \integers_n^*}：
+\startformula
+a^{\lambda(n)} \equiv 1 (\mod n)
+\stopformula
+其中 \m{n= p_1^{e_1} p_2^{e_2}\ldots p_r^{e_r}}，且 \m{\lambda(n)} 定義爲：
+\startformula
+\lambda(n) = 1cm(\phi(p_1^{e_1}),\ldots,\phi(p_r^{e_r}))
+\stopformula
+證明 \m{\lambda(n)|\phi(n)}，
+如果 \m{\lambda(n)|n-1}，
+則合數 \m{n} 爲 Carmichael 數。
+最小的 Carmichael 數爲 \m{561=3\cdot 11 \cdot 17}；
+這裏， \m{\lambda(n)=1cm(2,10,16)=80}，
+他可以整除 560。
+證明 Carmichael 數必須既是“無平方數”（不能被任何素數的平方所整除），
+又是至少三個素數的積。
+（因此， Carmichael 數並不常見。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e31.8-3
+\startEXERCISE
+證明：如果 \m{x} 是以 \m{n} 爲模的 1 的非平凡平方根，
+則 \m{\gcd(x-1,n)} 和 \m{\gcd(x+1,n)} 都是 \m{n} 的非平凡約數。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

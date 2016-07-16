@@ -1,0 +1,232 @@
+\startsection[
+  title={Elementary number-theoretic notions},
+]
+
+%e31.1-1
+\startEXERCISE
+證明：如果 \m{a>b>0}，且 \m{c=a+b}，則 \m{c\mod a = b}。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC c \mod a
+       =\NC (a+b) \mod a \NR
+\NC =\NC a \mod a + b \mod a \NR
+\NC =\NC 0 + b \mod a \NR
+\NC =\NC b \mod a \NR
+\stopmathalignment\stopformula
+由於 \m{a>b>0}，因此 \m{b\mod a = b}，所以 \m{c\mod a = b}。
+\stopANSWER
+
+%e31.1-2
+\startEXERCISE
+證明有無窮多個素數。（\hint 證明素數 \m{p_1}、 \m{p_2}、 \m{\ldots}、 \m{p_k} 都不能整除 \m{(p_1 p_2 \ldots p_k) + 1}。）
+\stopEXERCISE
+
+\startANSWER
+假設素數個數是有限的，且由小至大依次爲 \m{p_1}、 \m{p_2}、 \m{\ldots}、 \m{p_k}。令 \m{m = p_1 p_2 \ldots p_k}， \m{n=m+1}：
+\startigBase[n]
+\startitem
+如果 n 爲素數：則 \m{n} 大於 \m{p_1}、 \m{p_2}、 \m{\ldots}、 \m{p_k}，從而 \m{p_k} 不是最大素數，矛盾；
+\stopitem
+\startitem
+如果 n 爲合數：由於 m 和 n 的對大公約數爲 1，所以 n 不能被 \m{p_1}、 \m{p_2}、 \m{\ldots}、 \m{p_k} 整除，但是任一合數都可分解爲素數的乘積，所以分解得到的素數不屬於 \m{p_1}、 \m{p_2}、 \m{\ldots}、 \m{p_k}，矛盾。
+\stopitem
+\stopigBase
+即無論 n 是素數還是合數，都意味着在假設的有限個素數之外還存在其他素數。
+所以有無窮多個素數。
+\stopANSWER
+
+%e31.1-3
+\startEXERCISE
+證明：如果 \m{a|b} 且 \m{b|c}，則 \m{a|c}。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC a|b \Rightarrow \NC b=q_1 a \NR
+\NC b|c \Rightarrow \NC c=q_2 b \NR
+\stopmathalignment\stopformula
+因此 \m{c\mod a = (q_2 b)\mod a = (q_2 q_1 a)\mod a = 0}，即 \m{a|c}。
+\stopANSWER
+
+%e31.1-4
+\startEXERCISE
+證明：如果 p 是素數，且 \m{0<k<p}，則 \m{\gcd(k,p)=1}。
+\stopEXERCISE
+
+\startANSWER
+令 \m{n=\gcd(k,p)}，則 \m{n\le k < p}，且 \m{n|p}。
+由於 p 是素數，因此 \m{n|p} 意味着 \m{n=1} 或 \m{n=p}。
+又由於 \m{n<p}，因此 \m{n=1}，即 \m{\gcd(k,p)=1}。
+\stopANSWER
+
+%e31.1-5
+\startEXERCISE
+證明推論 31.5。
+（附{\EMP 推論 31.5}：
+對於任意正整數 n、 a 和 b，如果 \m{n|ab} 且 \m{\gcd(a,n)=1}，則 \m{n|b}）。
+\stopEXERCISE
+
+\startANSWER
+由於 \m{\gcd(a,n)=1}，因此有 \m{ax+ny=1}，所以 \m{abx+nby=b}。
+模 n 得 \m{b\mod n = (abx+nby)\mod n = (abx\mod n)+(nby\mod n) = 0 + 0 = 0}，所以 \m{n|b}。
+\stopANSWER
+
+%e31.1-6
+\startEXERCISE
+證明：如果 p 是素數，且 \m{0<k<p}，則 \m{p|\binom{p}{k}}。
+從而對於所有整數 a、 b 以及所有素數 p：
+\startformula
+(a+b)^p\equiv a^p + b^p \qquad (\mod p)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \binom{p}{k}
+   =\NC \frac{p!}{(p-k)!k!} \NR
+\NC=\NC \frac{p (p-1)!}{(p-k) (p-1-k)! k!} \NR
+\NC=\NC \frac{\prod_{i=1}^{k}(p-i+1)}{\prod_{i=1}^{k}{i}} \NR
+\NC=\NC p \frac{\prod_{i=2}^{k}(p-i+1)}{\prod_{i=2}^{k}{i}} \qquad \text{令} a = \prod_{i=2}^{k}(p-i+1)\text{， } b=\prod_{i=2}^{k}{i} \NR
+\NC=\NC \frac{p a}{b} \NR
+\stopmathalignment\stopformula
+由於 p 是素數，且 \m{0<k<p}，所以 \m{\gcd(p,b)=1}。而又由於 \m{\binom{p}{k}} 是整數，所以 \m{b|pa}，由推論 31.5 可知 \m{b|a}。因此 \m{\frac{b}{a}} 是正整數，所以 \m{\binom{p}{k} \mod p = p \frac{a}{b} \mod p = 0}，即 \m{p|\binom{p}{k}}。
+
+\startformula\startmathalignment
+\NC(a+b)^p
+   =\NC \sum_{k=0}^{p}\binom{p}{k}a^k b^{p-k} \NR
+\NC=\NC a^p + b^p + \sum_{k=1}^{p-1}\binom{p}{k}a^k b^{p-k} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e31.1-7
+\startEXERCISE
+證明：如果 a 和 b 是任意正整數，且 \m{a|b}，那麼對於任意整數 x，都有 \m{(x\mod b)\mod a = x \mod a}。
+
+證明：在同樣假設下，對於任意整數 x 和 y， \m{x\equiv y \qquad(\mod b)} 意味着 \m{x\equiv y \qquad(\mod a)}。
+\stopEXERCISE
+
+\startANSWER
+令 \m{x=qb+r}，且 \m{0<r<b}，則：
+\startformula\startmathalignment[n=1]
+\NC (x\mod b)\mod a = r\mod a \NR
+\NC x\mod a = (qb+r)\mod a = (qb)\mod a + r\mod a = 0 + r\mod a = r\mod a \NR
+\stopmathalignment\stopformula
+
+令 \m{x=q_x b + r}、 \m{y=q_y b + r}，且 \m{0<r<b}，則：
+\startformula\startmathalignment[n=1]
+\NC x\mod a = (q_x b + r)\mod a = (q_x b)\mod a + r\mod a = 0 + r\mod a = r\mod a \NR
+\NC y\mod a = (q_y b + r)\mod a = (q_y b)\mod a + r\mod a = 0 + r\mod a = r\mod a \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e31.1-8
+\startEXERCISE
+對於任一正整數 k，如果存在整數 a，使得 \m{a^k = n}，則稱整數 n 是一個 {\EMP k 次冪}。進而，如果 \m{n>1} 是一個 k 次冪，且 \m{k>1}，則稱 n 是{\EMP 非平凡冪}。
+如何在關於 \m{\beta} 的多項式時間內確定給定的 \m{\beta} 位整數 n 是否是一個非平凡冪。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+2^{\beta - 1} \le n = \sum_{i=0}^{\beta-1}a_i 2^i < 2^\beta
+\stopformula
+我們只需分析 n 是否是某個整數 a 的素數次冪，即只需分析 k 爲素數的情況。
+即 n 是非平凡冪與下列描述等價：
+
+存在整數 a，使得 \m{n=a^k}，其中 k 爲素數。
+
+由於 \m{a\ge 2}，所以 \m{k<\beta}，令小於 \m{\beta} 的素數集合爲 \m{\primes_\beta}，則 \m{k\in \primes_\beta}。遍歷 \m{\primes_\beta} 中的元素，用二分查找搜索 a。
+\stopANSWER
+
+%e31.1-9
+\startEXERCISE
+證明公式 31.6 ～ 31.10。
+\startformula\startmathalignment[
+  n=3,
+  align={left,left,right},]
+\NC \gcd(a,b)  \NC = \gcd(b,a)     \NC (31.6) \NR
+\NC \gcd(a,b)  \NC = \gcd(-a,b)    \NC (31.7) \NR
+\NC \gcd(a,b)  \NC = \gcd(|a|,|b|) \NC (31.8) \NR
+\NC \gcd(a,0)  \NC = |a|           \NC (31.9) \NR
+\NC \gcd(a,ka) \NC = |a| \qquad \text{對任意 }k\in\integers \NC \qquad (31.10) \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+定理 31.2： \m{\gcd(a,b)} 即爲集合 \m{\{ax+by: x,y\in \integers\}} 中的最小正整數。
+由於這個定義是對稱式的，所以 \m{\gcd(a,b)=\gcd(b,a)}。
+
+又由於 x 和 y 是任意整數，所以 \m{\gcd(a,b)=\gcd(-a,b)=\gcd(|a|,|b|)}。
+
+而 \m{\gcd(a,0)} 是集合 \m{\{ax: x\in\integers\}} 中的最小正整數，
+即 \m{x=\pm 1} 的時候，乘 a 的結果是正整數或者 \m{|a|}。
+
+\m{\gcd(a,ka)} 是集合 \m{\{ax+kay: x,y\in \integers\} = \{a(x+ky): x,y\in\integers\}} 中的最小正整數。此時 \m{x+ky=\pm 1}，即 \m{a(x+ky)=|a|}。
+\stopANSWER
+
+%e31.1-10
+\startEXERCISE
+證明： \m{\gcd} 滿足結合律。即證明對於所有整數 a、 b 和 c，有：
+\startformula
+\gcd(a,\gcd(b,c)) = \gcd(\gcd(a,b),c)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+令 \m{\gcd(a,\gcd(b,c)) = A}， \m{\gcd(\gcd(a,b),c) = B}，則：
+\startformula\startmathalignment[n=1]
+\NC A|a \qquad A|\gcd(b,c) \NR
+\NC A|a \qquad A|b \qquad A|c \NR
+\NC A|\gcd(a,b) \qquad A|c \NR
+\NC A|\gcd(\gcd(a,b),c) \NR
+\NC A|B \NR
+\stopmathalignment\stopformula
+同理 \m{B|A}，所以 \m{A=B}。
+\stopANSWER
+
+%e31.1-11
+\startEXERCISE\DIFFICULT
+證明定理 31.8。（附{\EMP 定理 31.8}：唯一因子分解定理，合數 a 僅能以一種方式寫成如下乘積形式：
+\startformula
+a = p_1^{e_1}p_2^{e_2}\ldots p_r^{e_r}
+\stopformula
+其中 \m{p_i} 爲素數， \m{p_1<p_2<\ldots<p_r}，且 \m{e_i} 爲正整數。）
+\stopEXERCISE
+
+\startANSWER
+用反證法，先反證質數底相同，再反正冪相同。
+\stopANSWER
+
+%e31.1-12
+\startEXERCISE
+如何高效地計算 \m{\beta} 位整數除以短整數的商和餘數。
+算法運行時間應爲 \m{\Theta(\beta^2)}。
+\stopEXERCISE
+
+\startANSWER
+用移位、比較和加法進行運算
+\stopANSWER
+
+%e31.1-13
+\startEXERCISE
+給出一個高效算法，用於將給定的 \m{\beta} 位（二進制）整數轉換承拾進制。
+證明：如果長度不大於 \m{\beta} 的整數乘法和除法所需時間爲 \m{M(\beta)}，
+則我們可以在時間 \m{\Theta(M(\beta)\lg\beta)} 內將二進制轉換成拾進制。
+（\hint 分治策略，用遞迴獨立計算前段和後段）
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{BIN-TO-DEC(B, begin, end)}
+\startCLRS
+if begin == end
+	return (B[begin], 1)
+
+center = (begin + end) / 2
+(Db, Rb) = BIN-TO-DEC(B, begin, center)
+(Dt, Rt) = BIN-TO-DEC(B, center + 1, end)
+return (Dt * Rb * 2 + Db, Rb * Rt)
+\stopCLRS
+\stopANSWER
+
+\stopsection

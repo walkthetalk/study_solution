@@ -2,4 +2,130 @@
   title={The DFT and FFT},
   reference=section:dft_fft,
 ]
+
+%e30.2-1
+\startEXERCISE
+證明推論 30.4。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \omega_n^{n/2} \NC = e^{\frac{2\pi i}{n} * \frac{n}{2}}
+    = e^{\pi i} = \cos(\pi) + i\sin(\pi) = -1 \NR
+\NC \omega_2 \NC = e^{\frac{2\pi i}{2}} = e^{\pi i} = -1 \NR
+\stopmathalignment\stopformula
+所以 \m{\omega_{n}^{n/2} = \omega_2 = -1}。
+\stopANSWER
+
+%e30.2-2
+\startEXERCISE
+計算向量 \m{(0,1,2,3)} 的 \ALGO{DFT}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e30.2-3
+\startEXERCISE
+採用運行時間爲 \m{\Theta(n\lg n)} 的方案完成\refexercise{30.1-1}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e30.2-4
+\startEXERCISE
+寫出僞碼，在 \m{\Theta(n\lg n)} 時間內計算出 \m{\DFT_{n}^{-1}}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e30.2-5
+\startEXERCISE
+請把 \ALGO{FFT} 推廣到 \m{n} 是 3 的冪的情形，
+寫出運行時間的遞歸式並求解。
+\stopEXERCISE
+
+\startANSWER
+\m{T(n) = 3T(n/3) + O(n) = O(n\lg n)}。
+\stopANSWER
+
+%e30.2-6
+\startEXERCISE[exercise:30.2-6]\DIFFICULT
+假設我們不是在複數域上執行 \m{n} 個元素的 \ALGO{FFT} （其中 \m{n} 爲偶數），
+而在整數模 \m{m} 生成的環 \m{\integers_m} 上執行 \ALGO{FFT}，
+其中 \m{m=2^{m/2} + 1}，且 \m{t} 是任意正整數。
+在模 \m{m} 的意義下，用 \m{\omega=2^t} 代替 \m{\omega_n} 作爲主 \m{n} 次單位根。
+證明：在該系統中， \ALGO{DFT} 與逆 \ALGO{DFT} 的定義是完備的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e30.2-7
+\startEXERCISE
+給定一組值 \m{z_0,z_1,\ldots,z_{n-1}} （可以重複），
+說明如何求出僅以 \m{z_0,z_1,\ldots,z_{n-1}} （可以重複）爲
+零點的一個次數界爲 \m{n+1} 的多項式 \m{P(x)} 的係數。
+你給出的過程運行時間應爲 \m{O(n\lg^{2}n)}。
+（\hint 當且僅當 \m{P(x)} 是 \m{(x - z_j)} 的倍數時，
+多項式 \m{P(x)} 在 \m{z_j} 處值爲 0。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e30.2-8
+\startEXERCISE\DIFFICULT
+一個向量 \m{a=(a_0,a_1,\ldots,a_{n-1})} 的{\EMP 線性調頻變換}（chirp transform）
+是向量 \m{y=(y_0,y_1,\ldots,y_{n-1})}，其中 \m{y_k = \sum_{j=0}^{n-1}a_j z^{kj}}，
+其中 \m{z} 是任意複數。
+因此，通過取 \m{z=\omega_n}， \ALGO{DFT} 是線性調頻變換的一種特殊情形。
+對任意複數 \m{z}，
+請說明如何在 \m{O(n\lg n)} 時間內求出線性調頻變換的值。
+（\hint 利用等式
+\startformula
+y_k = z^{k^2/2}\sum_{j=0}^{n-1}(a_j z^{j^2/2})(z^{-(k-j)^2/2})
+\stopformula
+可以把線性調頻變換看作一個卷積。）
+\stopEXERCISE
+
+\startANSWER
+令 \m{z = b\omega}，其中 \m{\omega = \cos u + i\sin u}， \m{b} 爲實數。
+則：
+\startformula
+y_k = \sum_{j=0}^{n-1}a_j (b\omega)^{kj}
+\stopformula
+\startformula
+y_k = b^{k} \omega^{\frac{j^2}{2}}
+	\sum_{j=0}^{n-1}(a_j b^j \omega^{\frac{j^2}{2}})(\omega^{\frac{(k-j)^2}{2}})
+\stopformula
+其中 \m{b^0,b^1,\ldots,b^{n-1}} 可以經過 \m{O(n)} 次循環求出，
+ \m{\omega^{n}} 則可以通過如下歐拉函數公式在 \m{O(1)} 時間內算出：
+\startformula
+(\cos u + i\sin u)^n = \cos nu + i\sin nu
+\stopformula
+
+令：
+\startformula
+g(j) = a_j b^j \omega^{\frac{j^2}{2}}
+\stopformula
+\startformula
+h(k-j)=\omega^{\frac{(k-j)^2}{2}}
+\stopformula
+\startformula
+t_k = b^k \omega^{\frac{k^2}{2}}
+\stopformula
+則：
+\startformula
+y_k = t_k \sum_{j=0}^{n-1}g(j)*h(k-j)
+\stopformula
+多項式 \m{g} 和 \m{h} 相乘得到卷積 \m{g\otimes h}。
+\stopANSWER
 \stopsection

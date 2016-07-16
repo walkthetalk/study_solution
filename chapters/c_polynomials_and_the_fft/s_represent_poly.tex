@@ -1,4 +1,132 @@
 \startsection[
   title={Representing polynomials},
 ]
+
+%e30.1-1
+\startEXERCISE[exercise:30.1-1]
+運用等式（30.1）和（30.2）把下列兩個多項式相乘：
+\startformula\startmathalignment
+\NC A(x) \NC = 7x^3 - x^2 + x - 10 \NR
+\NC B(x) \NC = 8x^3 - 6x + 3 \NR
+\stopmathalignment\stopformula
+附等式：
+\startformula\startmathalignment[n=3]
+\NC C(x) \NC = \sum_{j=0}^{2n-2} c_j x^j \NC \qquad (30.1) \NR
+\NC c_j \NC = \sum_{k=0}^{j} a_k b_{j-k} \NC \qquad (30.2) \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula
+C(x) = 56 x^6 - 8x^5 - 34x^4 - 53x^3 - 9x^2 + 63x - 30
+\stopformula
+\stopANSWER
+
+%e30.1-2
+\startEXERCISE[exercise:30.1-2]
+求一個次數界爲 \m{n} 的多項式 \m{A(x)} 在某給定點 \m{x_0} 的值存在另外一種方法；
+把多項式 \m{A(x)} 除以多項式 \m{(x-x_0)}，
+得到一個次數界爲 \m{n-1} 的商多項式 \m{q(x)} 和餘項 \m{r}，
+滿足 \m{A(x)=q(x)(x-x_0) + r}。
+很明顯， \m{A(x_0) = r}。
+請說明如何根據 \m{x_0} 和 \m{A} 的係數，
+在 \m{\Theta(n)} 的時間複雜度內計算出餘項 \m{r} 以及 \m{q(x)} 的係數。
+\stopEXERCISE
+
+\startANSWER\startmathalignment
+\NC c_{n-2} \NC = a_{n-1} \NR
+\NC c_{n-3} \NC = a_{n-2} + c_{n-2} x_0 \NR
+\NC c_{n-4} \NC = a_{n-3} + c_{n-3} x_0 \NR
+\NC \vdots  \NC \NR
+\NC c_1     \NC = a_2 + c_2 x_0 \NR
+\NC c_0     \NC = a_1 + c_1 x_0 \NR
+\stopmathalignment\stopANSWER
+
+%e30.1-3
+\startEXERCISE
+從 \m{A(x)=\sum_{j=0}^{n-1}a_j x^j} 的點值表達推導出 \m{A^{rev}(x)=\sum_{j=0}^{n-1}a_{n-1-j}x^j} 的點值表達，
+假設所有點都不爲 \m{0}。
+\stopEXERCISE
+
+\startANSWER
+先用 \ALGO{DFT} 逆求出 \m{A(x)} 在單位根下的係數表達，
+然後逆轉函數（倒序）再次用 \ALGO{FFT} 求出逆轉多項式在單位根下的點值表達。
+運行時間爲 \m{n\lg n)}。
+\stopANSWER
+
+%e30.1-4
+\startEXERCISE
+證明：爲了唯一確定一個次數界爲 \m{n} 的多項式，
+ \m{n} 個相互不同的點值對是必需的，
+也就是說，如果給定少於 \m{n} 個不同點值對，
+則他們不能唯一確定一個次數界爲 \m{n} 的多項式。
+（\hint 利用定理 30.1，加入一個任意選擇的點值對到一個已有 \m{n-1} 個點值對的集合，
+看看會發生什麼？）
+\stopEXERCISE
+
+\startANSWER
+如果少於 \m{n} 個點，則必然存在兩個點 \m{x_i = x_j}，
+那麼 Vander-monde 矩陣的行列式爲 0，
+即矩陣不可逆，
+所以不能通過矩陣方程確定唯一的係數向量 \m{a}，命題得證。
+\stopANSWER
+
+%e30.1-5
+\startEXERCISE
+說明如何利用等式（30.5）在 \m{\Theta(n^2)} 時間複雜度內進行插值運算。
+（\hint 首先計算多項式 \m{\Pi_{j}(x - x_j)} 的係數表達，
+然後把每項的分子除以 \m{(x - x_k)}；參見\refexercise{30.1-2}。
+你可以在 \m{O(n)} 時間複雜度內計算 \m{n} 個分母中的每一個。）
+附等式：
+\startformula
+A(x) = \sum_{k=0}^{n-1} y_k \frac{\Pi_{j\ne k}(x - x_j)}{\Pi_{j\ne k}(x_k - x_j)} \qquad (30.5)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+假設已知 n 個點 \m{(x_0,y_0),(x_1,y_1),\ldots,(x_n,y_n)}，
+\startigBase[n]
+\item 將 n 個單位複數根依次代入 \m{\Pi(x-x_j)} 得出 n 個多項式值 \m{y_i}，時間爲 \m{O(n^2)}；
+\item 然後利用 \ALGO{DFT} 逆求出其係數表達，時間爲 \m{O(n\lg n)}；
+\item 再寫一個求 \m{y_k / \Pi(x_j - x_k)} 的循環，時間爲 \m{O(n^2)}，
+把求得的值存入數組 a；
+\item 利用\refexercise{30.1-2}，對這個求出係數的多項式依次除以 \m{(x-x_j)} 並乘以 \m{a[i]}，
+每次做除法需要 \m{O(n)} 時間，然後同時循環 n 次求累加和，
+最終這個雙重循環需要時間 \m{O(n^2)}；
+\stopigBase
+總時間爲 \m{O(n^2)}。
+\stopANSWER
+
+%e30.1-6
+\startEXERCISE
+請解釋在採用點值表達時，用“顯然”的方法進行多項式除法，
+哪裏出現了錯誤，即除以相應的 \m{y} 值。
+請對除法有確定結果與無確定結果兩種情況分別討論。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e30.1-7
+\startEXERCISE
+考慮兩個集合 \m{A} 和 \m{B}，
+每個集合包含取值範圍在 \m{0}～\m{10n} 之間的 \m{n} 個整數。
+我們希望計算出 \m{A} 和 \m{B} 的{\EMP 迪卡爾和}，定義如下：
+\startformula
+C = \{x+y: x\in A, y\in B\}
+\stopformula
+注意到， \m{C} 中整數值的範圍在 \m{0}～\m{20n} 之間。
+我們希望找到 \m{C} 中的元素，
+並且求出 \m{C} 中的每個元素可表示爲 \m{A} 中元素與 \m{B} 中元素和的次數。
+請在 \m{O(n\lg n)} 時間內解決這個問題。
+（\hint 請用次數最多爲 \m{10n} 的多項式表示 \m{A} 和 \m{B}。）
+\stopEXERCISE
+
+\startANSWER
+多項式 A 和 B 的係數均爲 1，指數範圍爲 \m{0}～\m{10n}。
+計算 \m{C(x)=A(x)B(x)} 可以用 \ALGO{DFT} 在 \m{O(n\lg n)} 時間內算出。
+然後遍歷 \m{C}， C 的係數就是 A 和 B 的迪卡爾和項的出現次數。
+\stopANSWER
+
 \stopsection

@@ -1,4 +1,49 @@
 \startsection[
   title={Efficient FFT implementations},
 ]
+
+%e30.3-1
+\startEXERCISE
+請說明如何用 \ALGO{ITERATIVE-FFT} 計算出輸入向量 \m{(0,2,3,-1,4,5,7,9)} 的 \ALGO{DFT}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e30.3-2
+\startEXERCISE
+請說明如何實現一個 \ALGO{FFT} 算法，
+注意把位逆序置換放在計算的最後而不是開始。
+（\hint 考慮逆 \ALGO{DFT}）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e30.3-3
+\startEXERCISE
+在每個階段中， \ALGO{ITERATIVE-FFT} 計算旋轉銀子多少次？
+重寫 \ALGO{ITERATIVE-FFT}，使其在階段 \m{s} 中計算旋轉銀子 \m{2^{s-1}} 次。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e30.3-4
+\startEXERCISE\DIFFICULT
+假設 \ALGO{FFT} 電路的蝴蝶操作中加法器有時會發生錯誤：
+不論輸入如何，他們的輸出總是爲 0。
+假設卻又一個加法器失效，但你並不知道是哪一個。
+描述你如何能夠通過給整個 \ALGO{FFT} 電路提供輸入值並觀察其輸出，
+找到那個失效的加法器。
+你的方法效率如何？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

@@ -2,4 +2,336 @@
   title={Problems},
 ]
 
+%p30-1
+\startPROBLEM
+（Divide-and-conquer multiplication）
+\startigBase[a]\startitem
+說明如何僅用三次乘法，
+就能求出線性多項式 \m{ax+b} 和 \m{cx+d} 的乘積。
+（\hint 有一個乘法運算是\m{(a+b)\cdot (c+d)}）
+\stopitem\stopigBase
+
+\startANSWER
+\startformula
+(ax+b)(cx+d) = ac x^2 + ((a+b)(c+d)-ac-bd) x + bd
+\stopformula
+\stopANSWER
+
+\startigBase[continue]\startitem
+試寫出兩種分治算法，求出兩個次數界爲 \m{n} 的多項式乘積，
+使其在 \m{\Theta(n^{\lg 3})} 時間內，
+第一個算法把輸入多項式的係數分成高階係數和低階係數兩部分，各佔一半，
+第二個算法應該根據其係數下標的奇偶性進行劃分。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：請說明如何用 \m{O(n^{\lg 3})} 步計算粗兩個 n 位整數的乘積，
+其中每一步至多會在常數個 1 位的值上進行運算。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p30-2
+\startPROBLEM
+（Toeplitz matrices）
+{\EMP 特普利茨矩陣}是一個 \m{n\times n} 矩陣 \m{A=(a_{ij})}，
+其中對於 \m{i=2,3,\ldots,n}， \m{j=2,3,\ldots,n}，
+滿足 \m{a_{ij} = a_{i-1,j-1}}。
+\startigBase[a]\startitem
+兩個特普利茨矩陣的和是否一定是特普利茨矩陣？乘積呢？
+\stopitem\stopigBase
+
+\startANSWER
+和是，但乘積不是。
+\stopANSWER
+
+\startigBase[continue]\startitem
+試說明如何表示特普利茨矩陣才能在 \m{O(n)} 時間內求出兩個 \m{n\times n} 特普利茨矩陣的和。
+\stopitem\stopigBase
+
+\startANSWER
+只需第一列和第一行的值。
+\stopANSWER
+
+\startigBase[continue]\startitem
+請給出一個時間爲 \m{O(n\lg n)} 的算法，
+能計算出 \m{n\times n} 特普利茨矩陣與一個 \m{n} 維向量的乘積。
+請運用上一項的表示方法。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+請給出一個高效算法計算兩個 \m{n\times n} 特普利茨矩陣的乘積，
+並分析其運行時間。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p30-3
+\startPROBLEM
+（Multidimensional fast Fourier transform）
+我們可以將式（30.8）定義的一維離散傅立葉變換推廣到 \m{d} 維上。
+這是輸入是一個 \m{d} 維的數列 \m{A=(a_{j_1,j_2,\ldots,j_d})}，
+每一維的數目分別爲 \m{n_1,n_2,\ldots,n_d}，
+其中 \m{n_1 n_2\ldots n_d = n}。
+定義 \m{d} 維離散傅立葉變換如下：
+\startformula
+y_{k_1,k_2,\ldots,k_d} = \sum_{j_1 = 0}^{n_1 - 1} \sum_{j_2 = 0}^{n_2 - 1}
+	\ldots \sum_{j_d = 0}^{n_d - 1}
+	a_{j_1,j_2,\ldots,j_d} \omega_{n_1}^{j_1 k_1} \omega_{n_2}^{j_2 k_2}
+	\ldots \omega_{n_d}^{j_d k_d}
+\stopformula
+其中 \m{0\le k_1 < n_1, 0\le k_2 < n_2, \ldots, 0\le k_d < n_d}。
+\startigBase[a]\startitem
+證明：
+我們可以依次在每個維度上計算一維的 \ALGO{DFT} 來計算一個 \m{d} 維的 \ALGO{DFT}。
+也就是說，首先沿着第 1 維計算 \m{n / n_1} 個獨立的一維 \ALGO{DFT}。
+然後，把第 1 維的 \ALGO{DFT} 結果作爲輸入，
+計算沿着第 2 維的 \m{n/n_2} 個獨立的一維 \ALGO{DFT}。
+利用這個結果作爲輸入，沿着第 3 維計算 \m{n/n_3} 個獨立的一維 \ALGO{DFT}，
+以此類推，直到第 \m{d} 維。
+\stopitem\stopigBase
+
+\startANSWER
+首先利用 \m{d} 維向量定義把向量 \m{y} 展開，怎麽展開呢？
+一般是由裏及外展開，從第 \m{n_d} 維到第 \m{n_1} 維依次展開的過程是
+從子項僅有 \m{n_d} 項到子項有 \m{n_2 n_3\ldots n_d} 項，
+項數逐漸增加的過程，每次展開一個維度就要保存這個維度的向量 \m{y}，
+然後以這個 \m{y} 作為下壹維度基礎值。
+如果我們展開定義式是由外及裏，那麽首先我們展開第 \m{n_1} 維，
+ \m{n_1} 維每項是由 \m{n_2 n_3\ldots n_d} 個子項組成，
+而由於最初我們不知道這些子項數據，
+所以正確的做法由裏向外展開。
+所以書上說的從第 1 維開始計算就是第 \m{n_d} 維。
+計算 \m{d} 維 \ALGO{FFT} 的過程就是壹個展開多重求和式的過程。
+每展開壹個求和式就是求一維 \ALGO{DFT} 的過程。
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：維度的次序並無影響，
+於是可以通過在 \m{d} 個維度的任意順序中計算一維 \ALGO{DFT} 來計算一個 \m{d} 維的 \ALGO{DFT}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：如果採用計算 \ALGO{FFT} 計算每個一維的 \ALGO{DFT}，
+那麼計算一個 \m{d} 維的 \ALGO{DFT} 總時間爲 \m{O(n\lg n)}，與 \m{d} 無關。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p30-4
+\startPROBLEM
+(Evaluating all derivatives of a polynomial at a point)
+已知一個次數界爲 \m{n} 的多項式 \m{A(x)}，
+定義其 \m{t} 階導數如下：
+\startformula
+A^{(t)}(x) = \startcases
+\NC A(x) \NC \text{若 \m{t=0} } \NR
+\NC \frac{d}{dx}A^{(t-1)}(x) \NC \text{若 \m{1\le t\le n-1} } \NR
+\NC 0 \NC \text{若 \m{t\ge n} } \NR
+\stopcases
+\stopformula
+從 \m{A(x)} 的係數表達 \m{(a_0,a_1,\ldots,a_{n-1})} 和一個已知點 \m{x_0}，
+我們希望確定 \m{A^{(t)}(x_0)}，
+其中 \m{t = 0,1,\ldots,n-1}。
+
+\startigBase[a]\startitem
+給定係數 \m{(b_0,b_1,\ldots,b_{n-1})} 滿足：
+\startformula
+A(x) = \sum_{j=0}^{n-1}b_j (x-x_0)^j
+\stopformula
+說明如何在 \m{O(n)} 時間內計算出 \m{A^{(t)}(x_0)}，
+其中 \m{t=0,1,\ldots,n-1}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+請解釋如何在 \m{O(n\lg n)} 時間內找到 \m{b_0,b_1,\ldots,b_{n-1}}，
+已知 \m{A(x_0 + \omega_n^k)}，其中 \m{k=0,1,\ldots,n-1}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+請證明：
+\startformula
+A(x_0 + \omega_n^k) = \sum_{r=0}^{n-1}\left[
+	\frac{\omega_n^{kr}}{r!}
+	\sum_{j=0}^{n-1}f(j)g(r-j)
+\right]
+\stopformula
+其中， \m{f(j) = a_j \cdot j!}，並且：
+\startformula
+g(l) = \startcases
+\NC x_0^{-l} / (-l)! \NC \text{若 \m{-(n-1)\le l \le 0}} \NR
+\NC 0 \NC \text{若 \m{1\le l \le n-1}} \NR
+\stopcases
+\stopformula
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+請解釋如何在 \m{O(n\lg n)} 時間內求出 \m{A(x_0 + \omega_n^k)} 的值，
+其中 \m{k=0,1,\ldots,n-1}。
+請總結說明：我們可以在 \m{O(n\lg n)} 時間內，求出 \m{A(x)} 所有非平凡導數在 \m{x_0} 的值。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p30-5
+\startPROBLEM
+（Polynomial evaluation at multiple points）
+我們已經看到，運用霍納法則，如何在 \m{O(n)} 時間內求出次數界爲 \m{n} 的多項式在單個點的值。
+同時，我們也發現，運用 \ALGO{FFT} 能在 \m{O(n\lg n)} 時間內求出這樣的一個多項式
+在所有 \m{n} 個單位複數根處的值。
+現在我們就來說明如何在 \m{O(n\lg^{2} n)} 時間內，
+求出一個次數界爲 \m{n} 的多項式在任意 \m{n} 個點的值。
+
+爲了做到這一點，我們將假設下面未經證明的結論：
+當一個這樣的多項式除以另一個多項式時，我們可以在 \m{O(n\lg n)} 時間內計算出該多項式的餘式。
+例如，多項式 \m{3x^3 + x^2 - 3x + 1} 除以 \m{x^2 + x + 2}，餘式爲：
+\startformula
+(3x^3 + x^2 - 3x + 1) \mod (x^2 + x + 2) = -7x + 5
+\stopformula
+給定一個多項式 \m{A(x) = \sum_{k=0}^{n-1}a_k x^k} 的係數表達和
+ \m{n} 個點 \m{x_0,x_1,\ldots,x_{n-1}}，
+我們希望計算出 \m{n} 個值 \m{A(x_0),A(x_1),\ldots,A(x_{n-1})}。
+對 \m{0\le i\le j\le n-1}，定義多項式：
+\startformula
+P_{ij}(x)=\Pi_{k=i}^{j}(x-x_k)
+\stopformula
+\startformula
+Q_{ij}(x) = A(x)\mod P_{ij}(x)
+\stopformula
+注意到， \m{Q_{ij}(x)} 次數最多是 \m{j-i}。
+\startigBase[a]\startitem
+證明：對任意點 \m{z}， \m{A(x)\mod (x-z) = A(z)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明： \m{Q_{kk}(x) = A(x_k)}，以及 \m{Q_{0,n-1}(x)=A(x)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：對 \m{i\le k\le j}，我們有 \m{Q_{ik}(x) = Q_{ij}(x)\mod P_{ik}(x)}，
+以及 \m{Q_{kj}(x) = Q_{ij}(x)\mod P_{kj}(x)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個運行時間爲 \m{O(n\lg^{2} n)} 的算法，
+以求出 \m{A(x_0),A(x_1),\ldots,A(x_{n-1})}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p30-6
+\startPROBLEM
+（FFT using modular arithmetic）
+如定義所述，離散傅立葉變換（\ALGO{DFT}）計算時需要用複數，
+這會由於舍入誤差導致精度丟失。
+對某些問題而言，答案中僅包含整數，
+並且通過使用一種基於模算數的 \ALGO{FFT} 的不同形式，
+我們可以保證計算的答案是準確的。
+此類問題的一個例子如下：
+求兩個整係數多項式的乘積。
+\refexercise{30.2-6} 給出了一種解決方法，
+即運用一個長度爲 \m{\Omega(n)} 位的模來處理 \m{n} 個點上的 \ALGO{DFT}。
+下面給出了另一種方法，
+即用一個更爲合理的長度爲 \m{O(\lg n)} 的模；
+他要求你事先瞭解\refchapter{number_theoretic}的內容。
+設 \m{n} 爲 2 的冪。
+
+\startigBase[a]\startitem
+假定我們尋找最小的 \m{k}，使得 \m{p=kn+1} 是素數。
+請給出下列結論的簡單而有啓發型的理由：
+爲什麼我們希望 \m{k} 大約是 \m{\ln n}。
+（\m{k} 的值可能比 \m{\ln n} 大很多或者小很多，
+但是我們合理的期望，平均起來只需檢查 \m{O(\lg n)} 個候選的 \m{k} 值。）
+請問 \m{p} 的期望長度與 \m{n} 的長度相比如何？
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+設 \m{g} 是 \m{\integers_{p}^{*}} 的生成元，
+並設 \m{\omega = g^k \mod p}。
+
+\startigBase[continue]\startitem
+說明 \ALGO{DFT} 在模 \m{p} 的意義下是定義完備的逆運算，
+其中 \m{\omega} 是主 \m{n} 次單位根。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：在模 \m{p} 的意義下， \ALGO{FFT} 與其逆可在 \m{O(n\lg n)} 時間內運行，
+其中長度爲 \m{O(\lg n)} 位的字上操作需要單位時間，
+並假定算法已知 \m{p} 和 \m{\omega}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+請計算出向量 \m{(0,5,3,7,7,2,1,6)} 在模 \m{p=17} 下的 \ALGO{DFT}。
+注意， \m{g=3} 是 \m{\integers_{17}^{*}} 的生成元。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
 \stopsubject%Problems

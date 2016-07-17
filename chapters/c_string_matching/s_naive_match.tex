@@ -1,0 +1,79 @@
+\startsection[
+  title={The naive string-matching algorithm},
+]
+
+%e32.1-1
+\startEXERCISE
+試說明當模式 \m{P=0001}，文本 \m{T=000010001010001} 時，
+樸素字串匹配所執行的比較。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.1-2
+\startEXERCISE
+假設在模式 \m{P} 中所有字符都不相同。
+試說明如何對一段 \m{n} 個字符的文本 \m{T} 加速
+ \ALGO{NAIVE-STRING-MATCHER} 的執行速度，
+使其運行時間達到 \m{O(n)}。
+\stopEXERCISE
+
+\startANSWER
+從第一個不匹配的字符開始下一次搜索。
+\stopANSWER
+
+%e32.1-3
+\startEXERCISE
+假設模式 \m{P} 和文本 \m{T} 是長度分別爲 \m{m} 和 \m{n} 的隨機選取的字串。
+其字符分別來自含有 \m{d} 個元素的字母表：
+\startformula
+\sum_d = \{0,1,\ldots,d-1\}
+\stopformula
+，其中 \m{d\ge 2}。
+證明樸素算法第 4 行中隱含的循環所執行的字符比較的{\EMP 期望}次數爲：
+\startformula
+(n-m+1)\frac{1-d^{-m}}{1-d^{-1}} \le 2 (n-m+1)
+\stopformula
+直到這次循環結束。
+假設對於一個給定的偏移，
+當有一個字符不匹配或者整個模式已被匹配時，
+樸素算法將終止字符比較。
+因此，對任意隨機選取的字串，樸素算法都是有效的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.1-4
+\startEXERCISE[exercise:32.1-4]
+假設允許模式 \m{P} 中包含一個{\EMP 間隔符} \m{\diamondsuit}，
+他可以和{\EMP 任意}字串匹配（甚至可以和長度爲 0 的字串匹配）。
+例如，模式 \m{ab\diamondsuit ba \diamondsuit c} 與文本 \m{cabccbacbacab} 的匹配：
+\startformula\startmathalignment[n=7,
+  align={middle,middle,middle,middle,middle,middle,middle}]
+\NC c \NC \underbrace{ab} \NC \underbrace{cc} \NC \underbrace{ba}
+  \NC \underbrace{cba} \NC \underbrace{c} \NC ab \NR
+\NC   \NC ab \NC \diamondsuit \NC ba \NC \diamondsuit \NC c \NR
+\stopmathalignment\stopformula
+和
+\startformula\startmathalignment[n=7,
+  align={middle,middle,middle,middle,middle,middle,middle}]
+\NC c \NC \underbrace{ab} \NC \underbrace{ccbac} \NC \underbrace{ba}
+  \NC \ \underbrace{\ } \  \NC \underbrace{c} \NC ab \NR
+\NC   \NC ab \NC \diamondsuit \NC ba \NC \diamondsuit \NC c \NR
+\stopmathalignment\stopformula
+注意，間隔符可以在模式中出現任意次，
+但是不能在文本中出現。
+給出一個多項式時間算法，
+以確定這樣的模式 \m{P} 是否在給定的文本 \m{T} 中出現，
+並分析算法的運行時間。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

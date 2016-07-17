@@ -1,0 +1,65 @@
+\startsection[
+  title={The Rabin-Karp algorithm},
+]
+
+%e32.2-1
+\startEXERCISE
+如果模 \m{q=11}，
+那麼當 Rabin-Karp 匹配算法在文本 \m{T=3 141 592 653 589 793} 中
+搜尋模式 \m{P=26} 時，會遇到多少個僞命中點？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.2-2
+\startEXERCISE
+如何擴展 Rabin-Karp 算法，
+使其能解決如下問題：
+如何在文本字串中搜尋出給定的 \m{k} 個模式中的任何一個出現？
+起初假設所有 \m{k} 個模式都是等長的，
+然後擴展你的算法以適用於不同長度的模式。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.2-3
+\startEXERCISE
+試說明如何擴展 Rabin-Karp 算法用於處理一下問題：
+在一個 \m{n\times n} 的二維字符數組中搜索一個給定的 \m{m\times m} 的模式。
+（該模式可以在水平方向和垂直方向移動，
+但是不可以旋轉。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.2-4
+\startEXERCISE
+Alice 有一份很長的 \m{n} 位文件複印件 \m{A=\langle a_{n-1},a_{n-2},\ldots,a_0\rangle}，
+ Bob 也有一份類似的文件 \m{B=\langle b_{n-1},b_{n-2},\ldots,b_0\rangle}。
+ Alice 和 Bob 都希望直到他們的文件是否一樣。
+爲了避免傳送整個文件 A 或 B，
+他們運用下列快速的概率檢查方法。
+他們共同選擇一個素數 \m{q>1000n}，
+並從 \m{\{0,1,\ldots,q-1\}} 中隨機選取一個整數 \m{x}。
+然後， Alice 求出
+\startformula
+A(x)=\left(\sum_{i=0}^{n-1} a_i x^i \right)\mod q
+\stopformula
+的值， Bob 也用類似方法計算出 \m{B(x)}。
+證明：如果 \m{A\ne B}，
+則 \m{A(x)=B(x)} 的概率至多爲 \m{1/1000}；
+如果兩個文件相同，則 \m{A(x)} 的值必定等於 \m{B(x)} 的值。
+（\hint 參見\refexercise{model_zero}。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

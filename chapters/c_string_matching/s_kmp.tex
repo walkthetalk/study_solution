@@ -1,0 +1,96 @@
+\startsection[
+  title={The Knuth-Morris-Pratt algorithm},
+]
+
+%e32.4-1
+\startEXERCISE
+計算對應於模式 \m{ababbabbabbababbabb} 的前綴函數 \m{\pi}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.4-2
+\startEXERCISE
+給出關於 \m{q} 的函數 \m{\pi^*[q]} 的規模的上界。
+舉例說明所給出的上界是嚴格的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.4-3
+\startEXERCISE
+試說明如何通過檢查字串 \m{PT} （
+由 \m{P} 和 \m{T} 連接形成的長度爲 \m{m+n} 的字串
+）的 \m{\pi} 函數來確定模式 \m{P} 在文本 \m{T} 中的出現位置。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.4-4
+\startEXERCISE
+用聚合分析方法證明 \ALGO{KMP-MATCHER} 的運行時間是 \m{\Theta(n)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.4-5
+\startEXERCISE
+用勢函數證明 \ALGO{KMP-MATCHER} 的運行時間是 \m{\Theta(n)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.4-6
+\startEXERCISE
+試說明如何通過以下方式對過程 \ALGO{KMP-MATCHER} 進行改進：
+把第 7 行（不是第 12 行）出現的 \m{\pi} 替換爲 \m{\pi'}，
+其中對於 \m{q=1,2,\ldots,m-1}， \m{\pi'} 遞歸定義如下：
+\startformula
+\pi'[q]=\startcases
+\NC 0 \NC \text{如果 \m{\pi[q] = 0}} \NR
+\NC \pi'[\pi[q]] \NC \text{如果 \m{\pi[q] \ne 0} 且 \m{P[\pi[q]+1] = P[q+1]}} \NR
+\NC \pi[q] \NC \text{如果 \m{\pi[q] \ne 0} 且 \m{P[\pi[q]+1] \ne P[q+1]}} \NR
+\stopcases
+\stopformula
+說明修改後的算法爲什麼是正確的，
+並說明在何種意義上，這一修改是對原算法的改進。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.4-7
+\startEXERCISE
+寫出一個線性時間的算法，以確定文本 \m{T} 是否是另一個字串 \m{T'} 的循環旋轉。
+例如 \m{arc} 和 \m{car} 是彼此的循環旋轉。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e32.4-8
+\startEXERCISE\DIFFICULT
+給出一個有效算法，
+計算出相應於某給定模式 \m{P} 的字串匹配自動機的轉移函數 \m{\delta}。
+所給出的算法運行時間應爲 \m{O(m|\sum|)}。
+（\hint 證明如果 \m{q=m} 或 \m{P[q+1]\ne a}，
+則 \m{\delta(q,a)=\delta(\pi[q],a)}。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

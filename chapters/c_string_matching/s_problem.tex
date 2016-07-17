@@ -1,0 +1,65 @@
+\startsubject[
+  title={Problems},
+]
+
+%p32-1
+\startPROBLEM
+（String matching based on repetition factors）
+設 \m{y^i} 表示字串 \m{y} 與其自身首尾相接 \m{i} 次所得結果。
+例如 \m{(ab)^3 = ababab}。
+如果對某個字串 \m{y\in \sum^*} 和某個 \m{r>0} 有 \m{x=y^r}，
+則稱字串 \m{x\in \sum^*} 具有{\EMP 重複因子} \m{r}。
+設 \m{\rho(x)} 表示 \m{x} 的重複因子 \m{r} 的最大值。
+\startigBase[a]\startitem
+寫出一個有效算法以計算出 \m{\rho(P_i)} \m{(i=1,2,\ldots,m)}，
+算法的輸入爲模式 \m{P[1..m]}。
+算法的運行時間是多少？
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+對任何模式 \m{P[1..m]}，設 \m{\rho^*(P)} 定義爲 \m{\max_{1<i<m}\rho(P_i)}。
+證明：如果從長度爲 \m{m} 的所有二進制字串所組成的集合中隨機選擇模式 \m{P}，
+則 \m{\rho^*(P)} 的期望值是 \m{O(1)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+論證下列字串匹配算法可以在 \m{O(\rho^*(P)n+m)} 時間內正確找出模式 \m{P} 在
+文本 \m{T[1..n]} 中的所有出現位置。
+
+\CLRSH{REPETITION-MATCHER(P, T)}
+\startCLRS
+m = P.length
+n = T.length
+k = 1 + /BTEX \m{\rho^*(P)} /ETEX
+q = 0
+s = 0
+while /BTEX \m{s \le n-m} /ETEX
+	if /BTEX \m{T[s+q+1] == P[q+1]} /ETEX
+		q = q+1
+		if q == m
+			print "Pattern occurs with shift" s
+	if q == m or /BTEX \m{T[s+q+1] \ne P[q+1]} /ETEX
+		/BTEX \m{s = s + \max(1,\left\lceil q/k \right\rceil)} /ETEX
+		q = 0
+\stopCLRS
+該算法是 Galil 和 Seiferas 提出的。
+通過對這些設計思想進行大量擴充，
+他們得到了一個線性時間的字串匹配算法，
+該算法除了 \m{P} 和 \m{T} 所要求的存儲空間外，
+僅需 \m{O(1)} 的存儲空間。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+\stopsubject%Problems

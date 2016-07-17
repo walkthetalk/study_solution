@@ -184,7 +184,9 @@ local function gen_typeface ()
     context ('\\definetypeface[zhfonts][ss][sans][zhfonts][default][features=zh]')
     context ('\\definetypeface[zhfonts][tt][mono][zhfonts][default]')
     if mathfonts.roman.name then
-	context ('\\definetypeface[zhfonts][mm][math][zhfonts]')
+	--the definefontsynonym can't use typescript
+	--context ('\\definetypeface[zhfonts][mm][math][zhfonts]')
+	context ('\\definetypeface[zhfonts][mm][math]['..mathfonts.roman.name..']')
     end
     context ('\\stoptypescript')
 end

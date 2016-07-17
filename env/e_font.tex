@@ -1,6 +1,8 @@
 %% use `mtxrun --script font --list --all` to list all fonts
 %% use `mtxrun --script fonts --reload` to reload fonts
-%\usetypescriptfile[euler]
+\usetypescriptfile[euler]
+\appendtoks \rm \to \everymathematics
+\setupmathematics[lcgreek=normal, ucgreek=normal]
 
 % zhfonts
 \usemodule[p][zhfonts][style=rm, size=9pt]
@@ -50,7 +52,7 @@ bolditalic=texgyreherosbolditalic]
 
 % math
 \setupzhfonts[math][%
-  roman=neoeuler
+  roman=pagellaovereuler
 ]
 
 % 加粗數學函數名 % neoeuler 字體粗細差不多，加粗也看不太出來

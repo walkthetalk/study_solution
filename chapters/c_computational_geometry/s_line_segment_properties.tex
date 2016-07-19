@@ -1,0 +1,172 @@
+\startsection[
+  title={Line-segment properties},
+]
+
+%e33.1-1
+\startEXERCISE
+證明：若 \m{p_1\times p_2} 值爲正，
+則相對於原點 \m{(0,0)}，
+向量 \m{p_1} 位於向量 \m{p_2} 的順時針方向；
+若叉積爲負，則 \m{p_1} 在 \m{p_2} 的逆時針方向。
+\stopEXERCISE
+
+\startANSWER
+令 \m{p_1} 極座標爲 \m{(\rho_1, \alpha_1)}，
+ \m{p_2} 極座標爲 \m{(\rho_2, \alpha_2)}，
+其中 \m{\rho_1, \rho_2 > 0, 0\le \alpha_1,\alpha_2 < 360}，則：
+\startformula\startmathalignment
+\NC p_1 \times p_2 \NC = x_1 y_2 - x_2 y_1 \NR
+\NC \NC = \rho_1 \cos \alpha_1 \rho_2 \sin \alpha_2
+         - \rho_2 \cos \alpha_2 \rho_1 \sin \alpha_1 \NR
+\NC \NC = \rho_1 \rho_2 (\cos \alpha_1 \sin \alpha_2
+         - \cos \alpha_2 \sin \alpha_1 \NR
+\NC \NC = \rho_1 \rho_2 \sin (\alpha_2 - \alpha_1) \NR
+\stopmathalignment\stopformula
+\m{p_1\times p_2} 值爲正，等價於 \m{\sin (\alpha_2 - \alpha_1) > 0}，
+等價於向量 \m{p_1} 位於向量 \m{p_2} 的順時針方向；
+ \m{p_1\times p_2} 值爲負，等價於 \m{\sin (\alpha_2 - \alpha_1) < 0}，
+等價於向量 \m{p_1} 位於向量 \m{p_2} 的逆時針方向；
+\stopANSWER
+
+%e33.1-2
+\startEXERCISE
+van Pelt 教授提出，
+在過程 \ALGO{ON-SEGMENT} 的第 1 行中，
+只需測試 \m{x} 座標值。
+試說明教授錯誤的原因。
+\stopEXERCISE
+
+\startANSWER
+如果線段是垂直方向的，則三個點 \m{x} 值都相同，
+此時僅憑 \m{x} 無法判斷點是否在線段上，
+因此需要檢查 \m{y}。
+同理當線段是水平方向時，僅憑 \m{y} 也無法判斷點是否在線段上，
+此時還需要檢查 \m{x}。
+\stopANSWER
+
+%e33.1-3
+\startEXERCISE
+一個點 \m{p_1} 相對於原點 \m{p_0} 的{\EMP 極角}（polar angle）
+也就是向量 \m{p_1 - p_0} 在常規座標系中的角度。
+例如，點 \m{(3,5)} 相對於 \m{(2,4)} 的極角即爲向量 \m{(1,1)} 的極角，
+即 45 度或 \m{\pi/4} 弧度。
+點 \m{(3,3)} 相對於 \m{(2,4)} 的極角即爲向量 \m{(1,-1)} 的極角，
+即 315 度或 \m{7\pi/4} 的弧度。
+請編寫一段僞碼，根據相對於某個給定原點 \m{p_0} 的極角，
+對一個由 \m{n} 個點構成的序列 \m{\langle p_1,p_2,\ldots,p_n\rangle} 進行排序。
+所給過程的運行時間應爲 \m{O(n\lg n)}，
+並要求用叉積來比較極角的大小。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{COMPARE-POLAR-ANGLE(x1,y1, x2, y2)}
+\startCLRS
+if y1 >= 0 and y2 < 0
+	return -1	// p1 < p2
+else if y1 < 0 and y2 >= 0
+	return 1	// p1 > p2
+else if (x1*y2-x2*y1) > 0
+	return -1	// p1 < p2
+else
+	return 1	// p1 >= p2
+\stopCLRS
+\stopANSWER
+
+%e33.1-4
+\startEXERCISE
+試說明如何在 \m{O(n^2\lg n)} 時間內確定 \m{n} 個點中任意三點是否共線。
+\stopEXERCISE
+
+\startEXERCISE
+針對每一個點，對其他點按極角進行排序，並檢查是否有極角相同的兩點。
+時間爲：
+\m{O(n ((n-1)\lg(n-1) + (n-2))) = O(n^2\lg n)}。
+\stopEXERCISE
+
+%e33.1-5
+\startEXERCISE[33.1-5]
+{\EMP 多邊形}是平面上由一些列線段構成的閉合曲線。
+也就是說，他是由一系列直線段構成的首尾相連的曲線。
+這些直線段稱爲多邊形的{\EMP 邊}。
+一個連接兩條連續邊的頂點爲多邊形的{\EMP 頂點}。
+如果多邊形是{\EMP 簡單的}（一般情況下都會作此假設），
+那麼他的內部不存在邊交叉的情況。
+在平面上被簡單多邊形包圍的點集組成了該多邊形的{\EMP 內部}（interior），
+恰落在多邊形上的點組成了多邊形的{\EMP 邊界}（boundary），
+而包圍該多邊形的點構成了多邊形的{\EMP 外部}（exterior）。
+對於一個簡單多邊形，
+如果給定任意兩個位於其邊界或內部的點，
+連接這兩個點的線段上的所有點都在這個多邊形的邊界或內部，
+那麼該多邊形爲{\EMP 凸多邊形}。
+一個凸多邊形的頂點不能被表示成邊界或內部任意兩個頂點的凸組合。
+
+Amundsen 教授提出，對於由 \m{n} 個點組成的序列 \m{\langle p_0,p_1,\ldots,p_{n-1}\rangle}，
+可以用下面的方法來確定他們能否形成一個凸多邊形的連續頂點。
+若集合 \m{\{\angle p_i p_{i+1} p_{i+2}: i=0,1,\ldots,n-1\}} （下標是模 \m{n} 排列的）
+不是既包含左轉又包含右轉，則輸出”yes“；
+否則，輸出”no“。
+試說明雖然這種方法的運行時間是線性的，
+但他不總是得出正確結果。
+對教授的方法做修改，
+使其總是能在線性時間內得出正確結果。
+\stopEXERCISE
+
+\startANSWER
+例如三個點 \m{(0,0),(1,1),(2,2)} 處於同一條直線上，無法形成多邊形，
+但按 Amundsen 教授的方法，不滿足既包含左轉也包含右轉的條件，因此會得到”yes“。
+
+如果既不包含左轉，也不包含右轉，則輸出”no“。
+既包含左轉，也包含右轉，則輸出”no“。
+否則，輸出”yes“。
+\stopANSWER
+
+%e33.1-6
+\startEXERCISE[exercise:33.1-6]
+已知一個點 \m{p_0 = (x_0,y_0)}，
+他的{\EMP 右水平射線}（right horizontal ray）
+是頂點集合{\{ p_i = (x_i,y_i): x_i\ge x_0,y_i=y_0\}}，
+即 \m{p_0} 正右方的點的集合，包括 \m{p_0} 本身。
+試說明如何通過把問題轉化爲判斷兩條線段是否相交，
+從而在 \m{O(1)} 時間內確定從 \m{p_0} 出發
+的右水平射線是否和線段 \m{\overbar{p_1p_2}} 相交。
+\stopEXERCISE
+
+\startANSWER
+主要問題是如何確定水平射線的右端點。
+水平射線右端點的 y 座標與 \m{p_0} 相同，
+ x 座標爲 \m{\max(x_1,x_2)}，
+爲提高效率，可以在此基礎上增大一些，如 \m{\max(x_1,x_2)+1}。
+\stopANSWER
+
+%e33.1-7
+\startEXERCISE
+要確定點 \m{p_0} 是否在簡單多邊形 \m{P} （不一定是凸多邊形）的內部，
+一種方法是檢查由 \m{p_0} 發出的全部射線，
+看他們是否與 \m{P} 的邊界相交奇數次，
+但是 \m{p_0} 本身不能位於邊界上。
+試說明如何在 \m{\Theta(n)} 時間內計算出 \m{p_0} 是否在一個
+由 \m{n} 個頂點組成的多邊形內部。
+（\hint 參考\refexercise{33.1-6}。
+確保當射線與多邊形邊界在頂點處相交，
+以及當射線遮蓋住多邊形的一條邊時，算法的正確性。）
+\stopEXERCISE
+
+\startANSWER
+如果射線與蓋住了某條邊，則略過此邊。
+如果與多邊形頂點相交，則算兩個，即兩條相鄰邊各算一次。
+\stopANSWER
+
+%e33.1-8
+\startEXERCISE
+試說明如何在 \m{\Theta(n)} 時間內計算一個具有 \m{n} 個頂點的
+簡單多邊形（不一定是凸多邊形）的面積。
+（與多邊形有關的定義見\refexercise{33.1-5}。）
+\stopEXERCISE
+
+\startANSWER
+\startformula
+\frac{1}{2}\sum_{i=2}^{n-1} \overbar{p_1 p_i} \times \overbar{p_1 p_{i+1}}
+\stopformula
+\stopANSWER
+
+\stopsection

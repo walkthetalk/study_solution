@@ -2,4 +2,209 @@
   title={Problems},
 ]
 
+%p33-1
+\startPROBLEM
+（Convex layers）
+已知平面上點集 \m{Q}，
+我們用歸納法定義 \m{Q} 的{\EMP 凸層}（convex layer）。
+ \m{Q} 的第一凸層是由 \m{Q} 中 \ALGO{CH(Q)} 的頂點組成。
+對 \m{i>1}，定義 \m{Q_i} 由把 \m{Q} 中所有在凸層 \m{1,2,\ldots,i-1} 中的點
+都去除後所剩餘的點構成。
+如果 \m{Q_i\ne \empty}，
+那麼 \m{Q} 的第 \m{i} 凸層爲 \ALGO{CH(Q_i)}；
+否則，第 \m{i} 凸層無定義。
+
+\startigBase[a]\startitem
+寫出一個運行時間爲 \m{O(n^2)} 的算法，
+以找出 \m{n} 個點所組成的集合的各凸層。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：在對 \m{n} 個實數進行排序所需時間爲 \m{\Omega(n\lg n)} 的任何計算模型上，
+計算 \m{n} 個點的凸層需要 \m{\Omega(n\lg n)} 時間。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p33-2
+\startPROBLEM
+（Maximal layers）
+設 \m{Q} 是平面上 \m{n} 個點所組成的集合。
+如果有 \m{x\ge x'} 且 \m{y\ge y'}，
+則稱點 \m{(x,y)} {\EMP 支配} 點 \m{(x',y')}。
+ \m{Q} 中不被其中任何其他點支配的點稱爲{\EMP 最大點}。
+注意， \m{Q} 可以包含許多最大點，
+可以把這些最大點組織成如下的最大層。
+第一最大層 \m{L_1} 是 \m{Q} 中最大點構成的集合。
+對於 \m{i>1}，第 \m{i} 最大層 \m{L_i} 是 \m{Q-\cup_{j=1}^{i-1}L_j} 中
+最大點構成的集合。
+
+假設 \m{Q} 包含 \m{k} 個非空的最大層，
+並設 \m{y_i} 是 \m{L_i} 中最左邊點的 \m{y} 座標 \m{(i=1,2,\ldots,k)}。
+假定 \m{Q} 中沒有兩個點有相同的 \m{x} 座標或 \m{y} 座標。
+
+\startigBase[a]\startitem
+證明 \m{y_1>y_2>\ldots >y_k}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+考慮一個點 \m{(x,y)}，
+他在 \m{Q} 中任意點的左邊，
+並且其 \m{y} 座標與 \m{Q} 中任何點的 \m{y} 座標都不相同。
+設 \m{Q'=Q\cup\{(x,y)\}}。
+
+\startigBase[continue]\startitem
+設 \m{j} 是滿足 \m{y_j < y} 的最小下標，除非 \m{y<y_k}，
+在這種情況下，令 \m{j=k+1}。
+證明 \m{Q'} 的最大層如下：
+\startigBase
+\item 如果 \m{j\le k}，則 \m{Q'} 的最大層與 \m{Q} 的最大層相同，
+只是 \m{L_j} 也包含 \m{(x,y)} 作爲其新的最左點。
+\item 如果 \m{j=k+1}，則 \m{Q'} 的前 \m{k} 個最大層與 \m{Q} 的相同，
+但此外， \m{Q'} 有一個非空的第 \m{k+1} 最大層 \m{L_{k+1}=\{(x,y)\}}。
+\stopigBase
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+描述一種時間爲 \m{O(n\lg n)} 的算法，
+用於計算出包含 \m{n} 個點的集合 \m{Q} 的各最大層。
+（\hint 把一條掃除線從右向左移動。）
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+如果允許輸入點有相同的 \m{x} 座標或 \m{y} 座標，
+會不會出現問題？
+如果會，提出一種方法來解決這一問題。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p33-3
+\startPROBLEM
+（Ghostbusters and ghosts）
+有 \m{n} 個巨人正與 \m{n} 個鬼戰鬥。
+每個巨人的武器是一個質子包，
+他可以用一串質子流射中鬼從而將鬼消滅。
+質子流沿直線行進，在擊中鬼時終止。
+巨人聚定採取下列策略。
+他們各自尋找一個鬼形成 \m{n} 對巨人-鬼，
+然後每個巨人同時向各自對應的鬼射出一串質子流。
+我們直到，質子流互相交叉是很危險的，
+因此，巨人選擇的配對方式應該使質子流不會交叉。
+
+假定每個巨人和每個鬼的位置都是平面上一個固定的點，
+並且沒有三個位置共線。
+\startigBase[a]\startitem
+論證存在一條通過一個巨人和一個鬼的直線，
+使得直線一遍的巨人數與同一邊的鬼數相等。
+試說明如何在 \m{O(n\lg n)} 時間內找出這樣一條直線。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+寫出一個運行時間爲 \m{O(n^2\lg n)} 的算法，
+使其以不會有質子流交叉爲條件把巨人與鬼配對。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%33-4
+\startPROBLEM
+（Picking up sticks）
+ Charon 教授有 \m{n} 根小棍子，
+他們以某種方式互相疊放在一起。
+每根棍子都用其端點來指定，
+每個端點都是一個有序的三元組，
+其座標 \m{(x,y,z)} 已知。
+所有棍子都不是垂直的。
+他希望拾取所有的棍子，
+但要滿足如下條件：
+一次一根地挑起棍子，
+當一根棍子上面沒有壓着其他棍子時，
+才能將其挑起來。
+\startigBase[a]\startitem
+給出一個過程，
+取兩根棍子 \m{a} 和 \m{b} 作爲參數，
+返回 \m{a} 是在 \m{b} 的上面、下面還是與 \m{b} 無關。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個有效的算法，用於確定是否有可能拾取所有的棍子。
+如果能，提供一個拾取所有棍子的合法順序。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p33-5
+\startPROBLEM
+（Sparse-hulled distributions）
+考慮計算平面上點集的圖包問題，
+但這些點是根據某已知的隨機分佈取得的。
+有時，從這樣一種分佈中取得的 \m{n} 個點凸包的期望規模爲 \m{O(n^{1-\varepsilon})}，
+其中 \m{\varepsilon} 爲某個大於 0 的常數。
+稱這樣的分佈爲{\EMP 稀疏包分佈}。
+稀疏包分佈包括以下幾種：
+\startigBase[2]
+\item 點是均勻地從一個單位半徑的圓面中取得的，凸包的期望規模爲 \m{\Theta(n^{1/3})}。
+\item 點是均勻地從一個具有 \m{k} 條邊的凸多邊形內部取得的（\m{k} 爲任意常數）。
+凸包的期望規模爲 \m{\Theta(\lg n)}。
+\item 點是根據二維正態分佈取得的。凸包的期望規模爲 \m{\Theta(\sqrt{\lg n})}。
+\stopigBase
+
+\startigBase[a]\startitem
+已知兩個分別有 \m{n_1} 和 \m{n_2} 個頂點的凸多邊形，
+說明如何在 \m{O(n_1+n_2)} 時間內計算出全部 \m{n_1+n_2} 個點的凸包（多邊形可以重疊）。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：對於根據稀疏包分佈獨立取得的一組 \m{n} 個點，
+其凸包可以在 \m{O(n)} 的期望時間內計算出來。
+（\hint 採用遞歸方法分別求出前 \m{n/2} 個點和後 \m{n/2} 個點的凸包，
+然後再對結果進行合併。）
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
 \stopsubject%Problems

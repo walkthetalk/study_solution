@@ -1,4 +1,81 @@
 \startsection[
   title={Finding the closest pair of points},
 ]
+
+%e33.4-1
+\startEXERCISE
+Williams 教授提出了一個方案，可以在最近點對算法中，
+只檢查數組 \m{Y'} 中每個點後面的 5 個點，
+其思想是，總是將直線 \m{l} 上的點放入集合 \m{P_L} 中。
+那麼，直線 \m{l} 上就不可能有一個點屬於 \m{P_L}，
+另一個點屬於 \m{P_R} 的重合點對。
+因此，至多可能有 6 個點處於 \m{\delta\times 2\delta} 的矩形內。
+這種方案的缺陷何在？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e33.4-2
+\startEXERCISE
+試說明只檢查數組 \m{Y'} 中跟隨在每個點後的 5 個數組位置就足夠了。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e33.4-3
+\startEXERCISE
+除歐幾里德距離外，還有其他方法定義兩點間的距離。
+在平面上，點 \m{p_1} 和 \m{p_2} 之間的{\EMP \m{L_m} 距離}由下式給出：
+\startformula
+(|x_1-x_2|^m + |y_1-y_2|^m)^{1/m}
+\stopformula
+因此，歐幾里德距離實際上是 \m{L_2} 距離。
+修改最近點對算法，使其適用於 \m{L_1} 距離，
+也稱爲{\EMP 曼哈頓距離}（Manhattan distance）。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e33.4-4
+\startEXERCISE
+已知平面上兩個點 \m{p_1} 和 \m{p_2}，
+他們之間的 \m{L_\infty} 距離爲 \m{\max(|x_1-x_2|,|y_1-y_2|)}。
+修改最近點對算法，使其適用於 \m{L_\infty} 距離。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e33.4-5
+\startEXERCISE
+假設最近點對算法裏 \m{\Omega(n)} 對點是共垂線的。
+試說明如何確定集合 \m{P_L} 和 \m{P_R} 以及如何確定 \m{Y} 中的
+每個點是在 \m{P_L} 中還是在 \m{P_R} 中，
+從而使最近點對算法的運行時間保持 \m{O(n\lg n)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e33.4-6
+\startEXERCISE
+對最近點對算法進行修改，
+使其能避免對數組 \m{Y} 進行預排序，
+但仍能使算法的運行時間保持爲 \m{O(n\lg n)}。
+（\hint 將已排序的數組 \m{Y_L} 和 \m{Y_R} 加以合併，
+以形成有序數組 \m{Y}。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

@@ -77,14 +77,14 @@ else
 試說明如何在 \m{O(n^2\lg n)} 時間內確定 \m{n} 個點中任意三點是否共線。
 \stopEXERCISE
 
-\startEXERCISE
+\startANSWER
 針對每一個點，對其他點按極角進行排序，並檢查是否有極角相同的兩點。
 時間爲：
 \m{O(n ((n-1)\lg(n-1) + (n-2))) = O(n^2\lg n)}。
-\stopEXERCISE
+\stopANSWER
 
 %e33.1-5
-\startEXERCISE[33.1-5]
+\startEXERCISE[exercise:33.1-5]
 {\EMP 多邊形}是平面上由一些列線段構成的閉合曲線。
 也就是說，他是由一系列直線段構成的首尾相連的曲線。
 這些直線段稱爲多邊形的{\EMP 邊}。
@@ -165,7 +165,7 @@ Amundsen 教授提出，對於由 \m{n} 個點組成的序列 \m{\langle p_0,p_1
 
 \startANSWER
 \startformula
-\frac{1}{2}\sum_{i=2}^{n-1} \overbar{p_1 p_i} \times \overbar{p_1 p_{i+1}}
+\frac{1}{2} \left|\sum_{i=2}^{n-1} \overbar{p_1 p_i} \times \overbar{p_1 p_{i+1}} \right|
 \stopformula
 \stopANSWER
 

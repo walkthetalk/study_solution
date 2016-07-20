@@ -1,4 +1,99 @@
 \startsection[
   title={Finding the convex hull},
 ]
+
+%e33.3-1
+\startEXERCISE
+證明：在過程 \ALGO{GRAHAM-SCAN} 中，
+點 \m{p_1} 和 \m{p_m} 必定是 \ALGO{CH(Q)} 的頂點。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e33.3-2
+\startEXERCISE
+考慮一個能支持加法、比較和懲罰運算的計算模型，
+用該模型對 \m{n} 個數進行排序時，
+其下界爲 \m{\Omega(n\lg n)}。
+證明：
+當在這樣的一個模型中有序地計算出由 \m{n} 個點組成的集合的凸包時，
+其下界爲 \m{\Omega(n\lg n)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e33.3-3
+\startEXERCISE
+已知一個點集 \m{Q}，
+證明彼此相距最遠的點對必定是 \ALGO{CH(Q)} 中的頂點。
+\stopEXERCISE
+
+\startANSWER
+反證法，令相距最遠的兩個點爲 \m{p_1,p_2}，
+其連線延長線與 \ALGO{CH(Q)} 交於兩點 \m{p_3,p_4}。
+
+如果 \m{p_3,p_4} 都是 \ALGO{CH(Q)} 的頂點，
+則 \m{\vec{p_3p_4}} 的長度大於 \m{\vec{p_1p_2}}，矛盾。
+
+如果 \m{p_3,p_4} 只有一個是 \ALGO{CH(Q)} 的頂點，
+假定 \m{p_3} 是 \ALGO{CH(Q)} 的頂點，
+ \m{p_4} 所在的邊爲 \m{\vec{p_5,p_6}}，
+則 \m{\vec{p_3 p_5}} 和 \m{\vec{p_3 p_6}} 中必有一個長度大於 \m{\vec{p_3 p_4}}，
+當然也就大於 \m{\vec{p_1 p_2}} 的長度，矛盾。
+
+如果 \m{p_3,p_4} 都不是 \ALGO{CH(Q)} 的頂點，
+令 \m{p_3} 所在的邊爲 \m{\vec{p_5 p_6}}，
+ \m{p_4} 所在的邊爲 \m{\vec{p_7 p_8}}，
+其中 \m{p_5,p_7} 均在 \m{\vec{p_3p_4}} 的左側，
+ \m{p_6,p_8} 均在 \m{\vec{p_3p_4}} 的右側。
+那麼 \m{\vec{p_5p_7}} 和 \m{\vec{p_6p_8}} 中必有一個長度大於 \m{\vec{p_3 p_4}}，
+當然也就大於 \m{\vec{p_1 p_2}} 的長度，矛盾。
+\stopANSWER
+
+%e33.3-4
+\startEXERCISE
+對一個給定的多邊形 \m{P} 和在其邊界上的一個點 \m{q}，
+ \m{q} 的{\EMP 投影}是點 \m{r} 的集合，其中點 \m{r} 滿足如下條件：
+線段 \m{\overbar{qr}} 完全在 \m{P} 的邊界上或內部。
+正如圖 33-10 所示，
+如果在 \m{P} 的內部存在一個點 \m{p}，
+他處於 \m{P} 的邊界上每個點的投影中，
+則多邊形 \m{P} 是{\EMP 星形多邊形}。
+所有滿足這種條件的點 \m{p} 的集合稱爲 \m{P} 的{\EMP 內核}。
+給定一個 \m{n} 個頂點的星型多邊形 \m{P}，
+他的各個頂點已按逆時針方向排序，
+試說明如何在 \m{O(n)} 時間內計算出 \ALGO{CH(Q)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e33.3-5
+\startEXERCISE
+在{\EMP 聯機凸包問題}（on-line convex-hull problem）中，
+每次只給出由 \m{n} 個點所組成的集合 \m{Q} 中的一個點。
+在接收到每個點後，就計算出當前所有點的凸包。
+顯然，可以對每個點運行一次 Graham 掃描算法，
+總時間爲 \m{O(n^2\lg n)}。
+試說明如何在 \m{O(n^2)} 時間內解決聯機凸包問題。
+\stopEXERCISE
+
+\startANSWER
+\TDDO{略。}
+\stopANSWER
+
+%e33.3-6
+\startEXERCISE\DIFFICULT
+試說明如何實現增量法，以在 \m{O(n\lg n)} 時間內計算出 \m{n} 個點的凸包。
+\stopEXERCISE
+
+\startANSWER
+\TDDO{略。}
+\stopANSWER
+
 \stopsection

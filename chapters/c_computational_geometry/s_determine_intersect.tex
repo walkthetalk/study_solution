@@ -1,4 +1,133 @@
 \startsection[
   title={Determining whether any pair of segments intersects},
 ]
+
+%e33.2-1
+\startEXERCISE
+試說明在 \m{n} 條線段的集合中，可能有 \m{\Theta(n^2)} 個交點。
+\stopEXERCISE
+
+\startANSWER
+五角星，每一條線段都與其他所有線段相交。
+\stopANSWER
+
+%e33.2-2
+\startEXERCISE[33.2-2]
+已知兩條在 \m{x} 處可比的線段 \m{a} 和 \m{b}，
+試說明如何在 \m{O(1)} 時間內確定 \m{a \succeq_x b} 和 \m{b\succeq_x a} 中哪一個成立。
+假定這兩條線段都不是垂直的。
+（\hint 如果 \m{a} 和 \m{b} 不相交，利用叉積即可。
+如果 \m{a} 和 \m{b} 相交（當然頁可以用叉積來確定），
+仍然可以只利用加、減、乘這幾種運算，無需使用除法。
+當然，在應用 \m{\succeq_x} 關係時，如果 \m{a} 和 \m{b} 相交，
+就可以停下來並聲明已找到了一個交點。）
+\stopEXERCISE
+
+\startANSWER
+令 \m{a = \overbar{p_1 p_2}, b=\overbar{p_3,p_4}}，
+其中 \m{p_i=(x_i,y_i),1\le i\le 4}，
+ \m{x_1 < x_2, x_3 < x_4}。
+即 \m{a} 左端點爲 \m{p_1}，右端點爲 \m{p_2}；
+ \m{b} 左端點爲 \m{p_3}，右端點爲 \m{p_4}。
+
+如果 \m{a} 和 \m{b} 不相交，考慮兩條線段 \m{\vec{p_1 p_2}} 和 \m{\vec{p_2 p_3}}，
+如果在 \m{p_2} 處左轉，則 \m{b\succeq_x a}；
+如果在 \m{p_2} 處右轉，則 \m{a\succeq_x b}。
+
+如果 \m{a} 和 \m{b} 交點位於 \m{x} 左邊，
+那麼可以根據右端點判斷 \m{a} 和 \m{b} 的關係；
+如果交點位於 \m{x} 右邊，
+那麼可以根據左端點判斷 \m{a} 和 \m{b} 的關係。
+\stopANSWER
+
+%e33.2-3
+\startEXERCISE
+Mason 教授建議修改過程 \ALGO{ANY-SEGMENTS-INTERSECT}，
+使其不是找出一個交點後返回，而是輸出相交的線段，
+再繼續進行 \m{for} 循環的下一次迭代。
+他把這樣得到的過程稱爲 \ALGO{PRINT-INTERSECTING-SEGMENTS}，
+並聲稱該過程能夠按照線段在集合中出現的次序，
+從左到右輸出所有的交點。
+ Dixon 教授不同意 Mason 教授，稱其做法有誤。
+哪位教授的說法是正確的？
+ \ALGO{PRINT-INTERSECTING-SEGMENTS} 所找出的第一個相交點
+總是最左邊的交點嗎？
+他總能找出所有的相交點嗎？
+\stopEXERCISE
+
+\startANSWER
+不正確，不是，不能。
+\stopANSWER
+
+%e33.2-4
+\startEXERCISE
+寫出一個運行時間爲 \m{O(n\lg n)} 的算法，
+以確定由 \m{n} 個頂點組成的多邊形是否是簡單多邊形。
+\stopEXERCISE
+
+\startANSWER
+用掃除線算法判斷是否有兩條邊相交，
+忽略相鄰兩線段的交點。
+\stopANSWER
+
+%e33.2-5
+\startEXERCISE
+寫出一個運行時間爲 \m{O(n\lg n)} 的算法，
+以確定共有 \m{n} 個頂點的兩個簡單多邊形是否相交。
+\stopEXERCISE
+
+\startANSWER
+用掃除線算法判斷是否有兩條邊相交，
+忽略相鄰兩線段的交點。
+\stopANSWER
+
+%e33.2-6
+\startEXERCISE
+一個圓面是由一個圓加上其內部組成，用圓心和半徑表示。
+如果兩個圓面有公共點，則稱這兩個圓面相交。
+寫出一個運行時間爲 \m{O(n\lg n)} 的算法，
+以確定 \m{n} 個圓面中是否有任何兩個圓面相交。
+\stopEXERCISE
+
+\startANSWER
+參見\goto{stackoverflow}
+[url(http://stackoverflow.com/questions/19926054/segment-intersection)]
+
+\TODO{略。}
+\stopANSWER
+
+%e33.2-7
+\startEXERCISE
+已知 \m{n} 條線段中共有 \m{k} 個相交點，
+試說明如何在 \m{O((n+k)\lg n)} 時間內輸出全部 \m{k} 個交點。
+\stopEXERCISE
+
+\startANSWER
+將交點作爲事件點。
+\stopANSWER
+
+%e33.2-8
+\startEXERCISE
+論證即使有三條或更多的線段相交於同一點，
+過程 \ALGO{ANY-SEGMENTS-INTERSECT} 也能正確執行。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e33.2-9
+\startEXERCISE
+證明：在有垂直線段的情況下，
+如果將某一垂直線段的底部端點當作是左端點，
+其頂部端點當作右端點，
+則過程 \ALGO{ANY-SEGMENTS-INTERSECT} 也能正確執行。
+如果允許有垂直線段，
+對\refexercise{33.2-2} 的回答應如何修改。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

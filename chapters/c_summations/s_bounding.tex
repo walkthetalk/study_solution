@@ -1,0 +1,76 @@
+\startsection[
+  title={Bounding summations},
+]
+
+%eA.2-1
+\startEXERCISE
+證明： \m{\sum_{k=1}^{n}1/k^2} 有常數上界。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \sum_{k=1}^{n}\frac{1}{k^2} \NC = 1 + \sum_{k=2}^{n}\frac{1}{k^2} \NR
+\NC \NC \le 1 + \int_{1}^{n}\frac{dx}{x^2} \NR
+\NC \NC = 1 + \left[-\frac{1}{x}\right]_{1}^{n} \NR
+\NC \NC = 1 + \left[-\frac{1}{n} - \left(-\frac{1}{1}\right)\right] \NR
+\NC \NC = 2 - \frac{1}{n} \NR
+\NC \NC \le 2 \NR
+\stopmathalignment\stopformula
+將第一項分離出來，是爲了防止積分時除零。
+\stopANSWER
+
+%eA.2-2
+\startEXERCISE
+求下面和式的漸進上界：
+\startformula
+\sum_{k=0}^{\left\lfloor\lg n\right\rfloor}\left\lceil \frac{n}{2^k}\right\rceil
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \sum_{k=0}^{\left\lfloor\lg n\right\rfloor}\left\lceil \frac{n}{2^k}\right\rceil
+    \NC \le \sum_{k=0}^{\left\lfloor\lg n\right\rfloor} \left(\frac{n}{2^k} + 1\right)\NR
+\NC \NC \le \lg n + 1 + \sum_{k=0}^{\infty} \frac{n}{2^k} \NR
+\NC \NC = \lg n + 1 + n\cdot \frac{1}{1-\frac{1}{2}} \NR
+\NC \NC = \lg n + 1 + 2n \NR
+\NC \NC = O(n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eA.2-3
+\startEXERCISE
+通過分割求和的方式證明第 \m{n} 個調諧數是 \m{\Omega(\lg n)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%eA.2-4
+\startEXERCISE
+用積分法求 \m{\sum_{k=1}^{n}k^3} 的近似值。
+\stopEXERCISE
+
+\startANSWER
+\m{k^3} 單調遞增：
+\startformula\startmathalignment[n=3]
+\NC \int_{0}^{n}x^3 \NC \le \sum_{k=1}^{n} k^3 \NC \le \int_{1}^{n+1} x^3 \NR
+\NC \left[\frac{x^4}{4}\right]_0^n \NC \le \sum_{k=1}^{n} k^3
+     \NC \le \left[\frac{x^4}{4}\right]_1^{n+1} \NR
+\NC \frac{n^4}{4} - 0 \NC \le \sum_{k=1}^{n}k^3 \NC \le \frac{(n+1)^4}{4} - \frac{1}{4} \NR
+\NC \frac{n^4}{4} \NC \le \sum_{k=1}^{n}k^3 \NC \le \frac{(n+1)^4 - 1}{4} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eA.2-5
+\startEXERCISE
+爲什麼我們不在 \m{\sum_{k=1}^{n}1/k} 上使用積分近似（公式 A.12）來
+獲得第 \m{n} 個調諧數的上界？
+\stopEXERCISE
+
+\startANSWER
+防止除零。
+\stopANSWER
+
+\stopsection

@@ -1,4 +1,98 @@
 \startsection[
   title={NP-completeness and reducibility},
 ]
+
+%e34.3-1
+\startEXERCISE
+驗證圖 34-8（b）中的電路是不可滿足的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.3-2
+\startEXERCISE
+證明： \m{\le_P} 關係是語言上的一種傳遞關係，
+即證明如果有 \m{L_1\le_P L_2}，且 \m{L_2\le_P L_3} 則有 \m{L_1\le_P L_3}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.3-3
+\startEXERCISE
+證明： \m{L_1\le_P \overbar{P}} 當且僅當 \m{\overbar{L_1}\le_P L}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.3-4
+\startEXERCISE
+證明：在對引理 34.5 的另一種證明中，
+可滿足性賦值可以當作證書來使用。
+試問哪一個證書可以使證明過程更容易些？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.3-5
+\startEXERCISE
+在引理 34.6 的證明中，
+假定算法 A 的工作存儲佔用的是一塊具有多項式大小的連續存儲區域。
+在該證明的什麼地方用到了這一假設？
+論證這一假設的過程要具有普適性。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.3-6
+\startEXERCISE
+如果對所有 \m{L'\in C}，有 \m{L\in C} 且 \m{L'\le_P L}，
+則相對於多項式時間的歸約來說，
+一個語言 \m{L} 對語言類 \m{C} 是{\EMP 完全的}。
+證明：相對於多項式時間的歸約來說，
+ \m{\phi} 和 \m{\{0,1\}^*} 是 \m{P} 中僅有的對 \m{P} 不完全的語言。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.3-7
+\startEXERCISE
+證明：關於多項式時間歸約（參見練習 34.3-6），
+ \m{L} 對 NP 是完全的，
+當且僅當 \m{\overbar{L}} 對 \ALGO{co-NP} 是完全的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.3-8
+\startEXERCISE
+在引理 34.6 的證明中，歸約算法 \m{F} 基於有關 \m{x}、 \m{A} 和 \m{k} 的信息，
+構造了電路 \m{C=f(x)}。
+ Sartre 教授觀察到串 \m{x} 是 \m{F} 的輸入，
+但只有 \m{A}、 \m{k} 的存在性和運行時間 \m{O(n^k)} 中所隱含的常數因子對 \m{F} 來說
+是已知的（因爲語言 \m{L} 屬於 NP），
+實際值對 \m{F} 來說卻是未知的。
+因此，這位教授就得出了這樣的結論，
+即 \m{F} 不可能構造出電路 \m{C}，
+並且語言 \ALGO{CIRCUIT-SAT} 不一定是 NP 難度的。
+試說明在這位教授的推理中存在哪些缺陷？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

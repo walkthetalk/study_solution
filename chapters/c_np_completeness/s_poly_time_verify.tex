@@ -1,4 +1,128 @@
 \startsection[
   title={Polynomial-time verification},
 ]
+
+%e34.2-1
+\startEXERCISE
+考慮語言 \m{\text{\ALGO{GRAPH-ISOMORPHISM}} =
+ \{\langle G_1,G_2\rangle: \text{\m{G_1} 和 \m{G_2} 是同構圖}\}}。
+通過描述一個可以在多項式時間內驗證該語言的算法，
+來證明 \m{\text{\ALGO{GRAPH-ISOMORPHISM}} \in NP}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.2-2
+\startEXERCISE
+證明：如果 \m{G} 是一個有奇數個頂點的無向二分圖，
+則 \m{G} 是非哈密頓圖。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.2-3
+\startEXERCISE
+證明：如果 \m{\text{\ALGO{HAM-CYCLE}} \in P}，
+則可在多項式時間內按序列出一條哈密頓迴路中各個頂點。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.2-4
+\startEXERCISE
+證明：由語言構成 NP 類在並集、空集、連接和 Kleene 星運算下是封閉的，
+討論一下 NP 在補集運算下的封閉性。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.2-5
+\startEXERCISE
+證明：對某個常數 \m{k}， NP 中的任何語言都可以
+用一個運行時間爲 \m{2^{O(n^k)}} 的算法加以判定。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.2-6
+\startEXERCISE
+圖中的哈密頓路徑是一種簡單路徑，
+他遍歷圖中所有頂點，且每個頂點僅一次。
+證明：語言 \m{\text{\ALGO{HAM-PATH}} = \{\langle G,u,v\rangle:
+\text{圖 \m{G} 中存在一條從 \m{u} 到 \m{v} 的哈密頓路徑}} 屬於 NP。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.2-7
+\startEXERCISE
+\refexercise{34.2-6} 中提出了哈密頓路徑問題，
+證明：
+在有向無環圖中，哈密頓路徑問題可以在多項式時間內求解。
+給出一個有效算法解決此問題。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.2-8
+\startEXERCISE
+設 \m{\phi} 爲一個布爾公式，
+他由布爾輸入變量 \m{x_1,x_2,\ldots,x_k}、
+非（\m{\neg}）、 AND （\m{\wedge}）、 OR （\vee）和括號組成。
+如果對輸入變量的每一種 1 和 0 賦值，公式結果都是 1，
+則此公式爲{\EMP 重言式}（tautology）。
+定義 \ALGO{TAUTOLOGY} 爲由重言式布爾公式所組成的語言。
+證明： \m{\text{\ALGO{TAUTOLOGY}}\in \text{\ALGO{co-NP}}}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.2-9
+\startEXERCISE
+證明： \m{\text{\ALGO{P}}\subseteq \text{\ALGO{co-NP}}}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.2-10
+\startEXERCISE
+證明：如果 \m{\text{\ALGO{NP}}\ne \text{\ALGO{co-NP}}}，
+則 \m{P\ne NP}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.2-11
+\startEXERCISE
+設 \m{G} 爲一個至少包含 3 個頂點的連通無向圖，
+並設對 \m{G} 中所有由長度至多爲 3 的路徑連接起來的點對，
+將他們直接連接後所性層的圖爲 \m{G^3}。
+證明： \m{G^3} 是一個哈密頓圖。
+（\hint 爲 \m{G} 構造一棵生成樹，並採用歸納法進行證明。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

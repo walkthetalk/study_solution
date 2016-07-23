@@ -1,4 +1,83 @@
 \startsection[
   title={Polynomial time},
 ]
+
+%e34.1-1
+\startEXERCISE
+定義最優化問題 \ALGO{LONGEST-PATH-LENGTH} 爲一個關係，
+他將一個無向圖的每個實例、兩個頂點與這兩個頂點間的
+一條最長簡單路徑中所包含的邊數聯繫了起來。
+定義判定問題 \m{\text{\ALGO{LONGEST-PATH}} = \{\langle G,u,v,k\rangle\}: \text{
+\m{G=(V,E)} 爲一個無向圖， \m{u,v\in V}， \m{k\ge 0} 是一個整數，
+且 \m{G} 中存在一條從 \m{u} 到 \m{v} 的簡單路徑，
+他至少包含 \m{k} 條邊}\}}。
+證明：最優化問題 \ALGO{LONGEST-PATH-LENGTH} 可以在多項式時間內解決，
+當且僅當 \m{\text{\ALGO{LONGEST-PATH}}\in P}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.1-2
+\startEXERCISE
+對於在無向圖中尋找最長簡單迴路這一問題，
+給出其形式劃的定義並給出其相關的判定問題。
+另外，給出與該判定問題對應的語言。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.1-3
+\startEXERCISE
+給出一種形式化的編碼，
+他利用鄰接矩陣的表示形式，
+將有向圖編碼爲二進制串。
+另外，再給出利用鄰接表表示的編碼。
+論證兩種表示形式是多項式相關的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.1-4
+\startEXERCISE
+\refexercise{16.2-2} 中曾要求讀者給出 0-1 揹包問題的“動態規劃算法”，
+他是一個多項式時間的算法嗎？解釋你的答案。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.1-5
+\startEXERCISE
+證明：對於一個多項式時間的算法，
+當他調用一個多項式時間的子例程時，
+如果至多調用常數次，
+則此算法以多項式時間運行，
+但是，當進行多項式次的子例程調用時，
+此算法可能變成一個指數時間的算法。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.1-6
+\startEXERCISE
+證明：類 \m{P} 在被看作是一個語言集合時，
+在並集、交集、連接、補集和 KIeene 星運算下是封閉的。
+也就是說，
+如果 \m{L_1,L_2\in P}，則 \m{L_1\cup L_2\in P}，
+ \m{L_1\cap L_2\in P}， \m{L_1L_2\in P}， \m{\overbar{L_1}\in P}， \m{L_1^*\in P}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

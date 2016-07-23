@@ -2,4 +2,253 @@
   title={Problems},
 ]
 
+%p34-1
+\startPROBLEM
+（Independent set）
+圖 \m{G=(V,E)} 的{\EMP 獨立集}是子集 \m{V'\subseteq V}，
+使得 \m{E} 中的每條邊至多與 \m{V'} 中的一個頂點關聯。
+{\EMP 獨立集問題}是要找出 \m{G} 中規模最大的獨立集。
+
+\startigBase[a]\startitem
+給出與獨立集問題相關的判定問題的形式化描述，
+並證明他是 NP 完全的。
+（\hint 根據問題進行歸約。）
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+假設給定一個“黑箱”子程序，
+用於解決（a）中定義的判定問題。
+試寫出一個算法，
+以找出規模最大的獨立集。
+所給出的算法運行時間應該是關於 \m{|V|} 和 \m{|E|} 的多項式，
+其中查詢黑箱的工作被看作是一步操作。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+儘管獨立集判定問題是 NP 完全的，
+但在特殊情況下，可在多項式時間內求解。
+
+\startigBase[continue]\startitem
+當 \m{G} 中的每個頂點度數均爲 2 時，
+請給出一個有效的算法來求解獨立集問題。
+分析該算法的運行時間，並證明算法的正確性。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+當 \m{G} 爲二分圖時，試給出一個有效的算法以求解獨立集問題。
+分析算法的運行時間，並證明算法的正確性。
+（\hint 利用\refsection{26.3} 中的結論。）
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p34-2
+\startPROBLEM
+（Bonnie and Clyde）
+ Bonnie 和 Clyde 剛剛搶劫了一家銀行。
+他們搶劫到一袋錢，並打算將錢分光。
+對於下面的每種場景，都給出一個多項式時間算法，
+或者證明該問題是 NP 完全的。
+每種情況下的輸入是關於袋子裏 \m{n} 件東西的一份清單，
+以及每件東西的價值。
+
+\startigBase[a]\startitem
+袋子裏共有 \m{n} 枚硬幣，
+但只有兩個不同的面值：一些面值 \m{x} 美元，
+一些面值 \m{y} 美元。
+ Bonnie 和 Clyde 希望評分掉這筆錢。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+袋子裏共有 \m{n} 枚硬幣，
+他們有着任意數量的不同面值，
+但每一種面值都是 2 的非負整數次冪，
+即可能的面值爲 1 美元、 2 美元、 4 美元等。
+他倆希望平分這筆錢。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+袋子裏共有 \m{n} 張支票，十分巧合的是，
+這些支票恰好是支付給“Bonnie 或 Clyde”的。
+他倆希望評分這些支票，從而可以得到同樣數目的錢。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+與（c）一樣，袋子裏共有 \m{n} 張支票，
+但這一次，他倆願意接受這樣的一種分配方案，
+兩人所分得的錢差距不大於 100 美元。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p34-3
+\startPROBLEM
+（Graph coloring）
+地圖製造商想要使用儘可能少的顏色在一張地圖上把不同的國家着色，
+前提是相鄰的兩國家不使用同一種顏色。
+我們構造如下的模型：
+對於無向圖 \m{G=(V,E)}，
+圖中的每個頂點代表一個城市，相鄰兩點所代表的城市也是相鄰的。
+如此，一個無向圖 \m{G=(V,E)} 的{\EMP \m{k} 着色}就是一個函數
+ \m{c: V\rightarrow\{1,2,\ldots,k\}}，
+使得對每條邊 \m{(u,v)\in E}，有 \m{c(u)\neq c(v)}。
+換句話說，數 \m{1,2,\ldots,k} 表示 \m{k} 種顏色，
+並且相鄰頂點必須染上不同的顏色。
+{\EMP 圖的着色}問題就是確定要對某個給定圖着色至少需要幾種顏色。
+
+\startigBase[a]\startitem
+寫出一個有效的算法以判定一個圖的 2 着色（如果存在）。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+把圖的着色問題描述爲一個判定問題。
+證明：該判定問題在多項式時間內可解，
+當且僅當圖的着色問題在多項式時間內可解。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+設語言 \ALGO{3-COLOR} 是能夠進行三着色的圖的集合。
+證明：如果 \ALGO{3-COLOR} 是 NP 完全的，
+則（b）中的判定問題是 NP 完全的。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+爲了證明 \ALGO{3-COLOR} 具有 NP 完全性，
+我們利用 \ALGO{3-CNF-SAT} 進行歸約。
+給定一個由 \m{m} 個子句組成的關於 \m{n} 個變量
+ \m{x_1,x_2,\ldots,x_n} 的公式 \m{\phi}，
+構造圖 \m{G=(V,E)} 如下。
+對每個變量和每個變量的”非“，集合 \m{V} 分別包含一個頂點。
+對每個子句， \m{V} 包含 5 個頂點，另外，
+ \m{V} 中還有三個特殊的頂點：
+ TRUE、 FALSE 和 RED。
+圖的邊分成兩種類型：
+與子句無關的”文字“邊和依賴於子句的”子句“邊。
+對 \m{i=1,2,\ldots,n}，文字邊形成一個由特殊
+頂點構成的三角形，
+並且還形成了一個由 \m{x_i}、 \m{\neg x_i} 和 RED 構成的三角形。
+
+\startigBase[continue]\startitem
+論證在對包含”文字“邊的圖的任意一個 3 着色 \m{c} 中，
+一個變量和他的”非“中恰好有一個被着色爲 \m{c(\text{TRUE})}，
+另一個被着色爲 \m{c(\text{FALSE})}。
+論證對於 \m{\phi} 的任何真值賦值，
+對僅包含文字邊的圖都存在一種 3 着色。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+圖 34-20 所示的附件圖用於實現對應於子句 \m{x\vee y\vee z} 的條件。
+每個子句都要求圖中圖黑的 5 個頂點的一個副本，且此副本唯一。
+如圖所示，他們把子句中的文字和特殊頂點 TRUE 相連。
+
+\startigBase[continue]\startitem
+證明：如果 \m{x}、 \m{y} 和 \m{z} 中的每個頂點均着色
+爲 \m{c(\text{TRUE})} 或 \m{c(\text{FALSE})}，
+那麼該附件圖是 3 着色的，
+當且僅當 \m{x}、 \m{y} 和 \m{z} 中至少有一個被着色爲 \m{c(\text{TRUE})}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明： 3 着色問題是 NP 完全問題。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p34-4
+\startPROBLEM
+（Scheduling with profits and deadlines）
+假設有一臺機器和 \m{n} 項任務 \m{a_1,a_2,\ldots,a_n}。
+每項任務 \m{a_j} 在機器上都需要處理時間 \m{t_j}、利潤 \m{p_j} 和完工期限 \m{d_j}。
+這臺機器一次只能處理一項任務，而任務 \m{a_j} 必須不間斷地運行 \m{t_j} 個連續時間單位。
+如果能趕在完工期限 \m{d_j} 之前完成任務 \m{a_j}，
+就能獲得利潤 \m{p_j}，但是，如果在到期之後才完成任務，就得不到任何利潤。
+作爲一個最優化問題，給定 \m{n} 項任務的處理時間、利潤和完工期限，
+我們希望找出一種調度方案既能完成所有任務，又能獲取最大利潤。
+
+\startigBase[a]\startitem
+將這個問題表述爲一個判定問題。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：此判定問題是 NP 完全的。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定所有的處理時間都是從 1～n 之間的整數，
+給出此判定問題的一個多項式時間算法。
+（\hint 採用動態規劃。）
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定所有的處理時間都是 1～n 之間的整數，
+給出此最優化問題的一個多項式時間算法。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
 \stopsubject%Problems

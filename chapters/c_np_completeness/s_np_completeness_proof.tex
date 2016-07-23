@@ -1,4 +1,87 @@
 \startsection[
   title={NP-completeness proofs},
 ]
+
+%e34.4-1
+\startEXERCISE
+考慮一下在定理 34.9 的證明過程中運用直接（非多項式時間）歸約。
+描述一個規模爲 \m{n} 的電路，
+運用這種歸約思想將其轉換爲一個公式時，
+能產生一個規模爲 \m{n} 的指數的公式。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.4-2
+\startEXERCISE
+寫出將定理 34.10 中的方法應用於公式（34.3）時所得到的 \ALGO{3-CNF} 公式。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.4-3
+\startEXERCISE
+Jagger 教授提出，在定理 34.10 的證明中，
+可以僅利用真值表技術而無需其他步驟，
+就能證明 \m{\text{\ALGO{SAT}} \le_P \text{\ALGO{3-CNF-SAT}}}。
+也就是說，這位教授試圖取布爾公式 \m{\phi}，
+形成有關其變量的真值表，
+根據其真值表導出一個 \ALGO{3-CNF} 形式的、
+等價於 \m{\neg \phi} 的公式，
+再對公式取反，並運用 DeMorgan 定律，
+從而可以得到一個等價於 \m{\phi} 的 \ALGO{3-CNF} 公式。
+證明：這一策略不能產生多項式時間的歸約。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.4-4
+\startEXERCISE
+證明：確定某一布爾公式是否爲重言式這一問題對 \ALGO{co-NP} 來說是完全的。
+（\hint 見\refexercise{34.3-7}。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.4-5
+\startEXERCISE
+證明：可以在多項式時間內求解析取範式形式的布爾公式的可滿足性。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.4-6
+\startEXERCISE
+假設已知某一多項式時間算法可以判定公式的可滿足性。
+請說明如何利用這一算法在多項式時間內找出可滿足性賦值。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.4-7
+\startEXERCISE
+設 \ALGO{2-CNF-SAT} 是 \ALGO{CNF} 範式的、
+每個子句中恰有兩個文字的可滿足公式的集合，
+證明： \m{\text{\ALGO{2-CNF-SAT}}\in P}。
+儘可能優化你的算法效率。
+（\hint 注意 \m{x\vee y} 與 \m{\neg x\rightarrow y} 是等價的。
+將 \ALGO{2-CNF-SAT} 歸約爲一個在有向圖上高效可解的問題。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

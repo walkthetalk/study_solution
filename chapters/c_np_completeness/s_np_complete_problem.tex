@@ -4,6 +4,9 @@
 
 %e34.5-1
 \startEXERCISE
+{\EMP 子圖同構問題}：取兩個無向圖 \m{G_1} 和 \m{G_2}，
+回答 \m{G_1} 是否與 \m{G_2} 的一個子圖同構。
+證明：子圖同構問題是 NP 完全的。
 \stopEXERCISE
 
 \startANSWER
@@ -12,6 +15,11 @@
 
 %e34.5-2
 \startEXERCISE
+給定一個 \m{m\times n} 的整數矩陣 \m{A} 和一個整型的 \m{m} 維向量 \m{b}，
+ {\EMP 0-1 整數規劃問題}即研究是否有一個整型的 \m{n} 維向量 \m{x}，
+其元素取自集合 \m{\{0,1\}}，滿足 \m{Ax\le b}。
+證明： 0-1 整數規劃問題是 NP 完全的。
+（\hint 由 \ALGO{3-CNF-SAT} 問題進行歸約。）
 \stopEXERCISE
 
 \startANSWER
@@ -20,6 +28,68 @@
 
 %e34.5-3
 \startEXERCISE[exercise:34.5-3]
+{\EMP 整數線性規劃問題}與\refexercise{34.5-2} 中給出的 0-1 整數規劃十分相似，
+區別僅在於向量 \m{x} 的值可以取任何整數，而不僅是 0 或 1。
+假定 0-1 整數規劃問題是 NP 難度的，
+證明：整數線性規劃問題是 NP 完全的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.5-4
+\startEXERCISE
+證明：如果目標值 \m{t} 表示成一元形式，
+試說明如何在多項式時間內求解子集的和。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.5-5
+\startEXERCISE
+{\EMP 集合劃分問題}的輸入爲一個數字集合 \m{S}。
+問題是：這些數字是否能被劃分成兩個集合 \m{A} 和 \m{\overbar{A}=S-A}，
+使得 \m{\sum_{x\in A}x = \sum_{x\in\overbar{A}}x}。
+證明：集合劃分問題是 NP 完全的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.5-6
+\startEXERCISE
+證明：哈密頓路徑問題是 NP 完全的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.5-7
+\startEXERCISE
+{\EMP 最長簡單迴路問題}是在一個圖中，
+找出一個具有最大長度的簡單迴路（無重複的頂點）。
+證明：這個問題是 NP 完全的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e34.5-8
+\startEXERCISE
+在{\EMP 半 \ALGO{3-CNF} 可滿足性}中，
+給定一個 \ALGO{3-CNF} 形式的公式 \m{\phi}，
+他包含 \m{n} 個變量和 \m{m} 個子句，
+其中 \m{m} 是偶數。
+我們希望確定是否存在對 \m{\phi} 中變量的一個真值賦值，
+使得 \m{\phi} 中恰有一半的子句爲 0，
+同時恰有另一半的子句爲 1。
+證明：半 \ALGO{3-CNF} 可滿足性問題是 NP 完全的。
 \stopEXERCISE
 
 \startANSWER

@@ -1,0 +1,137 @@
+\startsubject[
+  title={Problems},
+]
+
+%pB-1
+\startPROBLEM
+（Graph coloring）
+給定一個無向圖 \m{G=(V,E)}，
+ \m{G} 的 {\EMP k 着色}是一個函數 \m{c:V\rightarrow\{0,1,\ldots,k-1\}}，
+滿足對於每條邊 \m{(u,v)\in E}，有 \m{c(u)\ne c(v)}。
+換句話說，數字 \m{0,1,\ldots,k-1} 代表了 \m{k} 種顏色，
+鄰接的頂點不能具有相同顏色。
+
+\startigBase[a]\startitem
+證明：所有樹都可 2 着色。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明下列三條描述是等價的：
+ 1） \m{G} 是二分圖；
+ 2） \m{G} 可 2 着色；
+ 3） \m{G} 沒有奇數長度的環。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+令 \m{d} 爲圖 \m{G} 中任意頂點的最大度數。
+證明： \m{G} 可以用 \m{d+1} 種顏色着色。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：如果 \m{G} 有 \m{O(|V|)} 條邊，
+那麼 \m{G} 可以用 \m{O(\sqrt{|V|})} 種顏色着色。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%pB-2
+\startPROBLEM
+（Friendly graphs）
+將下列描述改寫成關於無向圖的定理，並給出證明。
+假定友誼是對稱的，但不是自反的。
+
+\startigBase[a]\startitem
+如果一組人不少於兩個，
+那麼其中至少有兩人在組內有相同數目的朋友。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+任何 6 人組要麼至少有三個人互爲朋友，
+要麼至少有三人互不相識。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+每組人都可以分成兩組，
+其中每個人都至少有一半的朋友在另外一個子組中。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+如果一組人中，每個人都至少是該組內一半人的朋友，
+那麼該組可以按如下方式安排組員坐在圓桌周圍：
+每個人左右兩側都是他的朋友。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%pB-3
+\startPROBLEM
+（Bisecting trees）
+許多圖的分治算法要求圖被等分爲兩個大小基本相同的子圖。
+這可以通過在劃分頂點後，求取兩個點集的導出子圖來實現。
+本題將研究通過移除一小部分邊來將樹二等分的方法。
+要求如果在移除邊後兩個頂點落在了同一棵子樹中，
+則他們一定在同一個劃分內。
+
+\startigBase[a]\startitem
+證明：任意 \m{n} 個頂點二叉樹的頂點均可通過移除一條邊
+被劃分爲兩個集合 \m{A} 和 \m{B}，
+滿足 \m{|A|\le 3n/4}， \m{|B|\le 3n/4}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+通過給出一個例子：
+一棵簡單二叉樹在移除一條邊後，
+其最均勻平衡的劃分滿足 \m{|A|= 3n/4}，
+來證明（a）中的常數 \m{3/4} 在最壞情況下是最優的。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：通過移除最多 \m{O(\lg n)} 條邊，
+可以將任意 \m{n} 頂點二叉樹的頂點劃分爲兩個集合 \m{A} 和 \m{B}，
+滿足 \m{|A|=\left\lfloor n/2\right\rfloor} 和 \m{|B|=\left\lceil n/2\right\rceil}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+\stopsubject%Problems

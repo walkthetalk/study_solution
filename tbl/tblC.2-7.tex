@@ -1,0 +1,28 @@
+
+\startxtable[
+    option=max,
+    align={middle,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,bottomframe=on]
+\startxrow[foregroundstyle=bold,]
+  \xmcell[rightframe=on]{}\processcommalist[ 1,2,3,\cdots,n]\xmcell
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off]
+\startxrow \xmcell[rightframe=on]{1}\processcommalist[ 1,2,3,\cdots,n]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{2}\processcommalist[ 1,2,3,\cdots,n]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{3}\processcommalist[ 1,2,3,\cdots,n]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{\vdots}\processcommalist[\vdots,\vdots,\vdots,\vdots,\vdots]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{n-1}\processcommalist[1,2,3,\cdots,n]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{n}\processcommalist[all,-,-,\cdots,-]\xmcell \stopxrow
+\stopxtablebody
+
+\stopxtable

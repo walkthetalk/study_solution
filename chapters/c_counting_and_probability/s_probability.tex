@@ -1,4 +1,181 @@
 \startsection[
   title={Probability},
 ]
+
+%eC.2-1
+\startEXERCISE
+Rosencrantz 教授拋擲一枚均勻硬幣一次。
+ Guildenstern 教授拋擲一枚均勻硬幣兩次。
+ Rosencrantz 教授得到的正面朝上次數多於 Guildenstern 教授的概率是多少？
+\stopEXERCISE
+
+\startANSWER
+令 \m{G_n} 和 \m{R_n} 分別爲兩個教授證明朝上的次數。則：
+\startformula
+\Pr\{R_n = 1\} \cdot \Pr\{G_n = 0\} = \frac{1}{2} \cdot \frac{1}{4} = \frac{1}{8}
+\stopformula
+\stopANSWER
+
+%eC.2-2
+\startEXERCISE
+證明 {\EMP Boole 不等式}：對於有限或可數無限事件序列 \m{A_1,A_2,\ldots}，
+\startformula
+\Pr\{A_1 \cup A_2 \cup \ldots \} \le \Pr\{A_1\} + \Pr\{A_2\} + \ldots
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \Pr\{A_1 \cup A_2 \cup \cdots\}
+    \NC = \Pr\{A_1\}
+        + \Pr\{A_2 \cup A_3 \cup \cdots\}
+	- \Pr\{A_1 \cap (A_2 \cup A_3 \cup \cdots)\} \NR
+\NC \NC \le \Pr\{A_1\} + \Pr\{A_2 \cup A_3 \cup \cdots\} \NR
+\NC \NC \le \Pr\{A_1\} + \Pr\{A_2\} + \Pr\{A_3 \cup A_4 \cup \cdots\} \NR
+\NC \NC \qquad \vdots \NR
+\NC \NC \le \Pr\{A_1\} + \Pr\{A_2\} + \ldots \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.2-3
+\startEXERCISE
+假設有 10 張牌，每張牌上分別標有從 1 到 10 的數字，
+且每張牌上的數字均不同，將牌充分混合。
+然後從牌堆頂部一次一張地移除三張牌。
+那麼我們選出的三張牌按照（遞增）順序排列的概率是多少？
+\stopEXERCISE
+
+\startANSWER
+有 \m{n!/(n-k)!} 種方式拾取 \m{k} 張牌。其中只有 \m{\binom{n}{k}} 種按遞增排列。
+因此概率爲：
+\startformula
+\binom{n}{k} \div \frac{n!}{(n-k)!} = \frac{n!(n-k)!}{k!(n-k)!n!} = \frac{1}{k!}
+\stopformula
+
+也可以這樣計算：共有 \m{n!} 種排列方式。
+有 \m{\binom{n}{k}} 種方式選取 \m{k} 張牌，剩下的牌有 \m{(n-k)!} 種排列方式。
+因此總的概率爲 \m{\binom{n}{k}\cdot (n-k)! / n! = \frac{1}{k!}}。
+\stopANSWER
+
+%eC.2-4
+\startEXERCISE
+證明：
+\startformula
+\Pr\{A|B\} + \Pr\{\overbar{A}|B\} = 1
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \Pr\{A|B\} + \Pr\{\overline A | B\}
+    \NC = \frac{\Pr\{A \cap B\}}{\Pr\{B\}} +
+          \frac{\Pr\{\overline A \cap B\}}{\Pr\{B\}} \NR
+\NC \NC = \frac{\Pr\{A \cap B\} + \Pr\{\overline A \cap B\}}{\Pr\{B\}} \NR
+\NC \NC = \frac{\Pr\{(\overline A \cap B) \cup (A \cap B)\}}{\Pr\{B\}} \NR
+\NC \NC = \frac{\Pr\{(A \cup \overline A) \cap B)}{\Pr\{B\}} \NR
+\NC \NC = \frac{\Pr\{B\}}{\Pr\{B\}} \NR
+\NC \NC = 1 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.2-5
+\startEXERCISE
+證明：對於任意事件集 \m{A_1,A_2,\ldots,A_n}，
+\startformula
+  \Pr\{A_1 \cap A_2 \cap \cdots \cap A_n\}
+= \Pr\{A_1\} \cdot \Pr\{A_2 | A_1\} \cdot
+  \Pr\{A_3 | A_1 \cap A_2\} \cdots
+  \Pr\{A_n | A_1 \cap A_2 \cap \cdots \cap A_{n-1}\}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \Pr\{A_1 \cap A_2 \cap \cdots\}
+    \NC = \Pr\{A_n | A_1 \cap \cdots \cap A_{n-1}\} \cdot
+          \Pr\{A_1 \cap \cdots \cap A_{n-1}\} \NR
+\NC \NC = \Pr\{A_n | A_1 \cap \cdots \cap A_{n-1}\} \cdot
+        \Pr\{A_{n-1} | A_1 \cap \cdots \cap A_{n-2}\} \cdot
+        \Pr\{A_1 \cap \cdots \cap A_{n-2}\} \NR
+\NC \NC \qquad \vdots \NR
+\NC \NC = \Pr\{A_n | A_1 \cap \cdots \cap A_{n-1}\} \cdots
+        \Pr\{A_3 | A_1 \cap A_2\} \cdot
+        \Pr\{A_2 | A_1\} \cdot
+        \Pr\{A_1\} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.2-6
+\startEXERCISE\DIFFICULT
+描述一個以整數 \m{a} 和 \m{b} 爲輸入的過程，其中 \m{0<a<b}。
+在這個過程中，拋擲均勻硬幣，
+結果正面朝上的概率爲 \m{a/b}，
+反面朝上的概率爲 \m{(b-a)/b}。
+請給出拋擲硬幣次數期望的界，應爲 \m{O(1)}。
+（\hint 將 \m{a/b} 表示爲二進制。）
+\stopEXERCISE
+
+\startANSWER
+將 \m{a/b} 表示爲二進制 \m{0.b_1b_2b_3b_4\ldots}。
+其中 \m{b_i} 中的 \m{i} 表示第幾次拋硬幣。
+如果 \m{b_i = 0}，但是拋硬幣得到的是反面，則返回反面；
+如果 \m{b_i = 1}，但是拋硬幣得到的是正面，則返回正面；
+其他情況都繼續拋硬幣。
+\stopANSWER
+
+%eC.2-7
+\startEXERCISE\DIFFICULT
+請給出一種方法，用於構造滿足下列條件的集合：
+集合中元素爲兩兩獨立的 \m{n} 個事件，
+但不存在包含 \m{k>2} 個相互獨立元素的事件子集。
+\stopEXERCISE
+
+\startANSWER
+構造一個有 \m{n^2} 個面的骰子。
+選取 \m{n} 種顏色，將每種顏色塗到 \m{n-1} 個面上。
+在剩下的 \m{n} 個面中選取一個塗上所有顏色，
+最後剩下的 \m{n-1} 個面不塗任何顏色。
+\input{tbl/tblC.2-7}
+
+事件 \m{i}：擲骰子，所得面包含第 \m{i} 種顏色。
+則任一事件 \m{i} 的概率都是 \m{(n-1 + 1)/n^2 = 1/n}。
+任兩個事件同時發生的概率都是 \m{1/n^2}。
+所以這些事件兩兩相互獨立。
+而任意 \m{k} 個事件同時發生的概率仍然是 \m{1/n^2}，
+所以當 \m{k>2} 時，這 \m{k} 個事件並不互相獨立。
+\stopANSWER
+
+%eC.2-8
+\startEXERCISE\DIFFICULT
+已知事件 \m{C} 已發生，如果
+\startformula
+\Pr\{A \cap B | C\} = \Pr\{A | C\} \cdot \Pr\{B | C\}
+\stopformula
+則稱事件 \m{A} 和事件 \m{B} 是 {\EMP conditionally independent} 的。
+請給一個簡單但非平凡的例子，
+其中兩個事件不獨立，但是在已知第三個事件發生時卻獨立。
+\stopEXERCISE
+
+\startANSWER
+\startigBase[A]
+\item 第一個人擲得正面；
+\item 第二個人擲得正面；
+\item 硬幣是非均勻的（每次擲都會得到正面）——概率是 \m{1/3}。
+\stopigBase
+因此：
+\startformula\startmathalignment[n=1]
+\NC \Pr\{A\} = \frac 1 3 \cdot 1 + \frac 2 3 \cdot \frac 1 2 = \frac 2 3 \NR
+\NC \Pr\{B\} = \frac 1 3 \cdot 1 + \frac 2 3 \cdot \frac 1 2 = \frac 2 3 \NR
+\NC \Pr\{A \cap B\} = \frac 1 3 \cdot 1 + \frac 2 3 \cdot \frac 1 4 = \frac 1 2 \NR
+\stopmathalignment\stopformula
+\m{A} 和 \m{B} 不獨立，因爲：
+\startformula
+\frac 1 2 = \Pr\{A \cap B\} \neq \Pr\{A\} \cdot \Pr\{B\} = \frac 4 9
+\stopformula
+但如果 \m{C} 已發生，則 \m{A} 和 \m{B} 相互獨立：
+\startformula
+1 = \Pr\{A \cap B | C \} = \Pr\{A | C\} \cdot \Pr\{B | C\} = 1
+\stopformula
+\stopANSWER
+
 \stopsection

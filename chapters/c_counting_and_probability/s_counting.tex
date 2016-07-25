@@ -296,16 +296,56 @@
 通過將熵函數 \m{H(\lambda)} 進行微分，
 證明在 \m{\lambda=1/2} 處取得最大值。
 請問 \m{H(1/2)} 是多少？
+\startformula
+H(\lambda) = -\lambda\lg{\lambda} - (1 - \lambda)\lg(1 - \lambda)
+\stopformula
 \stopEXERCISE
 
 \startANSWER
+\startformula\startmathalignment
+\NC H'(\lambda) \NC= -\lg{\lambda} - \frac{\lambda 1}{\lambda \ln2}
+                     + \lg(1 - \lambda)
+                     - \frac{(1-\lambda)}{(1-\lambda)(-1)\ln2} \NR
+\NC \NC = \lg\frac{1 - \lambda}{\lambda} - \lg{e} + \lg{e} \NR
+\NC \NC = \lg\frac{1 - \lambda}{\lambda} \NR
+\stopmathalignment\stopformula
+
+極值點處：
+\startformula\startmathalignment[n=1]
+\NC H'(\lambda) = 0 \NR
+\NC \Downarrow \NR
+\NC \lg\frac{1 - \lambda}{\lambda} = 0 \NR
+\NC \Downarrow \NR
+\NC \frac{1-\lambda}{\lambda} = 1 \NR
+\NC \Downarrow \NR
+\NC \lambda = 1/2 \NR
+\stopmathalignment\stopformula
+
+由於 \m{H'(1/4)=\lg 3 > 0} 且 \m{H'(3/4)=\lg(1/3)<0}，
+所以 \m{H(\lambda)} 在 \m{1/2} 處取得最大值。
+
+\startformula
+H(1/2) = - \lg(1/2)/2 -\lg(1/2)/2 = - \lg{1/2} = 1
+\stopformula
 \stopANSWER
 
 % exercise c.1-15
-\startEXERCISE
+\startEXERCISE\DIFFICULT
+證明：對於任意整數 \m{n\ge 0}，有：
+\startformula
+\sum_{k=0}^{n}\binom{n}{k}k = n 2^{n-1}
+\stopformula
 \stopEXERCISE
 
 \startANSWER
+\startformula\startmathalignment
+\NC \sum_{k=0}^n\binom{n}{k}k
+   \NC = \sum_{k=1}^n\binom{n}{k}k \NR
+\NC \NC = \sum_{k=1}^n\frac{nk}{k}\binom{n-1}{k-1} \NR
+\NC \NC = n\sum_{k=1}^n\binom{n-1}{k-1} \NR
+\NC \NC = n\sum_{k=0}^{n-1}\binom{n-1}{k} \NR
+\NC \NC = n2^{n-1} \NR
+\stopmathalignment\stopformula
 \stopANSWER
 
 \stopsection

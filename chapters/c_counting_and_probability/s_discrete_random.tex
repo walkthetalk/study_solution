@@ -1,4 +1,117 @@
 \startsection[
   title={Discrete random variables},
 ]
+
+%eC.3-1
+\startEXERCISE
+投擲兩個普通的 6 面體骰子。
+兩個骰子值相加，所得和的期望值是多少？
+兩個值中的最大值的期望值又是多少？
+\stopEXERCISE
+
+\startANSWER
+和的期望值：
+\startformula\startmathalignment
+\NC E[X] \NC = \sum_{x=2}^{12}x\Pr\{X = x\} \NR
+\NC \NC =  2 \cdot \frac{1}{36} +
+           3 \cdot \frac{2}{36} +
+           4 \cdot \frac{3}{36} +
+           5 \cdot \frac{4}{36} +
+           6 \cdot \frac{5}{36} +
+           7 \cdot \frac{6}{36} +
+           8 \cdot \frac{5}{36} +
+           9 \cdot \frac{4}{36} +
+          10 \cdot \frac{3}{36} +
+          11 \cdot \frac{2}{36} +
+          12 \cdot \frac{1}{36} \NR
+\NC \NC = 7 \NR
+\stopmathalignment\stopformula
+
+較大值的期望值：
+\startformula\startmathalignment
+\NC E[Y]
+    \NC = \sum_{i=1}^{6}i\Pr\{Y = i\} \NR
+\NC \NC = \sum_{i=1}^{6}\left(i \cdot \frac{2i - 1}{36}\right) \NR
+\NC \NC = \frac{2\sum{i^2} - \sum{i}}{36} \NR
+\NC \NC = \frac{(6 \cdot 7 \cdot 13)/6 - (6 \cdot 7)/2}{36} \NR
+\NC \NC = \frac{161}{36} = 4.47\ldots \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.3-2
+\startEXERCISE
+數組 \m{A[1..n]} 包含 \m{n} 個不同數字，且順序隨機，
+每種排列均爲等可能的。
+該數組中最大元素下標的期望值是多少？
+最小元素下標值的期望是多少？
+\stopEXERCISE
+
+\startANSWER
+最大值下標爲 \m{i} 的概率爲 \m{\Pr\{X=i\}=\frac{1}{n}}。
+\startformula\startmathalignment
+\NC E[X]
+    \NC = \sum_{i=1}^n i \cdot \Pr\{X = i\} \NR
+\NC \NC = \sum_{i=1}^n i \cdot \frac 1 n \NR
+\NC \NC = \frac 1 n \sum_{i=1}^n i \NR
+\NC \NC = \frac 1 n \frac{n(n+1)}{2} \NR
+\NC \NC = \frac{n+1}{2} \NR
+\stopmathalignment\stopformula
+
+最小值下標的期望與最大值相同，也是 \m{\frac{n+1}{2}}。
+\stopANSWER
+
+%eC.3-3
+\startEXERCISE
+在一場狂歡節遊戲中，將 3 個骰子放在一個罩子中。
+一位遊戲者可以在 1 到 6 中的任意數字上賭 1 美元。
+主持人搖罩子，並按如下方案確定遊戲者的回報。
+如果遊戲者賭的數字沒有出現在任何一個骰子上，
+則他輸掉 1 美元。
+如果他賭的數字恰好出現在 \m{k} 個骰子上，
+ \m{k=1,2,3}，則他可以保留他的 1 美元，並贏得 \m{k} 美元。
+請計算玩一次這個遊戲的期望收入。
+\stopEXERCISE
+
+\startANSWER
+概率如下：
+\startformula\startmathalignment
+\NC \Pr\{X = 3\} \NC = \frac{1}{6} \cdot \frac{1}{6} \cdot \frac{1}{6}
+                     = \frac{1}{216} \NR
+\NC \Pr\{X = 2\} \NC = \binom{3}{2}
+                       \cdot \frac{1}{6} \cdot \frac{1}{6} \cdot \frac{5}{6}
+		     = \frac{15}{216} \NR
+\NC \Pr\{X = 1\} \NC = \binom{3}{1}
+                       \cdot \frac{1}{6} \cdot \frac{5}{6} \cdot \frac{5}{6}
+		     = \frac{75}{216} \NR
+\NC \Pr\{X = -1\} \NC = \frac{5}{6} \cdot \frac{5}{6} \cdot \frac{5}{6}
+		     = \frac{125}{216} \NR
+\stopmathalignment\stopformula
+
+\startformula\startmathalignment
+\NC E[X] \NC = -1 \cdot \Pr\{X = 0\} +
+             1 \cdot \Pr\{X = 1\} +
+             2 \cdot \Pr\{X = 2\} +
+             3 \cdot \Pr\{X = 3\} \NR
+\NC \NC = - 1 \cdot \frac{125}{216}
+            + 1 \cdot \frac{75}{216}
+            + 2 \cdot \frac{15}{216}
+            + 3 \cdot \frac{1}{216} \NR
+\NC \NC = - \frac{17}{216} \NR
+\NC \NC \approx -0.07 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.3-4
+\startEXERCISE
+證明：
+若 \m{X} 和 \m{Y} 是非負隨機變量，則：
+\startformula
+E[\max(X,Y)] \le E[X] + E[Y]
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
 \stopsection

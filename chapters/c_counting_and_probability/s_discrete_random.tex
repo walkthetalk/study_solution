@@ -12,7 +12,7 @@
 \startANSWER
 和的期望值：
 \startformula\startmathalignment
-\NC E[X] \NC = \sum_{x=2}^{12}x\Pr\{X = x\} \NR
+\NC \E[X] \NC = \sum_{x=2}^{12}x\Pr\{X = x\} \NR
 \NC \NC =  2 \cdot \frac{1}{36} +
            3 \cdot \frac{2}{36} +
            4 \cdot \frac{3}{36} +
@@ -29,7 +29,7 @@
 
 較大值的期望值：
 \startformula\startmathalignment
-\NC E[Y]
+\NC \E[Y]
     \NC = \sum_{i=1}^{6}i\Pr\{Y = i\} \NR
 \NC \NC = \sum_{i=1}^{6}\left(i \cdot \frac{2i - 1}{36}\right) \NR
 \NC \NC = \frac{2\sum{i^2} - \sum{i}}{36} \NR
@@ -49,7 +49,7 @@
 \startANSWER
 最大值下標爲 \m{i} 的概率爲 \m{\Pr\{X=i\}=\frac{1}{n}}。
 \startformula\startmathalignment
-\NC E[X]
+\NC \E[X]
     \NC = \sum_{i=1}^n i \cdot \Pr\{X = i\} \NR
 \NC \NC = \sum_{i=1}^n i \cdot \frac 1 n \NR
 \NC \NC = \frac 1 n \sum_{i=1}^n i \NR
@@ -88,7 +88,7 @@
 \stopmathalignment\stopformula
 
 \startformula\startmathalignment
-\NC E[X] \NC = -1 \cdot \Pr\{X = 0\} +
+\NC \E[X] \NC = -1 \cdot \Pr\{X = 0\} +
              1 \cdot \Pr\{X = 1\} +
              2 \cdot \Pr\{X = 2\} +
              3 \cdot \Pr\{X = 3\} \NR
@@ -106,12 +106,127 @@
 證明：
 若 \m{X} 和 \m{Y} 是非負隨機變量，則：
 \startformula
-E[\max(X,Y)] \le E[X] + E[Y]
+\E[\max(X,Y)] \le \E[X] + \E[Y]
 \stopformula
 \stopEXERCISE
 
 \startANSWER
+\startformula\startmathalignment
+\NC \E[\max(X, Y)] \NC = \sum n \cdot \max(\Pr\{X = n\}, \Pr\{Y = n\}) \NR
+\NC \NC \le \sum n \cdot (\Pr\{X=n\} + \Pr\{Y=n\}) \NR
+\NC \NC = \sum n\cdot \Pr\{X=n\} + \sum n\cdot \Pr\{Y=n\} \NR
+\NC \NC = \E[X] + \E[Y] \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.3-5
+\startEXERCISE\DIFFICULT
+令 \m{X} 和 \m{Y} 是獨立隨機變量。
+證明對於任何函數 \m{f} 和 \m{g}，
+ \m{f(x)} 和 \m{g(Y)} 是獨立的。
+\stopEXERCISE
+
+\startANSWER
 \TODO{略。}
+\stopANSWER
+
+%eC.3-6
+\startEXERCISE\DIFFICULT
+令 \m{X} 是非負隨機變量，
+並假定 \m{\E[X]} 是有定義的。
+證明 {\EMP Markov 不等式}：對於所有 \m{t>0}，
+\startformula
+\Pr\{X\ge t\}\le \frac{\E[X]}{t} \eqno{(C.30)}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \E[X] \NC = \sum_{x}x \cdot \Pr\{X=x\} \NR
+\NC \NC = \sum_{x < t}x \cdot \Pr\{X = x\} + \sum_{x \ge t} x \cdot \Pr\{X = x\} \NR
+\NC \NC \ge \sum_{x < t}x \cdot \Pr\{X = x\} + \sum_{x \ge t} t \cdot \Pr\{X = x\} \NR
+\NC \NC \ge t \sum_{x \ge t} \Pr\{X = x\} \NR
+\NC \NC = t \cdot \Pr\{X \ge t\} \NR
+\stopmathalignment\stopformula
+
+\startformula\startmathalignment[n=1]
+\NC \E[X] \ge t \cdot \Pr\{X \ge t\} \NR
+\NC \Downarrow \NR
+\NC \Pr\{X \ge t\} \le \E[X]/t \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.3-7
+\startEXERCISE\DIFFICULT
+令 \m{S} 爲樣本空間， \m{X} 和 \m{X'} 是隨機變量，
+滿足對於所有 \m{s\in S}，有 \m{X(s)\ge X'(s)}。
+證明：對於任意實常數 \m{t}，
+\startformula
+\Pr\{X\ge t\} \ge \Pr\{X'\ge t\}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \Pr\{X \ge t\} \NC = \sum_{s \in S:X(s) \ge t}\Pr\{s\} \NR
+\NC \Pr\{X' \ge t\} \NC = \sum_{s \in S:X'(s) \ge t}\Pr\{s\} \NR
+\stopmathalignment\stopformula
+由於 \m{X(s)\ge X'(s)}，第二個和式的任何一項都包含在第一個和式中。
+也就是說第一個和式的值不會比第二個和式小。
+\stopANSWER
+
+%eC.3-8
+\startEXERCISE
+一個隨機變量的平方的期望與其期望的平方哪個大？
+\stopEXERCISE
+
+\startANSWER
+由於 \m{\E[f(X)]\ge f(\E[X])}，當 \m{f(x)=x^2} 時，有 \m{\E[X^2]\ge E^2[X]}。
+\stopANSWER
+
+%eC.3-9
+\startEXERCISE
+證明：對於任意取值僅爲 0 或 1 的隨機變量 \m{X}，
+有 \m{\Var[X] = \E[X] \E[1-X]}。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \E[X] \NC = 0 \cdot \Pr\{X = 0\} + 1 \cdot \Pr\{X = 1\} = \Pr\{X = 1\} \NR
+\NC \E[1-X] \NC = \Pr\{X = 0\} \NR
+\NC \E[X]\E[1-X] \NC = \Pr\{X = 0\} \cdot \Pr\{X = 1\} \NR
+\stopmathalignment\stopformula
+據此有：
+\startformula\startmathalignment
+\NC \Var[X]
+    \NC = \E[X^2] - E^2[X] = \Pr\{X = 1\} - (\Pr\{X = 1\})^2 \NR
+\NC \NC = \Pr\{X = 1\} (1 - \Pr\{X = 1\}) \NR
+\NC \NC = \Pr\{X = 0\} \cdot Pr\{X = 1\} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.3-10
+\startEXERCISE
+根據方差定義（公式（C.27））證明： \m{\Var[\alpha X] = \alpha^2\Var[X]}。
+附公式（C.27）：
+\startformula\startmathalignment
+\NC \Var[X]
+    \NC = E[(X-E[X])^2] \NR
+\NC \NC = E[X^2 - 2X E[X] + E^[X]] \NR
+\NC \NC = E[X^2] - 2E[ X E[X] ] + E^2[X] \NR
+\NC \NC = E[X^2] - 2E^2[X] + E^2[X] \NR
+\NC \NC = E[X^2] - E^2[X] \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \Var[\alpha X]
+    \NC = \E[\alpha^2 X^2] - \E^2[\alpha X] \NR
+\NC \NC = \alpha^2 \E[X^2] - \alpha^2\E[X] \NR
+\NC \NC = \alpha^2 (\E[X^2] - \E^2[X]) \NR
+\NC \NC = \alpha^2 \Var[X] \NR
+\stopmathalignment\stopformula
 \stopANSWER
 
 \stopsection

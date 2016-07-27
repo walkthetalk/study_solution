@@ -2,4 +2,183 @@
   reference=section:geometric_binom,
   title={The geometric and binomial distributions},
 ]
+
+%eC.4-1
+\startEXERCISE
+對集合分佈驗證概率公理 2：
+\startformula
+\Pr\{S\} = 1
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \sum_{k=1}^{\infty} \Pr\{X = k\}
+    \NC = \sum_{k=1}^{\infty} q^{k-1}p \NR
+    \NC = p \sum_{k=0}^{\infty} q^k \NR
+    \NC = p \frac{1}{1-q} \NR
+    \NC = \frac{p}{p} \NR
+    \NC = 1 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.4-2
+\startEXERCISE
+現有 6 個均勻硬幣，平均要擲多少次才能得到 3 個正面和 3 個反面的結果？
+\stopEXERCISE
+
+\startANSWER
+有 \m{\binom{6}{3}} 種方式得到想要的結果：
+\startformula
+\Pr\{\text{3H3T}\}
+     = \frac{\binom{6}{3}}{2^6}
+     = \frac{5}{16}
+\stopformula
+期望次數爲：
+\startformula
+\E[\text{3H3T}] = \frac{1}{\Pr\{\text{3H3T}\}} = \frac{16}{5} = 3.2
+\stopformula
+\stopANSWER
+
+%eC.4-3
+\startEXERCISE
+證明： \m{b(k;n,p) = b(n-k;n,q)}，其中 \m{q=1-p}。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+b(k;n,p) = \binom{n}{k} p^k q^{n-k}
+            = \binom{n}{n-k} p^k q^{n-k}
+            = \binom{n}{n-k} q^{n-k} p^k
+            = b(n-k;n,q)
+\stopformula
+\stopANSWER
+
+%eC.4-4
+\startEXERCISE
+證明：二項分佈 \m{b(k;n,p)} 的最大值近似等於 \m{1/\sqrt{2\pi npq}}，其中 \m{q=1-p}。
+\stopEXERCISE
+
+\startANSWER
+\goto{wikipedia}[url(https://en.wikipedia.org/wiki/De_Moivre-Laplace_theorem)]
+
+令 \m{k=np + x\sqrt{npq}}，其中 \m{x} 是一個固定值。
+當 \m{n\rightarrow \infty} 時，
+\startformula
+\frac{
+  \frac{1}{\sqrt{2\pi npq}} e^{\frac{-(k+1-np)^2}{2npq}}
+}{
+  \frac{1}{\sqrt{2\pi npq}} e^{\frac{-(k-np)^2}{2npq}}
+}
+  = e^{\frac{2np-2k-1}{2npq}}
+  \simeq e^{\frac{-x}{\sqrt{npq}}}
+  \simeq e^0
+  = 1
+\stopformula
+
+首先，根據 Stirling 公式，當 \m{n\rightarrow \infty} 時：
+\startformula
+n! \simeq n^n e^{-n} \sqrt{2\pi n}
+\stopformula
+因此：
+\startformula\startmathalignment
+\NC \binom{n}{k}p^k q^{n-k}
+    \NC = \frac{n!}{k!(n-k)!} p^k q^{n-k} \NR
+\NC \NC \simeq \frac{
+                  n^n e^{-n} \sqrt{2\pi n}
+               }{
+                  k^k e^{-k} \sqrt{2\pi k} (n-k)^{n-k} e^{-(n-k)} \sqrt{2\pi (n-k)}
+               } p^k q^{n-k} \NR
+\NC \NC = \sqrt{\frac{n}{2\pi k (n-k)}}
+          \frac{n^n}{k^k (n-k)^{n-k}}
+          p^k q^{n-k} \NR
+\NC \NC = \sqrt{\frac{n}{2\pi k (n-k)}}
+          \left(\frac{np}{k}\right)^k
+          \left(\frac{nq}{n-k}\right)^{n-k} \NR
+\stopmathalignment\stopformula
+
+然後，根據 \m{\frac{k}{n}\rightarrow p}：
+\startformula\startmathalignment
+\NC \binom{n}{k}p^k q^{n-k}
+    \NC \simeq \sqrt{\frac{1}{2\pi n\frac{k}{n}(1-\frac{k}{n})}}
+               \left(\frac{np}{k}\right)^k \left(\frac{nq}{n-k}\right)^{n-k} \NR
+\NC \NC \simeq \frac{1}{\sqrt{2\pi npq}}
+               \left(\frac{np}{k}\right)^k \left(\frac{nq}{n-k}\right)^{n-k} \qquad p+q=1 \NR
+\stopmathalignment\stopformula
+
+最後根據 Taylor Series 可知：
+\startformula
+\ln(1+x)\simeq x - \frac{x^2}{2} + \frac{x^3}{3} - \ldots
+\stopformula
+所以：
+\startformula\startmathalignment
+\NC \binom{n}{k}p^k q^{n-k}
+    \NC \simeq \frac{1}{\sqrt{2\pi npq}}
+        \exp\left\{ \ln\left(\frac{np}{k}\right)^k
+                    + \ln\left(\frac{nq}{n-k}\right)^{n-k} \right\} \NR
+\NC \NC = \frac{1}{\sqrt{2\pi npq}}
+        \exp\left\{ -k\ln\left(\frac{k}{np}\right)
+                    + (k-n)\ln\left(\frac{n-k}{nq}\right) \right\} \NR
+\NC \NC = \frac{1}{\sqrt{2\pi npq}}
+        \exp\left\{ -k\ln\left(\frac{np + x\sqrt{npq}}{np}\right)
+                    + (k-n)\ln\left(\frac{n-np-x\sqrt{npq}}{nq}\right) \right\} \NR
+\NC \NC = \frac{1}{\sqrt{2\pi npq}}
+        \exp\left\{ -k\ln\left(1 + x\sqrt{\frac{q}{np}}\right)
+                    + (k-n)\ln\left(1-x\sqrt{\frac{p}{nq}}\right) \right\} \qquad p+q=1 \NR
+\NC \NC = \frac{1}{\sqrt{2\pi npq}}
+        \exp\left\{ -k\left(x\sqrt{\frac{q}{np}} - \frac{x^2q}{2np} + \ldots \right)
+                    + (k-n)\left(-x\sqrt{\frac{p}{nq}} - \frac{x^2p}{2nq} - \ldots \right) \right\} \NR
+\NC \NC = \frac{1}{\sqrt{2\pi npq}}
+        \exp\left\{ (-np - x\sqrt{npq})\left(x\sqrt{\frac{q}{np}} - \frac{x^2q}{2np} + \ldots \right) \right. \NR
+\NC \NC \hskip 10em \left. + (np + x\sqrt{npq} - n)\left(-x\sqrt{\frac{p}{nq}} - \frac{x^2p}{2nq} - \ldots \right) \right\} \NR
+\NC \NC = \frac{1}{\sqrt{2\pi npq}}
+        \exp\left\{ (-np - x\sqrt{npq})\left(x\sqrt{\frac{q}{np}} - \frac{x^2q}{2np} + \ldots \right) \right. \NR
+\NC \NC \hskip 10em \left. - (nq - x\sqrt{npq})\left(-x\sqrt{\frac{p}{nq}} - \frac{x^2p}{2nq} - \ldots \right) \right\} \NR
+\NC \NC = \frac{1}{\sqrt{2\pi npq}}
+        \exp\left\{ \left( -x\sqrt{npq} + \frac{1}{2}x^2q - x^q + \ldots \right)
+                    + \left( x\sqrt{npq} + \frac{1}{2}x^2p - x^p - \ldots \right) \right\} \NR
+\NC \NC = \frac{1}{\sqrt{2\pi npq}}
+        \exp\left\{ -\frac{1}{2}x^2q - \frac{1}{2}x^2p - \ldots \right\} \NR
+\NC \NC = \frac{1}{\sqrt{2\pi npq}}
+        \exp\left\{ -\frac{1}{2}x^2(p+q) - \ldots \right\} \NR
+\NC \NC \simeq \frac{1}{\sqrt{2\pi npq}}
+        \exp\left\{ -\frac{1}{2}x^2 \right\} \NR
+\NC \NC = \frac{1}{\sqrt{2\pi npq}}
+        e^{ \frac{-(k-np)^2}{2npq} } \NR
+\stopmathalignment\stopformula
+
+\stopANSWER
+
+%eC.4-5
+\startEXERCISE\DIFFICULT
+證明： \m{n} 次 Bernoulli 試驗（成功概率爲 \m{p=1/n}）
+一次也未成功的概率近似等於 \m{1/e}。
+證明：只有一次成功的概率也近似爲 \m{1/e}。
+\stopEXERCISE
+
+\startANSWER
+\m{n} 次均未成功的概率爲：
+\startformula
+b(0;n,p)
+  = \left.\binom{n}{k} p^k q^{n-k}\right|_{k=0,p=1/n}
+  = \binom{n}{0} q^n
+  = (1-p)^n
+  = \left(1 - \frac{1}{n}\right)^n
+  = \frac{1}{\left(1-\frac{1}{n}\right)^{-n}}
+\stopformula
+
+\m{n} 次中只有一次成功的概率爲：
+\startformula
+b(1;n,p)
+  = \binom{n}{1} \frac{1}{n} \left(1-\frac{1}{n}\right)^{n-1}
+  = \frac{1}{\left(1-\frac{1}{n}\right)^{-n-1}}
+\stopformula
+
+根據下面公式可知上面兩個值近似均爲 \m{1/e}。
+\startformula
+e = \lim_{n \to \infty}\left(1 + \frac{1}{n}\right)^n
+     = \lim_{n \to \infty}\left(1 - \frac{1}{n}\right)^{-n}
+\stopformula
+\stopANSWER
+
 \stopsection

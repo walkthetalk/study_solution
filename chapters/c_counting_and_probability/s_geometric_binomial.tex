@@ -181,4 +181,117 @@ e = \lim_{n \to \infty}\left(1 + \frac{1}{n}\right)^n
 \stopformula
 \stopANSWER
 
+%eC.4-6
+\startEXERCISE\DIFFICULT
+Rosencrantz 教授與 Guildenstern 教授各扔一枚均勻硬幣 \m{n} 次。
+證明：他們得到正面朝上次數相同的概率爲 \m{\binom{2n}{n}/4^n}。
+（\hint 對於 Rosencrantz 教授，稱正面爲成功；
+對於 Guildenstern 教授，稱背面爲成功。）
+並用你的結論在驗證恆等式：
+\startformula
+\sum_{k=0}^{n}\binom{n}{k}^2 = \binom{2n}{n}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+根據提示，總共 \m{2n} 次，要想兩個教授正面朝上次數相同，
+如果 Rosencrantz 教授成功了 \m{k} 次，
+則 Guildenstern 教授成功了 \m{n-k} 次，
+共成功 \m{n} 次。
+\startformula
+\Pr\{R=G\} = b(n;2n,1/2)
+           = \binom{2n}{n}\frac{1}{2^n}\frac{1}{2n}
+           = \binom{2n}{n}/4^n
+\stopformula
+也可以通過概率來計算：
+\startformula\startmathalignment
+\NC \Pr\{R=G\}
+    \NC = \sum_{k=0}^n \Pr\{R=k\}\Pr\{G=n-k\} \NR
+\NC \NC = \sum_{k=0}^n \binom{n}{k} \cdot \frac{1}{2^n} \cdot
+                               \binom{n}{n-k} \cdot \frac{1}{2^n} \NR
+\NC \NC = \frac{1}{4^n} \sum_{k=0}^n \binom{n}{k} \binom{n}{n-k} \NR
+\NC \NC = \frac{1}{4^n} \sum_{k=0}^n \binom{n}{k}^2 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.4-7
+\startEXERCISE\DIFFICULT
+證明：對於 \m{0\le k\le n}，
+\startformula
+b(k;n,1/2) \le 2^{n H(k/n) - n}
+\stopformula
+其中 \m{H(x)} 是熵函數：
+\startformula
+H(\lambda) = -\lambda\lg{\lambda} - (1 - \lambda)\lg(1 - \lambda) \eqno{(C.7)}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula
+b(k;n,1/2) = \binom{n}{k}\frac{1}{2^n}
+           = \binom{n}{n\frac{k}{n}}\frac{1}{2^n}
+           \le \frac{2^{nH(k/n)}}{2^n}
+           = 2^{nH(k/n) - n}
+\stopformula
+\stopANSWER
+
+%eC.4-8
+\startEXERCISE
+考慮 \m{n} 次 Bernoulli 試驗，
+其中 \m{i=1,2,\ldots,n}，
+第 \m{i} 次試驗成功的概率爲 \m{p_i}，
+令 \m{X} 爲表示總成功次數的隨機變量。
+令對所有 \m{i=1,2,\ldots,n} 有 \m{p\ge p_i}。
+證明：對於 \m{1\le k\le n}，
+\startformula
+\Pr\{X<k\} \ge \sum_{i=0}^{k-1} b(i;n,p)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+另外一組 Bernoulli 試驗 \m{Y}，每次成功的概率均爲 \m{p}，
+利用\refexercise{C.4-9} 的結論有：
+\startformula
+\Pr\{Y < k\} = 1 - \Pr\{Y \ge k\} \le 1 - \Pr\{X \ge k\} = \Pr\{X < k\}
+\stopformula
+\stopANSWER
+
+%eC.4-9
+\startEXERCISE[exercise:C.4-9]\DIFFICULT
+令 \m{X} 爲表示 \m{n} 次 Bernoulli 試驗構成的集合 \m{A} 中總成功次數的隨機變量，
+其中第 \m{i} 次試驗成功的概率爲 \m{p_i}，
+並令 \m{X'} 爲表示另一個由 \m{n} 個 Bernoulli 試驗構成的集合 \m{A'} 中
+總成功次數的隨機變量，
+其中第 \m{i} 次試驗成功的概率 \m{p'_i \ge p_i}。
+證明：對於 \m{0\le k\le n}，
+\startformula
+\Pr\{X'\ge k\}\ge \Pr\{X\ge k\}
+\stopformula
+（\hint 說明如何通過包含 \m{A} 中試驗的實驗
+來獲得 \m{A'} 中的 Bernoulli 試驗，
+並使用\refexercise{C.3-7} 中的結論。）
+\stopEXERCISE
+
+\startANSWER
+令 \m{Y_1,Y_2,\ldots,Y_n} 爲 \m{A} 中事件的指示隨機變量。
+令 \m{Z_1,Z_2,\ldots,Z_n} 爲新的隨機變量：
+\startigBase[a]
+\item 如果 \m{Y_i = 1}，則 \m{Z_i = 1}；
+\item 如果 \m{Y_i = 0}，則 \m{Z_i = 1} 的概率爲 \m{\frac{p'_i - p_i}{1-p_i}}。
+\stopigBase
+下面計算 \m{\Pr\{Z_i\}}：
+\startformula
+\Pr\{Z_i\} = p_i \Pr\{Y_i = 1\} + (1 - p_i) \cdot \frac{p_i' - p_i}{1-p_i}
+                = p_i + p_i' - p_i
+                = p_i'
+\stopformula
+
+由於 \m{p_i'\ge p_i}，則：
+\startformula
+\Pr\{X' \ge k\} = \Pr\{Z_1 + Z_2 + \ldots + Z_n\}
+                \ge \Pr\{Y_1 + Y_2 + \ldots + Y_n\}
+                = \Pr\{X \ge k\}
+\stopformula
+\stopANSWER
+
 \stopsection

@@ -1,4 +1,313 @@
 \startsection[
   title={The tails of the binomial distribution},
 ]
+
+%eC.5-1
+\startEXERCISE\DIFFICULT
+有一枚均勻硬幣，一種是拋擲 \m{n} 次都是反面朝上，
+另一種是拋擲 \m{4n} 次正面朝上的次數小於 \m{n}，
+哪個的概率小？
+\stopEXERCISE
+
+\startANSWER
+第一種的概率爲 \m{\left(\frac{1}{2}\right)^{n}}。
+
+下面看第二種，
+\startformula\startmathalignment
+\NC \Pr\{X<n\}
+    \NC = \sum_{i=0}^{n-1}b(i;4n,1/2) \NR
+\NC \NC = \left(\frac{1}{2}\right)^{4n}\sum_{i=0}^{n-1}\binom{4n}{i} \NR
+\stopmathalignment\stopformula
+等價於比較 \m{8^n} 和 \m{\sum_{i=0}^{n-1}\binom{4n}{i}}。
+
+列出兩個值的前幾項，可以看出兩者的比值一直在增長。
+前者是等比數列，
+而後者相鄰兩個數值的比例也一直在增長（除去 \m{n=1,2} 的情況），
+ \m{n\ge 18} 時，後者超過了前者，
+也就是說 \m{n<18} 時，前者概率較大，推測 \m{n\ge 18} 時，後者概率較大。
+\TODO{還有待證明}。
+
+\input{tbl/tblC.5-1.tex}
+\stopANSWER
+
+%eC.5-2
+\startEXERCISE\DIFFICULT
+證明推論 C.6 和推論 C.7。
+
+附推論 C.6：考慮 \m{n} 次 Bernoulli 試驗，成功概率爲 \m{p}。
+令 \m{X} 爲表示成功次數的隨機變量，
+則對於 \m{np<k<n}，
+獲得多於 \m{k} 次成功的概率爲：
+\startformula
+\Pr\{X>k\} = \sum_{i=k+1}^{n} b(i;n,p) < \frac{(n-k)p}{k-np} b(k;n,p)
+\stopformula
+
+附推論 C.7：考慮 \m{n} 次 Bernoulli 試驗，成功概率爲 \m{p}，
+失敗概率爲 \m{q=1-p}，令 \m{X} 爲表示成功次數的隨機變量，
+則對於 \m{(np+n)/2<k<n}， \m{\Pr\{X>k\} < \frac{1}{2}\Pr\{X>k-1\}}。
+\stopEXERCISE
+
+\startANSWER
+先來證明 C.6。先來看下面公式：
+\startformula\startmathalignment
+\NC \frac{b(i+1;n,p)}{b(i;n,p)}
+    \NC = \frac{\binom{n}{i+1}p^{i+1}(1-p)^{n-i-1}}{\binom{n}{i}p^i(1-p)^{n-i}} \NR
+\NC \NC = \frac{n-i}{i+1} \frac{p}{1-p} \NR
+\startintertext
+由於 \m{k\le i<n} （可加強爲 \m{k<i<n}）：
+\stopintertext
+\NC \NC \le \frac{n-k}{k+1} \frac{p}{1-p} \qquad \qquad \text{令此式爲 \m{x}。}\NR
+\startintertext
+由於 \m{np<k<n}：
+\stopintertext
+\NC \NC < \frac{n-np}{np+1}\frac{p}{1-p} \NR
+\NC \NC = \frac{np}{np+1} \NR
+\NC \NC < 1 \NR
+\stopmathalignment\stopformula
+
+根據上面推導可知 \m{b(i+1;n,p)<x b(i;n,p)}，同理：
+\startformula
+b(i+2;n,p)<x b(i+1;n,p) < x^2 b(i;n,p)
+\stopformula
+以此類推，可知：
+\startformula\startmathalignment
+\NC \Pr\{X>k\} = \sum_{i=k+1}^{n} b(i;n,p)
+    \NC < x b(k;n,p) + x^2 b(k;n,p) + \ldots + x^{n-k} b(k;n,p) \NR
+\NC \NC < b(k;n,p) \sum_{i=1}^{n-k}x^i \NR
+\NC \NC < b(k;n,p) \sum_{i=1}^{\infty} x^i \NR
+\NC \NC = b(k;n,p) \frac{x}{1-x} \NR
+\startintertext
+將 \m{x} 代入得：
+\stopintertext
+\NC \NC = b(k;n,p) \frac{(n-k)p}{1-p+k-np} \NR
+\NC \NC < \frac{(n-k)p}{k-np} b(k;n,p) \NR
+\stopmathalignment\stopformula
+
+然後證明 C.7。由於 \m{\frac{np+n}{2}<k<n}，
+\startformula
+\left(\frac{n-k}{k-np}\right) p
+  < \left(\frac{n-\frac{np+n}{2}}{\frac{np+n}{2}-np}\right)p
+  = p < 1
+\stopformula
+根據 C.6 可知：
+\startformula
+\Pr\{X>k\}
+  = \sum_{i=k+1}^{n} b(i;n,p)
+  < \frac{(n-k)p}{k-np} b(k;n,p)
+  < b(k;n,p)
+\stopformula
+現在就可以證明 C.7 了：
+\startformula\startmathalignment
+\NC \Pr\{X>k\}
+    \NC = \frac{1}{2} \left(\Pr\{X>k\} + \Pr\{X>k\}\right) \NR
+\NC \NC < \frac{1}{2} \left(\Pr\{X>k\} + b(k;n,p)\right) \NR
+\NC \NC = \frac{1}{2} \Pr\{X>k-1\} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.5-3
+\startEXERCISE\DIFFICULT
+證明：對於所有滿足 \m{0<k<na/(a+1)} 的 \m{a>0} 和 \m{k}，有
+\startformula
+\sum_{i=0}^{k-1}\binom{n}{i}a^i
+  < (a+1)^n\frac{k}{na-k(a+1)} b(k;n,a/(a+1))
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+因爲 \m{a>0}，令 \m{p = \frac{a}{a+1} < 1}，則：
+\startformula
+q = 1-p = 1 - \frac{a}{a+1} = \frac{1}{a+1}
+\stopformula
+現在考慮二項式 \m{b(i;n,p)} 中的係數 \m{p^i q^{n-i}}：
+\startformula
+p^i q^{n-i} = \left(\frac{a}{a+1}\right)^i
+              \left(\frac{1}{a+1}\right)^{n-i}
+            = \frac{a^i}{(a+1)^n}
+\stopformula
+從中可以看出 \m{a^i = (a+1)^n p^i q^{n-i}}，因此：
+\startformula\startmathalignment
+\NC \sum_{i=0}^{k-1}\binom{n}{i}a^i
+    \NC = (a+1)^n \sum_{i=0}^{k-1}\binom{n}{i}p^i q^{n-i} \NR
+\NC \NC = (a+1)^n \Pr\{X<k\} \NR
+\startintertext
+根據定理 C.4 （已滿足 \m{0<k<np}）：
+\stopintertext
+\NC \NC < (a+1)^n \frac{kq}{np-k} b(k;n,p) \NR
+\startintertext
+將 \m{p,q} 代入可得：
+\stopintertext
+\NC \NC = (a+1)^n \frac{k}{na-k(a+1)} b(k;n,\frac{a}{a+1})
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.5-4
+\startEXERCISE\DIFFICULT
+證明：若 \m{0<k<np}，其中 \m{0<p<1} 且 \m{q=1-p}，則
+\startformula
+\sum_{i=0}^{k-1}p^i q^{n-i}
+  < \frac{kq}{np-k}
+    \left(\frac{np}{k}\right)^k
+    \left(\frac{nq}{n-k}\right)^{n-k}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \sum_{i=0}^{k-1}p^iq^{n-i}
+    \NC < \sum_{i=0}^{k-1}\binom{n}{i}p^i q^{n-i} \NR
+\NC \NC = \Pr\{X < k\} \qquad \text{(C.4)} \NR
+\NC \NC < \frac{kq}{np - k} b(k;n,p) \qquad \text{(C.1)} \NR
+\NC \NC < \frac{kq}{np - k}
+          \left(\frac{np}{k}\right)^k
+          \left(\frac{nq}{n-k}\right)^{n-k}
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.5-5
+\startEXERCISE\DIFFICULT
+利用定理 C.8 證明：對於 \m{r>n-\mu}，
+\startformula
+\Pr\{\mu - X \ge r\} \le \left(\frac{(n-\mu)e}{r}\right)^r
+\stopformula
+附定理 C.8：考慮 \m{n} 次 Bernoulli 試驗，其中第 \m{i} 次成功概率爲 \m{p_i}，
+失敗概率爲 \m{q_i = 1 - p_i}， \m{i=1,2,\ldots,n}。
+令隨機變量 \m{X} 表示成功的總次數，令 \m{\mu = \E[X]}。
+那麼，對於 \m{r>\mu}，
+\startformula
+\Pr\{X-\mu\ge r\} \le \left(\frac{\mu e}{r}\right)^r
+\stopformula
+
+類似地，利用推論 C.9 證明：對於 \m{r>n-np}，
+\startformula
+\Pr\{np - X\ge r\}\le \left(\frac{nqe}{r}\right)^r
+\stopformula
+附定理 C.9：考慮 \m{n} 次 Bernoulli 試驗，
+每次試驗成功概率爲 \m{p}，失敗概率爲 \m{q = 1 - p}。
+令隨機變量 \m{X} 表示成功的總次數。
+那麼，對於 \m{r>np}，
+\startformula
+\Pr\{X-np\ge r\}
+  = \sum_{k=\left\lceil np+r\right\rceil}^{n} b(k;n,p)
+  \le \left(\frac{npe}{r}\right)^r
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+令 \m{Y=n-X}，即失敗次數，則 \m{\nu = \E[Y] = \E[n - X] = n - \E[x] = n - \mu}。
+根據定理 C.8：
+\startformula\startmathalignment[n=1]
+\NC \Pr\{Y - \nu > r\} \le \left(\frac{\nu e}{r}\right)^r \NR
+\NC \Downarrow \NR
+\NC \Pr\{\mu - X \ge r\} \le \left(\frac{(n - \mu)e}{r}\right)^r \NR
+\stopmathalignment\stopformula
+
+另一個證明類似。
+\stopANSWER
+
+%eC.5-6
+\startEXERCISE
+考慮 \m{n} 次 Bernoulli 試驗，其中第 \m{i} 次成功概率爲 \m{p_i}，
+失敗概率爲 \m{q_i = 1 - p_i}， \m{i=1,2,\ldots,n}。
+令隨機變量 \m{X} 表示成功的總次數，令 \m{\mu = \E[X]}。
+證明：對於 \m{r\ge 0}，有
+\startformula
+\Pr\{X-\mu\ge r\} \le e^{-r^2/2n}
+\stopformula
+（\hint 證明 \m{p_i e^{\alpha q_i} + q_i e^{-\alpha p_i} \le e^{\alpha^2/2}}。
+然後根據定理 C.8 的證明思路，利用該不等式代替 C.45。）
+\stopEXERCISE
+
+\startANSWER
+先證明提示所給不等式 \m{p_i e^{\alpha q_i} + q_i e^{-\alpha p_i} \le e^{\alpha^2/2}}。
+令：
+\startformula
+f(x) = e^{x^2/2} - (pe^{qx} + qe^{-px})
+\stopformula
+我們需要證明 \m{f(x)} 在 \m{x\ge 0} 時單調遞增，
+即要證明 \m{f'(x) > 0}：
+\startformula
+f'(x) = xe^{x^2/2} - pq(e^{qx} - e^{-px})
+\stopformula
+要證明 \m{f'(x)>0}，我們先證明 \m{f''(x) > 0}：
+\startformula\startmathalignment[align={middle, right}]
+\NC f''(x) = e^{x^2/2} + x^2 e^{x^2/2} - pq(qe^{qx} + pe^{-px}) > 0 \NC \NR
+\NC \Uparrow \NC \NR
+\NC e^{x^2/2} > pq(qe^{qx} + pe^{-px}) \NC x^2 e^{x^2/2} \ge 0 \NR
+\NC \Uparrow \NC \NR
+\NC e^{x^2/2} > \frac{1}{4}(qe^{qx} + pe^{-px}) \NC pq = p(1-p) \le 1/4\NR
+\NC \Uparrow \NC \NR
+\NC 4e^{x^2/2} > e^{qx} + e^{-px} \NC p<1,q<1\NR
+\NC \Uparrow \NC \NR
+\NC 4e^{x^2/2} > e^x + 1 \NC e^{qx} + e^{-px} = e^{-px} (e^x + 1) < e^x + 1 \NR
+\NC \Uparrow \NC \NR
+\NC 3e^{x^2/2} > e^x \NC e^{x^2/2} > 1 \NR
+\NC \Uparrow \NR
+\NC 3e^{x^2/2 - x} > 1 \NC \NR
+\NC \Uparrow \NR
+\NC 3e^{\frac{(x-1)^2 - 1}{2}} > 1 \NC \NR
+\NC \Uparrow \NC \NR
+\NC 3 > \sqrt{e} \NC\NR
+\stopmathalignment\stopformula
+
+對於 \m{x\ge 0}，由於 \m{f''(0)\ge 0}，因此 \m{f'(x)} 單調遞增。
+由於 \m{f'(x)\ge 0}，所以 \m{f(x)} 單調遞增。
+因此 \m{f(x)\ge 0}，即提示中所給不等式成立。
+據此可知：
+\startformula\startmathalignment
+\NC \E[e^{\alpha (X_i - p_i)}]
+    \NC = e^{\alpha(1-p_i)}p_i + e^{\alpha(0-p_i)}q_i \NR
+\NC \NC = p_i e^{\alpha q_i} + q_i e^{- \alpha p_i} \NR
+\NC \NC \le e^{\alpha^2/2} \NR
+\stopmathalignment\stopformula
+
+將其代入下式：
+\startformula\startmathalignment
+\NC \E[e^{\alpha(X - \mu)}]
+    \NC = \prod_{i=1}^n \E[e^{\alpha(X_i - p_i)}] \NR
+\NC \NC \le \prod_{i=1}^n \exp(\alpha^2 / 2) \NR
+\NC \NC = \exp(n \alpha^2/2) \NR
+\stopmathalignment\stopformula
+
+根據 C.43 和 C.44：
+\startformula\startmathalignment
+\NC \Pr\{X-\mu\ge r\}
+    \NC = \Pr\{e^{\alpha(X-\mu)} \ge e^{\alpha r}\} \NR
+\NC \NC \le \E[e^{\alpha(X-\mu)}] e^{-\alpha r} \NR
+\startintertext
+代入上面的不等式：
+\stopintertext
+\NC \NC \le \exp({n \alpha^2/2}) \exp({-\alpha r}) \NR
+\startintertext
+要是其值最小，即使 \m{n\alpha^2/2 - \alpha r} 最小，
+即其導數 \m{n\alpha - r = }，求解得 \m{\alpha = r/n}：
+\stopintertext
+\NC \NC = \exp({\frac{nr^2}{2n^2} - \frac{r^2}{n}}) \NR
+\NC \NC = \exp(-\frac{r^2}{2n}) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%eC.5-7
+\startEXERCISE\DIFFICULT
+證明：選擇 \m{\alpha = \ln(r/\mu)} 可使不等式 C.47 右側取最小值。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+\Pr\{X-\mu\ge r\} \le \exp(\mu e^{\alpha} - \alpha r)
+\stopformula
+要想使右式最小，可對 \m{\alpha} 求其一階導數，使其爲 0 即可。
+\startformula
+\frac{d}{d\alpha}\exp(\mu e^{\alpha} - \alpha r)
+  = (\mu e^{\alpha} - r) \exp(\mu e^{\alpha} - \alpha r)
+  = 0
+\stopformula
+解得 \m{\alpha = \ln (r/\mu)}。
+
+可通過二階導數來證明其正確性。也可以按如下方式進行說明：
+當 \m{\alpha > \ln (r/\mu)} 時，一階導數大於 0，原函數遞增，
+當 \m{\alpha < \ln (r/\mu)} 時，一階導數大於 0，原函數遞減，
+因此原函數在 \m{\alpha = \ln (r/\mu)} 處取得最小值。
+\stopANSWER
+
 \stopsection

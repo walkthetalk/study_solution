@@ -2,4 +2,66 @@
   title={Problems},
 ]
 
+%pC-1
+\startPROBLEM
+（Balls and bins）
+本題中，我們會研究在幾種假設條件下，
+有多少種方法可以將 \m{n} 個球放入 \m{b} 個箱子裏。
+\startigBase[a]\startitem
+假定 \m{n} 個球是不同的，
+且不考慮他們在盒子中的順序。
+證明：有 \m{b^n} 種放置方法。
+\stopitem\stopigBase
+
+\startANSWER
+每個球都有 \m{b} 種放法，一共 \m{b^n} 種放法。
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定 \m{n} 個球是不同的，且在盒子中有序。
+證明：有 \m{(b+n-1)!/(b-1)!} 種放置方法。
+（\hint 考慮有多少種方法可以將 \m{n} 個不同的球
+和 \m{b-1} 根相同的棍子排成一排。）
+\stopitem\stopigBase
+
+\startANSWER
+將 \m{n} 個球和 \m{b-1} 根棍子排成一排，有 \m{(n+b-1)!} 種方法。
+所有棍子都是相同的，棍子排列方法爲 \m{(b-1)!} 種。
+兩個棍子中間的球放入對應的箱子裏。
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定 \m{n} 個球是相同的，從而無需考慮他們在盒子中的順序。
+證明：有 \m{\binom{b+n-1}{n}} 種放置方法。
+（\hint 若球相同，則（b）中的排列有多少是重複的？）
+\stopitem\stopigBase
+
+\startANSWER
+球的排列有 \m{n!} 種是重複的。
+因此：
+\startformula
+\frac{(b+n-1)!}{(b-1)!n!} = \binom{b+n-1}{n}
+\stopformula
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定球是相同的，每個盒子只能放一個球，從而有 \m{n\le b}。
+證明：將球放入盒子中的方法數是 \m{\binom{b}{n}}。
+\stopitem\stopigBase
+
+\startANSWER
+在 \m{b} 個箱子中選擇 \m{n} 個用來放球，即 \m{\binom{b}{n}}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定球是相同的，且盒子不能爲空，即 \m{n\ge b}，
+證明：有 \m{\binom{n-1}{b-1}} 種放置方法。
+\stopitem\stopigBase
+
+\startANSWER
+先將球排成一列，將 \m{b-1} 根棍子放入 \m{n-1} 個空隙。
+即 \m{\binom{n-1}{b-1}}。
+\stopANSWER
+\stopPROBLEM
+
 \stopsubject%Problems

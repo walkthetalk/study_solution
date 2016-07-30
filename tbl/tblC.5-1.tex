@@ -1,0 +1,47 @@
+
+\startxtable[
+    option=max,
+    align={left,lohi},
+    split=yes,
+    header=repeat,
+    footer=repeat,
+    offset=.25em,
+]
+
+% head
+\startxtablehead[frame=off,bottomframe=on]
+\startxrow[foregroundstyle=bold,align={middle}]
+  \xmcell[rightframe=on]{n}
+  \processcommalist[
+  A_n = 8^n,
+  B_n = \sum_{i=0}^{n-1}\binom{4n}{n},
+  \frac{B_n}{B_{n-1}},
+  \frac{B_n}{A_n}
+  ]\xmcell
+\stopxrow
+\stopxtablehead
+
+% body
+\startxtablebody[frame=off]
+\startxrow \xmcell[rightframe=on]{ 1}\processcommalist[                 8,                  1, 1.000, 0.125]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{ 2}\processcommalist[                64,                  9, 9.000, 0.141]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{ 3}\processcommalist[               512,                 79, 8.778, 0.154]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{ 4}\processcommalist[              4096,                697, 8.823, 0.170]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{ 5}\processcommalist[             32768,               6196, 8.890, 0.189]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{ 6}\processcommalist[            262144,              55455, 8.950, 0.212]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{ 7}\processcommalist[           2097152,             499178, 9.001, 0.238]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{ 8}\processcommalist[          16777216,            4514873, 9.045, 0.269]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{ 9}\processcommalist[         134217728,           40999516, 9.081, 0.305]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{10}\processcommalist[        1073741824,          373585604, 9.112, 0.348]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{11}\processcommalist[        8589934592,         3414035527, 9.139, 0.397]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{12}\processcommalist[       68719476736,        31278197839, 9.162, 0.455]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{13}\processcommalist[      549755813888,       287191809724, 9.182, 0.522]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{14}\processcommalist[     4398046511104,      2642070371194, 9.200, 0.601]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{15}\processcommalist[    35184372088832,     24347999094724, 9.215, 0.692]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{16}\processcommalist[   281474976710656,    224723513577529, 9.230, 0.798]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{17}\processcommalist[  2251799813685248,   2076978797223820, 9.242, 0.922]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{18}\processcommalist[ 18014398509481984,  19220104372823340, 9.254, 1.067]\xmcell \stopxrow
+\startxrow \xmcell[rightframe=on]{19}\processcommalist[144115188075855872, 178061257422521452, 9.264, 1.236]\xmcell \stopxrow
+\stopxtablebody
+
+\stopxtable

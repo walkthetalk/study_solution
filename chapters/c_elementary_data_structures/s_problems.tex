@@ -1,0 +1,197 @@
+\startsubject[
+  title={Problems},
+]
+
+%p10-1
+\startPROBLEM
+（Comparisons among lists）
+對於下表中的 4 種鏈表，所列的每種動態集合操作在最壞情況下的漸進運行時間是多少？
+\stopPROBLEM
+
+\startANSWER
+\input{tbl/tbl10-1.tex}
+
+對於已排序的單向鏈表，如果跟蹤鏈表爲節點，則 \ALGO{MAXIMUM} 的運行時間爲常數。
+\stopANSWER
+
+%p10-2
+\startPROBLEM
+（Mergeable heaps using linked lists）
+{\EMP 可合並堆}（{\EMP mergeable heap}）支持以下操作： \ALGO{MAKE-HEAP}（創建一個空的可合並堆）、
+ \ALGO{INSERT}、 \ALGO{MINIMUM}、 \ALGO{EXTRACT-MIN} 和 \ALGO{UNION}\footnote{%
+由於我們定義的是 \ALGO{MINIMUM} 和 \ALGO{EXTRACT-MIN}，因此我們也可以將其稱爲{\EMP 可合並最小堆}；
+如果我們定義的是 \ALGO{MAXIMUM} 和 \ALGO{EXTRACT-MAX}，則可以將其稱爲{\EMP 可合並最大堆}。
+}。
+試說明下列各種情況下如何用鏈表實現可合並堆。
+試者使各種操作盡可能高效。
+根據動態集合的規模分析每種操作的運行時間。
+\startigBase[a]
+\item 鏈表已排序；
+\item 鏈表未排序；
+\item 鏈表未排序，且待合並的動態集合是不相交的。
+\stopigBase
+\stopPROBLEM
+
+\startANSWER
+\input{tbl/tbl10-2.tex}
+
+其中，如果可以跟蹤鏈表的尾節點，對於未排序的鏈表的 \ALGO{UNION} 操作可以是常數時間。
+\stopANSWER
+
+%p10-3
+\startPROBLEM
+（Searching a sorted compact list）
+\refexercise{compact_list} 提出了如何使鏈表保持緊湊的問題。
+我們假設所有 key 各不相同，且緊湊鏈表已排序，即，
+ \m{key[i] < key[next[i]]}，其中 \m{i=1,2,\ldots,n}，且 \m{next[i] \ne NIL}。
+同時假設有一個變量 \m{L} 保存鏈表種第一個元素的下標值。
+在這些假設下，我們可以用下列隨機化算法以期望時間 \m{O(\sqrt{n})} 搜索鏈表。
+
+\CLRSH{COMPACT-LIST-SEARCH(L, n, k)}
+\startCLRS
+i = L
+while i ≠ NIL and key[i] < k
+	j = RANDOM(1, n)
+	if key[i] < key[j] and key[j] ≤ k
+		i = j
+		if key[i] == k
+			return i
+	i = next[i]
+if i == NIL or key[i] > k
+	return NIL
+else
+	return i
+\stopCLRS
+
+如果忽略 3～7 行，那麼他就退化成一個普通的搜索已排序鏈表的算法，
+其中下標 \m{i} 依次指向鏈表的各個位置。
+一旦下標 \m{i} 落到鏈表以外，或者 \m{key[i]\ge k}，算法終止。
+在 \m{key[i]\ge k} 這種情況下，如果 \m{key[i] = k}，顯然我們找到了值爲 \m{k} 的 key；
+而如果 \m{key[i] > k}，那麼我們就無法找到值爲 \m{k} 的 key 了；
+因此算法終止。
+
+3～7 行試圖跳到前面隨機選擇一個位置 \m{j}。
+如果 \m{key[j]} 大於 \m{key[i]}，且不大於 \m{k}，那麼這樣處理是有好處的；
+這種情況下， \m{j} 所指位置是普通搜索時 \m{i} 的必經之地。
+由於鏈表是緊湊的，我們知道 1 到 n 之間的任意值所指位置都是鏈表中的元素，而不會是空閒的。
+
+我們不直接分析 \ALGO{COMPACT-LIST-SEARCH} 的性能，而是先分析一個相關的算法， \ALGO{COMPACT-LIST-SEARCH'}，
+他會執行兩個獨立的循環。
+這個算法會接受一個額外的參數 \m{t}，此參數決定了第一個循環迭代次數的上界。
+
+\CLRSH{COMPACT-LIST-SEARCH‘(L, n, k, t)}
+\startCLRS
+i = L
+for q = 1 to t
+	j = RANDOM(1, n)
+	if key[i] < key[j] and key[j] ≤ k
+		i = j
+		if key[i] == k
+			return i
+while i ≠ NIL and key[i] < k
+	i = next[i]
+if i == NIL or key[i] > k
+	return NIL
+else
+	return i
+\stopCLRS
+
+爲了比較這兩個算法，我們假設兩個算法中調用 \ALGO{RANDOM(1, n)} 所返回的值是相同的。
+\startigBase[a]
+\startitem
+假設 \ALGO{COMPACT-LIST-SEARCH(L, n, k)} 中 2～8 行的 while 循環進行了 t 次迭代。
+證明 \ALGO{COMPACT-LIST-SEARCH'(L, n, k, t)} 會返回同樣的結果，
+且 for 和 while 循環迭代的次數之和至少爲 t。
+\stopitem
+
+\startANSWER
+\TODO{}
+\stopANSWER
+\stopigBase
+
+在調用 \ALGO{COMPACT-LIST-SEARCH'(L, n, k, t)} 的時候，
+令隨機變數 \m{X_t} 代表 2～7 行的 for 迴圈經 t 次迭代後鏈表中
+（即通過 \m{next} 指針鏈）從位置 i 到目標關鍵字 k 之間的距離。
+\startigBase[a,continue]
+\startitem
+論證 \ALGO{COMPACT-LIST-SEARCH'(L, n, k, t)} 的期望運行時間為 \m{O(t+E[X_t])}。
+\stopitem
+
+\startANSWER
+要不就是在 t 次迭代後找到了 k，否則 while 迴圈還要進行 \m{X_t} 次迭代。
+\stopANSWER
+
+\startitem
+證明： \m{E[X_t]\le \sum_{r=1}^{n}(1-r/n)^t}。（\hint 用等式 C.25）
+\stopitem
+
+\startANSWER
+當 \m{t=1} 時，距離大於等於 r 的概率为 \m{(n-r)/n}。
+\startformula
+\Pr\{X_t\ge r\} = (\frac{n-r}{n})^t = (1-\frac{r}{n})^t
+\stopformula
+
+即，有一次調用 \ALGO{RANDOM} 會得到期望的距離，而其他的則會不斷接近期望距離。
+
+利用 C.25：
+\startformula
+E[X_t] = \sum_{r=1}^{\infty} \Pr\{X_t \ge r\}
+        = \sum_{r=1}^n \Pr\{X_t \ge r\}
+        = \sum_{r=1}^n \left(1 - \frac{r}{n}\right)^t
+\stopformula
+\stopANSWER
+
+\startitem
+證明： \m{E[X_t]\le n/(t+1)}。
+\stopitem
+
+\startANSWER
+由 A.11 可知：
+\startformula
+\sum_{r=0}^{n-1} r^t \le \int_0^n x^t dx = \frac{n^{t+1}}{t+1}
+\stopformula
+因此：
+\startformula\startmathalignment
+\NC E[X_t]
+    \NC= \sum_{r=1}^n \bigg(1 - \frac{r}{n}\bigg)^t \NR
+\NC \NC= \sum_{r=0}^{n-1} \bigg(\frac{r}{n}\bigg)^t \NR
+\NC \NC= \frac{1}{n^t} \sum_{r=0}^{n-1} r^t \NR
+\NC \NC\le \frac{1}{n^t} \cdot \frac{n^{t+1}}{t + 1} \NR
+\NC \NC= \frac{n}{t+1} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startitem
+證明： \ALGO{COMPACT-LIST-SEARCH'(L, n, k, t)} 的期望運行時間爲 \m{O(t+n/t)}。
+\stopitem
+
+\startANSWER
+\startformula
+O(t + E[X_t]) = O(t + n/(t+1)) = O(t + n/t)
+\stopformula
+\stopANSWER
+
+\startitem
+論證 \ALGO{COMPACT-LIST-SEARCH'(L, n, k, t)} 的期望運行時間爲 \m{O(\sqrt{n})}。
+\stopitem
+
+\startANSWER
+我們只需找到 \m{t+n/t} 的最小值。針對 \m{t} 求導爲 \m{1-n/t^2}， \m{t=\sqrt{n}} 時導數爲零。
+因此期望運行時間爲 \m{O(\sqrt{n}}。
+\stopANSWER
+
+\startitem
+爲什麼我們假設 \ALGO{COMPACT-LIST-SEARCH} 中的所有關鍵字互不相同？
+論證如果包含相同關鍵字，則隨機跳躍不一定能改進漸進時間。
+\stopitem
+
+\startANSWER
+如果有相同關鍵字，則無法得到 \m{E[X_t]\le n/(t+1)}。
+只有當 \ALGO{RANDOM} 找到的值大於當前值時才會發生躍變。
+例如，如果鏈表中全都是 0，而我們要找 1，算法仍然需要一直迭代，直到鏈表尾部。
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+\stopsubject%Problems

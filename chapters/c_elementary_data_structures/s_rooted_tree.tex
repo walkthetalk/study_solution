@@ -1,0 +1,127 @@
+\startsection[
+  title={Representing rooted trees},
+]
+
+\startEXERCISE
+畫出下列屬性表所示的二叉樹，其根節點下標為 6。
+
+\input{tbl/tbl10.4-1.tex}
+\stopEXERCISE
+
+\startANSWER
+如下圖，其中第 2 個和第 8 個元素沒有在樹上。
+
+\externalfigure[output/e10_4_1-1]
+\stopANSWER
+
+%e10.4-2
+\startEXERCISE
+給定一個含有 n 個節點的二叉樹，寫出一個運行時間爲 \m{O(n)} 的遞迴過程，
+將該樹所有節點的 key 打印出來。
+\stopEXERCISE
+
+\CLRSH{PRINT-BINARY-TREE(T)}
+\startCLRS
+if T
+	PRINT T.key
+	PRINT-BINARY-TREE(T.left)
+	PRINT-BINARY-TREE(T.right)
+\stopCLRS
+
+%e10.4-3
+\startEXERCISE
+給定一個含有 n 個節點的二叉樹，寫出一個運行時間爲 \m{O(n)} 的非遞迴過程，
+將該樹所有節點的 key 打印出來。
+可以使用一個棧作爲輔助數據結構。
+\stopEXERCISE
+
+\CLRSH{PRINT-BINARY-TREE(T)}
+\startCLRS
+if T
+	PUSH(S, T)
+while S.length > 0
+	T = POP(S)
+	PRINT(T.key)
+	if T.left
+		PUSH(S, T.left)
+	if T.right
+		PUSH(S, T.right)
+\stopCLRS
+
+%e10.4-4
+\startEXERCISE
+對於一個含有 n 個節點的任意有根樹，
+寫出一個 \m{O(n)} 時間的過程，輸出其所有關鍵字。
+該樹以左孩子右兄弟表示法存儲。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{PRINT-LCRS-TREE(T)}
+\startCLRS
+PRINT(T.key)
+if T.child
+	PRINT-LCRS-TREE(T.child)
+if T.sibling
+	PRINT-LCRS-TREE(T.sibling)
+\stopCLRS
+\stopANSWER
+
+%e10.4-5
+\startEXERCISE\DIFFICULT
+給定一個含有 n 個節點的二叉樹，寫出一個運行時間爲 \m{O(n)} 的非遞迴過程，
+將該樹所有節點的 key 打印出來。
+要求除樹本身外，只能使用固定量的額外存儲空間，
+且過程中不得修改樹，即使是暫時的修改也不允許。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{PRINT-BINARY-TREE(T)}
+\startCLRS
+prev = NIL
+curr = T
+while curr
+	if prev = curr.parent
+		if curr.left
+			prev = curr
+			curr = curr.left
+		else
+			PRINT(curr.key)
+			if curr.right
+				prev = curr
+				curr = curr.right
+			else
+				prev = curr
+				curr = curr.parent
+	if prev = curr.left
+		PRINT(curr.key)
+		if curr.right
+			prev = curr
+			curr = curr.right
+		else
+			prev = curr
+			curr = curr.parent
+	else if prev = curr.right
+		prev = curr
+		curr = curr.parent
+	else
+		error "logic error"
+\stopCLRS
+\stopANSWER
+
+%e10.4-6
+\startEXERCISE\DIFFICULT
+任意有根樹的左孩子右兄弟表示法中每個節點用到三個指針： \m{left-child}、 \m{right-sibling} 和 \m{parent}。
+對於任何節點，都可以在常數時間到達其父節點；
+並在與其孩子數呈線性關系的時間內到達所有還節點。
+說明如何在每個節點中只使用兩個指針和一個布爾值的情況下，
+使其父節點或其所有孩子節點都可以在與其孩子數呈線性關系的時間內到達。
+\stopEXERCISE
+
+\startANSWER
+只需要兩個指針 \m{left-child} 和 \m{next}，
+其中 \m{next} 即 \m{right-sibling}，只有最後一個兄弟節點例外，
+最後一個兄弟節點的 \m{right-sibling} 指向其父節點。
+而布爾量則表示自己是不是最右一個兄弟節點。
+\stopANSWER
+
+\stopsection

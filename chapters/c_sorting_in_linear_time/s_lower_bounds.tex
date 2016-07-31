@@ -1,0 +1,87 @@
+\startsection[
+  title={Lower bounds for sorting},
+  reference=section:lower_bound_sorting,
+]
+
+\startEXERCISE
+在一棵比較排序算法的決策樹中，一個葉節點可能的最小深度是多少？
+\stopEXERCISE
+
+\startANSWER
+最小深度是 \m{\Theta(n)}，更準確的來說是 \m{n-1}。
+要檢查一個數組是不是已經排好序，至少要比較 \m{n-1} 次。
+插入排序就是如此。
+\stopANSWER
+
+\startEXERCISE[exercise:bound_of_lgnfrac]
+不用 Stirling 近似公式，給出 \m{\lg(n!)} 的漸進緊確界。
+利用 A.2 節中介紹的技術來求累加和 \m{\sum_{k=1}^n\lg{k}}。
+\stopEXERCISE
+
+\startANSWER
+先來證明解爲 \m{O(n\lg{n})}：
+\startformula
+\sum_{k=1}^n\lg{k} \le \sum_{k=1}^n\lg{n} = n\lg{n} = O(n\lg{n})
+\stopformula
+
+再來證明解爲 \m{\Omega(n\lg{n})}：
+\startformula\startmathalignment
+\NC \sum_{k=1}^n\lg{k}
+   \NC= \sum_{k=1}^{\lfloor n/2 \rfloor}\lg{k} +
+	\sum_{k=\lfloor n/2 \rfloor + 1}^n\lg{k} \NR
+\NC\NC\ge \sum_{k=\lfloor n/2 \rfloor + 1}^n\lg{k} \NR
+\NC\NC\ge \sum_{k=n/2}^n\lg{k} \NR
+\NC\NC\ge \sum_{k=n/2}^n\lg{n/2} \NR
+\NC\NC\ge (n/2)\lg(n/2) \NR
+\NC\NC= \frac{1}{2}n\lg{n} - \frac{1}{2}n \NR
+\NC\NC= \Omega(n\lg{n}) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明：對於 \m{n!} 種長度爲 \m{n} 的輸入中，至少有一半不能在線性運行時間內進行比較排序。
+如果只要求對 \m{1/n} 的輸入達到線性時間呢？ \m{1/2^n} 呢？
+\stopEXERCISE
+
+\startANSWER
+如果能在線性時間內排序，則路徑在決策樹上的高度要小於等於 \m{n}，
+而高度爲 \m{n} 的二叉樹最多有 \m{2^n} 個葉子節點，因此：
+\startformula
+\frac{n!}{2} \le 2^n
+\stopformula
+只有 \m{n} 很小時上式才能成立。
+
+對於 \m{\frac{n!}{n} \le 2^n} 和 \m{\frac{n!}{2^n}\le 2^n \Leftrightarrow n! \le 4^n}，
+都只有當 \m{n} 很小時才成立。
+\stopANSWER
+
+\startEXERCISE
+假設現有一個包含 \m{n} 個元素的待排序序列，
+該序列由 \m{n/k} 個子序列組成，
+每個子序列包含 \m{k} 個元素。
+一個給定子序列中的任一元素都小於其後繼子序列中的所有元素，
+且大於其前驅子序列中的所有元素。
+因此，對於這個長度爲 \m{n} 的序列的排序轉化爲對 \m{n/k} 個子序列中的 \m{k} 個元素的排序。
+試證明：這個排序問題中所需比較次數的下界是 \m{\Omega(n\lg{k})}。
+（\hint 單地將每個子序列的下界進行合並是不嚴謹的。）
+\stopEXERCISE
+
+\startANSWER
+共有 \m{n/k} 個子序列，每個都有 \m{k!} 種排序結果。
+這樣共有 \m{(k!)^{n/k}} 種輸出。則：
+\startformula
+(k!)^{n/k}\le 2^h
+\stopformula
+
+兩邊同取對數，則：
+\startformula\startmathalignment
+\NC h
+   \NC\ge \lg(k!)^{n/k} \NR
+\NC\NC=   (n/k)\lg(k!) \NR
+\NC\NC\ge (n/k)(k/2)\lg(k/2) \qquad \text{（\refexercise{bound_of_lgnfrac}）}\NR
+\NC\NC=   \frac{1}{2}n\lg{k} - \frac{1}{2}n \NR
+\NC\NC=   \Omega(n\lg{k}) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\stopsection

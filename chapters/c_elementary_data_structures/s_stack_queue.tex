@@ -1,0 +1,188 @@
+\startsection[
+  reference=section:stack_and_queue,
+  title={Stacks and queues},
+]
+
+%e10.1-1
+\startEXERCISE
+仿照圖 10-1，畫圖表示依次執行操作 \ALGO{PUSH(S, 4)}、 \ALGO{PUSH(S, 1)}、 \ALGO{PUSH(S, 3)}、
+ \ALGO{POP(S)}、  \ALGO{PUSH(S, 8)} 和 \ALGO{POP(S)} 每一步的結果，
+棧 \m{S} 初始爲空，存儲於數列 \m{S[1..6]} 中。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[4*2]
+{\externalfigure[output/e10_1_1-1]}{a}
+{\externalfigure[output/e10_1_1-2]}{b}
+{\externalfigure[output/e10_1_1-3]}{c}
+{\externalfigure[output/e10_1_1-4]}{d}
+{\externalfigure[output/e10_1_1-5]}{e}
+{\externalfigure[output/e10_1_1-6]}{f}
+{\externalfigure[output/e10_1_1-7]}{g}
+\stopcombination
+\stopANSWER
+
+%e10.1-2
+\startEXERCISE
+請說明如何讓兩個棧共用一個數列 \m{A[1..n]}，
+僅當兩個棧的所有元素數目爲 \m{n} 時才會發生上溢。
+ \ALGO{PUSH} 和 \ALGO{POP} 操作要在 \m{O(1)} 時間內完成。
+\stopEXERCISE
+
+\startANSWER
+其中一個棧從 \m{A[1]} 向 \m{A[n]} 方向增長，
+另一個從 \m{A[n]} 向 \m{A[1]} 方向增長。
+當兩個棧的棧頂相鄰時才會發生上溢。
+\stopANSWER
+
+\startEXERCISE
+仿照圖 10-2，畫圖表示在初始爲空的隊列 \m{Q} 上依次執行 \ALGO{ENQUEUE(Q, 4)}、
+ \ALGO{ENQUEUE(Q, 1)}、 \ALGO{ENQUEUE(Q, 3)}、 \ALGO{DEQUEUE(Q)}、
+ \ALGO{ENQUEUE(Q, 8)} 和 \ALGO{DEQUEUE(Q)} 每步的結果，隊列存儲在數列 \m{Q[1..6]} 中。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[4*2]
+{\externalfigure[output/e10_1_3-1]}{a}
+{\externalfigure[output/e10_1_3-2]}{b}
+{\externalfigure[output/e10_1_3-3]}{c}
+{\externalfigure[output/e10_1_3-4]}{d}
+{\externalfigure[output/e10_1_3-5]}{e}
+{\externalfigure[output/e10_1_3-6]}{f}
+{\externalfigure[output/e10_1_3-7]}{g}
+\stopcombination
+\stopANSWER
+
+%e10.1-4
+\startEXERCISE
+重寫 \ALGO{ENQUEUE} 和 \ALGO{DEQUEUE} 以處理上溢和下溢的情況。
+\stopEXERCISE
+
+\startANSWER
+輔助過程：
+
+\CLRSH{NEXT(Q, i)}
+\startCLRS
+if i == Q.length
+	return 1
+else
+	return i + 1
+\stopCLRS
+
+\CLRSH{EMPTY(Q)}
+\startCLRS
+if Q.head == Q.tail
+	return true
+else
+	return false
+\stopCLRS
+
+\CLRSH{FULL(Q)}
+\startCLRS
+if NEXT(Q, Q.tail) == Q.head
+	return true
+else
+	return false
+\stopCLRS
+
+實現：
+
+\CLRSH{ENQUEUE(Q, x)}
+\startCLRS
+if FULL(Q)
+	error "Queue overflow"
+Q[Q.tail] = x
+Q.tail = NEXT(Q, Q.tail)
+\stopCLRS
+
+\CLRSH{DEQUEUE(Q)}
+\startCLRS
+if EMPTY(Q)
+	error "Queue underflow"
+x = Q[Q.head]
+Q.head = NEXT(Q, Q.head)
+return x
+\stopCLRS
+\stopANSWER
+
+%e10.1-5
+\startEXERCISE
+棧只能在同一端插入、刪除元素，隊列則可在一端插入、另一端刪除，
+而{\EMP 雙端隊列（deque）}兩端均可插入、刪除元素。
+以數列實現雙端隊列，寫出四個過程在雙端隊列的兩端插入、刪除元素，時間均爲 \m{O(1)}。
+\stopEXERCISE
+
+\startANSWER
+輔助過程：
+
+\CLRSH{PREV(Q, i)}
+\startCLRS
+if i == 1
+	return Q.length
+else
+	return i - 1
+\stopCLRS
+
+實現：
+
+\CLRSH{ENQUEUE_TAIL(Q, x)}
+\startCLRS
+if FULL(Q)
+	error "Queue overflow"
+Q[Q.tail] = x
+Q.tail = NEXT(Q, Q.tail)
+\stopCLRS
+
+\CLRSH{ENQUEUE_HEAD(Q, x)}
+\startCLRS
+if FULL(Q)
+	error "Queue overflow"
+Q[Q.head] = x
+Q.head = PREV(Q, Q.head)
+\stopCLRS
+
+\CLRSH{DEQUEUE_HEAD(Q)}
+\startCLRS
+if EMPTY(Q)
+	error "Queue underflow"
+x = Q[Q.head]
+Q.head = NEXT(Q, Q.head)
+return x
+\stopCLRS
+
+\CLRSH{DEQUEUE_TAIL(Q)}
+\startCLRS
+if EMPTY(Q)
+	error "Queue underflow"
+x = Q[Q.tail]
+Q.tail = PREV(Q, Q.tail)
+return x
+\stopCLRS
+\stopANSWER
+
+%e10.1-6
+\startEXERCISE[exercise:two_stack_to_queue]
+如何用兩個棧實現隊列？分析隊列操作的運行時間？
+\stopEXERCISE
+
+\startANSWER
+令兩個棧爲 \m{A} 和 \m{B}， \m{B} 用來入隊， \m{A} 用來出隊。
+當 \m{A} 爲空時，將 \m{B} 中所有元素轉移到 \m{A} 中。
+入隊時間爲 \m{O(1)}；當 \m{A} 不空時，出隊時間爲 \m{O(1)}，
+否則爲 \m{\Theta(n)}，其中 \m{n} 爲 \m{B} 中元素的數目。
+\stopANSWER
+
+%e10.1-7
+\startEXERCISE
+如何用兩個隊列實現棧？分析棧操作的運行時間。
+\stopEXERCISE
+
+\startANSWER
+兩個隊列，角色不同，一爲 ACTIVE，一爲 INVACTIVE， \ALGO{PUSH} 到 ACTIVE 隊列中，
+時間爲 \m{\Theta(1)}。
+而 \ALGO{POP} 則需將 ACTIVE 隊列中元素 \ALGO{DEQUEUE} 並 \m{QUEUE} 到 INACTIVE 隊列中，
+ ACTIVE 隊列中只留一個元素，最後這個元素 \ALGO{DEQUEUE} 後返回；然後交換兩個隊列的角色。
+ \ALGO{POP} 時間爲 \m{\Theta(n)}，其中 \m{n} 爲 隊列中元素數目。
+\stopANSWER
+
+\stopsection

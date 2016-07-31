@@ -1,0 +1,119 @@
+\startsection[
+  title={Linked lists},
+]
+
+%e10.2-1
+\startEXERCISE
+如何在單向鏈表上實現動態集合操作 \ALGO{INSERT}？要求時間爲 \m{O(1)}。 \ALGO{DELETE} 呢？
+\stopEXERCISE
+
+\startANSWER
+在單項鏈表頭部進行插入操作。
+而刪除操作則無法在常數時間內完成，除非傳遞的參數是要刪除節點的前驅，或者可以修改節點的 \m{key} 和衛星數據。
+\stopANSWER
+
+%e10.2-2
+\startEXERCISE
+用單向鏈表 \m{L} 實現棧。要求 \ALGO{PUSH} 和 \ALGO{POP} 的時間仍爲 \m{O(1)}。
+\stopEXERCISE
+
+\startANSWER
+插入和刪除全部在頭部進行即可。
+\stopANSWER
+
+%e10.2-3
+\startEXERCISE
+用單向鏈表 \m{L} 實現隊列。要求 \ALGO{ENQUEUE} 和 \ALGO{DEQUEUE} 的時間仍爲 \m{O(1)}。
+\stopEXERCISE
+
+\startANSWER
+入隊在頭部進行，出隊在尾部進行，只是需要哨兵跟蹤鏈表中最後一個元素。
+\stopANSWER
+
+%e10.2-4
+\startEXERCISE
+過程 \ALGO{LIST-SEARCH'} 中的每次循環中都要做兩個測試：
+一個是 \m{x \ne L.nil}，另一個是 \m{x.key \ne k}。
+如何消除對前者的測試？
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{LIST-SEARCH'(L, k)}
+\startCLRS
+x = L.nil.next
+L.nil.key = k
+while x.key ≠ k
+	x = x.next
+return x
+\stopCLRS
+\stopANSWER
+
+%e10.2-5
+\startEXERCISE
+用單向循環鏈表實現字典操作 \ALGO{INSERT}、 \ALGO{DELETE} 和 \ALGO{SEARCH}。
+運行時間如何？
+\stopEXERCISE
+
+\startANSWER
+字典操作參數均爲 \m{key}。
+利用哨兵，插入操作時間爲 \m{O(1)}；刪除和查找操作時間均爲 \m{O(n)}；
+\stopANSWER
+
+%e10.2-6
+\startEXERCISE
+動態集合操作 \m{UNION} 以兩個不相交的集合 \m{S_1} 和 \m{S_2} 作爲輸入，
+返回的集合 \m{S=S_1\cup S_2} 含有 \m{S_1} 和 \m{S_2} 中的所有元素。
+通常這個操作會銷毀 \m{S_1} 和 \m{S_2}。
+如何用鏈表數據結構來實現 \ALGO{UNION}？要求時間爲 \m{O(1)}。
+\stopEXERCISE
+
+\startANSWER
+用雙向鏈表，只需將 \m{S_2} 的第一個元素作爲 \m{S_1} 的最後一個元素的後繼節點即可。
+如果用了哨兵，則需要銷毀 \m{S_2}。
+\stopANSWER
+
+%e10.2-7
+\startEXERCISE
+如何以 \m{\Theta(n)} 時間將含有 \m{n} 個元素的單向鏈表反序，要求不能使用遞迴。
+要求除鏈表本身外，只能使用固定大小的存儲空間。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{REVERSE(list)}
+\startCLRS
+prev = list.NIL
+cur = list.NIL.next
+
+while cur != list.NIL
+	next = cur.next
+	cur.next = prev
+	prev = cur
+	cur = next
+\stopCLRS
+\stopANSWER
+
+%e10.2-8
+\startEXERCISE\DIFFICULT
+實現雙向鏈表，要求每個元素只用一個指針 \m{x.np}，而不是兩個（\m{next} 和 \m{prev}）。
+假設所有指針都可視爲 \m{k} 位整數，
+同時令 \m{x.np = x.next XOR x.prev}，即 \m{x.prev} 和 \m{x.next} 的 \m{k} 位“異或”。
+（NIL 的值爲 0。）
+要訪問鏈表頭需要哪些信息？
+如何實現 \ALGO{SEARCH}、 \ALGO{INSERT} 和 \ALGO{DELETE}？
+如何在 \m{O(1)} 時間內反序？
+\stopEXERCISE
+
+\startANSWER
+如果是通過前驅節點訪問的當前節點，則已經直到了 \m{prev} 的值，這時通過 \m{prev XOR np} 即可得 \m{next} 的值。
+
+如果是通過後繼節點訪問的當前節點，則已經直到了 \m{next} 的值，這時通過 \m{next XOR np} 即可得 \m{prev} 的值。
+
+\ALGO{SEARCH}、 \ALGO{INSERT} 和 \ALGO{DELETE} 的實現與普通雙向鏈表沒什麼區別，
+只是增加了計算 \m{prev}、 \m{next} 和 \m{np} 的步驟。
+
+要訪問鏈表只需直到第一個元素或者最後一個元素的指針即可。
+
+反序只需要調換以下 \m{head} 和 \m{tail} 的值即可。
+\stopANSWER
+
+\stopsection

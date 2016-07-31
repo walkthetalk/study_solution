@@ -1,0 +1,61 @@
+\startsection[
+  title={Counting sort},
+]
+
+\startEXERCISE
+參照圖 8-2 的方法，說明 \ALGO{COUNTING-SORT} 在數列 \m{A=\langle 6,0,2,0,1,3,4,6,1,3,2\rangle} 上的操作過程。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e8_2_1-1]
+\externalfigure[output/e8_2_1-2]
+\externalfigure[output/e8_2_1-3]
+\externalfigure[output/e8_2_1-4]
+\externalfigure[output/e8_2_1-5]
+\externalfigure[output/e8_2_1-6]
+\externalfigure[output/e8_2_1-7]
+\externalfigure[output/e8_2_1-8]
+\externalfigure[output/e8_2_1-9]
+\externalfigure[output/e8_2_1-10]
+\externalfigure[output/e8_2_1-11]
+\externalfigure[output/e8_2_1-12]
+\externalfigure[output/e8_2_1-13]
+\stopANSWER
+
+\startEXERCISE
+試證明 \ALGO{COUNTING-SORT} 是穩定的。
+\stopEXERCISE
+
+\startANSWER
+假定兩個下標爲 \m{i_1} 和 \m{i_2}，且 \m{i_1 < i_2} 的元素相等。
+排序後位置爲 \m{j_1} 和 \m{j_2}。
+由於 \ALGO{COUNTING-SORT} 是從右向左處理數列元素的，
+會先處理 \m{A[i_2]}，將其放入 \m{B[j_2]} 中，
+然後再處理 \m{A[i_1]}，將其放入 \m{B[j_1]} 中。
+由算法可知 \m{j_2 > j_1}，因此算法是穩定的。
+\stopANSWER
+
+\startEXERCISE
+假設我們在 \ALGO{COUNTING-SORT} 的第 10 行循環的開始部分，將代碼改爲：
+\startCLRS[start=10]
+for j = 1 to A.length
+\stopCLRS
+試證明該算法仍然是正確的。他還穩定嗎？
+\stopEXERCISE
+
+\startANSWER
+算法仍然正確，但不穩定了。相等的元素會以相反的順序出現在排好序的數列中。
+\stopANSWER
+
+\startEXERCISE
+設計一個算法，他能夠對於任何給定的介於 \m{0} 到 \m{k} 之間的 \m{n} 個整數先進行預處理，
+然後在 \m{O(1)} 時間內回答輸入的 \m{n} 個整數中有多少個落在區間 \m{[a..b]} 內。
+你設計的算法的預處理時間應爲 \m{\Theta(n+k)}。
+\stopEXERCISE
+
+\startANSWER
+先利用 \ALGO{COUNTING-SORT} 中的部分代碼構建數列 \m{C}，即預處理，時間爲 \m{\Theta(n) + \Theta(k) = \Theta(n+k)}。
+然後直接由 \m{C[b] - C[a-1]} 即可得到想要的結果，時間爲 \m{O(1)}。
+\stopANSWER
+
+\stopsection

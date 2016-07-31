@@ -1,0 +1,104 @@
+\startsection[
+  title={Bucket sort},
+]
+
+\startEXERCISE
+參照圖 8-4 的方法，說明 \ALGO{BUCKET-SORT} 在數列 \m{A = \langle .79, .13, .16, .64,
+.39, .20, .89, .53, .71, .42 \rangle} 上的操作過程。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e8_4_1-1]
+\stopANSWER
+
+\startEXERCISE
+解釋爲什麼桶排序在最壞情況下運行時間是 \m{\Theta(n^2)}？
+我們應該如何修改算法，使其在保持平均情況爲線性時間代價的同時，
+最壞情況下時間代價爲 \m{O(n\lg{n})}？
+\stopEXERCISE
+
+\startANSWER
+如果所有元素全部落在同一桶中，並且是逆序的，則需要對這個桶中的 \m{n} 個逆序元素進行插入排序，
+時間爲 \m{\Theta(n^2)}。
+
+我們可以用堆排序或歸並排序來代替插入排序，以減少最壞情況的運行時間。
+之所以選擇插入排序，是因爲他可以在鏈表上很好的工作。
+如果用其他算法，則可能需要將鏈表改稱數組，這可能會降低算法的速度。
+\stopANSWER
+
+\startEXERCISE
+設 \m{X} 是一個隨機變量，用於表示在將一枚硬幣拋擲兩次時，正面朝上的次數。
+ \m{E[X^2]} 是多少？ \m{E^2[X]} 是多少？
+\stopEXERCISE
+
+\startANSWER
+\startformula
+E[X] = 2 \cdot \frac{1}{4} + 1 \cdot \frac{1}{2} + 0 \cdot \frac{1}{4} = 1
+\stopformula
+
+\startformula
+E[X^2] = E[X] \cdot E[X] = 1
+\stopformula
+
+\startformula
+E^2[X] = E[X] \cdot E[X] = 1
+\stopformula
+\stopANSWER
+
+\startEXERCISE\DIFFICULT
+在單位圓內給定 \m{n} 個點， \m{p_i=(x_i,y_i)}，
+對所有 \m{i=1,2,\ldots,n}，有 \m{0<x_i^2+y_i^2\le 1}。
+假設所有點服從均勻分布，即在單位元的任一區域內找到給定點的概率與該區域的面積成正比。
+請設計一個在平均情況下有 \m{\Theta(n)} 時間代價的算法，
+他能夠按照點到原點之間的距離 \m{d_i=\sqrt{x_i^2+y_i^2}} 對這 \m{n} 個點進行排序。
+\stopEXERCISE
+
+\startANSWER
+單位圓面積爲 \m{\pi 1^2=\pi}，將其 \m{n} 等分，每塊面積爲 \m{\pi/n}。
+如果圓環的內徑爲 \m{a}，外徑爲 \m{b}，則其面積爲 \m{\pi(b^2-a^2)}。
+
+選取半徑序列 \m{a_0,a_1,a_2,\ldots,a_n} 將單位圓劃分成面積相等的 \m{n} 等份。
+第 \m{i} 個圓環內外徑分別爲 \m{a_{i-1}} 和 \m{a_i}。
+已知 \m{a_0=0} 且 \m{a_n=1}。則：
+\startformula\startmathalignment[n=1]
+\NC \pi^2 \pi(a_i^2 - a_{i-1}^2) = \pi(a_j^2 - a_{j-1}^2) = \frac{\pi}{n} \NR
+\NC \Downarrow \NR
+\NC a_i^2 - a_{i-1}^2 = a_j^2 - a_{j-1}^2 = \frac{1}{n} \NR
+\NC \Downarrow \NR
+\NC a_i^2 = \frac{1}{n} + a_{i-1}^2 \NR
+\stopmathalignment\stopformula
+得到如下遞迴式：
+\startformula\startmathalignment
+\NC a_0 \NC= 0 \NR
+\NC a_i \NC= \sqrt{1/n + a_{i-1}^2} \NR
+\stopmathalignment\stopformula
+解得：
+\startformula
+a_i=\frac{\sqrt{i}}{\sqrt{n}}
+\stopformula
+
+因此，桶的半徑區間爲：
+\startformula
+\left(0, \frac{1}{\sqrt n} \right],
+   \left(\frac{1}{\sqrt n}, \frac{\sqrt 2}{\sqrt n}\right], \cdots,
+   \left(\frac{\sqrt{n-1}}{\sqrt n}, 1 \right]
+\stopformula
+
+半徑爲 \m{d} 的元素應該放入第 \m{k} 個桶中（從 1 開始計數）， \m{k} 爲：
+\startformula
+k = \left\lceil d^2n \right\rceil
+\stopformula
+\stopANSWER
+
+\startEXERCISE\DIFFICULT
+定義隨機變量 \m{X} 的{\EMP 概率分布函數} \m{P(x)} 爲 \m{P(x)=\Pr\{X\le x\}}。
+假設有 \m{n} 個隨機變量 \m{X_1,X_2,\ldots,X_n} 服從一個連續概率分布函數 \m{P}，
+且他可以在 \m{O(1)} 時間內被計算得到。
+設計一個算法，使其能在平均情況下以線性時間對這些數進行排序。
+\stopEXERCISE
+
+\startANSWER
+與上一練習類似，關鍵在於如何構造“桶”。
+\stopANSWER
+
+\stopsection

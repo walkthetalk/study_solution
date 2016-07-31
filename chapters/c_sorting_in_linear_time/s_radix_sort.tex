@@ -1,0 +1,94 @@
+\startsection[
+  title={Radix sort},
+]
+
+\startEXERCISE
+參照圖 8-3 的方法，說明 \ALGO{RADIX-SORT} 在下列英文單詞上的操作過程：
+ COW、 DOG、 SEA、 RUG、 ROW、 MOB、 BOX、 TAB、 BAR、 EAR、 TAR、 DIG、 BIG、 TEA、 NOW、 FOX。
+\stopEXERCISE
+
+\startANSWER
+\leavevmode
+\externalfigure[output/e8_2_2-1]
+\externalfigure[output/e8_2_2-2]
+\externalfigure[output/e8_2_2-3]
+\externalfigure[output/e8_2_2-4]
+\stopANSWER
+
+\startEXERCISE
+下面的排序算法中哪些是穩定的：插入排序、歸並排序、堆排序和快速排序？
+給出一個能使任何配序算法都穩定的方法。
+你所給出的方法帶來的額外時間和空間開銷是多少？
+\stopEXERCISE
+
+\startANSWER
+插入排序、歸並排序是穩定的； 堆排序和快速排序是不穩定的。
+
+我們可以用額外空間存儲每個元素的索引，索引和元素本身一起移動，
+比較時，先比較元素本身，如果元素本身相同，則比較索引，
+這樣相當於保證所有元素互異，這樣無論用哪種排序算法都能保證穩定。
+所需的額外空間爲 \m{\Theta(n)}。
+所需的額外時間爲當於算法本身時間復雜度具有同樣的數量級。
+\stopANSWER
+
+\startEXERCISE
+利用歸納法來證明基數排序是正確的。
+在你所給出的證明中，
+在哪裏需要假設所用的底層配序算法是穩定的？
+\stopEXERCISE
+
+\startANSWER
+不變式：
+
+{\EMP 在 for 循環開始，數列已經對最低 \m{i-1} 位排好序。}
+
+{\EMP 初始化：}數列對最低的 0 位已經排好序；
+
+{\EMP 保持：}假設數列已經對最低 \m{i-1} 位排好序，
+在對第 \m{i} 位排序後，數列就對最低 \m{i} 位都排好序了。
+顯然第 \m{i} 位本身的排序是沒問題的，問題是當第 \m{i} 位相同時，
+由於排序算法是穩定的且最低 \m{i-1} 位已經排好序，所以最低 \m{i} 位均是排好序的。
+
+{\EMP 終止：} \m{i=d+1} 時循環終止。根據不變式，所有 \m{d} 位都是排好序的。
+
+在{\EMP 保持}時需要假設算法是穩定的。
+\stopANSWER
+
+\startEXERCISE
+說明如何在 \m{O(n)} 時間內，對 0 到 \m{n^3-1} 區間內的 \m{n} 個整數進行排序。
+\stopEXERCISE
+
+\startANSWER
+將數列元素以 \m{n} 進制表示，則有 3 位。
+根據{\EMP 引理 8.3}，所需時間爲 \m{\Theta(d(n+k))=\Theta(3(n+n))=\Theta(6n)=\Theta(n)}。
+\stopANSWER
+
+\startEXERCISE\DIFFICULT
+在本節給出的第一個卡片排序算法中，
+爲排序 \m{d} 位十進制數，
+在最壞情況下需要多少輪排序？
+在最壞情況下，操作員需要記錄多少堆卡片？
+\stopEXERCISE
+
+\startANSWER
+算法執行過程爲（以三進制爲例）：
+\startCLRS
+- 按第一位分組
+  - 將第一位爲 0 的分組
+    - 將第二位爲 0 的分組
+      。。。
+    - 將第二位爲 1 的分組
+      。。。
+    - 將第二位爲 2 的分組
+      。。。
+  - 將第一位爲 1 的分組
+    。。。
+  - 將第一位爲 2 的分組
+    。。。
+\stopCLRS
+
+可以看出算法爲指數級的。需要時間爲 \m{\Theta(k^d)}。
+空間則爲 \m{\Theta(nk)}。
+\stopANSWER
+
+\stopsection

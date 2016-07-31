@@ -1,0 +1,93 @@
+\startsection[
+  title={Implementing pointers and objects},
+]
+
+%e10.3-1
+\startEXERCISE
+畫出序列 \m{\langle 13,4,8,19,5,11 \rangle} 在多維數列表示的雙向鏈表中的存儲方式。
+同時畫出在單數列表示的雙向鏈表中的存儲方式。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e10_3_1-1]
+
+\externalfigure[output/e10_3_1-2]
+\stopANSWER
+
+%e10.3-2
+\startEXERCISE
+爲同構對象的單數列表示法寫出過程 \ALGO{ALLOCATE-OBJECT} 和 \ALGO{FREE-OBJECT}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{ALLOCATE-OBJECT}
+\startCLRS
+if free = NIL
+	error "out of space"
+else
+	x = free
+	free = A[free + 1]
+	return x
+\stopCLRS
+
+\CLRSH{FREE-OBJECT}
+\startCLRS
+A[x+1] = free
+free = x
+\stopCLRS
+\stopANSWER
+
+%e10.3-3
+\startEXERCISE
+爲什麼在 \ALGO{ALLOCATE-OBJECT} 和 \ALGO{FREE-OBJECT} 的實現中，
+我們不需要設置或重置對象的 \m{prev}？
+\stopEXERCISE
+
+\startANSWER
+因爲我們不使用 \m{prev}。
+對空閒鏈表而言，單鏈就足夠了。
+甚至連 \m{key} 都不需要。
+\stopANSWER
+
+%e10.3-4
+\startEXERCISE[exercise:compact_list]
+我們往往希望雙向鏈表的所有元素在存儲器中保持緊湊，
+例如，在多數列表示法中佔用前 \m{m} 個下標位置。
+（在頁式虛擬內存的計算環境下就是這樣的。）
+說明如何實現 \ALGO{ALLOCATE-OBJECT} 和 \ALGO{FREE-OBJECT} 才能達到這種效果。
+假設在鏈表外部沒有指針指向鏈表內元素。
+（\hint 用棧的數列實現方式）
+\stopEXERCISE
+
+\startANSWER
+我們可以在數列的起始位置開始分配元素。
+當釋放元素時，除非是棧的最後一個，我們都需要將其後面的所有元素左移，
+並更新所有指向他們的的下標。
+需要線性時間。
+\stopANSWER
+
+%e10.3-5
+\startEXERCISE
+令 \m{L} 爲雙向鏈表，長度爲 \m{n}，存儲在長度爲 \m{m} 的 \m{key}、 \m{prev} 和 \m{next} 三個數列中。
+這些數列由 \ALGO{ALLOCATE-OBJECT} 和 \ALGO{FREE-OBJECT} 通過空閒雙向鏈表 \m{F} 進行管理，
+假設 \m{L} 中有 \m{n} 個元素， \m{F} 中有 \m{m-n} 個元素。
+寫出過程 \m{COMPACTIFY-LIST(L, F)}，
+參數爲鏈表 \m{L} 和空閒鏈表 \m{F}，
+移動 \m{L} 中的元素，使其佔用數列中前 \m{n} 個位置，
+並調整空閒鏈表 \m{F}，使其佔用數列中後 \m{m-n} 個位置。
+此過程的運行時間應爲 \m{\Theta(n)}，
+且使用固定數量的額外存儲空間。
+並證明其正確性。
+\stopEXERCISE
+
+\startEXERCISE
+利用 \m{prev} 來存儲一個特定值來標記此元素屬於空閒鏈表。
+\startigBase[n]
+\item 從左至右掃描數列的前 \m{n} 個元素，找到第一個空閒元素；
+\item 從頭至尾掃描 \m{L} 找到第一個不在數列中前 \m{n} 個位置中的元素；
+\item 將這兩個元素互換；
+\item 重複以上步驟，直至掃描完畢。
+\stopigBase
+\stopEXERCISE
+
+\stopsection

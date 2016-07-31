@@ -23,7 +23,7 @@ fig_incs:=$(shell cd fig; find . -type f -name "*.mp" | cut -d '/' -f 2 | grep -
 #$(warning figincs is ${fig_incs})
 
 fig_pdfs:=$(patsubst %.mp,$(dir_output)/%-1.pdf,$(fig_srcs))
-fig_deps:=$(patsubst %.mp,$(dir_output)/%.mp,$(fig_incs))
+fig_deps:=$(patsubst %.mp,${dir_main}/fig/%.mp,$(fig_incs))
 
 #$(warning fig srcs is ${fig_pdfs})
 
@@ -50,11 +50,12 @@ $(pdf_name).pdf: $(tex_deps) ${fig_pdfs}
 	@echo [gen] $@
 	@context --git --purge --environment=env_cmm --path=$(dir_main)/env/ --result=$(pdf_name).pdf $(tex_name).tex; $(call clean_misc)
 
-$(dir_output)/%-1.pdf : fig/%.mp ${fig_deps}
-	@echo [compile] $*; \
-	cd ${dir_output}; \
-	cp ${dir_main}/fig/$*.mp ${dir_output}/; \
-	mptopdf $*.mp
-
-$(dir_output)/%.mp : fig/%.mp
-	@cp $< $(dir_output)/$*.mp
+$(dir_output)/%-1.pdf : ${dir_main}/fig/%.mp ${fig_deps}
+	@set -e; \
+	COMPILE_DIR=$$(mktemp -d /tmp/CLRSMP.XXXXXXXX); \
+	echo [compile] $* at $${COMPILE_DIR}; \
+	cp $^ $${COMPILE_DIR}/; \
+	cd $${COMPILE_DIR}; \
+	mptopdf $*.mp; \
+	cp *.pdf ${dir_output}/; \
+	rm -r $${COMPILE_DIR}

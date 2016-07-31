@@ -1,0 +1,396 @@
+\startsubject[
+  title={Problems},
+]
+
+%p16-1
+\startPROBLEM
+（Coin changing）
+考慮用最少的硬幣找 \m{n} 美分零錢的問題。
+假定每種硬幣的面額都是整數。
+\startigBase[a]
+\startitem
+設計貪心算法求解找零問題，
+假定有 25 美分、 10 美分、 5 美分和 1 美分 4種面額的硬幣。
+證明你的算法能找到最優解。
+\stopitem
+\startANSWER
+\CLRSH{MAKE-CHANGE(M)}
+\startCLRS
+for i = k downto 1
+	Q[i] = ceil(M / d[i])
+	M = M - Q[i] * d[i]
+\stopCLRS
+\stopANSWER
+
+\startitem
+假定硬幣面額是 \m{c} 的冪，
+即面額爲 \m{c^0,c^1,\ldots,c^k}，
+其中 \m{c} 和 \m{k} 爲整數， \m{c>1}、 \m{k\ge 1}。
+證明：貪心算法總能得到最優解。
+\stopitem
+
+\startANSWER
+\startformula
+M = \sum_{i=1}^k Q[i] \times d[i]
+\stopformula
+總的硬幣數目爲 \m{\sum_{i=1}^k n[i]}。
+對於任意 \m{i < k}，都有 \m{Q[i] < c}。
+否則，如果 \m{Q[i]\ge c}，
+我們可以將 \m{Q[i]} 減小 \m{c}，
+並將 \m{Q[i+1]} 增加 1。
+
+下面來證明貪心算法會得到最優解。
+令最優解中各面值硬幣數目爲 \m{O[i]}。
+令 \m{j} 第一個（最大的）滿足 \m{Q[j]\ne O[j]}。
+我們知道 \m{Q[j]>O[j]}，
+因爲貪心算法始終會曲最大數目的硬幣。
+如果 \m{O[j]>Q[j]}，則最優解找零會超過 \m{M}。
+
+\startformula\startmathalignment
+\NC \sum_{i=1}^{j}O[i]\times d_i = \NC \sum_{i=1}^{j}Q[i]\times d_i \NR
+\NC O[j]\times d_j + \sum_{i=1}^{j-1}O[i]\times d_i = \NC \sum_{i=1}^{j-1}Q[i]\times d_i + Q[j] \times d_j\NR
+\NC \sum_{i=1}^{j-1}O[i]\times d_i = \NC \sum_{i=1}^{j-1}Q[i]\times d_i + (Q[j] -O[j]) \times d_j\NR
+\NC \sum_{i=1}^{j-1}O[i]\times d_i = \NC \sum_{i=1}^{j-1}Q[i]\times d_i + (Q[j] -O[j]) \times c^{j-1}\NR
+\NC \sum_{i=1}^{j-1}O[i]\times d_i - \sum_{i=1}^{j-1}Q[i]\times d_i = \NC (Q[j] -O[j]) \times c^{j-1} > c^{j-1}\NR
+\stopmathalignment\stopformula
+
+如果對於 \m{i=1,2,\ldots,j-1}，滿足 \m{O[i] < c}，則：
+\startformula\startmathalignment
+\NC     \NC \sum_{i=1}^{j-1}O[i]\times d_i \NR
+\NC \le \NC \sum_{i=1}^{j-1}(c-1)\times c^{i-1} \NR
+\NC   = \NC (c-1) \sum_{i=1}^{j-1} c^{i-1} \NR
+\NC   = \NC (c-1) \sum_{i=0}^{j-2} c^i \NR
+\NC   = \NC (c-1) \frac{c^{j-1}-1}{c-1} \NR
+\NC   = \NC c^{j-1} - 1
+\stopmathalignment\stopformula
+這與上面得到的 \m{\sum_{i=1}^{j-1}O[i]\times d_i > c^{j-1}} 矛盾。因此最優解中編號爲 1 到 \m{j-1} 的硬幣中，必定有一種面值的硬幣個數達到或超過了 \m{c}。
+但是如上所述，這樣的話就不可能是最優的了。
+
+因此，貪心算法的解必定是最優解。
+\stopANSWER
+
+\startitem
+設計一組硬幣面額，使得貪心算法不能保證得到最優解。
+這組硬幣面額中應該包含 1 美分，
+使得對每個值都存在找零方案。
+\stopitem
+
+\startANSWER
+面額爲 \m{10,9,1}。
+貪心算法解爲 \m{2+7=9} 個硬幣，而最優解爲 3 個硬幣。
+\stopANSWER
+
+\startitem
+設計一個 \m{O(nk)} 時間的找零算法，
+適用於任何 \m{k} 種不同面額的硬幣，
+假定總是包含 1 美分硬幣。
+\stopitem
+
+\startANSWER
+使用動態規劃。
+令找零 j 美分至少需要 \m{c[j]} 枚硬幣。
+\startformula
+c[j] = \startcases
+\NC 0 \MC \text{如果 \m{j\le 0}；} \NR
+\NC 1 + \min_{1\le i \le k}\{c[j-d_i]\} \MC \text{如果 \m{j>1}。} \NR
+\stopcases\stopformula
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+%p16-2
+\startPROBLEM
+（Scheduling to minimize average completion time）
+給定任務集合 \m{S=\{a_1,a_2,\ldots,a_n\}}，
+其中任務 \m{a_i} 需要時間爲 \m{p_i}。
+用於執行這些任務的計算機，一次只能執行一個任務。
+令 \m{c_i} 表示任務 \m{a_i} 的{\EMP 完成時間（completion time）}。
+目標是使得平均完成時間最小，即 \m{(1/n)\sum_{i-1}^{n}c_i} 最小。
+例如，有兩個任務 \m{a_1} 和 \m{a_2}， \m{p_1=3}， \m{p_2=5}，
+如果先執行 \m{a_2}，則 \m{c_2=5,c_1=8}，平均完成時間爲 \m{(5+8)/2=6.5}。
+如果先執行 \m{a_1}，則 \m{c_1=3,c_2=8}，平均完成時間爲 \m{(3+8)/2=5.5}。
+
+\startigBase[a]
+\startitem
+設計算法，求解調度方案，使得平均完成時間最小。
+執行任務時不允許搶佔，即一旦開始一個任務，必須等其執行完後才能執行另一個任務。
+證明算法的正確性，並分析其運行時間。
+\stopitem
+
+\startANSWER
+輸入：任務集合 \m{\{a_i\}}， \m{1\le i\le n}。 \m{a_i} 的執行時間爲 \m{p_i}。
+如果任務按 \m{a_1,a_2,\ldots,a_n} 的順序執行，則 \m{a_k} 的完成時間爲：
+\startformula
+c_k = \sum_{i=1}^{k}p_i
+\stopformula
+
+直覺：如果先執行處理時間長的任務，則之後的所有任務的完成時間都會增加，
+因此先執行處理時間短的任務是比較明智的。
+
+貪婪算法：首先將任務按處理時間遞增順序排序，
+即使得 \m{p_1 \le p_2 \le \ldots \le p_n}。
+然後按 \m{\{a_1,a_2,\ldots,a_n\}} 的順序執行任務。
+排序時間爲 \m{O(n\lg n)}，執行任務時間固定或者爲 \m{O(n)}（用於選擇任務）。
+總用時爲 \m{O(n\lg n)}。
+
+正確性的證明：假設按序列 \m{a_1 a_2 \ldots a_m \ldots a_n} 的順序執行任務，
+其中 \m{a_m} 的處理時間最少。
+則我們可以調換 \m{a_1} 和 \m{a_m}，
+按 \m{a_m a_2 \ldots a_{m-1} a_1 a_{m+1} \ldots a_n} 的順序執行任務。
+重新排序後的平均完成時間要少於原來順序的平均完成時間。
+\startformula\startmathalignment[n=1, m=3, align={left,left,left}, distance=2em]
+\NC n \NC p_1 \NC p_m \NR
+\NC n-1 \NC p_2 \NC p_2 \NR
+\NC \ldots \NC \ldots \NC \ldots \NR
+\NC n-(m-2) \NC p_{m-1} \NC p_{m-1} \NR
+\NC n-(m-1) \NC p_m \NC p_1 \NR
+\NC n-m \NC p_{m+1} \NC p_{m+1} \NR
+\NC \ldots \NC \ldots \NC \ldots \NR
+\NC 1 \NC p_n \NC p_n \NR
+\stopmathalignment\stopformula
+
+我們可以按每個任務對總完成時間的貢獻來考慮，這個貢獻只與任務的執行順序有關。
+假設任務 \m{i} 的在執行順序中的位置爲 \m{j}，則其貢獻爲 \m{p_i \times (n-(j-1))}。
+這樣我們再來比較這兩種執行順序，則只有 \m{a_1} 和 \m{a_m} 的貢獻發生了變化，
+其餘任務對總完成時間的貢獻不變。
+由於 \m{p_m < p_1}，則 \m{n p_1 + (n-(m-1)) p_m > n p_m + (n-(m-1)) p_1}，
+因此重新排序後總完成時間變少了，
+這樣一直執行剩餘任務中執行時間最少的，就可以滿足要求。
+
+\stopANSWER
+
+\startitem
+現在假定任務並不是立刻就可以開始執行，
+每個任務都有一個{\EMP 釋放時間（release time）} \m{r_i}，
+在此時間之後才可以開始。
+此外假定任務執行是可以{\EMP 搶佔的（preemption）}，
+這樣可以將任務掛起，稍後再重新開始。
+例如，任務 \m{a_i} 的運行時間爲 \m{p_i=6}，
+釋放時間爲 \m{r_i=1}，
+他可能在時刻 1 開始運行，在時刻 4 被搶佔。
+然後在時刻 10 恢復運行，
+在時刻 11 再次被搶佔，
+最後在時刻 13 恢復運行，
+在時刻 15 運行完畢。
+任務 \m{a_i} 共運行了 6 個時間單位，
+但運行時間被分割成三部分。
+在此情況下， \m{a_i} 的完成時間爲 15。
+設計算法，對此問題求解平均完成時間最小的調度方案。
+證明完成時間確實最小，並分析算法的運行時間。
+\stopitem
+
+\startANSWER
+任意時刻 \m{t}，在 \m{r_i \le t} 的任務中選擇{\EMP 剩餘}時間最小的運行。
+由於可搶佔，我們可以在任意時刻執行這個動作。
+實際上，只需要在有新任務準備好，以及某個任務執行完畢時才需要做此動作。
+也就是說一旦開始執行任務，如果沒有新任務準備好，
+則可以一直執行完畢（此過程中，當前任務的剩餘時間一直是最小）。
+即一旦有新任務，則要做插入排序，新任務和當前正在執行且沒有執行完的任務都需要插入。
+此算法運行時間爲 \m{O(n\lg n)}。
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+%p16-3
+\startPROBLEM
+（Acyclic subgraphs）
+\startigBase[a]
+\startitem
+有無向圖 \m{G=(V,E)}，其{\EMP 關聯矩陣（incidence matrix）}是一個 \m{|V|\times|E|} 的矩陣 \m{M}，
+若邊 \m{e} 與頂點 \m{v} 關聯，則 \m{M_{ve}=1}，否則 \m{M_{ve}=0}。
+論證當且僅當對應的邊集無環時， \m{M} 的列集合在整數模 2 的域上線性無關。
+\stopitem
+
+\startANSWER
+\TODO{}
+\stopANSWER
+
+\startitem
+假定我們對一個無向圖 \m{G=(V,E)} 的每條邊都關聯一個非負權重 \m{\omega(e)}。
+設計一個高效算法，求權重之和最大的無環邊集。
+\stopitem
+
+\startANSWER
+\TODO{}
+\stopANSWER
+
+\startitem
+令 \m{G=(V,E)} 是任意的有向圖，定義 \m{(E,\cal{I})} 滿足 \m{A\in \cal{I}} 當且僅當 \m{A} 不包含任何有向環。
+給出一個有向圖 \m{G} 的例子，使得關聯的系統 \m{(E, \cal{I})} 不是一個擬陣。
+指出定義中哪個條件使得系統 \m{(E,\cal{I})} 不是擬陣。
+\stopitem
+
+\startANSWER
+\TODO{}
+\stopANSWER
+
+\startitem
+無自環的有向圖 \m{G=(V,E)} 的{\EMP 關聯矩陣}是一個 \m{|V|\times|E|} 的矩陣 \m{M}，
+若邊 \m{e} 從頂點 \m{v} 發出，則 \m{M_{ve}=-1}，
+若邊 \m{e} 指向頂點 \m{v}，則 \m{M_{ve}=1}，否則 \m{M_{ve}=0}。
+證明：如果 \m{M} 的一個列集合線性無關，那麼對應的邊集不包含有向環。
+\stopitem
+
+\startANSWER
+\TODO{}
+\stopANSWER
+
+\startitem
+練習 16.4-2 告訴我們任意矩陣 \m{M} 的線性無關的列集合的集合構成一個擬陣。
+仔細解釋 (c) 和 (e) 的結果爲什麼不矛盾。
+什麼情況下邊集無環與關聯矩陣中對應列集合線性無關
+這兩個問題間沒有完美的對應關係？
+\stopitem
+
+\startANSWER
+\TODO{}
+\stopANSWER
+\stopigBase
+\stopPROBLEM%p16-3
+
+%p16-4
+\startPROBLEM
+（Scheduling variations）
+對\refsection{task_schedule} 中帶截止時間和懲罰的單位時間任務調度問題，
+考慮如下算法。
+初始時另 \m{n} 個時間槽均爲空，時間槽 \m{i} 爲單位時間長度，結束於時刻 \m{i}。
+我們按懲罰值單調遞減的順序處理所有任務。
+當處理任務 \m{a_j} 時，如果存在不晚於 \m{a_j} 的截止時間 \m{d_j} 的空時間槽，
+則將 \m{a_j} 分配到其中最晚的那個。
+如果不存在這樣的時間槽，將 \m{a_j} 分配到最晚的空時間槽。
+\startigBase[a]
+\startitem
+證明：此算法總能得到最優解。
+\stopitem
+
+\startANSWER
+此算法本質上只是\refsection{task_schedule} 中所給算法的一種實現。
+此算法中，我們將任務放入沒有懲罰的最晚的空槽。
+如果沒有這樣的時間槽，我們則將其放入最晚的空槽。
+這種算法是所有方案中最極端的一個。
+如果這種算法無法爲某個任務找到可用的時間槽，則換任何調度算法都沒用。
+\stopANSWER
+
+\startitem
+利用\refsection{disjoint_set_op} 提出的快速不相交集合森林來高效實現此算法。
+假定輸入任務集合已經按懲罰值單調遞減的順序排序。
+分析實現程序的運行時間。
+\stopitem
+
+\startANSWER
+\TODO{}
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+%p16-5
+\startPROBLEM
+（off-line caching）
+現代計算機用 cache 將少量數據存儲在快速存儲器中。
+雖然程序可能訪問大量數據，
+但通過將主存中少量數據保存在{\EMP cache} —— 容量小但更快的存儲器中，
+還是可以大幅降低總體存取時間。
+當一個計算機程序運行時，
+他會訪問 \m{n} 次存儲器，順序爲 \m{\langle r_1,r_2,\ldots,r_n\rangle}，
+每次請求存取一個特定數據元素。
+例如，一個程序存取 4 個不同元素 \m{\{a,b,c,d\}}，
+存取序列爲 \m{\langle d,b,d,b,d,a,c,d,b,a,c,b\rangle}。
+令 \m{k} 爲 cache 的規模。
+當 cache 已經保存了 \m{k} 個元素，而程序存取第 \m{k+1} 個元素時，
+系統必須決定，對於本次以及後續的存取請求，
+要將哪 \m{k} 個元素保存在 cache 中。
+更準確地說，對每個請求 \m{r_i}， cache 管理算法檢查元素 \m{r_i} 是否已經在 cache 中。
+如果找到了，則產生一次 {\EMP cache hit}；
+否則，產生一次 {\EMP cache miss}。
+若未找到，則從主存中提取 \m{r_i}，
+同時 cache 管理算法必須決定是否將 \m{r_i} 保留在 cache 中。
+如果算法決定保留 \m{r_i} 且 cache 中已經保存了 \m{k} 個元素，
+則他必須將某個元素逐出 cache 爲 \m{r_i} 騰出空間。
+ cache 管理算法逐出數據的目標是在處理整個訪問請求序列的過程中儘量減少 cache miss 的次數。
+
+通常， cache 管理是一個在線問題。
+也就是說，我們在決定將哪些數據保留在 cache 中時，
+並不知道未來的請求是什麼。
+但是，我們這裏考慮此問題的離線版本，
+即預先知道完整的請求序列（包含 \m{n} 個訪問請求）及 cache 的規模 \m{k}，
+目標仍然是最小化 cache miss 的次數。
+
+我們可以用一種稱爲 {\EMP furthest-in-future} 的貪心策略求解此問題，
+此策略選擇逐出 cache 中數據的方法是選擇在請求序列中下一次訪問距離最遠的數據。
+\startigBase[a]
+\startitem
+編寫使用將來最遠策略的 cache 管理器的僞碼。
+輸入是請求序列 \m{\langle r_1,r_2,\ldots,r_n\rangle} 和 cache 規模 \m{k}，
+輸出是決策結果序列——處理每個請求時逐出 cache 的是哪個數據（如果需要的話）。
+分析算法的運行時間。
+\stopitem
+
+\startANSWER
+\CLRSH{FURTHEST-IN-FUTURE(r, k)}
+\startCLRS
+/// r[1-n] : array of data request
+/// o[1-n] : array of kick out
+/// c[1-k] : array of cache
+/// l : cache content number
+l = 0
+for i = 1 to n
+	j = 1
+	while j <= l
+		if c[j] == r[i]
+			break
+		++j
+	if j <= l
+		print "cache hit"
+	else
+		print "cache miss"
+		if l < k
+			++l
+			c[l] = r[i]
+		else	/// cache full
+			dfurther = 0	/// distance
+			jfurther = 0	/// cache index
+			j = 1
+			while j <= k
+				p = i + 1
+				while p <= n
+					if r[p] == c[j]
+						break
+				if p > n	/// no further use
+					jfurther = j
+					break
+				else
+					if p - i > dfurther
+						dfurther = p - i
+						jfurther = j
+			o[i] = c[j]
+			c[j] = r[i]
+\stopCLRS
+
+外循環 n 次，內循環 k 次，內循環中每次迭代最壞情況需 \m{n-i} 次。
+總時間爲：
+\startformula
+\sum_{i=1}^{n}k(n-i) = \frac{kn(n-1)}{2} = O(kn^2)
+\stopformula
+\stopANSWER
+
+\startitem
+證明：此問題具有最優子結構性質。
+\stopitem
+
+\startANSWER
+\TODO{}
+\stopANSWER
+
+\startitem
+證明：將來最遠策略可以保證 cache miss 的次數最小。
+\stopitem
+
+\startANSWER
+參考 \from[urlgreedyalgo]。
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+\stopsubject%Problems

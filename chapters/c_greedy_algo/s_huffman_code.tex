@@ -1,0 +1,139 @@
+\startsection[
+  title={Huffman codes},
+]
+
+%e16.3-1
+\startEXERCISE
+在證明引理 16.2 過程中，如果 \m{x.freq = b.freq}，
+則 \m{a.freq = b.freq = x.freq = y.freq}，爲什麼？
+\stopEXERCISE
+
+\startANSWER
+\m{x} 和 \m{y} 是頻度最低的兩個字符，則由於 \m{a.freq \le b.freq}，可知 \m{y.freq \le b.freq}。
+又由於 \m{x.freq = b.freq}，因此 \m{y.freq \le x.freq}；
+再者 \m{x.freq \le y.freq}，所以 \m{x.freq = y.freq}。
+而 \m{a.freq \le b.freq = x.freq}，因爲 \m{x} 的頻度最低，
+所以 \m{x.freq \le a.freq}，即 \m{x.freq \le a.freq \le x.freq}，
+所以 \m{a.freq = x.freq}。
+\stopANSWER
+
+%e16.3-2
+\startEXERCISE
+證明：亦可不滿的二叉樹不可能對應一個最優前綴碼。
+\stopEXERCISE
+
+\startANSWER
+對於只有一個字節點的節點，將其字節點提升爲兄弟節點，必然更優。
+\stopANSWER
+
+%e16.3-3
+\startEXERCISE
+如下所示： 8 個字符對應的出現頻率是 Fibonacci 數列的前 8 個數，
+其 Huffman 編碼是什麼？
+
+a:1 b:1 c:2 d:3 e:5 f:8 g:13 h:21
+
+其結論是否可以推廣，求頻度爲 Fibonacci 數列的最優前綴碼？
+\stopEXERCISE
+
+\startANSWER
+結論可以推廣，用數學歸納法。
+
+\externalfigure[output/e16_3_3-1]
+\stopANSWER
+
+%e16.3-4
+\startEXERCISE
+證明：編碼樹的總代價還可以表示爲所有內部節點的兩個孩子節點的聯合頻率之和。
+\stopEXERCISE
+
+\startANSWER
+公式 16.4：
+\startformula
+B(T) = \sum_{c\in C} f(c)d_{T} (c)
+\stopformula
+
+如果改成計算內部節點的孩子節點聯合頻率，
+對於任何一個葉子節點 \m{c} 而言，每一個祖先都會計算一次 \m{f(c)}，
+總共 \m{d_{T} (c)} 次。因此結果與公式 16.4 一樣。
+\stopANSWER
+
+%e16.3-5
+\startEXERCISE
+證明：如果我們將字母表中字符按頻率單調遞減排序，
+那麼存在一個最優編碼，其碼字長度是單調遞增的。
+\stopEXERCISE
+
+\startANSWER
+反證法。
+\stopANSWER
+
+%e16.3-6
+\startEXERCISE
+假定我們有字母表 \m{C=\{0,1,\ldots,n-1\}} 上的一個最優前綴碼，
+我們希望用最少的二進制位傳輸此編碼。
+說明如何僅用 \m{2n-1+n\left\lceil \lg n\right\rceil} 位表示 \m{C} 上的任意最優前綴碼。
+（\hint 通過對樹的遍歷，用 \m{2n-1} 位說明編碼樹的結構。）
+\stopEXERCISE
+
+\startANSWER
+深度優先遍歷整棵樹，每個葉子節點的值用 \m{\left\lceil \lg n\right\rceil} 位表示，
+內部節點用 1 表示，葉子節點用 0 表示，共 \m{n-1} 個內部節點， \m{n} 個葉子節點。
+\stopANSWER
+
+%e16.3-7
+\startEXERCISE
+推廣 Huffman 算法，使之能生成三進制的碼字（即碼字由符號 0、 1、 2 組成），
+並證明此算法能生成最優三進制碼。
+\stopEXERCISE
+
+\startANSWER
+改成每次取頻率最小的三個節點組成一個新節點。
+新節點的頻率爲三個子節點頻率之和。
+但如果總數爲偶數，最後剩餘節點個數會小於 3，從而無法形成完整的三叉樹，
+解決辦法是先增加一些頻率爲 0 的葉子節點，從而使得總數爲 \m{(k-1)t + 1}；
+其中 \m{k} 代表是 \m{k} 叉樹，此時是 3， \m{t} 爲任意正整數。
+\stopANSWER
+
+%e16.3-8
+\startEXERCISE
+假定一個數據文件由 8 位字符組成，
+其中有 256 個字符出現的頻率大致相同：
+最高的頻率也低於最低頻率的 2 倍。
+證明：在此情況下， Huffman 編碼並不比 8 位固定長度編碼更高效。
+\stopEXERCISE
+
+\startANSWER
+令最小頻率爲 \m{f_{\min}}：
+\startformula
+B(T) = \sum_{c\in C}f(c) d_{T}(c) \ge \sum_{c\in C} f_{\min} \times d_{T}(c) = f_{\min}\times\sum_{c\in C}d_{T}(c)
+\stopformula
+
+其中 \m{\sum_{c\in C}d_{T}(c)} 是葉子節點高度之和。
+當 T 爲完全平衡二叉樹的時候，他取得最小值。
+因此：
+\startformula
+B(T) \ge f\times \sum_{c\in C} d_{T}(c) \ge f\times 256 \times 9
+\stopformula
+
+而直接只用 8 位編碼的話，則：
+\startformula
+B(T') = \sum_{c\in C} 8 \times f(c)\le \sum_{c\in C} 8 \times 2 \times f = 256 \times 8 \times 2 \times f
+\stopformula
+\stopANSWER
+
+%e16.3-9
+\startEXERCISE
+證明：對於一個由隨機生成的 8 位字符組成的文件，
+沒有任何壓縮方法可以將其壓縮，哪怕只是壓縮一位。
+（\hint 比較原始文件和編碼後文件可能的數量。）
+\stopEXERCISE
+
+\startANSWER
+假設原始文件有 \m{n} 位，壓縮後的文件小於 \m{n} 位。
+源文件有 \m{2^n} 種。壓縮後的文件最多有 \m{2^1 + 2^2 + \ldots + 2^{n-1} < 2^n} 種。
+即至少有兩種原始文件壓縮後內容相同，這顯然是不可能的，
+因此壓縮後的文件程度必定有大於 \m{n} 的。
+\stopANSWER
+
+\stopsection

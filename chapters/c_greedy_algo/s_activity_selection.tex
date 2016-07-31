@@ -1,0 +1,164 @@
+\startsection[
+  title={An activity-selection problem},
+]
+
+%e16.1-1
+\startEXERCISE
+根據遞歸式（16.2）爲活動選擇問題設計一個動態規劃算法。
+算法應該按前文定義計算最大兼容活動集的大小 \m{c[i,j]} 並生成最大集本身。
+假定輸入的活動已按公式（16.1）排好序。
+比較你的算法和 \ALGO{GREEDY-ACTIVITY-SELECTOR} 的運行時間。
+附公式（16.1）：
+\startformula
+f_1 \le f_2 \le f_3 \le \ldots \le f_{n-1} \le f_n
+\stopformula
+
+附遞迴式（16.2）：
+\startformula
+c[i,j] = \startcases
+\NC 0 \MC \text{如果 \m{S_{ij} = \Phi}} \NR
+\NC \max_{a_k\in S_{ij}}\{c[i,k] + c[k,j] + 1\} \MC \text{如果 \m{S_{ij}\ne \Phi}} \NR
+\stopcases\stopformula
+\stopEXERCISE
+
+\startANSWER
+令 \m{S_{ij}} 爲兩個不相重疊的活動 \m{a_i} 和 \m{a_j} 的間隔。
+下列算法將爲活動選擇問題構建一張表，
+其中 \m{s} 和 \m{f} 分別是活動的起始和結束時間，長度均爲 \m{n}。
+
+\CLRSH{BUILD-ACTIVITY-TABLE(s, f)}
+\startCLRS
+n = s.length
+for i = 0 upto n
+	c[i][i] = 0
+
+for m = 2 upto n
+	for i = 1 upto (n-m+1)
+		j = (i+m-1)
+		c[i][j] = 0
+
+		for k = i+1 upto j-1
+			if f[i] <= s[k] && f[k] <= s[j]
+				q = (c[i][k] + c[k][j] + 1)
+				if q > c[i][j]
+					c[i][j] = q
+					c[j][i] = k
+return c
+\stopCLRS
+
+此算法總運行時間爲 \m{O(n^3)}，而貪婪算法運行時間爲 \m{O(n)}。
+\stopANSWER
+
+%e16.1-2
+\startEXERCISE
+假定我們不再一直選擇最早結束的活動，而是選擇最晚開始的活動，
+前提仍然是與之前選出的所有活動兼容。
+描述如何利用這一方法設計貪心算法，並證明算法會產生最優解。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{GREEDY-ACTIVITY-SELECTOR-JMC(s,f)}
+\startCLRS
+n = s.length
+A.push_front(a[n])
+k = n
+
+for m=(n-1) downto 1
+	if f[m] <= s[k]
+		A.push_front(a[m])
+		k = m
+\stopCLRS
+
+建議的方式，選擇與開始最晚的活動，總是保持與之前選中的活動相兼容，
+這確實是貪心算法，只是從後向前。
+
+我們可以這樣來看：有活動集 \m{S=\{a_1,a_2,\ldots,a_n\}}，
+其中 \m{a_i=[s_i,f_i)}，我們想通過選擇開始最晚的活動來得到最優方案，
+當然要保證與之前選中的活動相兼容。
+創建集合 \m{S'=\{a'_1,a'_2,\ldots,a'_n\}}，
+其中 \m{a'_i=[f_i,s_i)}，即 \m{a'_i} 正好與 \m{a_i} 相反。
+顯然，\m{\{a_{i_1},a_{i_2},\ldots,a_{i_k}\} \subseteq S} 的子集要想相互兼容，
+當且僅當其對應的 \m{\{a'_{i_1},a'_{i_2},\ldots,a'_{i_k}\} \subseteq S'} 的子集也相互兼容。
+因此， \m{S} 的最優解與 \m{S'} 的最優解可以相互直接映射。
+\stopANSWER
+
+%e16.1-3
+\startEXERCISE
+對於活動選擇問題，並不是所有貪心方法都能得到最大兼容活動子集。
+請舉例說明，在剩餘兼容活動中選擇持續時間最短者不能得到最大集。
+類似地，說明在剩餘兼容說動中選擇與其他剩餘活動重疊最少者，
+以及選擇最早開始者均不能得到最優解。
+\stopEXERCISE
+
+\startANSWER
+選擇持續時間最短活動：
+\input{tbl/tbl16.1-3-1}
+此方法會選擇 \m{\{a_2\}}，但最優解應爲 \m{\{a_1,a_3\}}。
+
+選擇與其他活動重疊最少的活動：
+\input{tbl/tbl16.1-3-2}
+此方法會先選擇 \m{a_6}，然後只能選擇兩個： \m{a_1,a_2,a_3,a_4} 中的一個，
+以及 \m{a_8,a_9,a_{10},a_{11}} 中的一個。而最優解爲 \m{a_1,a_5,a_7,a_{11}}。
+
+選擇最早開始的活動：只要最早開始的活動持續時間足夠長，
+就只能選擇這一個活動，其他的都無法與其兼容。
+\stopANSWER
+
+%e16.1-4
+\startEXERCISE
+假定右一組活動，我們需要將他們安排到一些教室，
+任意活動都可以在任意教室進行。
+我們希望使用最少的教室完成所有活動。
+設計一個高效的貪心算法求每個活動應該在哪個教室進行。
+
+（這個問題稱爲{\EMP 區間圖着色問題}（interval-graph color problem）。
+我們可以構造一個區間圖，頂點表示給定的活動，
+邊連接不兼容的活動。
+要求用最少的顏色對頂點進行着色，
+使得所有相鄰頂點顏色均不相同——
+這與使用最少的教室完成所有活動的問題是對應的。）
+\stopEXERCISE
+
+\startANSWER
+集合 \m{S} 包含 \m{n} 個活動。
+一個顯而易見的方案：使用 \ALGO{GREEDY-ACTIVITY-SELECTOR}，
+先爲第一個教室找到最大集合 \m{S_1} （\m{S_1\subseteq S}），
+再爲第二個教室找到最大集合 \m{S_1} （\m{S_1\subseteq S - S_1}），
+……。最壞情況下需要時間 \m{\Theta(n^2)}。
+
+還有一種更好的算法，然而，其漸進時間只是將活動按時間排序所需的時間 \m{O(n\lg n)}。
+如果活動的時間是小整數，甚至有可能達到 \m{O(n)}。
+
+通常我們會按起始時間遍歷所有活動，並將其指派給任何一個可用的教室。
+要達到這個目的，我們需要對活動的起始時間和結束時間進行排序，並遍歷所有時間點。
+維護兩個教室清單：一個是當前時間點 \m{t} 忙的教室，另一個是當前時間點 \m{t} 空閒的教室。
+如果 \m{t} 是某個活動的結束時間點，，則將此活動所佔教室挪到空閒清單中。
+如果 \m{t} 是另一個活動的起始時間點，則可以將這個活動安排到一個空閒的教室中。
+
+爲了儘量減少教室佔用，活動結束時將教室放入空閒清單的頭部，爲活動安排教室也從空閒教室頭部選取。
+
+運行時間包括兩部分： a）爲活動起始、結束時間排序。
+（如果某活動的結束時間和某活動起始時間相同，則應將結束的活動放在前面。）
+所需時間爲 \m{O(n\lg n)}，而如果活動所用時間是受限的（比如，都是小整數），
+則所需時間可能是 \m{O(n)}。
+ b）處理所有起始、結束時間點所需時間爲 \m{O(n)}：掃描 \m{2n} 個時間點，
+ 每個時間點的時間爲 \m{O(1)}。
+\stopANSWER
+
+%e16.1-5
+\startEXERCISE
+考慮活動選擇問題的一個變形：
+每個活動 \m{a_i} 除了開始和結束時間外，
+還有一個值 \m{v_i}。
+目標不再是求規模最大的兼容活動子集，
+而是求值之和最大的兼容活動子集。
+也就是說，
+選擇一個兼容活動子集 \m{A}，使得 \m{\sum_{a_k\in A} v_k} 最大化。
+設計一個多項式時間的算法求解此問題。
+\stopEXERCISE
+
+\startANSWER
+動態規劃。時間爲 \m{O(n^2)}。
+\stopANSWER
+
+\stopsection

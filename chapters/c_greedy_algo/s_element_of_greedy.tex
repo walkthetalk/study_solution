@@ -1,0 +1,164 @@
+\startsection[
+  title={Elements of the greedy strategy},
+]
+
+\startEXERCISE
+證明：分數揹包問題具有貪心選擇性質。
+\stopEXERCISE
+
+\startANSWER
+設商品數量爲 \m{n}，序號爲 \m{i\in \{1,2,\ldots,n\}} 的商品
+價值爲 \m{v_i}，重量爲 \m{w_i}。
+揹包能承重 \m{W}。目標是讓揹包中的商品價值最大。
+不必將整個商品都放到揹包內。
+即如果可以將價值最大化，可以只將商品的一部分放入揹包。
+先計算每個商品的價值密度，即 \m{v_i / w_i}。
+按價值密度對所有商品進行排序。
+設商品 \m{j} 的價值密度最大。
+
+\startigBase[n]
+\item Case 1：如果 \m{W=w_j}，則將商品 \m{j} 放入揹包，問題結束；
+\item Case 2：如果 \m{W<w_j}，則將儘量多的 \m{j} 放入揹包，問題結束；
+\item Case 3：如果 \m{W>w_j}，則將商品 \m{j} 放入揹包後。然後揹包還可以放入重量 \m{W-w_j} 的商品。
+後面採用貪心策略繼續解決子問題：揹包能承重 \m{W-w_j}，有 \m{n-1} 個商品共選擇。
+需要注意的是，選擇 \m{j} 時不必考慮子問題的解。
+\stopigBase
+
+因此 0-1 揹包問題具有貪婪選擇性質。
+\stopANSWER
+
+%e16.2-2
+\startEXERCISE
+設計動態規劃算法求解 0-1 揹包問題，要求運行時間爲 \m{O(nW)}， \m{n} 爲商品數量，
+揹包最大承重爲 \m{W}。
+\stopEXERCISE
+
+\startANSWER
+\m{w} 和 \m{v} 長度均爲 \m{n}；
+ \m{W} 是揹包的最大承重；
+ \m{B} 是 \m{(w+1)\times(n+1)} 矩陣；
+ \m{B[i][j]} 是揹包最大承重爲 \m{j}、只能在前 \m{i} 個商品中選擇時所能得到的最大價值。
+
+\CLRSH{KNAPSACK(w, v, W, n)}
+\startCLRS
+\\ initialization B[i,j]:
+\\ i is index of items, j is weight
+for i=1 to n
+	B[i,0] = 0
+for j=0 to W
+	B[0,j] = 0
+
+for i=1 to n
+	for j=0 to W
+		if w[i] <= j
+			B[i,j] = max((v[i] + B[i-1, j-w[i]]), B[i-1,w])
+		else
+			B[i,j] = B[i-1,w]
+\stopCLRS
+
+\CLRSH{KNAPSACK-ITEMS(v, w, B)}
+\startCLRS
+i=n
+k=W
+
+while i>0 and k>0
+	if B[i,k] != B[i-1,k]
+		add item i in the knapsack
+		k = k - w[i]
+	--i
+\stopCLRS
+
+\stopANSWER
+
+%e16.2-3
+\startEXERCISE
+假定在 0-1 揹包問題中，商品越重，價值越小，
+設計一個高效算法求解此變形問題的最優解，
+並證明算法的正確性。
+\stopEXERCISE
+
+\startANSWER
+按重量由輕到重選擇 \m{k} 個商品，
+使得 \m{\sum_{i=1}^k w[i] \le W} 且 \m{\sum_{i=1}^{k+1} w[i] > W}，這就是最優解。
+如果這 \m{k} 個商品中第 \m{j} 個沒有被選中，而 \m{i>k} 被選中，
+則我們可以將 \m{i} 換成 \m{j}，總重量不增加但價值會增加。
+\stopANSWER
+
+%e16.2-4
+\startEXERCISE
+Gekko 教授計劃沿 U.S. 2 號高速公路用直排輪滑橫穿 North Dakota，
+這條高速公路從 Minnesota 東部邊境的 Grand Forks 一直到達 Montana 西部邊境的 Williston。
+教授能夠帶兩公升水，在喝光之前能滑行 \m{m} 英里。
+（North Dakota 相當平坦，教授無需擔心上坡路段喝水速度比平地或下坡路段快。）
+教授從 Grand Forks 出發，並攜帶兩公升水。
+地圖上顯示了高速公訴上所有補給點，以及他們之間的距離。
+
+教授的目標是儘量減少途中補充水的次數。
+設計一個高效的方法，幫助教授確定應該在哪些地點補充水。
+證明你的策略會生成最優解，並分析其運行時間。
+\stopEXERCISE
+
+\startANSWER
+我們需要選擇補給站，每次選擇的補給站離上一個的距離應離 \m{m} 最近但不大於 \m{m}。
+
+首先，此問題的解包含子問題的最優解。
+令 \m{S} 爲解， \m{G} 爲選中的某個補給站。
+如果從起點到 \m{G} 之間，教授停下的次數不是最少，
+則我們可以有一個更好的解。
+但 \m{S} 是最優解，所以 \m{S} 包含子問題的最優解。
+
+下面來證明貪心選擇會得到最優解。
+令貪心選擇法選中的補給站爲 \m{G_1,G_2,\ldots,G_k}，且這不是最優解。
+則最優解中的第一個站點 \m{O_1} 不是 \m{G_1} 就是 \m{G_1} 之前的站點，
+否則從起點到 \m{O_1} 的距離會超過 \m{m}。
+由於 \m{O_1} 到 \m{O_2} 的距離小於 \m{m}，
+因此 \m{O_2} 不是 \m{G_2} 就是 \m{G_2} 之前的站點。
+以此類推， \m{O_k} 不是 \m{G_k} 就是 \m{G_k} 之前的站點。
+從而最優解選中站點個數不會少於貪心選擇法的解。
+即，貪心選擇法的解就是最優解。
+
+貪心選擇法的運行時間爲 \m{O_n}，其中 \m{n} 爲站點總數。
+\stopANSWER
+
+%e16.2-5
+\startEXERCISE
+設計一個高效算法，對實數線上給定的一個點集 \m{\{x_1,x_2,\ldots,x_n\}}，
+求一個單位長度閉區間的集合，包含所有給定的點，並要求此集合最小。
+證明你的算法是正確的。
+\stopEXERCISE
+
+\startANSWER
+貪心選擇法。先對所有點排序，然後以第一個點爲閉區間的起點，
+找到單位長度閉區間中最後一個點；以上一個閉區間後面緊挨的點爲新區間的起點，
+往後依次搜索。直到遍歷完所有點，得到的區間個數即爲所求。
+\stopANSWER
+
+%e16.2-6
+\startEXERCISE\DIFFICULT
+設計算法，在 \m{O(n)} 時間內求解分數揹包問題。
+\stopEXERCISE
+
+\startANSWER
+先按 \m{v/w} 從大到小排序，然後依次累加，直到重量超標。
+除最後一個外，其他累計物品即爲所求。
+\stopANSWER
+
+%e16.2-7
+\startEXERCISE
+給定兩個集合 \m{A} 和 \m{B}，各包含 \m{n} 個正整數。
+你可以按需要任意重排每個集合。
+重排後，令 \m{a_i} 爲集合 \m{A} 的第 \m{i} 個元素，
+ \m{b_i} 爲集合 \m{B} 的第 \m{i} 個元素。
+於是你得到回報 \m{\prod_{i=1}^{n}a_i^{b_i}}。
+設計算法使回報最大化。
+證明算法的正確性，並分析運行時間。
+\stopEXERCISE
+
+\startANSWER
+將兩個集合均按單調遞減進行排序。
+
+任取兩個索引 \m{i}、 \m{j}，其中 \m{i<j}。
+則 \m{a_i^{b_i} \times a_j^{b_j} \ge a_i^{b_j}\times a_j^{b_i}}。
+\stopANSWER
+
+\stopsection

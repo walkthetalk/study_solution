@@ -1,0 +1,400 @@
+\startsubject[
+  title={Problems},
+]
+
+%p23-1
+\startPROBLEM
+（Second-best minimum spanning tree）
+設 \m{G=(V,E)} 爲一連通無向圖，
+其權重函數爲 \m{\omega:E\rightarrow R}，
+假定 \m{|E|\ge |V|} 並且所有的權重都互不相同。
+我們定義一棵次優最小生成樹如下：
+設 \m{\tau} 爲 \m{G} 的所有生成樹的集合，
+ \m{T'} 爲 \m{G} 的一棵最小生成樹。
+那麼{\EMP 次優最小生成樹}是生成樹 \m{T}，
+其滿足 \m{\omega(T)=\min_{T''\in \tau-\{T'\}}\{\omega(T'')\}}。
+\startigBase[a]\startitem
+證明：最小生成樹唯一，並不能保證次優最小生成樹唯一。
+\stopitem\stopigBase
+
+\startANSWER
+\midaligned{
+\startcombination[nx=3,distance=5em]
+{\externalfigure[output/p23_1-1]}{最小生成樹}
+{\externalfigure[output/p23_1-2]}{次優生成樹 1}
+{\externalfigure[output/p23_1-3]}{次優生成樹 2}
+\stopcombination
+}
+\stopANSWER
+
+\startigBase[continue]\startitem
+設 \m{T} 爲 \m{G} 的一棵最小生成樹。證明：
+圖 \m{G} 中可以找到兩條邊 \m{(u,v)\in T} 和 \m{(x,y)\notin T}，
+使得 \m{T-\{(u,v)\}\cup\{(x,y)\}} 是 \m{G} 的一棵次優最小生成樹。
+\stopitem\stopigBase
+
+\startANSWER
+由於任一生成樹均包含 \m{|V|-1} 條邊，
+因此次優 MST 至少含有一條邊不在 MST 中。
+
+如果次優 MST 中只有一條邊不在 MST 中，如 \m{(x,y)}，
+則次優 MST 與 MST 中邊的差異，只有 \m{(x,y)} 和另一條邊 \m{(u,v)}。
+即次優 MST 中用 \m{(x,y)} 代替了 MST 中的 \m{(u,v)}，其他邊都一樣。
+這種情況下， \m{T-\{(u,v)\}\cup\{(x,y)\}} 是 \m{G} 的一棵次優 MST。
+
+因此我們要證明替換 MST 中的兩條或多條邊，無法得到次優 MST。
+
+令 \m{T} 爲 \m{G} 的 MST，
+假設存在次優 MST \m{T'}， \m{T-T'} 中至少有兩條邊，
+令 \m{T-T'} 中權重最小的邊爲 \m{(u,v)}。
+如果將 \m{(u,v)} 加入 \m{T'}，會形成環路 \m{c}。
+這個環路包含 \m{T'-T} 中的某條邊 \m{(x,y)} （否則， \m{T} 會形成環路）。
+
+我們要證明 \m{\omega(x,y)>\omega(u,v)}。
+用反證法，先假設 \m{\omega(x,y)<\omega(u,v)}。
+假設所有邊的權重都不同，因此不用考慮 \m{\omega(x,y)=\omega(u,v)} 的情況。
+如果將 \m{(x,y)} 加入 \m{T}，會形成環路 \m{c'}，
+此環路中必定包含 \m{T-T'} 中的某條邊 \m{(u',v')} （否則， \m{T'} 會形成環路）。
+因此， \m{T''=T-\{(u',v')\}\cup\{(x,y)\}} 會形成生成樹，
+同時必須滿足 \m{\omega(u',v')<\omega(x,y)}，
+否則 \m{T''} 的權重會小於 \m{T} 的權重， \m{T} 就不是 MST 了。
+因此 \m{\omega(u',v')<\omega(x,y)<\omega(u,v)}，
+但這與假設不符： \m{(u,v)} 是 \m{T-T'} 中權重最小的邊。
+
+由於 \m{(u,v)} 和 \m{(x,y)} 在同一個環路 \m{c} 上，
+如果我們將 \m{(u,v)} 加入 \m{T'}，
+ \m{T'-\{(x,y)\}\cup\{(u,v)\}} 是一棵生成樹，且其權重小於 \m{\omega(T')}。
+進一步， \m{T'} 與 \m{T} 不同（僅差一條邊）。
+因此，我們找到了一棵生成樹，且其權重小於 \m{\omega(T')}，但這棵樹不是 \m{T}。
+因此， \m{T'} 不是次優 MST。
+\stopANSWER
+
+\startigBase[continue]\startitem
+設 \m{T} 爲 \m{G} 的一棵 MST，
+對於任意兩個節點 \m{u,v\in V}，
+設 \m{\max[u,v]} 表示樹 \m{T} 中從節點 \m{u} 到節點 \m{v} 的簡單路徑上權重最大的邊，
+請給出一個 \m{O(V^2)} 時間複雜度的算法來計算 \m{\max[u,v]}。
+\stopitem\stopigBase
+
+\startANSWER
+我們可以在 \m{O(V^2)} 時間內找到所有 \m{u,v\in V} 的 \m{\max[u,v]}。
+用何種方法並不重要，廣度優先、深度優先，或者其他方式都行。
+
+下面給出廣度優先和深度優先的僞碼。
+但僞碼與第 22 章的僞碼有點區別，我們不需要計算 \m{d} 和 \m{f} 的值，
+我們使用表 \m{\max} 本身來記錄是否訪問過一個節點。
+當且僅當 \m{u=v} 或者還沒有訪問過節點 \m{v} 時，纔有 \m{\max[u,v]=NIL}。
+注意，由於我們是訪問無向圖生成樹的邊，因此可以保證從 \m{u} 開始可以訪問到所有節點。
+在節 22.3 中的 \ALGO{DFS} 中的“restart”就沒有必要了。
+僞碼中假設每個節點的鄰接鏈表僅包含生成樹 \m{T} 中的邊。
+
+\CLRSH{BFS-FILL-MAX(G, T, w)}
+\startCLRS
+let max be a new table with an entry max[u,v] for each u, v in G.V
+for each vertex u in G.V
+	for each vertex v in G.V
+		max[u,v] = NIL
+	Q = empty
+	ENQUEUE(Q,u)
+	while Q not empty
+		x = DEQUEUE(Q)
+		for each v in G.Adj[x]
+			if max[u,v] == NIL and v != u
+				if x == u or w(x,v) > max[u,x]
+					max[u,v] = (x,v)
+				else
+					max[u,v] = max[u,x]
+				ENQUEUE(Q,v)
+return max
+\stopCLRS
+
+\CLRSH{DFS-FILL-MAX(G, T, w)}
+\startCLRS
+let max be a new table with an entry max[u,v] for each u, v in G.V
+for each vertex u in G.V
+	for each vertex v in G.V
+		max[u,v] = NIL
+	DFS-FILL-MAX-VISIT(G, u, u, max)
+return max
+\stopCLRS
+
+\CLRSH{DFS-FILL-MAX-VISIT(G, u, x, max)}
+\startCLRS
+for each vertex v in G.Adj[x]
+	if max[u,v] == NIL and v != u
+		if x == u or w(x,v) > max[u,x]
+			max[u,v] = w(x,v)
+		else
+			max[u,v] = max[u,x]
+		DFS-FILL-MAX-VISIT(G, u, v, max)
+\stopCLRS
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個有效算法來計算圖 \m{G} 的次優最小生成樹。
+\stopitem\stopigBase
+
+\startANSWER
+在 b）中，我們已證明，只要替換最小生成樹中的一個邊就可以得到一棵次優 MST。
+假如用邊 \m{(u,v)\notin T} 替換 \m{(x,y)\in T} 得到次優 MST \m{T'}，
+則 \m{\omega(T')=\omega(T)-\omega(x,y)+\omega(u,v)}。
+如果確定了 \m{(u,v)}，則要使 \m{\omega(T')} 最小，需要在 \m{T} 中找到
+從 \m{u} 到 \m{v} 的唯一路徑上權值最大的邊。
+如果我們已經計算除了 \m{T} 上的 \m{\max} 表（見 c）），
+那麼我們就可以根據 \m{\max[u,v]} 直接找到這條邊了。
+剩下唯一要做的就是找到邊 \m{(u,v)\notin T}，使得 \m{\omega(\max[u,v])-\omega(u,v)} 最小。
+因此，尋找次優 MST 的算法如下：
+
+\startigNum[n]
+\item 計算最小生成樹 \m{T}，時間 \m{O(E+V\lg V)}，
+使用 Prim 算法（用 Fibonacci 堆實現優先隊列）。
+由於 \m{|E|<|V|^2}，因此運行時間爲 \m{O(V^2)}。
+
+\item 用 MST 計算表 \m{\max}，參見 c）。時間爲 \m{O(V^2)}。
+
+\item 找到邊 \m{(u,v)\notin T}，使得 \m{\omega(\max[u,v])-\omega(u,v)} 最小。
+時間 \m{O(E)}，即 \m{O(V^2)}。
+
+\item 根據上一步結果， \m{T'=T-\{\max[u,v]\}\cup\{(u,v)\}} 即爲所求次優 MST。
+\stopigNum
+
+總時間爲 \m{O(V^2)}。
+\stopANSWER
+
+\stopPROBLEM
+
+%p23-2
+\startPROBLEM[problem:23-2]
+（Minimum spanning tree in sparse graphs）
+對於非常稀疏的圖 \m{G=(V,E)} 來說，
+我們可以對 Prim 算法進行進一步改善，
+改善後的時間將優於使用 Fibonacci 堆時的 \m{O(E+V\lg V)} 的運行時間。
+改善所用的方法就是對圖 \m{G} 進行預處理來減少節點的數量，
+然後在減少節點數量後的圖 \m{G} 上運行 Prim 算法。
+具體來說，對於每個節點 \m{u}，
+我們選擇與節點 \m{u} 鄰接的邊中權重最小的 \m{(u,v)}，
+將其加入到正在構建的最小生成樹裏。
+然後對所有選擇的邊進行收縮（請參閱\refsection{appendix_graphs}的內容）。
+不過，我們不是一條一條地收縮每條邊，
+而是首先找出有哪些節點連接到了同一個新節點。
+然後創建一個新的圖，
+這個圖就如每次收縮這樣一條邊所得出的一樣，
+但是我們通過“重新命名”來實現。
+重新命名是根據每條邊的端點所在的節點集合來進行。
+原始圖中的多條邊可能被重命名爲同樣的名。
+在這種情況下，
+重名的邊中只有一條邊留下，
+這條邊對應原始邊中最小權重的邊。
+
+在初始時，我們把將要構建的最小生成樹 \m{T} 設爲空，
+對於每條邊 \m{(u,v)\in E}，對其屬性進行如下初始化操作：
+ \m{(u,v).orig = (u,v)}， \m{(u,v).c=\omega(u,v)}。
+我們使用 \m{orig} 屬性來引用原始圖中與收縮後的圖的邊相關的邊。
+屬性 \m{c} 記錄邊的權重，隨着邊的收縮，
+我們根據上面選擇邊權重的方法來更新這個屬性。
+下面的 \ALGO{MST-REDUCE} 算法以圖 \m{G} 和樹 \m{T} 作爲輸入，
+返回一個收縮後的圖 \m{G'} 和更新後的屬性 \m{orig'} 與 \m{c'}。
+該算法同時選出圖 \m{G} 中的邊來構成最小生成樹 \m{T}。
+
+\CLRSH{MST-REDUCE(G,T)}
+\startCLRS
+for each v in G.V
+	v.mark = FALSE
+	MAKE-SET(v)
+for each u in G.V
+	if u.mark == FALSE
+		choose v in G.Adj[u] such that (u,v).c is minimized
+		UNION(u,v)
+		T = T merge (u,v).orig
+		u.mark = v.mark = TRUE
+G'.V = {FIND-SET(v): v in G.V}
+G'.E = empty
+for each (x,y) in G.E
+	u = FIND-SET(x)
+	v = FIND-SET(y)
+	if (u,v) notin G'.E
+		G'.E = G'.E merge {(u,v)}
+		(u,v).orig' = (x,y).orig
+		(u,v).c' = (x,y).c
+	else if (x,y).c < (u,v).c'
+		(u,v).orig' = (x,y).orig
+		(u,v).c' = (x,y).c
+construct adjacency lists G': Adj for G'
+return G' and T
+\stopCLRS
+
+\startigBase[a]\startitem
+設 \m{T} 爲算法 \ALGO{MST-REDUCE} 所返回的邊的集合，
+設 \m{A} 爲調用 \ALGO{MST-Prim(G',c',r)} 所生成的圖 \m{G'} 的最小生成樹，
+這裏 \m{c'} 是 \m{G'.E} 中邊的權重屬性，
+ \m{r} 是 \m{G'.V} 中的任意節點。
+證明： \m{T\cup \{(x,y).orig': (x,y)\in A\}} 是圖 \m{G} 的一棵最小生成樹。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明： \m{|G'.V|\le |V|/2}。
+\stopitem\stopigBase
+
+\startANSWER
+\m{G'.V} 中每個節點至少包含 \m{G.V} 中的兩個節點。
+\stopANSWER
+
+\startigBase[continue]\startitem
+請說明如何實現算法 \ALGO{MST-REDUCE}，
+才能讓其運行時間爲 \m{O(E)}。
+（\hint 使用簡單的數據結構）
+\stopitem\stopigBase
+
+\startANSWER
+用鄰接集合。
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定運行 \ALGO{MST-REDUCE} 算法 \m{k} 次，
+使用前一次輸出的圖 \m{G'} 作爲下一次的輸入圖 \m{G}，
+並在 \m{T} 中將邊累積起來。
+證明：算法運行 \m{k} 次的總時間爲 \m{O(kE)}。
+\stopitem\stopigBase
+
+\startANSWER
+根據上一項可知。
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定在運行 \ALGO{MST-REDUCE} 算法 \m{k} 次後，
+就如在本題的 d）部分那樣，
+我們通過調用算法 \ALGO{MST-Prim(G',c',r)} 來運行 Prim 算法，
+這裏圖 \m{G'} 是最後一個階段所返回的圖，
+其權重屬性爲 \m{c'}， \m{r} 是 \m{G'.V} 中的任意節點。
+請說明如何選擇 \m{k}，才能使整體運行時間爲 \m{O(E\lg \lg V)}。
+並證明所選擇的 \m{k} 使得總體漸進運行時間最短。
+\stopitem\stopigBase
+
+\startANSWER
+Prim 算法運行時間爲 \m{O(E+V\lg V)}。
+運行 \m{k} 次 \ALGO{MST-REDUCE} 後 \m{V'= V 2^{-k}}。
+當 \m{k = \lg \lg V} 時，總運行時間 \m{O(kE) + O(E+V'\lg V')} 才爲 \m{O(E\lg \lg V)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+要想使這種帶預處理的 Prim 算法的運行時間在漸進意義上由於不帶預處理的 Prim 算法，
+ \m{|E|} 和 \m{|V|} 要滿足什麼關係？
+\stopitem\stopigBase
+
+\startANSWER
+即 \m{O(E\lg\lg V) < O(E + V\lg V)}，得 \m{E < \frac{V\lg V}{\lg\lg V}}。
+\stopANSWER
+
+\stopPROBLEM
+
+%p23-3
+\startPROBLEM
+（Bottleneck spanning tree）
+無向圖 \m{G} 的{\EMP 瓶頸生成樹} \m{T} 是 \m{G} 的一棵生成樹，
+其最大邊的權重是 \m{G} 的所有生成樹中最小的。
+我們將 \m{T} 中權重最大邊的權重值稱作瓶頸生成樹 \m{T} 的值。
+\startigBase[a]\startitem
+證明：最小生成樹是瓶頸生成樹。
+\stopitem\stopigBase
+
+\startANSWER
+給 MST 添加一條邊必然形成一個環路，然後再去掉一個邊形成另一棵生成樹。
+添加的邊的權重肯定大於環路中其他邊的權重。
+新生成樹的值不可能小於 MST 的值。
+\stopANSWER
+
+本題的 a）部分顯示，找出一棵瓶頸生成樹並不比找出一棵最小生成樹更難。
+在本題餘下的部分，我們來演示如何在線性時間內找到一棵瓶頸生成樹。
+
+\startigBase[continue]\startitem
+請給出一個線性時間的算法，
+在給定圖 \m{G} 和整數 \m{b} 的情況下，
+能夠判斷瓶頸生成樹的值是否最大不超過 \m{b}。
+\stopitem\stopigBase
+
+\startANSWER
+用 \ALGO{DFS} 搜索，跳過權重大於 \m{b} 的邊，看最終是否可以遍歷所有節點。
+（等效於刪除權重大於 \m{b} 的邊後，圖是否仍然連通）
+\stopANSWER
+
+\startigBase[continue]\startitem
+使用本題 b）部分的算法，設計一個瓶頸生成樹問題的線性時間算法，
+該算法將以 b）部分的算法作爲子程序。
+（\hint 考慮使用一個子程序對邊的集合進行收縮，
+就如同\refproblem{23-2} 中所描述的 \ALGO{MST-REDUCE} 算法一樣。）
+\stopitem\stopigBase
+
+\startANSWER
+二分法搜索 \m{b}。
+\stopANSWER
+\stopPROBLEM
+
+%p23-4
+\startPROBLEM
+（Alternative minimum-spanning-tree algorithms）
+在本題中，我們給出三種不同算法的僞碼。
+每種算法的輸入都是一個連通圖和一個權重函數，
+返回值都是一個邊的集合 \m{T}。
+對於每種算法，要麼證明 \m{T} 是一棵最小生成樹，
+要麼證明 \m{T} 不是一棵最小生成樹。
+同時給出每種算法的最有效的實現
+（不管該算法是否能夠計算出最小生成樹）。
+
+\startigBase[a]\startitem
+\CLRSH{MAYBE-MST-A(G,w)}
+
+\startCLRS
+sort the edges into nonincreasing order of edge weights w
+T = E
+for each edge e, taken in nonincreasing order by weight
+	if T - {e} is a connected graph
+		T = T - {e}
+return T
+\stopCLRS
+\stopitem\stopigBase
+
+\startANSWER
+是 MST。
+\stopANSWER
+
+\startigBase[continue]\startitem
+\CLRSH{MAYBE-MST-B(G,w)}
+
+\startCLRS
+T = empty
+for each edge e, taken in arbitrary order
+	if T merge {e} has no cycles
+		T = T merge {e}
+return T
+\stopCLRS
+\stopitem\stopigBase
+
+\startANSWER
+不是 MST。
+\stopANSWER
+
+\startigBase[continue]\startitem
+\CLRSH{MAYBE-MST-C(G,w)}
+
+\startCLRS
+T = empty
+for each edge e, taken in arbitrary order
+	T = T merge {e}
+	if T has a cycle c
+		let e' be a maximum-weight edge on c
+		T = T - {e'}
+return T
+\stopCLRS
+\stopitem\stopigBase
+
+\startANSWER
+是 MST。
+\stopANSWER
+
+\stopPROBLEM
+
+\stopsubject%Problems

@@ -48,7 +48,12 @@ fig_pdfs: ${fig_pdfs}
 
 $(pdf_name).pdf: $(tex_deps) ${fig_pdfs}
 	@echo [gen] $@
-	@context --git --purge --environment=env_cmm --path=$(dir_main)/env/ --result=$(pdf_name).pdf $(tex_name).tex; $(call clean_misc)
+	@context --jit --purge \
+	  --environment=env_cmm \
+	  --path=$(dir_main)/env/ \
+	  --result=$(pdf_name).pdf \
+	  $(tex_name).tex; \
+	$(call clean_misc)
 
 $(dir_output)/%-1.pdf : ${dir_main}/fig/%.mp ${fig_deps}
 	@set -e; \
@@ -56,6 +61,6 @@ $(dir_output)/%-1.pdf : ${dir_main}/fig/%.mp ${fig_deps}
 	echo [compile] $* at $${COMPILE_DIR}; \
 	cp $^ $${COMPILE_DIR}/; \
 	cd $${COMPILE_DIR}; \
-	mptopdf $*.mp; \
+	mptopdf $*.mp > /dev/null; \
 	cp *.pdf ${dir_output}/; \
 	rm -r $${COMPILE_DIR}

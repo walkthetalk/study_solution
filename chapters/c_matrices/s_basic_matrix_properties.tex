@@ -1,0 +1,152 @@
+\startsection[
+  title={Basicmatrix properties},
+]
+
+%eD.2-1
+\startEXERCISE
+證明：矩陣的逆唯一，
+即如果 \m{B} 和 \m{C} 均爲 \m{A} 的逆，則 \m{B=C}。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment[n=1]
+\NC AB = BA = I \NR
+\NC AC = CA = I \NR
+\stopmathalignment\stopformula
+
+\startformula
+B = BI = B(AC) = (BA)C = IC = C
+\stopformula
+\stopANSWER
+
+%eD.2-2
+\startEXERCISE
+證明：下三角矩陣或上三角矩陣的行列式與其對角線元素之積相等。
+
+證明：一個下三角矩陣的逆（如果存在）也是下三角矩陣。
+\stopEXERCISE
+
+\startANSWER
+根據行列式的定義：
+\startformula
+\det(A) = \startcases
+\NC a_{11} \NC 如果 \m{n=1} \NR
+\NC \sum_{j=1}^{n} (-1)^{1+j} a_{1j} \det(A_{[1j]}) \NC 如果 \m{n>1} \NR
+\stopcases
+\stopformula
+由於第一行只有 \m{a_{11}} 不是 0，因此：
+\startformula
+\sum_{j=1}^{n} (-1)^{1+j} a_{1j} \det(A_{[1j]})
+  = a_{11} \cdot \det(A_{[1j]})
+  = a_{11} \cdot a_{22} \cdot \ldots \cdot a_{nn}
+\stopformula
+
+令 \m{L^{-1} = [y_1 \ldots y_n]}，其中 \m{y_k} 是 \m{n\times 1} 矩陣。
+根據定義 \m{LL^{-1} = I = [e_1\ldots e_n]}，其中 \m{e_k} 也是 \m{n\times 1} 矩陣，
+其只有第 \m{k} 行爲 1，其他都是 0。
+由於
+\startformula
+LL^{-1}=L[y_1\ldots y_n] = [Ly_1\ldots Ly_n]
+\stopformula
+所以 \m{Ly_k = e_k}，其中 \m{1\le k\le n}。
+
+由於 \m{L} 是下三角矩陣：
+\startformula
+Ly_k =
+\left[\startmatrix[align=left]
+\NC L_{11} Y_{1k} \NR
+\NC L_{21} Y_{1k} + L_{22} Y_{2k} \NR
+\NC \vdots \NR
+\NC L_{k-1,1} Y_{1k} + L_{k-1,2} Y_{2k} + \ldots + L_{k-1,k-1} Y_{k-1,k} \NR
+\NC L_{k,1} Y_{1k} + L_{k,2} Y_{2k} + \ldots + L_{k,k-1} Y_{k-1,k} + L_{k,k}Y_{k,k} \NR
+\NC \vdots \NR
+\stopmatrix\right]
+=
+\left[\startmatrix
+\NC 0 \NR
+\NC 0 \NR
+\NC \vdots \NR
+\NC 0 \NR
+\NC 1 \NR
+\NC \vdots \NR
+\stopmatrix\right]
+=e_k
+\stopformula
+由第一行可知 \m{Y_{1k} = 0}，代入第二行，可得 \m{Y_{2k}=0}，以此類推，
+可知 \m{i < k, Y_{ik} = 0}，即 \m{Y} 也是下三角矩陣。
+\stopANSWER
+
+%eD.2-3
+\startEXERCISE
+證明：如果 \m{P} 是一個排列矩陣，則 \m{P} 是可逆的，
+他的逆是 \m{P^T}，且 \m{P^T} 也是一個排列矩陣。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+P^{-1} = P^T
+\stopformula
+\stopANSWER
+
+%eD.2-4
+\startEXERCISE
+令 \m{A} 和 \m{B} 是 \m{n\times n} 矩陣， 且 \m{AB=I}。
+證明：若矩陣 \m{A'} 是將矩陣 \m{A} 第 \m{j} 行加到第 \m{i} 行所得，
+則將 \m{B} 中第 \m{j} 列減去第 \m{i} 列所得的 \m{B'} 爲 \m{A'} 的逆矩陣。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%eD.2-5
+\startEXERCISE
+令 \m{A} 是一個非奇異 \m{n\times n} 複數矩陣。
+證明： \m{A^{-1}} 中每個元素均爲實數，
+當且僅當 \m{A} 中每個元素是實數。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%eD.2-6
+\startEXERCISE
+證明：若 \m{A} 是一個非奇異的 \m{n\times n} 對稱矩陣，則 \m{A^{-1}} 是對稱的。
+
+證明：若 \m{B} 是任意 \m{m\times n} 矩陣，
+則 \m{m\times m} 矩陣 \m{BAB^T} 也是對稱的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%eD.2-7
+\startEXERCISE
+證明定理 D.2。
+即證明：
+一個矩陣 \m{A} 是列滿秩的，
+當且僅當 \m{Ax=0} 蘊含 \m{x=0}。
+（\hint 將一列與另一列線性相關表示爲矩陣——向量等式。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%eD.2-8
+\startEXERCISE
+對於任意兩個相容矩陣 \m{A} 和 \m{B}，
+\startformula
+\rank(AB)\le \min(\rank(A),\rank(B))
+\stopformula
+其中，如果 \m{A} 或 \m{B} 是非奇異方陣，則大呢公式成立。
+（\hint 使用矩陣秩的另一種定義。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

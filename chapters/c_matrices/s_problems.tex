@@ -1,0 +1,99 @@
+\startsubject[
+  title={Problems},
+]
+
+%pD-1
+\startPROBLEM
+（Vandermonde matrix）
+給定數值 \m{x_0,x_1,\ldots,x_{n-1}}，
+證明 Vandermonde 矩陣的行列式
+\startformula
+V(x_0,x_1,\ldots,x_n)=
+\left[\startmatrix
+\NC 1 \NC x_0 \NC x_0^2 \NC \cdots \NC x_0^{n-1} \NR
+\NC 1 \NC x_1 \NC x_1^2 \NC \cdots \NC x_1^{n-1} \NR
+\NC \vdots \NC \vdots \NC \vdots \NC \ddots \NC \vdots \NR
+\NC 1 \NC x_{n-1} \NC x_{n-1}^2 \NC \cdots \NC x_{n-1}^{n-1} \NR
+\stopmatrix\right]
+\stopformula
+是
+\startformula
+\det(V(x_0,x_1,\ldots,x_{n-1}) = \prod_{0\le j < k\le n-1} (x_k - x_j)
+\stopformula
+（\hint 對於 \m{i=n-1,n-2,\ldots,1}，
+將第 \m{i} 列乘以 \m{-x_0} 以後加到第 \m{i+1} 列上，
+然後使用歸納法。）
+\stopPROBLEM
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%pD-2
+\startPROBLEM
+（Permutations defined by matrix-vector multiplication over GF(2)）
+利用 \m{GF(2)} 上的矩陣乘法可以定義一類集合 \m{S_n=\{0,1,2,\ldots,2^n-1]\}} 中整數的排列。
+對於 \m{S_n} 中每個整數，可以將他的二進制表示形式看作一個 \m{n} 位向量
+\startformula
+\left[\startmatrix
+\NC x_0 \NR
+\NC x_1 \NR
+\NC x_2 \NR
+\NC \vdots \NR
+\NC x_{n-1} \NR
+\stopmatrix\right]
+\stopformula
+其中 \m{\sum_{i=0}^{n-1} x_i 2^i}。
+如果 \m{A} 是一個元素均爲 0 或 1 的 \m{n\times n} 矩陣，
+則我們可以定義一個排列。
+該排列將 \m{S_n} 中的每一個值 \m{x} 映射到一個數上，
+該數的二進制表示形式爲矩陣——向量積 \m{Ax}。
+這裏，我們按照 \m{GF(2)} 執行所有算數運算：
+所有的值爲 0 或 1，
+並且除特例 \m{1+1=0} 外，
+其他常規加法、乘法規則均適用。
+讀者可以認爲 \m{GF(2)} 算數運算除了只使用最低有效位，
+其他均與常規整數算術運算一致。
+
+例如，對於 \m{S_2=\{0,1,2,3\}}，矩陣
+\startformula
+A=\left[\startmatrix
+\NC 1 \NC 0 \NR
+\NC 1 \NC 1 \NR
+\stopmatrix\right]
+\stopformula
+定義了如下排列 \m{\pi_A: \pi_A(0)=0,\pi_A(1)=3,\pi_A(2)=2,\pi_A(3)=1}。
+下面解釋 \m{\pi_A(3)=1} 的理由，在 \m{GF(2)} 中
+\startformula
+\pi_A(3)=
+\left[\startmatrix
+\NC 1 \NC 0 \NR
+\NC 1 \NC 1 \NR
+\stopmatrix\right]
+\left[\startmatrix
+\NC 1 \NC 1 \NR
+\stopmatrix\right]
+\left[\startmatrix
+\NC 1\cdot 1 + 0\cdot 1 \NR
+\NC 1\cdot 1 + 1\cdot 1 \NR
+\stopmatrix\right]
+\left[\startmatrix
+\NC 1 \NR
+\NC 0 \NR
+\stopmatrix\right]
+\stopformula
+就是 1 的二進制表示。
+
+我們繼續在 \m{GF(2)} 上討論本問題，
+並且所有矩陣和向量的元素均爲 0 或 1。
+定義 0-1 矩陣（勻速均爲 0 或 1 的矩陣）在 \m{GF(2)} 上的秩與普通矩陣一致，
+但是所有的決定線性相關的算術運算都按 \m{GF(2)} 進行。
+定義 \m{n\times n} 0-1 矩陣 \m{A} 的取值範圍爲
+\startformula
+R(A) = \{y: y=Ax,x\in S_n\}
+\stopformula
+這樣， \m{R(A)} 是 \m{S_n} 中一類數的集合，
+這類數可以由將 \m{S_n} 中每個值 \m{x} 乘以 \m{A} 得到。
+\stopPROBLEM
+
+\stopsubject%Problems

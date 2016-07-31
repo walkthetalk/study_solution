@@ -1,0 +1,84 @@
+\startsection[
+  title={Matrices and matrix operations},
+]
+
+%eD.1-1
+\startEXERCISE
+證明：若 \m{A} 和 \m{B} 均爲 \m{n\times n} 對稱矩陣，
+則 \m{A+B} 和 \m{A-B} 也是 \m{n\times n} 對稱矩陣。
+\stopEXERCISE
+
+\startANSWER
+\startformulas
+\startformula\startmathalignment[n=5]
+\NC s_{ij} \NC = \NC a_{ij} \NC + \NC b_{ij} \NR
+\NC \Updownarrow \NC \Leftarrow \NC \Updownarrow \NC \NC \Updownarrow \NR
+\NC s_{ji} \NC = \NC a_{ji} \NC + \NC b_{ji} \NR
+\stopmathalignment\stopformula
+\startformula\startmathalignment[n=5]
+\NC m_{ij} \NC = \NC a_{ij} \NC - \NC b_{ij} \NR
+\NC \Updownarrow \NC \Leftarrow \NC \Updownarrow \NC \NC \Updownarrow \NR
+\NC m_{ji} \NC = \NC a_{ji} \NC - \NC b_{ji} \NR
+\stopmathalignment\stopformula
+\stopformulas
+\stopANSWER
+
+%eD.1-2
+\startEXERCISE
+證明： \m{(AB)^T = B^T A^T}，以及 \m{A^T A} 是對稱矩陣。
+\stopEXERCISE
+
+\startANSWER
+\startformulas
+\startformula\startmathalignment[n=4,align={left,right,middle,middle}]
+\NC (AB)^T  \qquad \NC c_{ij} \NC = \sum_{k=1}^{n} \NC a_{jk} b_{ki} \NR
+\NC \Updownarrow \NC \Updownarrow \NC \Leftarrow \NC \times \NR
+\NC B^T A^T \NC c_{ij} \NC = \sum_{k=1}^{n} \NC b_{ki} a_{jk} \NR
+\stopmathalignment\stopformula
+
+\startformula\startmathalignment[n=4,align={left,right,middle,middle}]
+\NC A^T A  \qquad \NC c_{ij} \NC = \sum_{k=1}^{n} \NC a_{ik} a_{kj} \NR
+\NC \NC \Updownarrow \NC \Leftarrow \NC \times \NR
+\NC A^T A  \qquad \NC c_{ji} \NC = \sum_{k=1}^{n} \NC a_{jk} a_{ki} \NR
+\stopmathalignment\stopformula
+\stopformulas
+\stopANSWER
+
+%eD.1-3
+\startEXERCISE
+證明：兩個下三角矩陣的積是下三角矩陣。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+c_{ij} = \sum_{k=1}^{n}a_{ik} b_{kj}
+\stopformula
+如果 \m{i<j}，則 \m{c_{ij}}：
+\startigBase[a]
+\item 如果 \m{k\le i}，則 \m{k<j}，即 \m{b_{kj} = 0}， \m{a_{ik}b_{kj} = 0}；
+\item 如果 \m{i < k}，則 \m{a_{ik} = 0}， \m{a_{ik}b_{kj} = 0}。
+\stopigBase
+即只要 \m{i<j}，則 \m{c_{ij} = 0}。
+\stopANSWER
+
+%eD.1-4
+\startEXERCISE
+證明：如果 \m{P} 是 \m{n\times n} 排列矩陣， \m{A} 是 \m{n\times n} 矩陣，
+則矩陣積 \m{PA} 是 \m{A} 行變換後的矩陣，
+而矩陣積 \m{AP} 是矩陣 \m{A} 列變換後的矩陣。
+
+證明：兩個排列矩陣的積是排列矩陣。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+PA: c_{ij} = \sum_{i=1}^{n}p_{ik}a_{kj} = a_{kj}|_{p_{ik} = 1} \qquad i\rightarrow k
+\stopformula
+\startformula
+AP: c_{ij} = \sum_{i=1}^{n}a_{ik}p_{kj} = a_{ik}|_{p_{kj} = 1} \qquad j\rightarrow k
+\stopformula
+
+排列矩陣無論是經行變換還是列變換後還是排列矩陣。
+\stopANSWER
+
+\stopsection

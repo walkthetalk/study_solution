@@ -1,0 +1,145 @@
+\startsection[
+  title={The potential method},
+]
+
+%e17.3-1
+\startEXERCISE
+假定有勢函數 \m{\Phi}，對所有 \m{i} 滿足 \m{\Phi(D_i)\ge\Phi(D_0)}，但 \m{\Phi(D_0)\ne 0}。
+證明：存在勢函數 \m{\Phi'}，使得 \m{\Phi'(D_0)=0}，
+對所有 \m{i\ge 1} 滿足 \m{\Phi'(D_i)\ge 0}，
+且使用 \m{\Phi'} 的攤還代價與使用 \m{\Phi} 的攤還代價相同。
+\stopEXERCISE
+
+\startANSWER
+令 \m{\Phi'(D_i)=\Phi(D_i)-\Phi(D_0)}。
+\stopANSWER
+
+%e17.3-2
+\startEXERCISE
+使用勢能法重做\refexercise{power_cost}。
+\stopEXERCISE
+
+\startANSWER
+另勢能函數 \m{\Phi(D_0)=0}，對於 \m{i>0}， \m{\Phi(D_i) = 2 i - 2^{1+\lfloor \lg i\rfloor}}。
+如果 \m{i=1}，則：
+\startformula
+\hat{c_i} = c_i + \Phi(D_i) - \Phi(D_{i-1}) = 1 + 2 - 2^{1+\lceil \lg 1\rceil} - 0 = 1
+\stopformula
+
+如果 \m{i>1}，且 \m{i} 不是 2 的冪：
+\startformula
+\hat{c_i} = c_i + \Phi(D_i) - \Phi(D_{i-1}) = 1 + 2i - 2^{1+\lceil \lg i\rceil} - (2(i-1) - 2^{1+\lceil \lg (i-1)\rceil}) = 3
+\stopformula
+
+如果 \m{i>2^j}， \m{j\in \blackboard{N}}：
+\startformula
+\hat{c_i} = c_i + \Phi(D_i) - \Phi(D_{i-1}) = i + 2i - 2^{1+j} - (2(i-1) - 2^{1+j-1}) = i+2i-2i-2i+2+i = 2
+\stopformula
+
+因此，每個操作的攤還代價爲 3。
+\stopANSWER
+
+%e17.3-3
+\startEXERCISE
+考慮一個包含 \m{n} 個元素的普通二叉最小堆數據結構，
+他支持 \ALGO{INSERT} 和 \ALGO{EXTRACT-MIN} 操作，
+最壞情況時間均爲 \m{O(\lg n)}。
+給出一個勢函數 \m{\Phi}，使得 \ALGO{INSERT} 操作的攤還代價爲 \m{O(\lg n)}，
+而 \ALGO{EXTRACT-MIN} 操作的攤還代價爲 \m{O(1)}，證明他是正確的。
+\stopEXERCISE
+
+\startANSWER
+令勢能函數爲 \m{\Phi(D_i)=k\lg n}，其中 \m{k} 爲堆中元素個數。則 \ALGO{INSERT} 的攤還代價爲：
+\startformula
+\hat{c_i} = c_i + \Phi(D_i) - \Phi(D_{i-1}) \le \lg n + (k+1)\lg n - k\lg n = 2\lg n \in O(\lg n)
+\stopformula
+
+\ALGO{EXTRACT-MIN} 的攤還代價爲：
+\startformula
+\hat{c_i} = c_i + \Phi(D_i) - \Phi(D_{i-1}) \le \lg n + (k-1)\lg n - k\lg n = 0 \in O(1)
+\stopformula
+\stopANSWER
+
+%e17.3-4
+\startEXERCISE
+執行 \m{n} 個 \ALGO{PUSH}、 \ALGO{POP} 和 \ALGO{MULTIPOP} 操作的總代價是多少？
+假定初始時棧中包含 \m{s_0} 個對象，結束後包含 \m{s_n} 個對象。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \sum_{i=1}^{n}c_i \NC = \sum_{i=1}^{n}\hat{c_i} + \Phi(D_i) - \Phi(D_{i-1}) \NR
+\NC \NC = n - s_n + s_0 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e17.3-5
+\startEXERCISE
+假定計數器初值不是 0，而是包含 \m{b} 個 1 的二進制數。
+證明：若 \m{n=\Omega(b)}，則執行 \m{n} 個 \ALGO{INCREMENT} 操作的代價爲 \m{O(n)}。
+（不要假定 \m{b} 是常量）
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \sum_{i=1}^{n}c_i \NC = \sum_{i=1}^{n}\hat{c_i} + \Phi(D_i) - \Phi(D_{i-1}) \NR
+\NC \NC = n - x + b \NR
+\NC \NC \le n - x + n \NR
+\NC \NC = O(n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e17.3-6
+\startEXERCISE
+證明：如何用兩個普通的棧實現一個隊列（\refexercise{two_stack_to_queue}），
+使得每個 \ALGO{ENQUEUE} 和 \ALGO{DEQUEUE} 操作的攤還代價爲 \m{O(1)}。
+\stopEXERCISE
+
+\startANSWER
+令兩個棧分別爲 D 和 E，大小均爲 \m{n}。 E 用於入隊， D 用於出隊。
+
+\CLRSH{ENQUEUE(E,x)}
+\startCLRS
+PUSH(E,x)
+\stopCLRS
+
+\CLRSH{DEQUEUE(E,D)}
+\startCLRS
+if D is empty
+	do
+		x = POP(E)
+		if E is empty
+			return x
+		PUSH(D, x)
+	while true
+else
+	return POP(D)
+\stopCLRS
+
+\ALGO{ENQUEUE} 的攤還代價爲 4， \ALGO{DEQUEUE} 的攤還代價爲 0。
+ \m{k} 個入隊操作剩餘信用爲 \m{3k}。
+第一個出隊操作會用掉 \m{2k} 的信用。
+後續每個出隊操作使用 1 個信用。
+\stopANSWER
+
+%e17.3-7
+\startEXERCISE
+爲動態整數多重集 \m{S} （允許包含重複值）設計一種數據結構，支持如下兩種操作：
+\startigBase[2]
+\item \ALGO{INSERT(S,x)} 將 \m{x} 插入 \m{S} 中。
+\item \ALGO{DELETE-LARGER-HALF(S)} 將最大的 \m{\lceil |S|/2\rceil} 個元素從 \m{S} 中刪除。
+\stopigBase
+解釋如何實現這種數據結構，
+使得任意 \m{m} 個 \ALGO{INSERT} 和 \ALGO{DELETE-LARGER-HALF} 操作的序列能在 \m{O(m)} 時間內完成。
+還要實現一個能在 \m{O(|S|)} 時間內輸出所有元素的操作。
+\stopEXERCISE
+
+\startANSWER
+用數組來存儲元素。
+
+\ALGO{INSERT}：將元素追加到數組中。
+
+\ALGO{DELETE-LARGER-HALF}：在 \m{O(n)} 時間內找到中值，並刪除較大的 \m{\lceil |S|/2\rceil} 個元素。
+\stopANSWER
+
+\stopsection

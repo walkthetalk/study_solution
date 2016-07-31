@@ -1,0 +1,40 @@
+\startsection[
+  title={The accounting method},
+]
+
+%e17.2-1
+\startEXERCISE
+假定對一個規模永遠不會超過 \m{k} 的棧執行一個操作序列。
+執行 \m{k} 個操作後，我們複製整個棧進行備份。
+通過爲不同的棧操作賦予合適的攤還代價，
+證明： \m{n} 個棧操作（包括複製棧）的代價爲 \m{O(n)}。
+\stopEXERCISE
+
+\startANSWER
+\input{tbl/tbl17.2-1}
+\stopANSWER
+
+%e17.2-2
+\startEXERCISE
+用覈算法重做\refexercise{power_cost}。
+\stopEXERCISE
+
+\startANSWER
+\input{tbl/tbl17.2-2}
+\stopANSWER
+
+%e17.2-3
+\startEXERCISE
+假定我們不僅對計數器進行增 1 操作，
+還會進行置 0 操作（即將所有位復位）。
+設檢測或修改一位的時間爲 \m{\Theta(1)}，
+說明如何用一個位數列來實現計數器，
+使得對一個初值爲 0 的計數器執行一個由任意 \m{n} 個 \ALGO{INCREMENT} 和 \ALGO{RESET} 操作組成的序列花費時間爲 \m{O(n)}。
+（\hint 維護一個指針一直指向最高位的 1）
+\stopEXERCISE
+
+\startANSWER
+\input{tbl/tbl17.2-3}
+\stopANSWER
+
+\stopsection

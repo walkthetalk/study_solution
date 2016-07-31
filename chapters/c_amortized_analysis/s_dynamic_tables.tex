@@ -1,0 +1,109 @@
+\startsection[
+  title={Dynamic tables},
+  reference=section:dynamic_tables,
+]
+
+%e17.4-1
+\startEXERCISE
+假定我們希望實現一個動態的開放地址散列表。
+爲什麼我們要在裝載因子達到一個嚴格小於 1 的值 \m{\alpha} 時就認爲表滿？
+簡要描述如何爲動態開放地址散列表設計一個插入算法，
+使得每個插入操作的攤還代價期望值爲 \m{O(1)}。
+爲什麼每個插入操作的實際代價期望值不必對所有插入操作都是 \m{O(1)}。
+\stopEXERCISE
+
+\startANSWER
+主要是表收縮和表擴張所對應的兩個裝載因子閾值，比如擴張用上限 0.8，收縮用下限 0.2。
+\stopANSWER
+
+%e17.4-2
+\startEXERCISE
+證明：如果動態表的 \m{\alpha_{i-1}\ge 1/2}，
+且第 \m{i} 個操作是 \ALGO{TABLE-DELETE}，
+那麼用勢函數公式 (17.6) 所定義操作的攤還代價的上界是一個常數。
+附公式（17.6）：
+\startformula
+\Phi(T) = \startcases
+\NC 2\cdot T.num - T.size \NC \text{若 \m{\alpha(T) \ge 1/2}} \NR
+\NC T.size / 2 - T.num \NC \text{若 \m{\alpha(T) < 1/2}} \NR
+\stopcases
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+如果 \m{\alpha_{i-1}\ge 1/2}， \ALGO{TABLE-DELETE} 不會觸發收縮，
+所以 \m{c_i = 1}， \m{s_i = s_{i-1}}。
+
+如果 \m{\alpha_i\ge 1/2}：
+\startformula\startmathalignment
+\NC \hat{c_i} \NC = c_i + \Phi_i - \Phi_{i-1} \NR
+\NC \NC = 1 + (2n_i - s_i) - (2n_{i-1} - s_{i-1}) \NR
+\NC \NC = 1 + (2(n_{i-1} - 1) - s_{i-1}) - (2n_{i-1} - s_{i-1}) \NR
+\NC \NC = -1 \NR
+\stopmathalignment\stopformula
+
+如果 \m{\alpha_i < 1/2}：
+\startformula\startmathalignment
+\NC \hat{c_i} \NC = c_i + \Phi_i - \Phi_{i-1} \NR
+\NC \NC = 1 + (s_i/2 - n_i) - (2n_{i-1} - s_{i-1}) \NR
+\NC \NC = 1 + (s_{i-1}/2 - (n_{i-1} - 1)) - (2n_{i-1} - s_{i-1}) \NR
+\NC \NC = 2 + \frac{3}{2}s_{i-1} - 3n_{i-1} \NR
+\NC \NC = 2 + \frac{3}{2}s_{i-1} - 3\alpha_{i-1}s_{i-1} \NR
+\NC \NC \le 2 + \frac{3}{2}s_{i-1} - \frac{3}{2}s_{i-1} \NR
+\NC \NC = 2 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e17.4-3
+\startEXERCISE
+假定我們改變表收縮的方式，不是當裝載因子小於 \m{1/4} 時將表規模減半，
+而是當裝載因子小於 \m{1/3} 時將表規模變爲原來的 \m{2/3}。
+使用勢函數：
+\startformula
+\Phi(T) = |2\cdot T.num - T.size|
+\stopformula
+證明：使用此策略， \ALGO{TABLE-DELETE} 操作的攤還代價的上界是一個常數。
+\stopEXERCISE
+
+\startANSWER
+另 \m{c_i} 爲第 \m{i} 個操作的實際代價， \m{\hat{c_i}} 爲攤還代價，
+而 \m{n_i}、 \m{s_i} 和 \m{\Phi_i} 分別爲第 \m{i} 個操作之後表中元素數目，
+表的大小，以及表的勢。
+ \m{\Phi_i} 始終非負，且 \m{\Phi_0 = 0}。
+因此對於所有 \m{i}，都有 \m{\Phi_i \ge \Phi_0}，且總攤還代價存在一個上界。
+
+如果第 \m{i} 個操作是 \ALGO{TABLE-DELETE}，
+則 \m{n_i = n_{i-1} - 1}。
+如果裝載因子沒有低於 \m{1/3}，即 \m{\frac{n_i}{s_{i-1}} \ge \frac{1}{3}}，
+則表不會收縮，即 \m{s_i = s_{i-1}}。
+\startformula\startmathalignment
+\NC \hat{c_i} \NC = c_i + \Phi_i - \Phi_{i-1} \NR
+\NC \NC = 1 + |2n_i - s_i| - |2n_{i-1} - s_{i-1}| \NR
+\NC \NC = 1 + |2n_{i-1} - s_{i-1} - 2| - |2n_{i-1} - s_{i-1}| \qquad n_i = n_{i-1}-1, s_i = s_{i-1} \NR
+\NC \NC \le 1 + |(2n_{i-1} - s_{i-1} - 2) - (2n_{i-1} - s_{i-1})| \qquad \text{三角不等式}\NR
+\NC \NC = 1 + 2 = 3 \NR
+\stopmathalignment\stopformula
+
+如果裝載因子落到了 \m{1/3} 以下，引起了收縮，則：
+\startformula
+\frac{n_i}{s_{i-1}} < \frac{1}{3} \le \frac{n_{i-1}}{s_{i-1}}
+\Rightarrow 2n_i < \frac{2}{3}s_{i-1} \le 2n_i + 2
+\stopformula
+\startformula
+s_i = \left\lceil \frac{2}{3}s_{i-1}\right\rceil
+\Rightarrow \frac{2}{3}s_{i-1} - 1 \le s_i \le \frac{2}{3}s_{i-1}
+\stopformula
+由上面兩式可得 \m{2n_i - 1\le s_i\le 2n_i + 2}，即 \m{|2n_i - s_i|\le 2}。
+
+而又由於 \m{s_{i-1}>3n_i}，因此 \m{|2n_{i-1} - s_{i-1}| = -2n_{i-1} + s_{i-1} \ge n_{i-1}}。
+所以：
+\startformula\startmathalignment
+\NC \hat{c_i} \NC = c_i + \Phi_i - \Phi_{i-1} \NR
+\NC \NC = (n_i + 1) + |2n_i - s_i| - |2n_{i-1} - s_{i-1}| \NR
+\NC \NC \le (n_i+1)+2-n_i = 3 \NR
+\stopmathalignment\stopformula
+
+兩種情況下攤還代價均不大於 3，所以攤還代價上界是一個常數。
+\stopANSWER
+
+\stopsection

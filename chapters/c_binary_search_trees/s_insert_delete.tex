@@ -1,0 +1,203 @@
+\startsection[
+  title={Insertion and deletion},
+]
+
+%e12.3-1
+\startEXERCISE
+給出 \ALGO{TREE-INSERT} 過程的遞歸版本。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{TREE-INSERT(p, z)}
+\startCLRS
+if z.key < p.key
+	if p.left == NIL
+		p.left = z
+		z.p = p
+	else TREE-INSERT(p.left, z)
+else
+	if p.right == NIL
+		p.right = z
+		z.p = p
+	else TREE-INSERT(p.right, z)
+\stopCLRS
+\stopANSWER
+
+%e12.3-2
+\startEXERCISE
+假設通過反復向一棵樹中插入互不相同的關鍵字來構造一棵二叉搜索樹。
+證明：在這棵樹中查找關鍵字所檢查過的節點數目等於先前插入這個關鍵字所檢查的節點數目加 1。
+\stopEXERCISE
+
+\startANSWER
+插入和搜索的路徑是相同的，除了最後一個節點。
+\stopANSWER
+
+%e12.3-3
+\startEXERCISE
+對於給定的 n 個數的集合，可以通過先構造包含這些數據的一棵二叉搜索樹
+（反復使用 \ALGO{TREE-INSERT} 逐個插入這些數），
+然後按中序遍歷輸出這些數，這樣就可以對這些數進行排序。
+這個排序算法的最壞情況運行時間和最好情況運行時間各爲多少？
+\stopEXERCISE
+
+\startANSWER
+最壞情況爲 \m{\Theta(n^2)}，數據本來就是有序的，所生成的二叉樹高度爲 n。
+
+最好情況爲 \m{\Theta(n\lg{n})}，如果所生成的二叉樹高度爲 \m{\Theta(\lg{n})}。
+\stopANSWER
+
+%e12.3-4
+\startEXERCISE
+刪除操作可交換嗎？
+可交換的含義爲：先刪除 x 再刪除 y 所得結果與先刪除 y 再刪除 x 所得結果相同。
+如果是，說明爲什麼？否則給出反例。
+\stopEXERCISE
+
+\startANSWER
+反例：在如下二叉搜索樹中刪除元素 1 和 2。
+\externalfigure[output/e12_3_4-1]
+\stopANSWER
+
+%e12.3-5
+\startEXERCISE
+假設每個節點 x 不是用屬性 \m{x.p} 來指向其父節點，而是用屬性 \m{x.succ} 指向其後繼節點，
+給出用這種方法表示的二叉搜索樹 T 上的 \ALGO{SEARCH}、 \ALGO{INSERT} 和 \ALGO{DELETE} 操作的僞碼。
+這些過程應在 \m{O(h)} 時間內完成，其中 h 是 T 的高度。
+（\hint 你需要實現一個子過程來返回父節點）
+\stopEXERCISE
+
+\startANSWER
+\goto{CSDN}[url(http://blog.csdn.net/hrzr79011/article/details/41889431)]
+
+\ALGO{SEARCH} 不用變。
+
+\CLRSH{TREE-INSERT(T,z)}
+\startCLRS
+y = NIL
+x = T.root
+while x != NIL
+	y = x
+	if z.key < x.key
+		x = x.left
+	else
+		x = x.right
+if y == NIL
+	T.root = z	// T was empty
+	z.succ = NIL
+elseif z.key < y.key
+	y.left = z
+	z.succ = y
+else
+	y.right = z
+	z.succ = y.succ
+	y.succ = z
+\stopCLRS
+
+\CLRSH{TREE-PARENT(T, z)}
+\startCLRS
+x = z
+while x.right != NIL
+	x = x.right
+x = x.succ
+if x == NIL
+	y = T.root
+	while y.right != z
+		y = y.right
+	return y
+else
+	if x.left == z
+		return x	// x is the left child of its' parent
+	else
+		y = x.left
+		while y.right != z
+			y = y.right
+		return y
+\stopCLRS
+
+\CLRSH{TREE-PREDECESSOR(T, z)}
+\startCLRS
+if z.left != NIL
+	y = z.left
+	while y.right != NIL
+		y = y.right
+	return y
+else
+	p = TREE-PARENT(T, z)
+	if p.left == z
+		return NIL
+	esle
+		return p
+\stopCLRS
+
+\CLRSH{TREE-TRANSPLANT(T, u, v)}
+\startCLRS
+y = TREE-PARENT(T, u)
+if y == NIL
+	T.root = v
+else if u == y.left
+	y.left = v
+else
+	y.right = v
+\stopCLRS
+
+\CLRSH{TREE-DELETE(T, z)}
+\startCLRS
+if z.left == NIL
+	TREE-TRANSPLANT(T, z, z.right)
+else if z.right == NIL
+	TREE-TRANSPLANT(T, z, z.left)
+else
+	y = TREE-MINIMUM(z.right)
+	if y != z.right
+		TREE-TRANSPLANT(T, y, y.right)
+		y.right = z.right
+	TREE-TRANSPLANT(T, z, y)
+	y.left = z.left
+pd = TREE-PREDECESSOR(T, z)
+if pd != NIL
+	pd.succ = z.succ
+\stopCLRS
+\stopANSWER
+
+%e12.3-6
+\startEXERCISE
+如果節點 z 在 \ALGO{TREE-DELETE} 中有兩個子節點，
+我們可以選擇其前驅 y 而不是後繼。
+如果這樣做，我們還需要對 \ALGO{TREE-DELETE} 做哪些修改？
+有些人提出了一個公平策略，即賦予前驅和後繼相同的優先級，
+從而得到了更好的實驗性能。
+如何修改 \ALGO{TREE-DELETE} 來實現這樣的策略？
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{TREE-DELETE(T, z)}
+\startCLRS
+if z.left == NIL
+	TRANSPLANT(T, z, z.right)
+else if z.right == NIL
+	TRANSPLANT(T, z, z.left)
+else
+	flag = RANDOM()		// 0 or 1
+	if flag == 0
+		y = TREE-MAXIMUM(z.left)
+		if y ！= z.left
+			TRANSPLANT(T, y, y.left)
+			y.left = z.left
+			y.left.p = y
+		TRANSPLANT(T, z, y)
+		y.right = z.right
+		y.right.p = y
+	else
+		y = TREE-MINIMUM(z.right)
+		if y != z.right
+			TRANSPLANT(T, y, y.right)
+			y.right = z.right
+			y.right.p = y
+		TRANSPLANT(T, z, y)
+		y.left = z.left
+		y.left.p = y
+\stopCLRS
+\stopANSWER
+
+\stopsection

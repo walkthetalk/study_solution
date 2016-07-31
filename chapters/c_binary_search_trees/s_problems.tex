@@ -1,0 +1,259 @@
+\startsubject[
+  title={Problems},
+]
+
+%p12-1
+\startPROBLEM
+（Binary search trees with equal keys）
+相同的關鍵字給二叉搜索樹的實現帶來一個難題。
+\startigBase[a]
+\startitem
+當用 \ALGO{TREE-INSERT} 將 n 個其中帶有相同關鍵字的數據插入到一棵初始爲空的二叉搜索樹中時，
+其漸進性能是多少？
+\stopitem
+
+\startANSWER
+最壞情況下會形成一個只有右子樹的鏈，漸進性能爲 \m{O(n)}。
+\stopANSWER
+
+我們建議通過以下方式改進 \ALGO{TREE-INSERT}：
+在第 5 行前比較 \m{z.key == x.key}，在第 11 行前比較 \m{z.key == y.key}。
+如果比較結果是相等，我們根據以下策略之一來實現。
+對於每種策略，找到上一項的答案。
+（對於第 5 行，策略是比較 z 和 x，而對於第 11 行，是比較 z 和 y）
+
+\startitem
+在節點 x 中維護一個布爾標志，並根據 \m{x.b} 的值將 x 設置成 \m{x.left} 或者 \m{x.right}，
+這樣當插入的關鍵字與 x 相同時， \m{x.b} 的值就會在 FALSE 和 TRUE 間來回切換。
+\stopitem
+
+\startANSWER
+所構造的是平衡二叉樹，時間爲 \m{O(\lg{n})}。
+\stopANSWER
+
+\startitem
+在 x 中維護一個鏈表，存儲關鍵字與 x 相同的節點，將 z 插入此鏈表。
+\stopitem
+
+\startitem
+隨機地將 x 設置成 \m{x.left} 或 \m{x.right}。
+（給出最壞情況的性能，並導出期望運行時間）
+\stopitem
+\stopigBase
+\stopPROBLEM
+
+%p12-2
+\startPROBLEM
+（Radix trees）
+給定兩個字串 \m{a=a_0 a_1 \ldots a_p} 和 \m{b=b_0 b_1 \ldots b_q}，
+這裏每個 \m{a_i} 和 \m{b_j} 是以字符集的某種次序出現的，
+如果下面兩種規則之一成立，
+就稱字串 \m{a} {\EMP 按字典序小於}（lexicographically less than）字串 \m{b}：
+\startigBase[n]
+\startitem
+存在一個整數 j，其中 \m{0\le j \le \min(p,q)}，
+使得對所有的 \m{i=0,1,\ldots,j-1}， \m{a_i=b_i} 都成立，且 \m{a_j < b_j}。
+\stopitem
+
+\startitem
+\m{p<q}，且對所有的 \m{i=0,1,\ldots,p}，都有 \m{a_i=b_i}。
+\stopitem
+\stopigBase
+
+例如，如果 a 和 b 是位串，那麼 \m{10 100 < 10 110} （由規則 1，取 \m{j=3}），
+ \m{10 100 < 101 000} （由規則 2）。
+這種次序類似於英語字典中的排序。
+
+{\EMP 基數樹}（radix tree）數據結構如下圖所示，
+這個樹存儲了位串 \m{1011}、 \m{10}、 \m{011}、 \m{100} 和 \m{0}。
+當對一個關鍵字 \m{a=a_0 a_1 \ldots a_p} 進行查找時，
+在深度爲 i 的一個節點處，如果 \m{a_i=0}，則走左側；
+如果 \m{a_i=1}，則走右側。
+設 S 是一個不同位串組成的集和，各個串長度值和爲 n。
+說明如何使用一顆基數樹在 \m{\Theta(n)} 時間內按字典序對 S 進行排序。
+對於下圖所示的例子，排序輸出的應該是序列 \m{0}、 \m{011}、 \m{10}、 \m{100}、 \m{1011}。
+
+\externalfigure[output/p12_2-1]
+\stopPROBLEM
+
+%p12-3
+\startPROBLEM
+（Average node depth in a randomly built binary search tree）
+現有一棵隨機構建的二叉搜索樹，証明其節點平均深度為 \m{O(\lg{n})}。
+雖然此結果比定理 12.4 要弱，但是我們要使用的方法將會告訴你，構建二叉搜索樹的過程，
+與\refsection{rand_quicksort} 中執行 \ALGO{RANDOMIZED-QUICKSORT} 驚人的相似。
+
+給定二叉搜索樹 \m{T}，其中任一節點 \m{x} 的深度為 \m{d(x, T)}，則所有節點深度的和為 \m{P(T)}，
+稱為 \m{T} 的 {\EMP 路徑總長度（total path length）}。
+
+\startigBase[a]
+
+\startitem
+証明 \m{T} 中節點的平均深度為：
+\startformula
+\frac{1}{n}\sum_{x\in T} d(x,T) = \frac{1}{n} P(T)
+\stopformula
+\stopitem
+
+\startANSWER
+根據定義 \m{P(T)=\sum_{x\in T}d(x,T)}，兩邊同除以 \m{n} 即可。
+\stopANSWER
+
+下面來証明 \m{P(T)} 的期望值為 \m{O(n\lg{n})}。
+\startitem
+令 \m{T} 的左右子樹分別為 \m{T_L} 和 \m{T_R}。
+証明如果 \m{T} 有 \m{n} 個節點，則：
+\startformula
+P(T) = P(T_L) + P(T_R) + n - 1
+\stopformula
+\stopitem
+
+\startANSWER
+對於 \m{T_L} 中任一節點 \m{x}，有 \m{d(x, T) = d(x, T_L) + 1}。
+則：
+\startformula\startmathalignment
+\NC P(T) \NC = \sum_{x\in T}d(x, T) \NR
+\NC      \NC = \sum_{x\in T_L}d(x, T) + \sum_{x\in T_R}d(x, T) \NR
+\NC      \NC = \sum_{x\in T_L}(d(x, T_L) + 1) + \sum_{x\in T_R}(d(x, T_R) + 1) \NR
+\NC      \NC = \sum_{x\in T_L}d(x, T_L) + \sum_{x\in T_R}d(x, T_R) + (n - 1) \NR
+\NC      \NC = P(T_L) + P(T_R) + n - 1 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startitem
+有一棵隨機構建的二叉搜索樹，其中有 \m{n} 個節點，令其平均路徑長度為 \m{P(n)}。証明：
+\startformula
+P(n) = \frac{1}{n}\sum_{i=0}^{n-1}(P(i) + P(n-i-1) + n - 1)
+\stopformula
+\stopitem
+
+\startANSWER
+既然是隨機構建，則左右子樹的節點數目也是隨機的，共有 \m{n} 種情況，
+即左右子樹的節點數是 \m{(0,n-1)}、 \m{(1,n-2)}、 \m{\cdots}、{(n-1,0)} 中的任一種。
+根據上一項的結果即得。
+\stopANSWER
+
+\startitem
+如何將 \m{P(n)} 改寫為：
+\startformula
+P(n) = \frac{2}{n}\sum_{k=1}^{n-1}P(k)+\Theta(n)
+\stopformula
+\stopitem
+
+\startANSWER
+展開上一項的結果，並去除 \m{P(0)} 即可。（\m{P(0) = 0}）
+\stopANSWER
+
+\startitem
+回顧一下\refproblem{alt_quicksort_analysis} 中對隨機快速排序的分析，試證明： \m{P(n)=O(n\lg{n})}。
+\stopitem
+
+\startANSWER
+請參考\refproblem{alt_quicksort_analysis} 的解答。
+\stopANSWER
+
+快速排序中每次遞迴調用，我們都會隨機選擇一個主元來分割要排序的元素。
+二叉搜索樹中，每個節點都可以看作是分割其子樹的主元。
+\startitem
+試說明快速排序時所進行的比較與往二叉搜索樹中插入元素所進行的比較相同。
+（比較的次序可能不同，但比較所涉及的元素必須相同）
+\stopitem
+
+\startANSWER
+將快速排序時所選的主元作爲子樹的跟節點。
+主元將子數列分成了兩部分，這兩部分就是主元的左右兩棵子樹。
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM % 12-3
+
+% p12-4
+\startPROBLEM
+（Number of different binary trees）
+令 \m{b_n} 表示由 \m{n} 個節點所構成的二叉樹的數目。
+本題會給出 \m{b_n} 的公式以及漸進估計。
+\startigBase[a]
+\startitem
+證明 \m{b_0=1}，且當 \m{n\ge 1} 時，
+\startformula
+b_n = \sum_{k=0}^{n-1}b_k b_{n-1-k}
+\stopformula
+\stopitem
+
+\startANSWER
+略。
+\stopANSWER
+
+\startitem
+參考\refproblem{generating_function} 中生成函數的定義，令 \m{B(x)} 爲生成函數：
+\startformula
+B(x) = \sum_{n=0}^{\infty}b_n x^n
+\stopformula
+試證明 \m{B(x) = x B(x)^2 + 1}，及：
+\startformula
+B(x) = \frac{1}{2x}(1 - \sqrt{1-4x})
+\stopformula
+\stopitem
+
+\startANSWER
+略。
+\stopANSWER
+\stopigBase
+
+\m{f(x)} 在 \m{x=a} 處{\EMP 泰勒展開式（Taylor expansion）}爲：
+\startformula
+f(x) = \sum_{k=0}^{\infty}\frac{f^{(k)}(a)}{k!}(x-a)^k
+\stopformula
+其中 \m{f^{(k)}(x)} 是 \m{f} 對 \m{x} 的 \m{k} 階導數。
+
+\startigBase[continue]
+\startitem
+用 \m{\sqrt{1-4x}} 在 \m{x=0} 處的泰勒展開式證明：
+\startformula
+b_n = \frac{1}{n+1}\binom{2n}{n}
+\stopformula
+（即第 \m{n} 個 {\EMP Catalan number}）如果不想用泰勒展開式，也可以使用二項展開式，
+參見\refsection{geometric_binom}，
+將其推廣到非整數的指數 \m{n} 上去，也就是對於所有實數 \m{n} 和任一整數 \m{k}，
+當 \m{k\ge 0} 時，\m{\binom{n}{k}} 可以表示爲 \m{n(n-1)\cdots(n-k+1)/k!}，否則爲 0。
+\stopitem
+
+\startANSWER
+令 \m{f(x) = \sqrt{1-4x}}，其泰勒展開式爲：
+\startformula
+\sqrt{1-4x} = 1 - \frac{2}{1!}x - \frac{4}{2!}x^2 - \frac{24}{3!}x^3 - \frac{240}{4!}x^4 - \cdots
+\stopformula
+因此：
+\startformula\startmathalignment
+\NC B(x) \NC = \frac{1}{2x}(1-\sqrt{1-4x}) \NR
+\NC      \NC = \frac{2}{1!}x + \frac{4}{2!}x^2 + \frac{24}{3!}x^3 + \frac{240}{4!}x^4 + \cdots \NR
+\NC      \NC = \frac{1}{1!} + \frac{2}{2!}x + \frac{12}{3!}x^2 + \frac{120}{4!}x^3 + \cdots \NR
+\NC      \NC = \sum_{n=1}^{\infty}\frac{(2n-2)!}{n(n-1)!(n-1)!}x^{n-1} \NR
+\NC      \NC = \sum_{n=0}^{\infty}\frac{1}{n+1}\binom{2n}{n}x^n \NR
+\NC B(x) \NC = \sum_{n=0}^{\infty}b_n x^n \NR
+\stopmathalignment\stopformula
+所以：
+\startformula
+b_n = \frac{1}{n+1}\binom{2n}{n}
+\stopformula
+\stopANSWER
+
+\startitem
+證明： \m{b_n = \frac{4^n}{\sqrt{\pi}n^{3/2}}(1+O(1/n))}。
+\stopitem
+
+\startANSWER
+由 Stirling‘s approximation：
+\startformula
+n! = \sqrt{2\pi n}\left(\frac{n}{e}\right)^n\left(1 + \Theta(\frac{1}{n})\right)
+\stopformula
+可得：
+\startformula
+b_n = \frac{1}{n+1}\binom{2n}{n} = \frac{4^n}{\sqrt{\pi}n^{3/2}}(1 + O(\frac{1}{n}))
+\stopformula
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+\stopsubject%Problems

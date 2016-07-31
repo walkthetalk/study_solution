@@ -1,0 +1,127 @@
+\startsection[
+  title={Randomly built binary search trees},
+]
+
+%e12.4-1
+\startEXERCISE
+證明等式 12.3。附等式 12.3：
+\startformula
+\sum_{i=0}^{n-1}\binom{i+3}{3} = \binom{n+3}{4}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \sum_{i=0}^{n-1}\binom{i+3}{3}
+    \NC = \binom{4}{4} + \sum_{i=1}^{n-1}\binom{i+3}{3} \NR
+\NC \NC = \binom{4}{4} + \binom{4}{3} + \sum_{i=2}^{n-1}\binom{i+3}{3} \NR
+\NC \NC = \binom{5}{4} + \sum_{i=2}^{n-1}\binom{i+3}{3} \NR
+\NC \NC = \binom{6}{4} + \sum_{i=3}^{n-1}\binom{i+3}{3} \NR
+\NC \NC = \ldots \NR
+\NC \NC = \binom{n+3}{4} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e12.4-2
+\startEXERCISE
+請描述這樣一棵有 n 個節點的二叉搜索樹，
+其樹中節點的平均深度爲 \m{\Theta(\lg{n})}，
+但這棵樹的高度是 \m{\omega(\lg{n})}。
+一棵有 n 個節點的二叉搜索樹中節點的平均深度爲 \m{\Theta(\lg{n})}，
+給出這棵樹高度的一個漸進上界。
+\stopEXERCISE
+
+\startANSWER
+假設這樣構建二叉樹：給定 n 個節點，取 \m{f(n)} 個節點放在一邊。
+然後構建一個二叉樹，使得根結點的左子樹是一個完全二叉樹，
+有 \m{n-f(n)-1} 個節點，而右子樹則是 \m{f(n)} 個節點構成的鏈。
+後面再處理那 \m{f(n)} 個節點。
+
+根的左子樹平均深度是多少？由於我們只想得到一個漸進界，
+讓我們選取一個 n，使得 \m{n-f(n)-1} 正好比 2 的冪小 1，即 \m{2^k-1}。
+這種情況下，這部分的總高度爲 \m{1\times 2+2\times 3+4\times 4+8\times 5+\ldots+2^{k-1}\times k}。
+總數約爲 \m{2^k\times k}，即 \m{(n-f(n))\log{(n-f(n))}}，只跟 k 有關。
+而對於另外一部分，總高度爲 \m{f(n)^2}。
+即整棵樹的平均高度爲 \m{((n-f(n))\log{(n-f(n))} + f(n)^2)/n}。
+而樹的高度爲 \m{f(n)}，所以我們要使得 \m{f(n)} 最大化，並保持平均高度 \m{O(\log{n})}。
+
+我們需要找到 \m{f(n)}，使得：
+\startigBase[n]
+\item \m{n-f(n)=\Theta(n)}，否則分子中的 \m{\log} 項會消失，從而使高度不再是指數級的；
+\item \m{f(n)^2/n=O(\log{n})}，否則分子中的第二項就太大了。
+\stopigBase
+
+如果選擇 \m{f(n)=\Theta(\sqrt(n\log{n}))}，則這兩項都得到了最大滿足。
+即樹的高度爲 \m{\Theta(\sqrt(n\log{n}))}，而平均高度爲 \m{\Theta(\log{n})}。
+
+參見 \goto{stackoverflow}[url(http://stackoverflow.com/questions/9257464/give-an-asymptotic-upper-bound-on-the-height-of-an-n-node-binary-search-tree-in)]。
+\stopANSWER
+
+%e12.4-3
+\startEXERCISE
+說明含有 n 個關鍵字的隨機選擇二叉搜索樹的概念，
+這裏每一棵 n 個節點的二叉搜索樹都是等可能的被選擇，
+不同於本節中給出的隨機構建二叉搜索樹的概念。
+（\hint 當 \m{n=3} 時，列出所有的可能。）
+\stopEXERCISE
+
+\startANSWER
+排列 \m{213} 和 \m{231} 所構建的二叉樹相同。
+\stopANSWER
+
+%e12.4-4
+\startEXERCISE
+證明：函數 \m{f(x)=2^x} 是凸的。
+\stopEXERCISE
+
+\startANSWER
+\m{f''(x) > 0}
+\stopANSWER
+
+%e12.4-5
+\startEXERCISE\DIFFICULT
+考慮在 n 個互不相同的輸入數據的序列上執行 \ALGO{RANDOMIZED-QUICKSORT} 操作。
+證明：對於任何常數 \m{k>0}， \m{n!} 種輸入排列除了其中的 \m{O(1/n^k)} 種之外，
+運行時間都爲 \m{O(n\lg{n})}。
+\stopEXERCISE
+
+\startANSWER
+\ALGO{QUICKSOR} 生成二叉搜索樹，每層總時間開銷爲 \m{O(n)}。
+總時間爲 \m{O(n h_n)}，其中 \m{h_n} 爲樹的高度，是一個隨機變量。
+ \m{E(h_n) = c\lg{n}}。
+ \m{\omega(n\lg{n})} 時間概率爲：
+\startformula
+ \Pr\left{\lim_{n\rightarrow\infty}\frac{h_{\pi(n)}}{c\lg{n}} = \infty\right}
+\stopformula
+
+要證明：
+\startformula
+\forall\rho
+  \lim_{n\rightarrow\infty}n^\rho
+  \Pr\left{\lim_{n\rightarrow\infty}\frac{h_{\pi(n)}}{c\lg{n}} < \infty\right}
+\stopformula
+只需要證明：
+\startformula
+ \Pr\left{\lim_{n\rightarrow\infty}\frac{h_{\pi(n)}}{c\lg{n}} = 0\right}
+\stopformula
+
+其中 \m{h_{\pi(n)}} 表示 \m{1\ldots n} 的排列 \m{\pi(n)} 生成的二叉搜索樹的高度。
+事件可等價表示爲：
+\startformula\startmathalignment
+\NC  \NC \lim_{n\rightarrow\infty}\frac{h_{\pi(n)}}{c\lg{n}} = \infty \NR
+\NC \Leftrightarrow \NC \forall K \exists N(K), n > N(K), \frac{h_{\pi(n)}}{c\lg{n}} > K \NR
+\NC \Leftrightarrow \NC \bigcap_{K}\left{\frac{h_{\pi(n)}}{c\lg{n}} > K | n>N(K) \right} \NR
+\stopmathalignment\stopformula
+
+由 Markov 不等式可得：
+\startformula
+\Pr\left{ \frac{h_{\pi(n)}}{c\lg{n}} > K \right} < \frac{1}{K}
+\stopformula
+
+\startformula
+\Pr\left{ \bigcap_{K}\left{\frac{h_{\pi(n)}}{c\lg{n}} > K | n>N(K) \right} \right} < \frac{1}{K} \forall K=0
+\stopformula
+
+\stopANSWER
+
+\stopsection

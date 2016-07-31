@@ -1,0 +1,149 @@
+\startsection[
+  title={Querying a binary search tree},
+]
+
+%e12.2-1
+\startEXERCISE
+假設一棵二叉搜索樹中的節點在 1 到 1000 之間，
+現在想要查找數值爲 363 的節點。
+下面序列中哪個不是查找過的序列？
+\startigBase[a]
+\item \m{2,252,401,398,330,344,397,363}；
+\item \m{924,220,911,244,898,258,362,363}；
+\item \m{925,202,911,240,912,245,363}；
+\item \m{2,399,387,219,266,382,381,278,363}；
+\item \m{935,278,347,621,299,392,358,363}；
+\stopigBase
+\stopEXERCISE
+
+\startANSWER
+c 中 911 和 912 不符合二叉搜索樹的性質。
+
+e 中 347 和 299 不符合二叉搜索樹的性質。
+\stopANSWER
+
+%e12.2-2
+\startEXERCISE
+寫出 \ALGO{TREE-MINIMUM} 和 \ALGO{TREE-MAXIMUM} 的遞歸版本。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{TREE-MINIMUM(x)}
+\startCLRS
+if x.lchild == NIL
+	return x;
+else
+	TREE-MINIMUM(x.lchild)
+\stopCLRS
+
+\CLRSH{TREE-MAXIMUM(x)}
+\startCLRS
+if x.rchild == NIL
+	return x;
+else
+	TREE-MAXIMUM(x.rchild)
+\stopCLRS
+\stopANSWER
+
+%e12.2-3
+\startEXERCISE
+寫出過程 \ALGO{TREE-PREDECESSOR} 的僞碼。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{TREE_PREDECESSOR(x)}
+\startCLRS
+if x.lchild != NIL
+	return TREE-MAXIMUM(x.lchild)
+y = x.p
+while y != NIL and y.lchild == x
+	x = y
+	y = y.p
+return y
+\stopCLRS
+\stopANSWER
+
+%e12.2-4
+\startEXERCISE
+Bunyan 教授認爲他發現了一個二叉搜索樹的重要性質。
+假設在一棵二叉搜索樹中查找一個關鍵字 k，查找結束於一個樹葉。
+考慮三個集合： A 爲查找路徑左邊的關鍵字集合；
+ B 爲查找路徑上的關鍵字集合； C 爲查找路徑右邊的關鍵字集合。
+ Bunyan 教授聲稱：任何 \m{a\in A}， \m{b\in B} 和 \m{c\in C}，一定滿足 \m{a\le b\le c}。
+請給出該教授這個論斷的一個可能的最小反例。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e12_2_4-1]
+查找路徑爲 \m{(1,3,4)\in B}， \m{2\in A}，所以 \m{2>1}。
+\stopANSWER
+
+%e12.2-5
+\startEXERCISE
+證明：如果一棵二叉搜索樹中的一個節點有兩個孩子，
+那麼他的後繼沒有左孩子，他的前驅沒有右孩子。
+\stopEXERCISE
+
+\startANSWER
+令此節點爲 x，後繼爲 y，而後繼 y 有左孩子 z，y 和 z 均在 x 的右子樹上，
+則 \m{x < z < y}，這與 y 爲 x 的後繼相矛盾，所以 x 的後繼沒有左孩子。
+
+同理， x 的前驅沒有右孩子。
+\stopANSWER
+
+%e12.2-6
+\startEXERCISE
+考慮一棵二叉搜索樹 T，其關鍵字互不相同。
+證明：如果 T 中一個節點 x 的右子樹爲空，且 x 有一個後繼 y，
+那麼 y 一定是 x 的最底層祖先。並且 y 的左孩子也是 x 的祖先。
+（注意：每個節點都是他自己的祖先。）
+\stopEXERCISE
+
+\startANSWER
+若 x 是其後繼 y 的左孩子，那麼 \m{x.key\le y.key}，
+所以 y 是 x 的最低祖先， y 的左孩子 x 也是 x 的祖先。
+
+若 x 是其後繼 y 的右孩子，那麼 \m{x.key\ge y.key}，這明顯與後繼的定義相矛盾。
+
+若 x 是其後繼 y 的左孩子 z 的右孩子，那麼 \m{z.key\le x.key\le y.key}，
+所以 y 的左孩子 z 是 x 的祖先， y 是 x 的最低祖先。
+\stopANSWER
+
+%e12.2-7
+\startEXERCISE
+對於一棵有 n 個節點的二叉搜索樹，有另一種方法來實現中序遍歷，
+先調用 \ALGO{TREE-MINIMUM} 找到這棵樹中的最小元素，
+然後再調用 \m{n-1} 次的 \ALGO{TREE-SUCCESSOR}。
+證明：該算法的運行時間爲 \m{\Theta(n)}。
+\stopEXERCISE
+
+\startANSWER
+此方法等同於 \ALGO{INORDER-TREE-WALK}。
+
+在 \m{n-1} 條邊上，通過每條邊最多兩次。
+\stopANSWER
+
+%e12.2-8
+\startEXERCISE[exercise:cont_successor]
+證明：在一棵高度爲 h 的二叉搜索樹中，不論從哪個節點開始，
+ k 次連續的 \ALGO{TREE-SUCCESSOR} 調用所需時間爲 \m{O(k+h)}。
+\stopEXERCISE
+
+\startANSWER
+假設從根結點開始運行 n 步，總時間爲 \m{O(n+h)}。
+則從 \m{n-k+1} 到 \m{n} 的連續 k 步開銷爲 \m{O(k+h)}。
+\stopANSWER
+
+%e12.2-9
+\startEXERCISE
+設 T 是一棵二叉搜索樹，其關鍵字互不相同；
+設 x 是一個葉子節點， y 爲其父節點。
+證明： \m{y.key} 是 T 中大於 \m{x.key} 的最小關鍵字，
+或者是 T 中小於 \m{x.key} 的最大關鍵字。
+\stopEXERCISE
+
+\startANSWER
+按中序遍歷， x 和 y 相鄰。
+\stopANSWER
+
+\stopsection

@@ -1,0 +1,155 @@
+\startsection[
+  title={What is a binary search tree?},
+]
+
+%e12.1-1
+\startEXERCISE
+對於關鍵字集合 \m{\{1,4,5,10,16,17,21\}}，分別畫出高度爲 2、 3、 4、 5 和 6 的二叉搜索樹。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e12_1_1-1]
+\externalfigure[output/e12_1_1-2]
+\externalfigure[output/e12_1_1-3]
+\externalfigure[output/e12_1_1-4]
+\externalfigure[output/e12_1_1-5]
+\stopANSWER
+
+%e12.1-2
+\startEXERCISE
+二叉搜索樹的性質與最小堆（參見\refsection{heaps}）性質有什麼不同？
+能使用最小堆性質在 \m{O(n)} 時間內按序輸出一棵有 n 個節點的二叉搜索樹的所有關鍵字嗎？
+可以的話，請說明如何做，否則解釋理由。
+\stopEXERCISE
+
+\startANSWER
+二叉搜索樹：左子樹所有節點小於自己，右子樹的所有節點大於自己。
+
+最小堆：左子樹和右子樹的所有節點均大於自己。
+
+不能。原因是最小堆中左右子樹的大小關係不固定。
+結果就是不能按照樹的前、中、後序遍歷在 \m{O(n)} 時間內按序輸出。
+而二叉搜索樹，左右子樹大小關係固定，可以用中序遍歷按序輸出。
+\stopANSWER
+
+%e12.1-3
+\startEXERCISE
+設計一個執行中序遍歷的非遞歸算法。
+（\hint 種較爲簡單的方法是使用棧作爲輔助結構；
+另一種較複雜但比較簡潔的做法是不用棧，但要假設能測試兩個指針是否相等。）
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{INORDER-TREE-WALK(root)}
+\startCLRS
+prev = NIL
+node = root
+while node ！= NIL
+	if prev == node.p
+		if node.left != NIL
+			prev = node
+			node = node.left
+		else
+			output node.key
+			if node.right != NIL
+				prev = node
+				node = node.right
+			else
+				prev = node
+				node = node.p
+	else if prev == node.left
+		output node.key
+		if node.right != NIL
+			prev = node
+			node = node.right
+		else
+			prev = node
+			node = node.p
+	else if prev == node.right
+		prev = node
+		node = node.p
+\stopCLRS
+\stopANSWER
+
+%e12.1-4
+\startEXERCISE
+對於一棵有 n 個節點的二叉搜索樹，
+設計可以在 \m{\Theta(n)} 時間內完成的先序遍歷算法和後序遍歷算法。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{PREORDER-TREE-WALK(root)}
+\startCLRS
+prev = NIL
+node = root
+while node ！= NIL
+	if prev == node.p
+		output node.key
+		if node.left != NIL
+			prev = node
+			node = node.left
+		else
+			if node.right != NIL
+				prev = node
+				node = node.right
+			else
+				prev = node
+				node = node.p
+	else if prev == node.left
+		if node.right != NIL
+			prev = node
+			node = node.right
+		else
+			prev = node
+			node = node.p
+	else if prev == node.right
+		prev = node
+		node = node.p
+\stopCLRS
+
+\CLRSH{POSTORDER-TREE-WALK(root)}
+\startCLRS
+prev = NIL
+node = root
+while node ！= NIL
+	if prev == node.p
+		if node.left != NIL
+			prev = node
+			node = node.left
+		else
+			if node.right != NIL
+				prev = node
+				node = node.right
+			else
+				output node.key
+				prev = node
+				node = node.p
+	else if prev == node.left
+		if node.right != NIL
+			prev = node
+			node = node.right
+		else
+			output node.key
+			prev = node
+			node = node.p
+	else if prev == node.right
+		output node.key
+		prev = node
+		node = node.p
+\stopCLRS
+\stopANSWER
+
+%e12.1-5
+\startEXERCISE
+因爲在基於比較的排序模型中，完成 n 個元素的排序，
+其最壞情況下需要 \m{\Omega(n\lg{n})} 的時間。
+試證明：任何基於比較的算法從 n 個元素的任意序列中構造一棵二叉搜索樹，
+其最壞情況下需要 \m{\Omega(n\lg{n})} 的時間。
+\stopEXERCISE
+
+\startANSWER
+構造二叉搜索樹的過程本質就是一個排序的過程，
+所以最壞情況需要的時間與比較排序相同，都是 \m{\Omega(n\lg{n})}。
+\stopANSWER
+
+\stopsection

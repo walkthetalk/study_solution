@@ -1,0 +1,139 @@
+\startsection[
+  title={Asymptotic notation},
+]
+
+\startEXERCISE
+證明 \m{\max(f(n),g(n)) = \Theta(f(n)+g(n))}。
+\stopEXERCISE
+\startANSWER
+由於單調遞增，則：
+\startformula\startalign[n=3]
+\NC \exists n_1, n_2: \NC f(n) \geq 0 \NC \quad\text{若 \m{n > n_1}；} \NR
+\NC                   \NC g(n) \geq 0 \NC \quad\text{若 \m{n > n_2}。} \NR
+\stopalign\stopformula
+
+設 \m{n_0 = \max(n_1,n_2)}，對於 \m{n > n_0}：
+\startformula\startalign
+\NC f(n) \NC \leq \max(f(n), g(n)) \NR
+\NC g(n) \NC \leq \max(f(n), g(n)) \NR
+\NC (f(n) + g(n))/2 \NC \leq \max(f(n),g(n)) \NR
+\NC \max(f(n), g(n)) \NC \leq f(n) + g(n) \NR
+\stopalign\stopformula
+
+對於最後兩個不等式，有：
+\startformula
+0 \leq \frac{1}{2}(f(n)+g(n)) \leq \max(f(n),g(n)) \leq f(n) + g(n)\text{，若 \m{n > n_0}。}
+\stopformula
+
+這與 \m{\Theta(f(n)+g(n))} 的定義一致，其中 \m{c_1 = 1/2}， \m{c_2=1}。
+
+\stopANSWER
+
+\startEXERCISE
+證明：對於任意實數常量 \m{a} 和 \m{b}，其中 \m{b>0}，有：
+\startformula
+(n+a)^b = \Theta(n^b)
+\stopformula
+\stopEXERCISE
+\startANSWER
+\startformula
+(n + a)^b = \binom{n}{0}n^b + \binom{n}{1}n^{b-1}b + \cdots + \binom{n}{0}a^b
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+解釋一下爲什麼說“算法 \m{A} 的運行時間至少是 \m{O(n^2)}”沒有任何意義。
+\stopEXERCISE
+\startANSWER
+\m{O} 是指上界，“至少”是指下界。
+\stopANSWER
+
+\startEXERCISE
+\m{2^{n+1} = O(2^n)}？ \m{2^{2n} = O(2^n)}？
+\stopEXERCISE
+\startANSWER
+\m{2^{n+1} = O(2^n)}。
+
+\m{2^{2n} \neq O(2^n)}，因爲\m{\nexists c: 2^n \cdot 2^n \leq c 2^n}。
+\stopANSWER
+
+\startEXERCISE
+證明定理 3.1。
+
+當且僅當 \m{f(n) = O(g(n))} 並且 \m{f(n) = \Omega(g(n))} 時，才有 \m{f(n) = \Theta(g(n))}。
+\stopEXERCISE
+\startANSWER
+如果 \m{f(n) = \Theta(g(n))}，則：
+\startformula
+0 \leq c_1g(n) \leq f(n) \leq c_2g(n) \quad \text{若} n > n_0
+\stopformula
+將兩個常數 \m{c_1} 和 \m{c_2} 代入 \m{O} 和 \m{\Omega} 的定義中即得：
+\startformula\startalign
+\NC f(n) \NC = O(g(n)) \NR
+\NC f(n) \NC = \Omega(g(n)) \NR
+\stopalign\stopformula
+
+如果 \m{f(n) = O(g(n))} 並且 \m{f(n) = \Omega(g(n))}，則：
+\startformula\startalign
+0 \leq c_3g(n) \leq f(n) \NC \quad \text{若} n \geq n_1 \NR
+0 \leq f(n) \leq c_4g(n) \NC \quad \text{若} n \geq n_2 \NR
+\stopalign\stopformula
+設 \m{n_3=\max(n_1,n_2)}，合並兩個不等式，得：
+\startformula
+0 \leq c_3g(n) \leq f(n) \leq c_4g(n) \quad \text{若} n > n_3
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明當且僅當算法的最壞情況運行時間爲 \m{O(g(n))}，且最好情況運行時間爲 \m{\Omega(g(n))} 時，
+其運行時間才是 \m{\Theta(g(n))}。
+\stopEXERCISE
+\startANSWER
+設最壞情況運行時間爲 \m{T_w}，最好情況運行時間爲 \m{T_b}，則：
+\startformula\startalign
+\NC 0 \leq c_1g(n) \leq T_b(n) \NC \quad \text{若} n > n_b \NR
+\NC 0 \leq T_w(n) \leq c_2g(n) \NC \quad \text{若} n > n_w \NR
+\stopalign\stopformula
+
+結合兩式，有：
+\startformula
+0 \leq c_1g(n) \leq T_b(n) \leq T_w(n) \leq c_2g(n)
+   \quad \text{若} n > \max(n_b, n_w)
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明集合 \m{o(g(n)) \cap \omega(g(n))} 爲空。
+\stopEXERCISE
+\startANSWER
+對於常量 \m{c > 0}：
+\startformula\startalign
+\NC \exists n_1 > 0 : \NC 0 \leq f(n) < cg(n) \NR
+\NC \exists n_2 > 0 : \NC 0 \leq cg(n) < f(n) \NR
+\stopalign\stopformula
+
+如果 \m{n_0 = \max(n_1,n_2)}，則：
+\startformula
+f(n) < cg(n) < f(n)
+\stopformula
+顯然此不等式不成立，不存在這樣的函式 \m{f(n)}。
+\stopANSWER
+
+\startEXERCISE
+將參數 \m{n} 推廣爲兩個參數 \m{m} 和 \m{n}，
+存在正常數 \m{c}、 \m{n_0} 和 \m{m_0}，
+使得對於所有的 \m{n\geq n_0} 或 \m{m\geq m_0}，
+有 \m{0 \leq f(n,m) \leq cg(n,m)}，即 \m{O(g(n,m)) = f(n,m)}。
+給出 \m{\Omega(g(n,m))} 和 \m{\Theta(g(n,m))} 的定義。
+\stopEXERCISE
+\startANSWER
+存在正常數 \m{c}、 \m{n_0} 和 \m{m_0}，
+使得對於所有的 \m{n\geq n_0} 或 \m{m\geq m_0}，
+有 \m{0 \leq cg(n,m) \leq f(n,m)}，即 \m{\Omega(g(n,m)) = f(n,m)}。
+
+存在正常數 \m{c_1}、 \m{c_2}、 \m{n_0} 和 \m{m_0}，
+使得對於所有的 \m{n\geq n_0} 或 \m{m\geq m_0}，
+有 \m{0 \leq c_1g(n,m) \leq f(n,m) \leq c_2g(n,m)}，即 \m{\Theta(g(n,m)) = f(n,m)}。
+\stopANSWER
+
+\stopsection

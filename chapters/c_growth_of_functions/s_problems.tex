@@ -1,0 +1,405 @@
+\startsubject[
+  title={Problems},
+]
+
+%p3-1
+\startPROBLEM
+（多項式的漸近行爲）
+設\m{p(n) = \sum_{i = 0}^{d} {a_i n^i}}是關於\m{n}的\m{d}次多項式，
+其中\m{a_d > 0}，\m{k}是一個常量。用漸進記號的定義證明下列性質。
+\startigBase[a]
+\item 如果\m{k \geq d}，那麼\m{p(n) = O(n^k)}。
+\item 如果\m{k \leq d}，那麼\m{p(n) = \Omega(n^k)}。
+\item 如果\m{k = d}，那麼\m{p(n) = \Theta(n^k)}。
+\item 如果\m{k > d}，那麼\m{p(n) = o(n^k)}。
+\item 如果\m{k < d}，那麼\m{p(n) = \omega(n^k)}。
+\stopigBase
+\stopPROBLEM
+
+\startANSWER
+取 \m{c = a_d + b}，滿足下列不等式：
+\startformula
+p(n) = \sum_{i = 0}^{d}a_i n^i = a_d n^d + a_{d-1}n^{d-1} + \ldots + a_1 n + a_0 \leq cn^d
+\stopformula
+兩邊同除以 \m{n^d}，有：
+\startformula
+c = a_d + b \geq a_d + \frac{a_{d-1}}n + \frac{a_{d-2}}{n^2} + \ldots + \frac{a_0}{n^d}
+\stopformula
+即
+\startformula
+b \geq \frac{a_{d-1}}n + \frac{a_{d-2}}{n^2} + \ldots + \frac{a_0}{n^d}
+\stopformula
+如果使 \m{b = 1}，則選取 \m{n_0}，使得：
+\startformula
+n_0 = \max(da_{d-1}, d\sqrt{a_{d-2}}, \ldots, d\sqrt[d]{a_0})
+\stopformula
+則有：
+\startformula
+p(n) \leq cn^d \quad \text{對於 } n \geq n_0
+\stopformula
+即 \m{O(n^d)} 的定義。如果選 \m{b = -1}，則可得 \m{\Omega(n^d)}，綜合可得 \m{\Theta(n^d)}。
+另外兩個的證明類似。
+\stopANSWER
+
+\startPROBLEM
+（相對漸進增長）
+對於下表中每對算式 \m{(A, B)}，指明 \m{A} 是否是 \m{B} 的 \m{O}、\m{o}、\m{\Omega}、\m{\omega}、\m{\Theta}。
+假定 \m{k \geq 1}，\m{\epsilon > 0} 且 \m{c > 1}，均爲常量。
+
+\bTABLE[align=center]
+\bTABLEhead
+\bTR
+	\bTH \m{A} \eTH
+	\bTH \m{B} \eTH
+	\bTH \m{O} \eTH
+	\bTH \m{o} \eTH
+	\bTH \m{\Omega} \eTH
+	\bTH \m{\omega} \eTH
+	\bTH \m{\Theta} \eTH
+\eTR
+\eTABLEhead
+\bTABLEbody
+\bTR
+	\bTD \m{\lg^kn} \eTD
+	\bTD \m{n^\epsilon} \eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n^k} \eTD
+	\bTD \m{c^n} \eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{\sqrt{n}} \eTD
+	\bTD \m{n^{\sin n}} \eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{2^n} \eTD
+	\bTD \m{2^{n/2}} \eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n^{\lg c}} \eTD
+	\bTD \m{c^{\lg n}} \eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{\lg(n!)} \eTD
+	\bTD \m{\lg(n^n)} \eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+	\bTD\startANSWER no \stopANSWER\eTD
+	\bTD\startANSWER yes \stopANSWER\eTD
+\eTR
+\eTABLEbody
+\eTABLE
+\stopPROBLEM
+
+\startPROBLEM
+(根據漸進增長率排序)
+\startigBase[a]
+\startitem
+根據增長的階爲下列函數排序，即求出滿足
+\m{g_1 = \Omega(g_2)}、\m{g_2 = \Omega(g_3)}、\m{\ldots}、\m{g_{29} = \Omega(g_{30})}
+的函數的一種排列 \m{g_1, g_2, \ldots, g_{30}}。
+並將這些函數劃分成等價類，當且僅當 \m{f(n) = \Theta(g(n))}時，\m{f(n)}和\m{g(n)}才再同一類中。
+
+\bTABLE[align=center]
+\bTR \bTD \m{\lg(\lg^{\ast}n)} \eTD \bTD \m{2^{\lg^{\ast}n}} \eTD \bTD \m{(\sqrt{2})^{\lg{n}}} \eTD \bTD \m{n^2} \eTD \bTD \m{n!} \eTD \bTD \m{(\lg{n})!} \eTD \eTR
+\bTR \bTD \m{(\frac{3}{2})^n} \eTD \bTD \m{n^3} \eTD \bTD \m{\lg^2{n}} \eTD \bTD \m{\lg(n!)} \eTD \bTD \m{2^{2^n}} \eTD \bTD \m{n^{1/\lg{n}}} \eTD \eTR
+\bTR \bTD \m{\ln{\ln{n}}} \eTD \bTD \m{\lg^{\ast}n} \eTD \bTD \m{n \cdot 2^n} \eTD \bTD \m{n^{\lg\lg{n}}} \eTD \bTD \m{\ln{n}} \eTD \bTD \m{1} \eTD \eTR
+\bTR \bTD \m{2^{\lg{n}}} \eTD \bTD \m{(\lg{n})^{\lg{n}}} \eTD \bTD \m{e^n} \eTD \bTD \m{4^{\lg{n}}} \eTD \bTD \m{(n + 1)!} \eTD \bTD \m{\sqrt{\lg{n}}} \eTD \eTR
+\bTR \bTD \m{\lg^{\ast}(\lg{n})} \eTD \bTD \m{2^{\sqrt{2\lg{n}}}} \eTD \bTD \m{n} \eTD \bTD \m{2^n} \eTD \bTD \m{n\lg{n}} \eTD \bTD \m{2^{2^{n + 1}}} \eTD \eTR
+\eTABLE
+\stopitem
+
+\startANSWER
+\startformula\startalign
+\NC (\sqrt{2})^{\lg{n}} \NC = \sqrt{n} \NR
+\NC \sqrt{2}^{\lg{n}} \NC = 2^{1/2\lg{n}} = 2^{\lg{\sqrt{n}}} = \sqrt{n} \NR
+\NC n! < n^n \NC = 2^{\lg{n^n}} = 2^{n\lg{n}} \NR
+\NC n^{1/\lg{n}} \NC = n^{\log_n{2}} = 2 \NR
+\NC n^{\lg{\lg{n}}} \NC = (2^{\lg{n}})^{\lg\lg{n}} = (2^{\lg\lg{n}})^{\lg{n}} = (\lg{n})^{\lg{n}} \NR
+\NC \lg^2{n} \NC = 2^{\lg{\lg^2{n}}} = o(2^{\sqrt{2\lg{n}}}) \NR
+\stopalign\stopformula
+\startcolumns[n=3,blank=small,distance=2em,balance=yes]
+\startigBase[n]
+\item \m{1 = n^{1/\lg n}}
+\item \m{\lg(\lg^{\ast}n)}
+\item \m{\lg^{\ast}n\simeq \lg^{\ast}{\lg{n}}}
+\item \m{2^{\lg^{\ast}n}}
+\item \m{\ln{\ln{n}}}
+\item \m{\sqrt{\lg{n}}}
+\item \m{\ln{n}}
+\item \m{\lg^2{n}}
+\item \m{2^{\sqrt{2\lg{n}}}}
+\item \m{(\sqrt{2})^{\lg{n}}}
+\item \m{n = 2^{\lg{n}}}
+\item \m{n\lg{n} \simeq \lg(n!)}
+\item \m{n^2 = 4^{\lg{n}}}
+\item \m{n^3}
+\item \m{n^{\lg\lg{n}} = (\lg{n})^{\lg{n}}}
+\item \m{(\frac{3}{2})^n}
+\item \m{2^n}
+\item \m{n \cdot 2^n}
+\item \m{e^n}
+\item \m{n!}
+\item \m{(n + 1)!}
+\item \m{2^{2^n}}
+\item \m{2^{2^{n+1}}}
+\stopigBase
+\stopcolumns
+\stopANSWER
+
+\startitem
+給出一個非負函數 \m{f(n)}，使得對於所有 \m{g_i(n)}，\m{f(n)}既不是 \m{O(g_i(n))}，也不是 \m{\Omega(g_i(n))}。
+\stopitem
+
+\startANSWER
+\m{2^{2^{(n + 1)\sin{x}}}}
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+\startPROBLEM
+（漸進記號的性質）
+假設 \m{f(n)} 和 \m{g(n)} 是漸進正函數，證明或反駁下面的每個猜測。
+\startigBase[a]
+\item \m{f(n) = O(g(n))} 蘊含 \m{g(n) = O(f(n))}。
+
+\startANSWER
+錯誤。 \m{n = O(n^2)}，但是 \m{n^2 \neq O(n)}。
+\stopANSWER
+
+\item \m{f(n) + g(n) = \Theta(\min(f(n), g(n)))}。
+
+\startANSWER
+錯誤。 \m{n^2 + n \neq \Theta(min(n^2, n)) = \Theta(n)}。
+\stopANSWER
+
+\item 如果對於足夠的 \m{n}，有 \m{\lg(g(n))\geq 1} 且 \m{f(n)\geq 1}，那麼 \m{f(n) = O(g(n))} 蘊含 \m{\lg(f(n)) = O(lg(g(n)))}。
+
+\startANSWER
+正確。 因爲對於給定 \m{n \geq n_0}， \m{f(n) \geq 1}：
+\startformula
+\exists c, n_0 : \forall n \geq n_0 : 0 \leq f(n) \leq cg(n)
+\stopformula
+\startformula
+   \Downarrow
+\stopformula
+\startformula
+   0 \leq \lg{f(n)} \leq \lg(cg(n)) = \lg{c} + \lg{g(n)}
+\stopformula
+需要證明：
+\startformula
+\lg{f(n)} \leq d\lg{g(n)}
+\stopformula
+很容易找到 \m{d}：
+\startformula
+d = \frac{\lg{c} + \lg{g(n)}}{\lg{g(n)}} = \frac{\lg{c}}{\lg{g}} + 1 \leq \lg{c} + 1
+\stopformula
+最後一步顯然成立，因爲 \m{\lg{g(n)} \geq 1}。
+\stopANSWER
+
+\item \m{f(n) = O(g(n))} 蘊含 \m{2^{f(n)} = O(2^{g(n)})}。
+
+\startANSWER
+錯誤。 \m{2n = O(n)}，但是 \m{2^{2n} = 4^n \neq O(2^n)}。
+\stopANSWER
+
+\item \m{f(n) = O((f(n))^2)}。
+
+\startANSWER
+正確。只要 \m{f(n) \geq 1}， \m{0 \leq f(n) \leq cf^2(n)} 是很自然的。
+當然如果對於所有 \m{n}， \m{f(n) < 1}，則錯誤，但我們通常不考慮這種函數。
+\stopANSWER
+
+\item \m{f(n) = O(g(n))} 蘊含 \m{g(n) = \Omega(f(n))}。
+
+\startANSWER
+正確。如果 \m{f(n) = O(g(n))}，則 \m{0 \leq f(n) \leq cg(n)}，我們只需證明：
+\startformula
+0 \leq df(n) \leq g(n)
+\stopformula
+對於 \m{d = 1/c}，上式顯然成立。
+\stopANSWER
+
+\item \m{f(n) = \Theta(f(n/2))}。
+
+\startANSWER
+錯誤。取 \m{f(n) = 2^n}，我們需要證明：
+\startformula
+\exists c_1, c_2, n: \forall n \geq n_0 : 0 \leq c_1 \cdot 2^{n/2} \leq 2^n
+   \leq c_2 \cdot 2^{n/2}
+\stopformula
+顯然不成立。
+\stopANSWER
+
+\item \m{f(n) + o(f(n)) = \Theta(f(n))}。
+
+\startANSWER
+正確。設 \m{g(n) = o(f(n))}，我們需要證明 \m{c_1f(n) \leq f(n) + g(n) \leq c_2f(n)}，我們知道：
+\startformula
+\forall c \exists n_0 \forall n \geq n_0 : cg(n) < f(n)
+\stopformula
+因此，只需 \m{c_1 = 1}， \m{c_2 = 2} 即可。
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+\startPROBLEM
+（\m{O}與\m{\Omega}的一些變形）
+某些作者用一種與我們稍微不同的方式來定義 \m{\Omega}；
+假設我們使用 \m{\mathop{\Omega}\limits^{\infty}} 來表示這種定義。
+若存在正常量 \m{c}，使得對無窮多個整數 \m{n}，有 \m{f(n)\geq cg(n)\geq 0}，
+則稱 \m{f(n) = \mathop{\Omega}\limits^{\infty}(g(n))}。
+\startigBase[a]
+\item 證明：對漸進非負的任意兩個函數 \m{f(n)} 和 \m{g(n)}，
+或者 \m{f(n) = O(g(n))} 或者 \m{f(n) = \mathop{\Omega}\limits^{\infty}(g(n))} 或者二者均成立，
+然而，如果用 \m{\Omega} 代替 \m{\mathop{\Omega}\limits^{\infty}}，那麼該命題卻不成立。
+
+\startANSWER
+我們需要比較 \m{cg(n) \leq f(n)}；
+如果對於正無窮整數均成立，則有 \m{\mathop{\Omega}\limits^{\infty}}；
+而如果之對有限的整數成立，則設最大值爲 \m{n_0}，有：
+\startformula
+\forall n > n_0: f(n) < cg(n)
+\stopformula
+足以說明 \m{f(n) = O(g(n))}。
+
+如果 \m{f(n) = g(n)}，顯然兩式均成立。
+
+但是對於 \m{\Omega}，卻不一定，
+如 \m{n = \mathop{\Omega}\limits^{\infty}(n^{\sin{n}})}，
+但 \m{n \neq \Omega(n^{\sin{n}})}。
+\stopANSWER
+
+\item 描述用 \m{\mathop{\Omega}\limits^{\infty}} 代替 \m{\Omega} 來刻畫程序運行時間的潛在優點和缺點。
+
+\startANSWER
+TODO
+\stopANSWER
+
+\stopigBase
+
+某些作者也用一種稍微不同的方式定義 \m{O}；
+假設用 \m{O'} 來表示這種可選的定義。
+我們稱 \m{f(n) = O'(g(n))}，當且儘當 \m{|f(n)| = O(g(n))}。
+
+\startigBase[a,continue]
+\item 如果用 \m{O'} 代替 \m{O}，但仍使用 \m{\Omega}，定理 3.1 中的“當且儘當”的每個方向將出現什麼情況？
+
+\startANSWER
+定理 3.1 中的“當且儘當”要改爲“蘊含”，即 \m{\Theta \Rightarrow O'}，反向則不成立。
+比如函數 \m{f(n) = n \cdot \sin{n}}，即爲 \m{O'(n)}，但卻不是 \m{O(n)} 或 \m{\Theta(n)}。
+\stopANSWER
+\stopigBase
+
+有些作者定義 \m{\tilde{O}} 來意指忽略對數因子的 \m{O}：
+\startformula
+\tilde{O} = \lbrace f(n) : \exists c > 0, k > 0, n_0 > 0 \forall n \geq n_0: 0 \leq f(n) \leq cg(n)\lg^k(n) \rbrace
+\stopformula
+\startigBase[a,continue]
+\item 用類似方式定義 \m{\tilde{\Omega}} 和 \m{\tilde{\Theta}}。
+證明定理 3.1 相對應的類似結論。
+
+\startANSWER
+\startformula
+\tilde{\Omega} = \lbrace f(n) : \exists c, k, n_0 \forall n > n_0 : 0 \leq cg(n) \lg^{-k}(n) \leq f(n) \rbrace
+\stopformula
+\startformula
+\tilde{\Theta} = \lbrace f(n) : \exists c_1, c_2, k_1, k_2, n_0 \forall n > n_0 : 0 \leq c_1g(n) \lg^{-k_1}(n) \leq f(n) \leq c_2g(n) \lg^{k_2}(n)\rbrace
+\stopformula
+\stopANSWER
+\stopigBase
+
+\stopPROBLEM
+
+\startPROBLEM
+（多重函數）我們可以把用於函數 \m{\lg^{\ast}} 中的重復運算符 \m{\ast} 應用於實數集上的任意單調遞增函數 \m{f(n)}。
+對給定的常量 \m{c \in R}，我們定義多重函數 \m{f_c^{\ast}} 爲：
+\startformula
+f_c^{\ast}(n) = \min \lbrace i \geq 0 : f^{(i)}(n) \leq c \rbrace
+\stopformula
+該函數不必在所有情況下都爲良定義的。
+換句話說， \m{f_c^{\ast}(n)} 的值就是爲將其參數縮小至 \m{c} 或更小所需要將函數 \m{f} 重復應用的數目。
+對如下每個函數 \m{f(n)} 和常量 \m{c}，給出 \m{f_c^{\ast}(n)} 的一個盡量緊確的界。
+
+\bTABLE[align=center]
+\bTABLEhead
+\bTR
+	\bTH \m{f(n)} \eTH
+	\bTH \m{c} \eTH
+	\bTH \m{f_c^{\ast}(n)} \eTH
+\eTR
+\eTABLEhead
+\bTABLEbody
+\bTR
+	\bTD \m{n - 1} \eTD
+	\bTD \m{0} \eTD
+	\bTD\startANSWER \m{\Theta(n)} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{\lg{n}} \eTD
+	\bTD \m{1} \eTD
+	\bTD\startANSWER \m{\Theta(\lg^{\ast}n)} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n/2} \eTD
+	\bTD \m{1} \eTD
+	\bTD\startANSWER \m{\Theta(\lg{n})} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n/2} \eTD
+	\bTD \m{2} \eTD
+	\bTD\startANSWER \m{\Theta(\lg{n})} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{\sqrt{n}} \eTD
+	\bTD \m{2} \eTD
+	\bTD\startANSWER \m{\Theta(\lg\lg{n})} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{\sqrt{n}} \eTD
+	\bTD \m{1} \eTD
+	\bTD\startANSWER 無法收斂 \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n^{1/3}} \eTD
+	\bTD \m{2} \eTD
+	\bTD\startANSWER \m{\Theta(\log_3\lg{n})} \stopANSWER\eTD
+\eTR
+\bTR
+	\bTD \m{n/\lg{n}} \eTD
+	\bTD \m{2} \eTD
+	\bTD\startANSWER \m{\omega(\lg\lg{n}), o(\lg{n})} \stopANSWER\eTD
+\eTR
+\eTABLEbody
+\eTABLE
+
+\stopPROBLEM
+
+\stopsubject

@@ -1,0 +1,148 @@
+\startsection[
+  title={Strassen’s algorithm for matrix multiplication},
+]
+
+\startEXERCISE
+用 Strassen 算法計算矩陣積：
+\startformula
+\startpmatrix%[location=low]
+\NC1\NC3\NR
+\NC7\NC5\NR
+\stoppmatrix
+\startpmatrix%[location=low]
+\NC6\NC8\NR
+\NC4\NC2\NR
+\stoppmatrix
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+十個矩陣分別爲：
+\startformula\startmathalignment[n=10]
+\NC S_1 \NC= 6 \qquad
+\NC S_2 \NC=  4 \qquad
+\NC S_3 \NC= 12 \qquad
+\NC S_4 \NC= -2 \qquad
+\NC S_5 \NC= 5 \NR
+\NC S_6 \NC= 8 \qquad
+\NC S_7 \NC= -2 \qquad
+\NC S_8 \NC=  6 \qquad
+\NC S_9 \NC= -6 \qquad
+\NC S_{10} \NC= 14 \NR
+\stopmathalignment\stopformula
+七個矩陣積分別爲：
+\startformula\startmathalignment[n=8]
+\NC P_1 \NC= 1 \cdot 6 = 6 \qquad
+\NC P_2 \NC= 4 \cdot 2 = 8 \qquad
+\NC P_3 \NC= 6 \cdot 12 = 72 \qquad
+\NC P_4 \NC= (-2) \cdot 5 = -10 \NR
+\NC P_5 \NC= 6 \cdot 8 = 48 \qquad
+\NC P_6 \NC= (-2) \cdot 6 = -12 \qquad
+\NC P_7 \NC= (-6) \cdot 14 = -84 \qquad
+\NC \NC \NR
+\stopmathalignment\stopformula
+結果爲：
+\startformula\startmathalignment[n=4]
+\NC C_{11} \NC = 48 + (-10) - 8 + (-12) = 18 \qquad
+\NC C_{12} \NC = 6 + 8 = 14 \NR
+\NC C_{21} \NC = 72 + (-10) = 62 \qquad
+\NC C_{22} \NC = 48 + 6 - 72 - (-84) = 66 \NR
+\stopmathalignment\stopformula
+即：
+\startformula
+\startpmatrix
+\NC18\NC44\NR
+\NC62\NC66\NR
+\stoppmatrix
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+爲 Strassen 算法編寫僞碼。
+\stopEXERCISE
+
+\startANSWER
+\startCLRS
+TODO
+\stopCLRS
+\stopANSWER
+
+\startEXERCISE
+修改 Strassen 算法，使之能適應矩陣規模 \m{n} 不是 \m{2} 的冪的情況？
+證明：算法的運行時間爲 \m{\Theta(n^{\lg 7})}。
+\stopEXERCISE
+
+\startANSWER
+我們可以通過添加值爲 \m{0} 的元素來擴展矩陣，使得矩陣規模 \m{n} 是 \m{2} 的冪。
+運行時間顯然爲 \m{\Theta(n^{\lg 7})}。
+\stopANSWER
+
+\startEXERCISE
+如果可以用 \m{k} 次乘法運算（假定乘法的交換律不成立）完成兩個 \m{3 \times 3} 矩陣相乘，
+那麼就可以在 \m{o(n^{\lg 7})} 時間內完成 \m{n \times n} 矩陣相乘，
+滿足這一條件的 \m{k} 最大是多少？
+此算法運行時間如何？
+\stopEXERCISE
+
+\startANSWER
+由分治法可得遞迴算法運行時間爲：
+\startformula
+T(n) = k T(n/3) + \Theta(n)
+\stopformula
+如果 \m{k} 足夠大，則求解得 \m{T(n) = \Theta(n^{\log_3^k})}。則：
+\startformula\startmathalignment[n=1,align=center]
+\NC n^{\log_3 k} < n^{\lg7} \NR
+\NC \Downarrow \NR
+\NC \log_3k < \lg7 \NR
+\NC \Downarrow \NR
+\NC k < 3^{\lg7} \approx 21.84986\NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+V.Pan 發現一種方法可以用 \m{132464} 次乘法操作完成 \m{68\times 68} 的矩陣乘法；
+還發現一種方法可以用 \m{143640} 次乘法操作完成 \m{70\times 70} 的矩陣乘法；
+還發現一種方法可以用 \m{155424} 次乘法操作完成 \m{72\times 72} 的矩陣乘法。
+若用於矩陣相乘的分治算法，上述哪種方法會得到最佳的漸進運行時間？
+與 Strassen 算法相比，性能如何？
+\stopEXERCISE
+\startANSWER
+\startformula\startalign
+\log_{68} 132464 \approx 2.795128 \NR
+\log_{70} 143640 \approx 2.795122 \NR
+\log_{72} 155424 \approx 2.795147 \NR
+\stopalign\stopformula
+顯然 \m{70 \times 70} 的方法漸進運行時間最佳。比 Strassen 算法要好。
+\stopANSWER
+
+\startEXERCISE
+用 Strassen 算法作爲子例程求解 \m{kn\times n} 和 \m{n \times kn} 兩個矩陣相乘，
+最快需要花費多少時間？
+如果兩個輸入矩陣規模互換，又需要多長時間？
+\stopEXERCISE
+
+\startANSWER
+\m{(kn \times n)(n \times kn)} 生成 \m{kn \times kn} 矩陣，需要 \m{k^2} 次 \m{n\times n} 矩陣相乘。
+
+\m{(n \times kn)(kn \times n)} 生成 \m{n \times n} 矩陣，需要 \m{k} 次乘法和 \m{k-1} 次加法。
+\stopANSWER
+
+\startEXERCISE
+設計算法，僅使用三次實數乘法即可完成復數 \m{a + bi} 和 \m{c + di} 相乘。
+算法輸入爲 \m{a}、 \m{b}、 \m{c}、 \m{d}，分別生成實部 \m{ac - bd} 和虛部 \m{ad + bc}。
+\stopEXERCISE
+
+\startANSWER
+三次乘法分別爲：
+\startformula\startalign
+\NC A \NC = (a+b)(c+d) = ac + ad + bc + bd \NR
+\NC B \NC = ac \NR
+\NC C \NC = bd \NR
+\stopalign\stopformula
+結果爲：
+\startformula
+(B - C) + (A - B - C)i
+\stopformula
+\stopANSWER
+
+\stopsection

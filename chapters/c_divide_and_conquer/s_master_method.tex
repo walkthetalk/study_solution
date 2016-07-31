@@ -1,0 +1,96 @@
+\startsection[
+  title={The master method for solving recurrences},
+]
+
+\startEXERCISE
+用主定理求下列遞迴式的漸進緊確界。
+\startigBase[a]
+\item \m{T(n) = 2T(n/4) + 1}
+\item \m{T(n) = 2T(n/4) + \sqrt{n}}
+\item \m{T(n) = 2T(n/4) + n}
+\item \m{T(n) = 2T(n/4) + n^2}
+\stopigBase
+\stopEXERCISE
+\startANSWER
+\startigBase[a]
+\item \m{\Theta(n^{\log_4{2}}) = \Theta(\sqrt{n})}
+\item \m{\Theta(n^{\log_4{2}}\lg{n}) = \Theta(\sqrt{n}\lg{n})}
+\item \m{\Theta(n)}
+\item \m{\Theta(n^2)}
+\stopigBase
+\stopANSWER
+
+\startEXERCISE
+Caesar 教授想設計一個漸進優於 Strassen 算法的矩陣相乘算法。
+他的算法使用分治策略，將每個矩陣分解爲 \m{n/4 \times n/4} 的子矩陣，
+分解和合並步驟共花費時間爲 \m{\Theta(n^2)}。
+他需要確定，這個算法需要創建多少個子問題，才能擊敗 Strassen 算法。
+如果他的算法創建 \m{a} 個子問題，則描述運行時間 \m{T(n)} 的遞迴式爲
+\m{T(n) = a T(n/4) + \Theta(n^2)}。
+Caesar 教授的算法如果要漸進優於 Strassen 算法， \m{a} 的最大整數值應爲多少？
+\stopEXERCISE
+\startANSWER
+當 \m{a < 16} 時適用於主定理的第一種情況。
+此時，此算法 \m{T(n) = \Theta(n^{\log_4{a}})}。
+要想更快，需 \m{\log_4{a} < \log_{2}7}，其中 \m{a < 14}。
+因此，最大整數值爲 \m{13}。
+\stopANSWER
+
+\startEXERCISE
+用主定理證明：而分查找遞迴式 \m{T(n) = T(n/2) + \Theta(1)} 的解爲 \m{T(n) = \Theta(\lg n)}。
+（二分查找的描述參見\refexercise{bin_search}）
+\stopEXERCISE
+\startANSWER
+\startformula\startmathalignment
+\NC a =\NC 1\NR
+\NC b =\NC 2\NR
+\NC f(n) =\NC \Theta(n^{\log_2^1}) = \Theta(1) \NR
+\NC T(n) =\NC \Theta(\lg n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+主定理是否可用於遞迴式 \m{T(n) = 4 T(n/2) + n^2 \lg n}？
+請說明爲什麼。
+請給出此遞迴式的漸進上界。
+\stopEXERCISE
+\startANSWER
+根據主定理， 有 \m{a = 4}、 \m{b = 2}，
+而 \m{f(n) = n^2\lg{n} \ne O(n^{2-\epsilon}) \ne \Omega(n^{2-\epsilon})}，
+因此無法使用主定理。
+
+猜測 \m{\Theta(n^2\lg^2{n})}：
+\startformula\startmathalignment
+\NC T(n) \NC \le 4T(n/2) + n^2\lg{n} \NR
+\NC      \NC \le 4c(n/2)^2\lg^2(n/2) + n^2\lg{n} \NR
+\NC      \NC \le cn^2\lg(n/2)\lg{n} - cn^2\lg(n/2)\lg{2} + n^2\lg{n} \NR
+\NC      \NC \le cn^2\lg^2{n} - cn^2\lg{n}\lg{2} - cn^2\lg(n/2) + n^2\lg{n} \NR
+\NC      \NC \le cn^2\lg^2{n} + (1 - c)n^2\lg{n} - cn^2\lg(n/2) \qquad (c > 1) \NR
+\NC      \NC \le cn^2\lg^2{n} - cn^2\lg(n/2) \NR
+\NC      \NC \le cn^2\lg^2{n} \NR
+\stopmathalignment\stopformula
+
+推廣結論參見 \refexercise{master_method_generalized}。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+考慮主定理第三種情況中，對於某個常數 \m{c < 1}，考慮其正則條件 \m{a f(n/b) \le c f(n)} 是否成立。
+給出例子，使常數 \m{a \ge 1}、 \m{b > 1}，且函數 \m{f(n)} 滿足主定理第三種情況中除正則條件外的所有條件。
+\stopEXERCISE
+\startANSWER
+\startformula\startmathalignment
+\NC a \NC = 1 \NR
+\NC b \NC = 2 \NR
+\NC f(n) \NC = n (2 - \cos n) \NR
+\stopmathalignment\stopformula
+
+如果想要證明：
+\startformula\startmathalignment[n=1]
+\NC \frac{n}{2}(2 - \cos \frac{n}{2}) < c n \NR
+\NC \frac{1 - \cos(n/2)}{2} < c \NR
+\NC c \ge 1 - \frac{\cos(n/2)}{2} \NR
+\stopmathalignment\stopformula
+由於 \m{\min \cos(n/2) = -1}，因此需要 \m{c \ge \frac{3}{2}}，但是 \m{c < 1}。
+\stopANSWER
+
+\stopsection

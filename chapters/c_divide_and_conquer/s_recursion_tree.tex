@@ -1,0 +1,342 @@
+\startsection[
+  title={The recursion-tree method for solving recurrences},
+]
+
+\startEXERCISE
+對遞迴式 \m{T(n) = 3T(\lfloor n/2 \rfloor) + n}，
+利用遞迴樹確定一個漸進上界，用代入法進行驗證。
+\stopEXERCISE
+\startANSWER
+忽略向下取整，結果沒有區別。
+
+樹深 \m{\lg n}，有 \m{\Theta(3^{\lg 2}) = \Theta(2^{\lg n})} 片葉子，因此：
+\startformula\startmathalignment
+\NC T(n) \NC = \sum_{i=0}^{\lg{n}-1}\Big(\frac{3}{2}\Big)^i n + \Theta(n^{\lg3}) \NR
+\NC      \NC = n\frac{(3/2)^{\lg{n}} - 1}{(3/2) - 1} + \Theta(n^{\lg3}) \NR
+\NC      \NC = n\Theta(n^{\lg3 - 1}) + \Theta(n^{\lg3}) \NR
+\NC      \NC = \Theta(n^{\lg3}) \NR
+\stopmathalignment\stopformula
+
+套用代入法，猜測 \m{T(n) \le cn^{\lg3} + 2n} （忽略向下取整）：
+\startformula\startmathalignment
+\NC T(n) \NC \le 3c(n/2)^{\lg3} + 2n/2 + n \NR
+\NC      \NC \le cn^{\lg3} + 2n \NR
+\NC      \NC = \Theta(n^{\lg3}) \NR
+\stopmathalignment\stopformula
+
+	\startMPcode
+		input reccursion_tree
+		string A[];
+		string B[];
+		A[3] := "$n$";		B[3] := "$n$";
+		A[2] := "$n/2$";	B[2] := "$3n/2$";
+		A[1] := "$n/4$";	B[1] := "$9n/4$";
+		A[0] := "$T(1)$";	B[0] := "$(3/2)^i n$";
+		rectree(A, B)(3, 3, 30, 30, 6);
+	\stopMPcode
+\stopANSWER
+
+\startEXERCISE
+對遞迴式 \m{T(n) = T(n/2) + n^2}，
+利用遞迴樹確定一個漸進上界，用代入法進行驗證。
+\stopEXERCISE
+\startANSWER
+樹的每一層爲 \m{n^2/4^i}，有 \m{\lg n} 層和 \m{1} 個葉子。因此：
+\startformula\startmathalignment
+\NC T(n) \NC = \sum_{i=0}^{\lg{n}-1}\Big(\frac{1}{4}\Big)^i n^2 + 1 \NR
+\NC      \NC < n^2 \sum_{i=0}^{\infty}\Big(\frac{1}{4}\Big)^i + 1 \NR
+\NC      \NC = n^2 \frac{1}{1-1/4} + 1 \NR
+\NC      \NC = \Theta(n^2) \NR
+\stopmathalignment\stopformula
+
+猜測 \m{T(n) \le cn^2}，有：
+\startformula\startmathalignment
+\NC T(n) \NC \le c(n/2)^2 + n^2 \NR
+\NC      \NC \le cn^2/4 + n^2 \NR
+\NC      \NC \le (c/4 + 1)n^2 \qquad (c > 4/3) \NR
+\NC      \NC \le cn^2 \NR
+\stopmathalignment\stopformula
+
+	\startMPcode
+		input reccursion_tree
+		string A[];
+		string B[];
+		A[3] := "$n^2$";	B[3] := "$n^2$";
+		A[2] := "$n^2/4$";	B[2] := "$n^2/4$";
+		A[1] := "$n^2/16$";	B[1] := "$n^2/16$";
+		A[0] := "$T(1)$";	B[0] := "$n^2/4^i$";
+		rectree(A, B)(1, 3, 30, 30, 6);
+	\stopMPcode
+\stopANSWER
+
+\startEXERCISE
+對遞迴式 \m{T(n) = 4T(n/2+2) + n}，
+利用遞迴樹確定一個漸進上界，用代入法進行驗證。
+\stopEXERCISE
+\startANSWER
+簡化後，樹高 \m{\lg n}，每層和爲 \m{2^i n + 2^{1-i}}，有 \m{4^{\lg n} = n^2} 個葉子。則：
+\startformula\startmathalignment
+\NC T(n) \NC = \sum_{i=0}^{\lg{n}-1}\Big(2^i n + 2^{1-i}) + \Theta(n^2) \NR
+\NC      \NC = \sum_{i=0}^{\lg{n}-1}2^i n + \sum_{i=0}^{\lg{n}-1}2^{1-i} + \Theta(n^2) \NR
+\NC      \NC = \frac{2^{\lg{n}} - 1}{2 - 1} + 2\sum_{i=0}^{\lg{n}-1}\Big(\frac{1}{2}\Big)^i + \Theta(n^2) \NR
+\NC      \NC \le n - 1 + 2\sum_{i=0}^{\infty}\Big(\frac{1}{2}\Big)^i + \Theta(n^2) \NR
+\NC      \NC = n - 1 + 2\frac{1}{1-1/2} + \Theta(n^2) \NR
+\NC      \NC = \Theta(n^2) + n + 3 \NR
+\NC      \NC = \Theta(n^2) \NR
+\stopmathalignment\stopformula
+
+猜測 \m{T(n) \le cn^2 + 2n}：
+\startformula\startmathalignment
+\NC T(n) \NC \le 4c(n/2)^2 + 2n/2 + n \NR
+\NC      \NC \le cn^2 + 2n \NR
+\NC      \NC = \Theta(n^2) \NR
+\stopmathalignment\stopformula
+
+	\startMPcode
+		input reccursion_tree
+		string A[];
+		string B[];
+		A[3] := "$n$";		B[3] := "$n$";
+		A[2] := "$n/2+2$";	B[2] := "$2n$";
+		A[1] := "$n/4 + 1$";	B[1] := "$4n$";
+		A[0] := "$T(1)$";	B[0] := "$2^i n + 2^{1-i}$";
+		rectree_vertical(A, B)(4, 3, 35, 15, 2);
+	\stopMPcode
+\stopANSWER
+
+\startEXERCISE
+對遞迴式 \m{T(n) = T(n-1) + 1}，
+利用遞迴樹確定一個漸進上界，用代入法進行驗證。
+\stopEXERCISE
+\startANSWER
+深度爲 \m{n}，每一層爲 \m{2^i}，有 \m{2^n} 個葉子。因此：
+\startformula\startmathalignment
+\NC T(n) \NC = \sum_{i=0}^{n-1}2^i + \Theta(2^n) \NR
+\NC      \NC = \frac{2^n - 1}{2 - 1} + \Theta(2^n) \NR
+\NC      \NC = \Theta(2^n) + 2^n - 1 \NR
+\NC      \NC = \Theta(2^n) \NR
+\stopmathalignment\stopformula
+
+猜測 \m{T(n) \le c 2^n + n}。因此：
+\startformula\startmathalignment
+\NC T(n) \NC \le 2c2^{n-1} + (n - 1) + 1 \NR
+\NC      \NC \le c2^n + n \NR
+\NC      \NC = O(2^n) \NR
+\stopmathalignment\stopformula
+	\startMPcode
+		input reccursion_tree
+		string A[];
+		string B[];
+		A[3] := "$1$";		B[3] := "$1$";
+		A[2] := "$1$";		B[2] := "$2$";
+		A[1] := "$1$";		B[1] := "$4$";
+		A[0] := "$T(1)$";	B[0] := "$2^i$";
+		rectree(A, B)(2, 3, 30, 30, 6);
+	\stopMPcode
+\stopANSWER
+
+\startEXERCISE
+對遞迴式 \m{T(n) = T(n-1) + T(n/2) + n}，
+利用遞迴樹確定一個漸進上界，用代入法進行驗證。
+\stopEXERCISE
+\startANSWER
+此題有點怪異。遞迴樹表明最差也就是指數級。
+同時遞迴樹不是高度爲 \m{n} 的完全二叉樹，但也不是多項式。
+
+猜測 \m{T(n) \le c 2^n - 4n}，則：
+\startformula\startmathalignment[n=3]
+\NC T(n) \NC \le c2^{n-1} - 4(n-1) + c2^{n/2} - 4n/2 + n \NC \NR
+\NC      \NC \le c(2^{n-1} + 2^{n/2}) - 5n + 1 \NC (n > 1/4) \NR
+\NC      \NC \le c(2^{n-1} + 2^{n/2}) - 4n \NC (n > 2)\NR
+\NC      \NC \le c(2^{n-1} + 2^{n-1}) - 4n \NC \NR
+\NC      \NC \le c2^n - 4n \NC \NR
+\NC      \NC = O(2^n) \NC \NR
+\stopmathalignment\stopformula
+
+猜測 \m{T(n) \ge c n^2}，則：
+\startformula\startmathalignment[n=3]
+\NC T(n) \NC \ge c(n - 1)^2 + c(n/2)^2 + n \NC\NR
+\NC      \NC \ge cn^2 - 2cn + 1 + cn^2/4 + n \NC\NR
+\NC      \NC \ge (5/4)cn^2 + (1 - 2c)n + 1 \NC\NR
+\NC      \NC \ge cn^2 + (1 - 2c)n + 1 \NC (c < 1/2)\NR
+\NC      \NC \ge cn^2 \NC\NR
+\NC      \NC = O(n^2) \NC\NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+對遞迴式 \m{T(n) = T(n/3) + T(2n/3) + cn}（\m{c}爲常數），
+利用遞迴樹論證其解爲 \m{\Omega(n\lg{n})}。
+\stopEXERCISE
+\startANSWER
+到一個葉子節點的最短路徑爲 \m{\log_3^n}。
+每層的葉子節點和爲 \m{c n}。
+
+猜測 \m{T(n) \ge k n \log_3{n}}，則：
+\startformula\startmathalignment[n=3]
+\NC T(n) \NC \ge k(n/3)\log_3(n/3) + k(2n/3)\log_3{(2n/3)} + cn \NC \NR
+\NC      \NC = k(n/3)(\log_3{n} - 1) + k(2n/3)(\log_3{2} + \log_3{n} - 1) + cn \NC \NR
+\NC      \NC = kn\log_3{n} + k(2n/3)\log_3{2} - kn + cn \NC (k < \frac{3c}{3 - 2\log_3{2}}) \NR
+\NC      \NC \ge kn \log_3{n} \NC \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+對遞迴式 \m{T(n) = 4T(\lfloor n/2 \rfloor) + cn} （\m{c}爲常數），
+利用遞迴樹給出其解的一個漸進緊確界，用代入法進行驗證。
+\stopEXERCISE
+\startANSWER
+忽略向下取整。上個練習已經說明了如何處理。
+樹深爲 \m{\lg n}，每層爲 \m{2^{i}cn}，有 \m{4^{\lg{n}} = n^2} 個葉子。
+因此：
+\startformula\startmathalignment
+\NC T(n) \NC = \sum_{i=0}^{\lg{n}- 1}2^icn + \Theta(n^2) \NR
+\NC      \NC = cn \sum_{i=0}^{\lg{n}-1}2^i + \Theta(n^2) \NR
+\NC      \NC = cn \frac{2^{\lg{n}} - 1}{2 - 1} + \Theta(n^2) \NR
+\NC      \NC = \Theta(n^2) \NR
+\stopmathalignment\stopformula
+
+猜測 \m{T(n) \le c n^2 + 2cn}，則：
+\startformula
+T(n) \le 4c(n/2)^2 + 2cn/2 + cn
+        \le cn^2 + 2cn
+\stopformula
+
+猜測 \m{T(n) \ge c n^2 + 2cn}，則：
+\startformula
+T(n) \ge 4c(n/2)^2 + 2cn/2 + cn
+        \ge cn^2 + 2cn
+\stopformula
+	\startMPcode
+		input reccursion_tree
+		string A[];
+		string B[];
+		A[3] := "$cn$";		B[3] := "$cn$";
+		A[2] := "$cn/2$";	B[2] := "$2cn$";
+		A[1] := "$cn/4$";	B[1] := "$4cn$";
+		A[0] := "$T(1)$";	B[0] := "$2^icn$";
+		rectree_vertical(A, B)(4, 3, 35, 15, 2);
+	\stopMPcode
+\stopANSWER
+
+\startEXERCISE
+對遞迴式 \m{T(n) = T(n-a) + T(a) + cn} （其中 \m{a\ge 1} 和 \m{c > 0}爲常數），
+利用遞迴樹給出其解的一個漸進緊確界。
+\stopEXERCISE
+\startANSWER
+樹高 \m{n/a}，每層爲 \m{c(n - ia)}。有
+\startformula\startmathalignment
+\NC T(n) \NC = \sum_{i=0}^{n/a}c(n-ia) + (n/a)ca \NR
+\NC      \NC = \sum_{i=0}^{n/a}cn - \sum_{i=0}^{n/a}cia + (n/a)ca \NR
+\NC      \NC = cn^2/a - \Theta(n) + \Theta(n) \NR
+\NC      \NC = \Theta(n^2) \NR
+\stopmathalignment\stopformula
+
+另一種方式：
+\startformula\startmathalignment
+\NC T(n) \NC = cn + T(a) + T(n - a) + T(a) \NR
+\NC      \NC = cn + ca + c(n-a) + T(a) + T(n - 2a) \NR
+\NC      \NC = cn + c(n-a) + 2ca + c(n - 2a) + T(a) + T(n - 3a) \NR
+\NC      \NC = cn + c(n-a) + c(n - 2a) + c(n - 3a) + T(n - 4a) + 3ca + T(a) \NR
+\NC      \NC = \frac{n(n+1)}{2a} + cn \NR
+\NC      \NC = \Theta(n^2) \NR
+\stopmathalignment\stopformula
+
+猜測 \m{T(n) \le c n^2}，則：
+\startformula\startmathalignment[n=3]
+\NC T(n) \NC \le c(n-a)^2 + ca + cn \NC \NR
+\NC      \NC \le cn^2 - 2acn + ca + cn \NC \NR
+\NC      \NC \le cn^2 - c(2an - a - n) \NC (a > 1/2, n > 2a) \NR
+\NC      \NC \le cn^2 - cn \NC \NR
+\NC      \NC \le cn^2 \NC \NR
+\NC      \NC = \Theta(n^2) \NC \NR
+\stopmathalignment\stopformula
+
+猜測 \m{T(n) \ge c n^2}，則：
+\startformula\startmathalignment[n=3]
+\NC T(n) \NC \ge c(n-a)^2 + ca + cn \NC \NR
+\NC      \NC \ge cn^2 - 2acn + ca + cn \NC \NR
+\NC      \NC \ge cn^2 - c(2an - a - n) \NC (a < 1/2, n > 2a) \NR
+\NC      \NC \ge cn^2 + cn \NC \NR
+\NC      \NC \ge cn^2 \NC \NR
+\NC      \NC = \Theta(n^2) \NC \NR
+\stopmathalignment\stopformula
+
+	\startMPcode
+		input reccursion_tree
+		string A[];
+		string B[];
+		string S;
+		A[4] := "$cn$";		B[4] := "$cn$";
+		A[3] := "$c(n-a)$";	B[3] := "$cn$";
+		A[2] := "$c(n-2a)$";	B[2] := "$c(n-a)$";
+		A[1] := "$c(n-3a)$";	B[1] := "$c(n-2a)$";
+		A[0] := "$c(n-ia)$";	B[0] := "$c(n-(i-1)a)$";
+		S := "$ca$";
+		rectree_single_side_binary(A, B, S)(2, 4, 30, 30, 6);
+	\stopMPcode
+\stopANSWER
+
+%e4.4-9
+\startEXERCISE[exercise:partition_alpha]
+對遞迴式 \m{T(n) = T(\alpha n) + T((1-\alpha)n) + cn} （其中 \m{0 < \alpha < 1} 和 \m{c > 0}爲常數），
+利用遞迴樹給出其解的一個漸進緊確界。
+\stopEXERCISE
+\startANSWER
+我們可以假設 \m{\alpha \le 1/2}，因爲我們可以讓 \m{\beta = 1 - \alpha} 來代替 \m{\alpha}。
+
+由此，樹的深度爲 \m{\log_{1/\alpha}n}，每一層爲 \m{cn}。
+葉子節點不明朗，但我們可以假設爲 \m{\Theta(n)}。
+\startformula\startmathalignment
+\NC T(n) \NC = \sum_{i=0}^{\log_{1/\alpha}n}cn + \Theta(n) \NR
+\NC      \NC = cn\log_{1/\alpha}n + \Theta(n) \NR
+\NC      \NC = \Theta(n\lg{n}) \NR
+\stopmathalignment\stopformula
+
+另一種方式，設 \m{\beta = 1 - \alpha}，則：
+\startformula\startmathalignment
+\NC T(n) \NC = T(\alpha n) + T(\beta n) + cn \NR
+\NC      \NC = T(\alpha^2 n) + 2T(\alpha \beta n) + T(\beta^2 n) + cn + c \alpha n  + c \beta n \NR
+\NC      \NC = T(\alpha^2 n) + 2T(\alpha \beta n) + T(\beta^2 n) + 2cn \NR
+\NC      \NC = T(\alpha^3 n) + T(\alpha^2 \beta n) + c\alpha^2 n +
+               2T(\alpha^2 \beta n) + 2T(\alpha \beta^2 n) + 2c\alpha\beta n +
+               T(\alpha \beta^2 n) + T(\beta ^ 3 n) + c\beta ^ 2 n + 2cn \NR
+\NC      \NC = T(\alpha^3 n) + 3T(\alpha^2 \beta n) + 3T(\alpha \beta^2 n) + T(\beta^3 n) +
+               c \alpha^2 n + 2c \alpha \beta n + c \beta ^ 2 n + 2cn \NR
+\NC      \NC = T(\alpha^3 n) + 3T(\alpha^2 \beta n) + 3T(\alpha \beta^2 n) + T(\beta^3 n) + 3cn \NR
+\NC      \NC = \ldots \NR
+\stopmathalignment\stopformula
+
+一直到 \m{\alpha^k n \le 1}，最後得到 \m{T(n) = O(1) + ckn}。
+\startformula\startmathalignment
+\NC \NC \alpha^k = \frac{1}{n} \NR
+\NC \Rightarrow \NC \log{\alpha^k} = \log\frac{1}{n} \NR
+\NC \Rightarrow \NC k\log\alpha = - \log{n} \NR
+\NC \Rightarrow \NC k = \frac{-\log{n}}{\log\alpha} = \frac{\log{n}}{\log(1/\alpha)} = \log_{1/\alpha}n \NR
+\stopmathalignment\stopformula
+
+用代入法進行驗證。猜測 \m{T(n) \le dn\lg{n}}：
+\startformula\startmathalignment[n=3]
+\NC T(n) \NC \le d \alpha n \lg(\alpha n) + c \beta n \lg(\beta n) + cn \NC \NR
+\NC      \NC \le d \alpha n \lg{n} + d \beta n \lg{n} + d \alpha n \lg\alpha + d \beta n \lg\beta + cn \NC \NR
+\NC      \NC \le d n \lg{n} + \big(d (\alpha \lg\alpha + \beta \lg\beta) + c\big)n \NC (d(\alpha\lg\alpha + \beta\lg\beta) + c \le 0)\NR
+\NC      \NC \le d n \lg{n} \NC \NR
+\stopmathalignment\stopformula
+
+由於 \m{1/2 \le \alpha < 1} 並且 \m{0 < 1 - \alpha \le 1/2}，有 \m{\lg\alpha < 0} 以及 \m{\lg(1-\alpha)<0}。
+因此 \m{\alpha\lg\alpha + \beta\lg\beta < 0}，因此：
+\startformula
+d \ge -\frac{c}{\alpha\lg\alpha + (1-\alpha)\lg(1-\alpha)}
+\stopformula
+不等式右側爲一個正常數，只要 \m{d} 滿足此不等式， \m{T(n) \le dn\lg{n}} 就成立。
+
+同理若要 \m{T(n) \ge dn\lg{n}}，只需 \m{d(\alpha\lg\alpha + \beta\lg\beta) + c \ge 0} 即可，
+即：
+\startformula
+0 \le d \le -\frac{c}{\alpha\lg\alpha + (1-\alpha)\lg(1-\alpha)}
+\stopformula
+
+因此 \m{T(n) = \Theta(n\lg n)}。
+\stopANSWER
+
+\stopsection

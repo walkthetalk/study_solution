@@ -1,0 +1,103 @@
+\startsection[
+  title={Proof of the master theorem},
+]
+
+\startEXERCISE \DIFFICULT
+對 \m{b} 時正整數而非任意實數的情況，給出公式（4.27）中 \m{n_j} 的表達式，要求既簡單又準確。
+附公式（4.27）：
+\startformula
+ n_j = \startmathcases
+   \NC n \NC 若 \m{j = 0} \NR
+   \NC \left\lceil n_{j-1}/b \right\rceil \NC 若 \m{j > 0} \NR
+\stopmathcases
+\stopformula
+\stopEXERCISE
+\startANSWER
+若 \m{n} 爲正整數，則解爲：
+\startformula
+n_j = \left\lceil n / b^j \right\rceil
+\stopformula
+
+\goto{stackexchange}[url(http://math.stackexchange.com/questions/509862/closed-form-expression-for-n-j-defined-by-n-j-lceil-n-j-1-b-rceil)] 上有如下證明：
+
+若 \m{a} 和 \m{b} 均爲正整數， \m{x} 爲任意實數，則有：
+\startformula
+\left\lceil \frac{x}{a} \right\rceil - 1
+< \frac{x}{a}
+\le \left\lceil \frac{x}{a} \right\rceil
+\stopformula
+
+兩邊同除以 \m{b}，則：
+\startformula
+\frac{1}{b}(\left\lceil \frac{x}{a} \right\rceil - 1)
+< \frac{x}{ab}
+\le \frac{1}{b} \left\lceil \frac{x}{a} \right\rceil
+\stopformula
+
+令 \m{P = \left\lceil \frac{x}{a} \right\rceil}，記 \m{P = q \cdot b - r}，
+其中 \m{0 \le r < b}， \m{r}、 \m{b} 均爲整數。
+則由 \m{P > (q - 1) \cdot b} 可知 \m{P - 1 \ge (q - 1) \cdot b}，因此：
+\startformula
+q - 1 \le \frac{P-1}{b} < \frac{x}{ab} \le \frac{P}{b} \le q
+\stopformula
+
+由此可知：
+\startformula
+\left\lceil \frac{x}{ab} \right\rceil = \left\lceil \frac{1}{b} \left\lceil \frac{x}{a} \right\rceil \right\rceil
+\stopformula
+
+顯然，推廣後可以執行任意次除法，也可以將 \m{\left\lceil \right\rceil} 換乘 \m{\lfloor \rfloor}，
+但是不能混合使用。因此
+\startformula
+n_j = \left\lceil \frac{n_{j-1}}{b} \right\rceil
+    = \left\lceil \frac{1}{b} \left\lceil \frac{n}{b^{j-1}} \right\rceil \right\rceil
+    = \left\lceil \frac{n}{b^j} \right\rceil
+\stopformula
+
+如果 \m{b} 是任意正實數，則結論不成立，
+因爲無法由 \m{P > (q-1)\cdot b} 得出 \m{P-1 \ge (q-1) \cdot b}。
+\stopANSWER
+
+\startEXERCISE[exercise:master_method_generalized] \DIFFICULT
+證明：如果 \m{f(n) = \Theta(n^{\log_b{a}}\lg^k{n})}，其中 \m{k\ge 0}，
+則主遞迴式的解爲 \m{T(n) = \Theta(n^{\log_b{a}}\lg^{k+1}n)}。
+簡單起見，假定 \m{n} 是 \m{b} 的冪。（\m{T(n)=aT(n/b)+f(n)}）
+\stopEXERCISE
+\startANSWER
+\startformula\startmathalignment[n=2]
+\NC g(n) \NC= \sum_{j=0}^{\log_b{n}-1}a^jf(n/b^j) \NR
+\NC f(n/b^j) \NC= \Theta\Big((n/b^j)^{\log_b{a}}\lg^k(n/b^j)\Big) \NR
+\NC g(n) \NC= \Theta\Big(\sum_{j=0}^{\log_b{n}-1}a^j\big(\frac{n}{b^j}\big)^{\log_b{a}}\lg^k\big(\frac{n}{b^j}\big)\Big) = \Theta(A) \NR
+\NC A \NC= \sum_{j=0}^{\log_b{n}-1}a^j\big(\frac{n}{b^j}\big)^{\log_b{a}}\lg^k\frac{n}{b^j} \NR
+\NC   \NC= n^{\log_b{a}}\sum_{j=0}^{\log_b{n}-1}\Big(\frac{a}{b^{\log_b{a}}}\Big)^j\lg^k\frac{n}{b^j} \NR
+\NC   \NC= n^{\log_b{a}}\sum_{j=0}^{\log_b{n}-1}\lg^k\frac{n}{b^j} \NR
+\NC   \NC= n^{\log_b{a}}B \NR
+\NC \lg^k\frac{n}{d} \NC= (\lg{n} - \lg{d})^k = \lg^k{n} + o(\lg^k{n}) \NR
+\NC B \NC= \sum_{j=0}^{\log_b{n}-1}\lg^k\frac{n}{b^j} \NR
+\NC   \NC= \sum_{j=0}^{\log_b{n}-1}\Big(\lg^k{n} - o(\lg^k{n})\Big) \NR
+\NC   \NC= \log_b{n}\lg^k{n} + \log_b{n} \cdot o(\lg^k{n}) \NR
+\NC   \NC= \Theta(\log_b{n}\lg^k{n}) \NR
+\NC   \NC= \Theta(\lg^{k+1}{n}) \NR
+\NC g(n) \NC= \Theta(A) = \Theta(n^{\log_b{a}}B) = \Theta(n^{\log_b{a}}\lg^{k+1}{n}) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+證明：主定理中第三種情況被過分強調了，因爲對於某個常數 \m{c<1}，
+正則條件 \m{af(n/b)\le cf(n)} 成立本身就意味着存在常數 \m{\epsilon > 0}，
+使得 \m{f(n) = \Omega(n^{\log_b{a} + \epsilon})}。
+\stopEXERCISE
+\startANSWER
+證明如下，參見\goto{stackexchange}[url(http://math.stackexchange.com/questions/510897/why-does-afn-b-cfn-for-c-1-imply-that-fn-omegan-log-ba-ep)]：
+\startformula\startmathalignment[n=1]
+\NC a f(n/b) \le cf(n) \NR
+\NC \alpha f(n/b) \le f(n) \quad \alpha = a/c \NR
+\NC \alpha f(n) \le f(nb) \NR
+\NC \alpha^i f(1) \le f(b^i) \NR
+\NC n = b^i \Rightarrow i = \log_{b}n \Rightarrow f(n) \ge \alpha^{\log_b{n}}f(1) = n^{\log_{b}\alpha} \NR
+\NC \alpha > a \Rightarrow \alpha = a + d \quad (c < 1, d > 0) \NR
+\NC \Rightarrow f(n) = n^{\log_b{a} + log_b{d}} = n^{\log_b{a}+\epsilon} \quad (\epsilon = \log_{b}d) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\stopsection

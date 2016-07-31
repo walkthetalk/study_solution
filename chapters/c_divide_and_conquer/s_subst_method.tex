@@ -1,0 +1,194 @@
+\startsection[
+  title={The substitution method for solving recurrences},
+]
+
+\startEXERCISE
+證明 \m{T(n)  = T(n - 1) + n} 的解爲 \m{O(n^2)}。
+\stopEXERCISE
+\startANSWER
+猜測 \m{T(n) \leq cn^2}，則：
+\startformula\startalign
+\NC T(n) \NC \leq (n - 1)^2 + n \NR
+\NC      \NC = n^2 - 2n + 1 + n \NR
+\NC      \NC = n^2 - n + 1 \NR
+\NC      \NC \leq cn^2 \NR
+\stopalign\stopformula
+其中 \m{c\geq 1}， \m{n\geq 1}。
+\stopANSWER
+
+\startEXERCISE
+證明 \m{T(n) = T(\lceil n/2 \rceil) + 1} 的解爲 \m{O(\lg n)}。
+\stopEXERCISE
+\startANSWER
+猜測 \m{T(n) \leq c\lg(n - 2)}，則：
+\startformula\startalign
+\NC T(n) \NC \le c\lg(\lceil n/2 \rceil - 2) + 1 \NR
+\NC      \NC \le c\lg(n/2 + 1 - 2) + 1 \NR
+\NC      \NC \le c\lg((n - 2)/2) + 1 \NR
+\NC      \NC \le c\lg(n - 2) - c\lg2 + 1 \NR
+\NC      \NC \le c\lg(n - 2) \NR
+\stopalign\stopformula
+\stopANSWER
+
+\startEXERCISE
+我們已經知道 \m{T(n) = 2T(\lfloor n/2 \rfloor) + n} 的解爲 \m{O(n\lg n)}。
+證明 \m{\Omega(n\lg n)} 也是他的解。
+從而可得結論：解爲 \m{\Theta(n\lg n)}。
+\stopEXERCISE
+\startANSWER
+猜測 \m{T(n) \le cn\lg n}，則：
+\startformula\startalign
+\NC T(n) \NC \le 2c\lfloor n/2 \rfloor\lg{\lfloor n/2 \rfloor} + n \NR
+\NC      \NC \le cn\lg(n/2) + n \NR
+\NC      \NC \le cn\lg{n} - cn\lg{2} + n \NR
+\NC      \NC \le cn\lg{n} + (1 - c)n \qquad \text{for } c \ge 1 \NR
+\NC      \NC \le cn\lg{n} \NR
+\stopalign\stopformula
+猜測 \m{T(n) \ge c(n+2)\lg(n+2)}，則：
+\startformula\startalign
+\NC T(n) \NC \ge 2c(\lfloor n/2 \rfloor + 2)(\lg(\lfloor n/2 \rfloor + 2) + n \NR
+\NC      \NC \ge 2c(n/2 - 1 + 2)(\lg(n/2 - 1 + 2) + n \NR
+\NC      \NC \ge 2c\frac{n+2}{2}\lg\frac{n+2}{2} + n \NR
+\NC      \NC \ge c(n+2)\lg(n+2) - c(n+2)\lg2 + n \NR
+\NC      \NC \ge c(n+2)\lg(n+2) + (1 - c)n - 2c \qquad \text{for } n \ge 2c/(1-c), 0 < c < 1 \NR
+\NC      \NC \ge c(n+2)\lg(n+2) \NR
+\stopalign\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明：通過做出不同的歸納假設，我們不必調整歸納證明中的邊界條件，
+即可克服遞迴式（4.19）中邊界條件 \m{T(1)=1} 所帶來的困難。
+\stopEXERCISE
+\startANSWER
+猜測 \m{T(n) \le n\lg{n} + n}，則：
+\startformula\startalign
+\NC T(n) \NC \le 2(c\lfloor n/2 \rfloor\lg{\lfloor n/2 \rfloor} + \lfloor n/2 \rfloor) + n \NR
+\NC      \NC \le 2c(n/2)\lg(n/2) + 2(n/2) + n \NR
+\NC      \NC \le cn\lg(n/2) + 2n \NR
+\NC      \NC \le cn\lg(n/2) + 2n \NR
+\NC      \NC \le cn\lg{n} - cn\lg{2} + 2n \NR
+\NC      \NC \le cn\lg{n} + (2 - c)n \qquad (c \ge 1)\NR
+\NC      \NC \le cn\lg{n} + n \NR
+\stopalign\stopformula
+這樣邊界條件爲：
+\startformula
+T(1) = 1 \le cn\lg{n} + n = 0 + 1 = 1
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+證明：歸並排序的“嚴格”遞迴式（4.3）的解爲 \m{\Theta(n\lg n)}。
+\stopEXERCISE
+\startANSWER
+遞迴式爲：
+\startformula
+T(n) = T(\lfloor n/2 \rfloor) + T(\lceil n/2 \rceil) + \Theta(n)
+\stopformula
+
+猜測 \m{T(n) \le c(n - 2)\lg(n -2)}，則：
+\startformula\startalign
+\NC T(n) \NC \le c(\lfloor n/2 \rfloor - 2)\lg(\lfloor n/2 \rfloor - 2) + c(\lceil n/2 \rceil -2 )\lg(\lceil n/2 \rceil - 2) + dn \NR
+\NC      \NC \le c(n/2 - 2)\lg(n/2 - 2) + c(n/2 + 1 -2 )\lg(n/2 + 1 - 2) + dn \NR
+\NC      \NC \le c(n/2 - 1)\lg(n/2 - 1) + c(n/2 - 1 )\lg(n/2 - 1) + dn \NR
+\NC      \NC \le c\frac{n-2}{2}\lg\frac{n-2}{2} + c\frac{n-2}{2}\lg\frac{n-2}{2} + dn \NR
+\NC      \NC \le c(n-2)\lg\frac{n-2}{2} + dn \NR
+\NC      \NC \le c(n-2)\lg(n-2) - c(n-2) + dn \NR
+\NC      \NC \le c(n-2)\lg(n-2) + (d - c)n + 2c \qquad (c > d, n > 2c)\NR
+\NC      \NC \le c(n-2)\lg(n-2) \NR
+\stopalign\stopformula
+這就是 \m{\Theta(n\lg n)}。 \m{\Omega(n\lg n)} 類似。
+\stopANSWER
+
+\startEXERCISE
+證明： \m{T(n) = 2T(\lfloor n/2 \rfloor + 17) + n} 的解爲 \m{O(n\lg n)}。
+\stopEXERCISE
+\startANSWER
+猜測 \m{T(n) \le c(n-a)\lg(n-a)}，則：
+\startformula\startmathalignment[n=3]
+\NC T(n) \NC \le 2c(\lfloor n/2 \rfloor + 17 - a)\lg(\lfloor n/2 \rfloor + 17 - a) + n \NC \NR
+\NC      \NC \le 2c(n/2 + 1 + 17 - a)\lg(n/2 + 1 + 17 - a) + n \NC \NR
+\NC      \NC \le c(n + 36 - 2a)\lg\frac{n + 36 - 2a}{2} + n \NC \NR
+\NC      \NC \le c(n + 36 - 2a)\lg(n + 36 - 2a) - c(n + 36 - 2a) + n \qquad\NC (c > 1, n > n_0 = f(a))\NR
+\NC      \NC \le c(n + 36 - 2a)\lg(n + 36 - 2a)                      \NC (a \ge 36) \NR
+\NC      \NC \le c(n - a)\lg(n - a) \NC \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+使用 4.5 節中的方法，可以證明 \m{T(n) = 4T(n/3) + n} 的解爲 \m{T(n) = \Theta(n^{\log_3^4})}。
+說明基於假設 \m{T(n) \le cn^{\log_3^4}} 的代入法不能證明這一結論。
+然後說明如何通過減去一個低階項完成代入法證明。
+\stopEXERCISE
+\startANSWER
+猜測 \m{T(n) \le cn^{\log_3{4}}}，則：
+\startformula\startmathalignment
+\NC T(n) \NC \le 4c(n/3)^{\log_3{4}} + n \NR
+\NC      \NC \le cn^{\log_3{4}} + n \NR
+\stopmathalignment\stopformula
+與猜測不一致，證明失敗。
+
+猜測 \m{T(n) \le cn^{\log_3{4}} - n}，則：
+\startformula\startmathalignment
+\NC T(n) \NC \le 4\Big(c(n/3)^{\log_3{4}} - n\Big) + n \NR
+\NC      \NC \le cn^{\log_3{4}} - 4n + n \NR
+\NC      \NC \le cn^{\log_3{4}} - 3n \NR
+\NC      \NC \le cn^{\log_3{4}} - n \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+使用 4.5 節中的方法，可以證明 \m{T(n) = 4T(n/2) + n} 的解爲 \m{T(n) = \Theta(n^2)}。
+說明基於假設 \m{T(n) \le cn^2} 的代入法不能證明這一結論。
+然後說明如何通過減去一個低階項完成代入法證明。
+\stopEXERCISE
+\startANSWER
+猜測 \m{T(n) \le cn^2}，則：
+\startformula\startmathalignment
+\NC T(n) \NC \le 4c(n/2)^2 + n \NR
+\NC      \NC \le cn^2 + n \NR
+\NC      \NC \le (c+1)n^2 \NR
+\stopmathalignment\stopformula
+與猜測不一致，證明失敗。
+
+猜測 \m{T(n) \le cn^2 - n}，則：
+\startformula\startmathalignment
+\NC T(n) \NC \le 4\Big(c(n/2)^2 - n/2\Big) + n \NR
+\NC      \NC \le cn^2 - 2n + n \NR
+\NC      \NC \le cn^2 - n \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+利用改變變量的方法求解遞迴式 \m{T(n) = 3 T(\sqrt{n}) + \log{n}}。
+你的解應該是漸進緊確的。不必擔心數值是否是整數。
+\stopEXERCISE
+\startANSWER
+假設 \m{m = \lg n}， \m{S(m) = T(2^m)}，則：
+\startformula\startmathalignment
+\NC T(n)   \NC = 3T(\sqrt{n}) + \lg{n} \NR
+\NC T(2^m) \NC = 3T(2^{m/2}) + m \NR
+\NC S(m)   \NC = 3S(m/2) + m \NR
+\stopmathalignment\stopformula
+
+猜測 \m{S(m)\le cm^{\lg 3} + dm}，則：
+\startformula\startmathalignment[n=3]
+\NC S(m) \NC \le 3\Big(c(m/2)^{\lg{3}} + d(m/2)\Big) + m \NC \NR
+\NC      \NC \le cm^{\lg{3}} + (\frac{3}{2}d + 1)m       \NC (d \le -2) \NR
+\NC      \NC \le cm^{\lg{3}} + dm \NC \NR
+\stopmathalignment\stopformula
+
+猜測 \m{S(m)\ge cm^{\lg 3} + dm}，則：
+\startformula\startmathalignment[n=3]
+\NC S(m) \NC \ge 3\Big(c(m/2)^{\lg{3}} + d(m/2)\Big) + m \NC \NR
+\NC      \NC \ge cm^{\lg{3}} + (\frac{3}{2}d + 1)m       \NC (d \ge -2) \NR
+\NC      \NC \ge cm^{\lg{3}} + dm \NC \NR
+\stopmathalignment\stopformula
+
+因此：
+\startformula\startmathalignment
+\NC S(m) \NC = \Theta(m^{\lg{3}}) \NR
+\NC T(n) \NC = \Theta(\lg^{\lg{3}}{n}) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\stopsection

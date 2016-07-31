@@ -1,0 +1,113 @@
+\startsection[
+  title={Flow networks},
+  reference=section:flow_networks,
+]
+
+%e26.1-1
+\startEXERCISE
+證明：在一個流網絡中，
+將一條邊分解爲兩條邊所得到的是一個等價的網絡。
+更形式化地說，假定網絡 \m{G} 包含邊 \m{(u,v)}，
+我們以如下方式創建一個新的流網絡 \m{G'}：
+創建一個新節點 \m{x}，
+用新的邊 \m{(u,x)} 和 \m{(x,v)} 來替換原來的邊 \m{(u,v)}，
+並設置 \m{c(u,x)=c(x,v)=c(u,v)}。
+證明： \m{G'} 中的一個最大流與 \m{G} 中的一個最大流具有相同的值。
+\stopEXERCISE
+
+\startANSWER
+\m{f(u,x)=f(x,v)}。
+\stopANSWER
+
+%e26.1-2
+\startEXERCISE
+將流的性值和定義推廣到多源點和多匯點的流問題上。
+證明：在多源點多匯點流網絡中，
+通過增加一個超級源點和超級匯點，可以所形成一個單源點單匯點流網絡，
+新網絡與原網絡中的流是一一對應的。
+\stopEXERCISE
+
+\startANSWER
+容量限制：對於所有 \m{u,v\in V}，都有 \m{0\le f(u,v)\le c(u,v)}；
+
+流量守恆：對於所有 \m{u\in V-S-T}，都有 \m{\sum_{v\in V}f(v,u)=\sum_{v\in V}f(u,v)}。
+\stopANSWER
+
+%e26.1-3
+\startEXERCISE
+假定流網絡 \m{G=(V,E)} 違反了如下假設：對於所有節點 \m{v\in V}，
+網絡必須包括一條路徑 \m{s\leadsto v\leadsto t}。
+設節點 \m{u} 滿足：不存在路徑 \m{s\leadsto u\leadsto t}。
+證明： \m{G} 中必然存在一個最大流 \m{f}，
+使得對於所有節點 \m{v\in V}， \m{f(u,v)=f(v,u)=0}。
+\stopEXERCISE
+
+\startANSWER
+\m{u} 只能扇入或只能扇出，因此只能是既無扇入亦無扇出。
+\stopANSWER
+
+%e26.1-4
+\startEXERCISE
+設 \m{f} 爲網絡中的一個流， \m{\alpha} 爲一實數，
+將 \m{\alpha f} 稱爲{\EMP 標量流積（scalar flow product）}，
+是從 \m{V\times V} 到 \m{R} 的函數，定義如下：
+\startformula
+(\alpha f)(u,v) = \alpha \cdot f(u,v)
+\stopformula
+證明：網絡中的流形成一個{\EMP 凸集（convex set）}。
+也就是說，證明：如果 \m{f_1} 和 \m{f_2} 爲兩個流，
+則 \m{\alpha f_1 + (1-\alpha)f_2} 也是一個流，這裏 \m{0\le \alpha \le 1}。
+\stopEXERCISE
+
+\startANSWER
+\m{0\le \alpha f_1 + (1-\alpha)f_2 \le \max(f_1,f_2)}。
+\stopANSWER
+
+%e26.1-5
+\startEXERCISE
+將最大流問題表述爲一個線性規劃問題。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC \max \NC (\sum_{v\in V}f(s,v) - \sum_{v\in V}f(v,s)) \NR
+\NC s.t. \NC 0\le f(u,v) \le c(u,v) \NR
+\NC \NC \sum_{v\in V}f(v,u) - \sum_{v\in V}f(u,v) = 0 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e26.1-6
+\startEXERCISE
+Adam 教授有兩個兒子，可不幸的是，他們互相討厭對方。
+隨着時間的推移，問題變得如此嚴重，
+他們不僅不願意一起到學校，
+而且都拒絕走對方當天所走過的街區。
+兩個孩子並不在意自己走的路徑與對方所走的路徑在街角交叉。
+幸運的是，教授的房子和學校都位於街角。
+但除此之外，教授不能肯定是否可以在滿足上述條件的情況下
+把兩個小孩送到同一所學校。
+教授有一份小鎮的地圖，試說明如何將這個問題轉換爲一個最大流問題，
+以便決定是否可以將孩子送到同一所學校。
+\stopEXERCISE
+
+\startANSWER
+每條路的容量都是 1，最大流必須大於 1。
+\stopANSWER
+
+%e26.1-7
+\startEXERCISE
+假定除邊的容量外，流網絡還有{\EMP 節點容量}。
+即對於每個節點 \m{v}，有一個極限值 \m{l(v)}，
+這是可以流經此節點的最大流量。
+請說明如何將一個帶有節點容量的流網絡 \m{G=(V,E)} 轉換
+爲一個等價的但沒有節點容量的流網絡 \m{G'=(V',E')}，
+使得 \m{G'} 中的最大流與 \m{G} 中的最大流取值相同。
+圖 \m{G'} 裏有多少個節點和多少條邊？
+\stopEXERCISE
+
+\startANSWER
+將每個節點 \m{v} 轉換成一條邊 \m{v,v‘}，其容量爲 \m{l(v)}。
+ \m{V' = 2V}， \m{E'=V+E}。
+\stopANSWER
+
+\stopsection

@@ -1,0 +1,409 @@
+\startsubject[
+  title={Problems},
+]
+
+%p26-1
+\startPROBLEM
+（Escape problem）
+\m{n\times n} 的{\EMP 網格（grid）}是由 \m{n} 行、 \m{n} 列節點構成的無向圖，
+如圖 26-11 所示。
+我們將位於第 \m{i} 行、第 \m{j} 列的節點表示爲 \m{(i,j)}。
+除了位於邊界的節點外，網絡中其他所有節點都有剛好 4 個鄰接點。
+邊界節點指的是滿足 \m{i=1}、 \m{i=n}、 \m{j=1} 或 \m{j=n} 的節點 \m{(i,j)}。
+在這樣的網格裏給定 \m{m\le n^2} 個起始節點 \m{(x_1,y_1),(x_2,y_2),\ldots,(x_m,y_m)}，
+{\EMP 逃逸問題（escape problem）}要做的事情是判斷是否存在從這些起始節點到
+任意 \m{m} 個不同的邊界節點之間的 \m{m} 條節點分離的路徑（每條路徑之間沒有共同節點）。
+例如，在圖 26-11（a）所示的網格中有一個逃逸線路，
+但圖 26-11（b）的網格則沒有逃逸線路。
+附圖 26-11（a）和圖 26-11（b）：
+
+\startcombination[2*1]
+{\externalfigure[output/p26_1-1]}{}
+{\externalfigure[output/p26_1-2]}{}
+\stopcombination
+
+\startigBase[a]\startitem
+考慮這樣的流網絡，其中的節點和邊都有容量限制，
+也就是說，進入任何給定節點的正流都要收到容量的限制。
+證明：在這樣的流網絡中確定最大流的問題可以歸約爲桶燈規模流網絡中的普通最大流問題。
+\stopitem\stopigBase
+
+\startANSWER
+可以將每個節點拆分成兩個節點，中間用一條邊連接，此邊的容量就是原節點的容量限制。
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個有效的算法來解決逃逸問題，並分析算法的運行時間。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopPROBLEM
+
+%p26-2
+\startPROBLEM
+（Minimum path cover）
+有向圖 \m{G=(V,E)} 的一個{\EMP 路徑覆蓋（path cover）}
+指不含相交節點的路徑集合 \m{P}，
+使集合 \m{V} 中每個節點恰好在 \m{P} 的路徑上只出現一次。
+路徑的起始節點和終結點可以是任意節點，也可以有任意長度，包括 0 長度。
+圖 \m{G} 的一個{\EMP 最小路徑覆蓋（minimum path cover）}是一個包含路徑條數最少的路徑覆蓋。
+
+\startigBase[a]\startitem
+給出一個有效算法找到有向無環圖 \m{G=(V,E)} 的一個最小路徑覆蓋。
+（\hint 假定 \m{V=\{1,2,\ldots,n\}}，然後構建圖 \m{G'=(V',E')}，其中
+
+\startformula\startmathalignment
+\NC V'= \NC \{x_0,x_1,\ldots,x_n\}\cup \{y_0,y_1,\ldots,y_n\} \NR
+\NC E'= \NC \{(x_0,x_i): i \in V\} \cup \{(y_i,y_0): i \in V\} \cup \{(x_i,y_j):(i,j)\in E\}
+\stopmathalignment\stopformula
+然後在圖 \m{G'} 上運行最大流算法。）
+\stopitem\stopigBase
+
+\startANSWER
+爲找到有向無環圖 \m{G = (V, E)} 的最小路徑覆蓋，按提示構造圖 \m{G' = (V', E')}，
+且 \m{E'} 中所有邊的容量都是 \m{1}。
+則 \m{G'} 的最大流是 \m{|f|}， \m{G} 的最小路徑覆蓋是 \m{|V| - |f|}，
+算法運行時間是 \m{O(VE)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+你的算法是否適用於帶環路的有向圖？請詳細解釋。
+\stopitem\stopigBase
+
+\startANSWER
+不適用。
+\stopANSWER
+
+\stopPROBLEM
+
+%p26-3
+\startPROBLEM
+（Algorithmic consulting）
+ Gore 教授希望創辦一家算法諮詢公司。
+教授選出了算法中的 \m{n} 個重要子領域（大概相當於本書的每個不同部分），
+並用集合 \m{A=\{A_1,A_2,\ldots,A_n\}} 予以表示。
+在每個子領域 \m{A_k}，教授可以用 \m{c_k} 美元聘請該領域的一位專家。
+諮詢公司已經列出了一個潛在工作的集合 \m{J=\{J_1,J_2,\ldots,J_m\}}。
+爲了完成工作 \m{J_i}，公司需要在子領域的子集合 \m{R_i\subseteq A} 中聘請專家。
+每位專家可以同時從事多項工作。
+如果公司選擇接受工作 \m{J_i}，
+則公司必須在集合 \m{R_i} 中的所有子領域中聘請專家，
+同時，公司從該項目中可以收入的營業額爲 \m{p_i} 美元。
+
+ Gore 教授的工作是決定聘請哪些子領域的專家，接受哪些工作，
+以便使公司的淨營業額達到最高，
+這裏淨營業額指的是從工作中獲得的總輸入減去聘請專家的總成本的差額。
+
+考慮下面的流網絡 \m{G}。
+該網絡包含一個源節點 \m{s}，節點 \m{A_1,A_2,\ldots,A_n}，
+節點 \m{J_1,J_2,\ldots,J_m}，
+以及一個匯點 \m{t}。
+對於 \m{k=1,2,\ldots,n}，流網絡包含一條邊 \m{(s,A_k)}，
+其容量爲 \m{c(s,A_k)=c_k}，
+而對於 \m{i=1,2,\ldots,m}，
+流網絡包含一條邊 \m{(J_i,t)}，容量爲 \m{c(J_i,t)=p_i}。
+對於 \m{k=1,2,\ldots,n} 和 \m{i=1,2,\ldots,m}，
+如果 \m{A_k \in R_i}，則圖 \m{G} 包含邊 \m{(A_k,J_i)}，
+其容量爲 \m{c(A_k,J_i)=\infty}。
+
+\startigBase[a]\startitem
+證明：如果對於一個有限容量的切割 \m{(S,T)}，有 \m{J_i\in T}，
+則對於每個節點 \m{A_k\in R_i}，有 \m{A_k\in T}。
+\stopitem\stopigBase
+
+\startANSWER
+由於切割的容量有限，對於所有 \m{i=1,2,\ldots,n} 和 \m{j=1,2,\ldots,m}，
+都有 \m{(A_i,J_j)\notin (S,T)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+請說明如何從圖 \m{G} 的一個最小切割的容量和給定的 \m{p_i} 值中計算公司的最大淨收入。
+\stopitem\stopigBase
+
+\startANSWER
+\CLRSH{Net-Revenue(I, E, c, p, cut(S,T))}
+\startCLRS
+revenue = 0
+for i = 1 to m
+	if J[i] in T
+		revenue = revenue + p[i]
+for i = 1 to n
+	if A[i] in T
+		revenue = revenue - c[i]
+return revenue
+\stopCLRS
+\stopANSWER
+
+\startigBase[continue]\startitem
+請給出一個有效算法來判斷應該接受哪些工作，應該聘請哪些專家。
+分析算法的運行時間，並以 \m{m}、 \m{n} 和 \m{r=\sum_{i-1}^{m}|R_i|} 來予以表示。
+\stopitem\stopigBase
+
+\startANSWER
+\ALGO{EDMONDS-KARP} 的運行時間是 \m{O(VE^2)}。
+在 \m{G} 中 \m{|V|=n+m+2}， \m{|E|=n+m+r}。
+如果 \m{S} 和 \m{T} 用離散集合實現（帶路徑壓縮的按秩合併），
+運行時間爲 \ALGO{EDMONDS-KARP} 的運行時間，加上計算淨收入的時間。
+
+\startformula
+O((n+m+2)\times (n+m+r)^2) + O(n+m) = O((n+m)\times(n+m+r)^2)
+\stopformula
+
+\stopANSWER
+
+\stopPROBLEM
+
+%p26-4
+\startPROBLEM
+（Updating maximum flow）
+設 \m{G=(V,E)} 是一個源點爲 \m{s} 匯點爲 \m{t} 的流網絡，
+其容量全部爲整數值。假定我們已經給定 \m{G} 的一個最大流。
+\startigBase[a]\startitem
+如果將單條邊 \m{(u,v)\in E} 的容量增加 1 個單位，
+請給出一個 \m{O(V+E)} 時間的算法來對最大流進行更新。
+\stopitem\stopigBase
+
+\startANSWER
+在算法 \ALGO{FORD-FULKERSON} 中多執行一次迭代。
+
+如果邊 \m{(u,v)} 沒有跨越最小切割，則增加 \m{(u,v)} 的容量不會改變最小切割的容量，
+即不會改變最大流的容量。
+
+如果邊 \m{(u,v)} 跨越了最小切割，則可能會增加 \m{(u,v)} 的容量，
+即可能會改變最大流的容量，但最多也只會增加 1。
+\stopANSWER
+
+\startigBase[continue]\startitem
+如果將單條邊 \m{(u,v)\in E} 的容量減少1 個單位，
+請給出一個 \m{O(V+E)} 時間的算法來對最大流進行更新。
+\stopitem\stopigBase
+
+\startANSWER
+新的流 \m{f'(u,v) = f(u,v) - 1}。
+
+如果存在從 \m{u} 到 \m{v} 的增廣路徑，
+則沿增廣路徑增加一個單位容量的流。
+否則，搜索從 \m{u} 到 \m{s} 以及從 \m{t} 到 \m{v} 的增廣路徑，
+並沿增廣路徑減少一個單位容量的流。
+\stopANSWER
+
+\stopPROBLEM
+
+%p26-5
+\startPROBLEM
+（Maximum flow by scaling）
+設 \m{G=(V,E)} 爲一個源點 \m{s} 匯點 \m{t} 的流網絡，
+對於每條邊 \m{(u,v)\in E}，其容量 \m{c(u,v)} 爲整數值。
+設 \m{C=\max_{(u,v)\in E} c(u,v)}。
+\startigBase[a]\startitem
+證明：圖 \m{G} 的一個最小切割的容量最多爲 \m{C|E|}。
+\stopitem\stopigBase
+
+\startANSWER
+跨越最小切割的邊數最多爲 \m{|E|}，因此最小切割的容量最多爲 \m{C|E|}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+對於給定數值 \m{K}，說明如何在 \m{O(E)} 時間內找到一條容量至少爲 \m{K} 的增廣路徑，
+假如這樣的路徑存在。
+\stopitem\stopigBase
+
+\startANSWER
+搜索增廣路徑時忽略容量小於 \m{K} 的邊。
+\stopANSWER
+
+使用下面修改過的 \ALGO{FORD-FULKERSON-METHOD} 計算圖 \m{G} 的最大流：
+
+\CLRSH{MAX-FLOW-BY-SCALING(G,s,t)}
+\startCLRS
+C = max(c)
+initialize flow f to 0
+K = pow(2, floor(lg(C)))
+while K >= 1
+	while exists an augmenting path p of capacity at least K
+		augment flow f along p
+	K = K / 2
+return f
+\stopCLRS
+
+\startigBase[continue]\startitem
+證明：算法 \ALGO{MAX-FLOW-BY-SCALING} 返回的是一個最大流。
+\stopitem\stopigBase
+
+\startANSWER
+如果 \m{K=1}，則此算法與 \ALGO{FORD-FULKERSON-METHOD} 並無區別。
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：每次執行第 4 行時，殘存網絡 \m{G_f} 的一個最小切割容量最多爲 \m{2K|E|}。
+\stopitem\stopigBase
+
+\startANSWER
+邊數最多爲 \m{|E|}，每條邊容量最多爲 \m{2K}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：對於每個數值 \m{K}，第 5 ～ 6 行的內部 {\EMP while} 循環執行次數爲 \m{O(E)}。
+\stopitem\stopigBase
+
+\startANSWER
+根據上一項，容量最多爲 \m{2K|E|}，每條增廣路徑會使容量增加 \m{K}，
+則次數最多爲 \m{2K|E|/K=2|E|}，即次數爲 \m{O(E)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：算法 \ALGO{MAX-FLOW-BY-SCALING} 可以在 \m{O(E^2\lg C} 時間內實現。
+\stopitem\stopigBase
+
+\startANSWER
+根據 b）和 e）可知內層 while 時間爲 \m{O(E)\times O(E)=O(E^2)}，外層 while 爲 \m{O(\lg C)}，
+因此總是間爲 \m{O(E^2\lg C)}。
+\stopANSWER
+
+\stopPROBLEM
+
+%p26-6
+\startPROBLEM
+（The Hopcroft-Karp bipartite matching algorithm）
+本題中，爲找到一個二分圖的最大匹配，
+我們將描述一個由 Hopcroft 和 Karp 提出的更快的算法。
+算法運行時間爲 \m{O(\sqrt{V}E)}。
+給定一個無向二分圖 \m{G=(V,E)}，其中 \m{V=L\cup R} 並且所有邊都恰好有一個端點在集合 \m{L} 中。
+設 \m{M} 爲圖 \m{G} 的一個匹配。
+對於圖 \m{G} 中的一條簡單路徑 \m{P}，
+如果該路徑的起點是 \m{L} 中一個未匹配的節點，終結點是集合 \m{R} 中一個未匹配的節點，
+而路徑上的邊交替屬於 \m{M} 和 \m{E-M}，
+則稱路徑 \m{P} 是一條相對於 \m{M} 的增廣路徑（
+該增廣路徑的定義與流網絡中的增廣路徑相關，但並不相同）。
+本題中，我們將一條路徑看做是一系列的邊，而不是一系列的點。
+一條關於匹配 \m{M} 的最短增廣路徑是一條包含邊數最少的增廣路徑。
+
+給定兩個集合 \m{A} 和 \m{B}，{\EMP 對稱差（symmetric difference）} \m{A\oplus B} 定義爲
+ \m{(A-B)\cup(B-A)}，即僅在一個集合中出現的元素。
+
+\startigBase[a]\startitem
+證明：如果 \m{M} 是圖 \m{G} 的一個匹配， \m{P} 是一條關於 \m{M} 的增廣路徑，
+則對稱差 \m{M\oplus P} 也是一個匹配並且 \m{|M\oplus P| = |M| + 1}。
+另外，證明：如果 \m{P_1,P_2,\ldots,P_k} 爲關於 \m{M} 的節點分離的增廣路徑，
+則對稱差 \m{M\oplus (P_1\cup P_2\cup\ldots\cup P_k)} 是一個基數爲 \m{|M|+k} 的匹配。
+\stopitem\stopigBase
+
+\startANSWER
+令 \m{P} 中有 \m{k} 條屬於 \m{M} 的邊，則有 \m{k+1} 條不屬於 \m{M} 的邊。
+\stopANSWER
+
+下面是 \ALGO{HOPCROFT-KARP} 二分匹配算法的一般結構：
+
+\CLRSH{HOPCROFT-KARP(G)}
+\startCLRS
+M = /BTEX \m{\emptyset} /ETEX
+repeat
+	let /BTEX \m{\mathcal{P}=\{P_1,P_2,\ldots,P_k\}} /ETEX be a maximal set of vertex-disjoint
+		shortest augmenting paths with respect to M
+	/BTEX \m{M=M\oplus(P_1\cup P_2\cup\ldots\cup P_k)} /ETEX
+until /BTEX \m{\mathcal{P} == \emptyset} /ETEX
+return M
+\stopCLRS
+
+該問題的剩餘部分要求讀者分析上述算法的迭代次數（即 {\EMP repeat} 循環的迭代次數）
+並給出算法的第 3 行的一種實現。
+
+\startigBase[continue]\startitem
+給定圖 \m{G} 的兩個匹配 \m{M} 和 \m{M^*}，證明：
+圖 \m{G'=(V,M\oplus M^*)} 中的每個節點的度數最多爲 2。
+同時證明圖 \m{G'} 是由一些不相交的簡單路徑或環路組成。
+另外，試說明每條這樣的簡單路徑或環中的邊交替屬於 \m{M} 和 \m{M^*}。
+證明：如果 \m{|M|\le |M^*|}，則 \m{M\oplus M^*} 至少包含 \m{|M^*|-|M|} 條關於 \m{M} 的節點不相交的增廣路徑。
+\stopitem\stopigBase
+
+\startANSWER
+對於任意匹配，其中每個節點的度數最多爲 1，所以圖 \m{G'=(V,M\oplus M^*)} 中的每個節點的度數最多爲 2。
+因此 \m{G'} 中只有簡單路徑或環路。
+對於每一條簡單路徑或環路而言，其中的邊交替屬於 \m{M} 或 \m{M^*}，
+因爲每個節點只能存在於一個匹配的一條邊中。
+
+由於 \m{|M|\le |M^*|}，令 \m{P=M- M\cap M^*}，令 \m{P^*=M^*- M\cap M^*}。
+則 \m{|M^*|-|M| = |P^*| - |P|}， \m{P^*\cap P = \emptyset}，
+且 \m{M\oplus M^* = P\cup P^*}。
+
+對於圖 \m{G'}，最壞情況下，存在一條增廣路徑包含 \m{P} 中的所有邊，
+且包含 \m{P^*} 中的 \m{|P|+1} 條邊。
+因此 \m{M \oplus M^*} 包含 \m{|P^*| - (|P|+1) + 1 = |P^*| - |P| = |M^*| - |M|} 條關於 \m{M} 的節點不相交的增廣路徑。
+\stopANSWER
+
+設 \m{l} 爲關於匹配 \m{M} 的最短增廣路徑的長度。
+ \m{P_1,P_2,\ldots, P_k} 爲關於 \m{M} 的長度爲 \m{l} 的節點不相交增廣路徑的最大集合。
+設 \m{M'=M\oplus(P_1\cup P_2\cup\ldots\cup P_k)}，
+並且假定 \m{P} 是相對於 \m{M'} 的一條最短增廣路徑。
+
+\startigBase[continue]\startitem
+證明：如果路徑 \m{P} 與路徑 \m{P_1,P_2,\ldots,P_k} 之間沒有共同節點，
+則路徑 \m{P} 中的邊數大於 \m{l}。
+\stopitem\stopigBase
+
+\startANSWER
+由於 \m{P} 與 \m{P_1, P_2, \cdots, P_k} 無共同節點，
+所以 \m{M' = M \oplus (P_1 \cup P_2 \cup \cdots \cup P_k)} 不影響 \m{M} 的增廣路徑。
+因此， \m{P} 是關於 \m{M} 的增廣路徑。
+根據 \m{\{P_1, P_2, \cdots, P_k\}} 的定義，隱含 \m{|P| > l}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+現在假定路徑 \m{P} 與路徑 \m{P_1,P_2,\ldots,P_k} 之間存在共同節點。
+設 \m{A} 爲邊 \m{(M\oplus M')\oplus P} 的集合。
+證明： \m{A=(P_1\cup P_2\cup \ldots \cup P_k)\oplus P} 並且 \m{|A|\ge (k+1)l}。
+同時證明：路徑 \m{P} 中的邊數大於 \m{l}。
+\stopitem\stopigBase
+
+\startANSWER
+令 \m{\mathcal{P}=P_1\cup P_2\cup\ldots \cup P_k}，
+ \m{I = M \cap \mathcal{P}}，
+ \m{m = M - I}， \m{p = \mathcal{P} - I}，
+則 \m{M' = m \cup p}， \m{M = m\cup I}，
+ \m{M\oplus M' = M \cup M' - M\cap M' = m\cup p \cup I - m = p \cup I = \mathcal{P}}。
+
+由於 \m{(M\oplus M')\oplus P = M\oplus (M'\oplus P)}，
+令 \m{M'' = M'\oplus P}，
+則 \m{M''} 也是一個匹配，且 \m{|M''|=|M| + k + 1}。
+根據 b）， \m{A} 包含至少 \m{|M''|-|M| = |M| + k + 1 - |M| = k + 1} 條關於 \m{M} 的不相交的增廣路徑。
+因此 \m{|A|\ge (k+1)l}，即 \m{P} 中邊數大於 \m{l}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：如果關於 \m{M} 的一條最短增廣路徑有 \m{l} 條邊，
+則最大匹配的規模至多爲 \m{|M| + |V| / (l+1)}。
+\stopitem\stopigBase
+
+\startANSWER
+由於 \m{M} 的增廣路徑邊數至少爲 \m{l}，
+因此最多有 \m{|V|/(l+1)} 條增廣路徑。
+且每條增廣路徑都是使匹配的值增 1。
+因此最大匹配的規模至多爲 \m{|M| + |V| / (l+1)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明： \ALGO{HOPCROFT-KARP} 二分匹配算法中 {\EMP repeat} 循環的迭代次數至多爲 \m{2\sqrt{V}}。
+（\hint 在第 \m{\sqrt{V}} 次迭代後， \m{M} 能增長多少？）
+\stopitem\stopigBase
+
+\startANSWER
+\m{\sqrt{V}} 次迭代後，增廣路徑的長度至少爲 \m{\sqrt{V}}，
+匹配 \m{M} 最多會增長 \m{V/(\sqrt{V} + 1) < \sqrt{V}}。
+因此，算法中 {\EMP repeat} 循環的迭代次數至多爲 \m{2\sqrt{V}}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個 \m{O(E)} 時間複雜度的算法，
+可以找到一個關於給定匹配 \m{M} 的節點不相交的最短增廣路徑 \m{P_1,P_2,\ldots,P_k} 的最大集合。
+證明：算法 \ALGO{HOPCROFT-KARP} 的總運行時間爲 \m{O(\sqrt{V}E)}。
+\stopitem\stopigBase
+
+\startANSWER
+用深度優先搜索。
+\stopANSWER
+
+\stopPROBLEM
+
+\stopsubject%Problems

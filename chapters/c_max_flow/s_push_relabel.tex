@@ -1,0 +1,250 @@
+\startsection[
+  title={Push-relabel algorithms},
+]
+
+%e26.4-1
+\startEXERCISE
+證明：算法 \ALGO{INITIALIZE-PREFLOW(G,s)} 終止後，
+有 \m{s.e\le -|f^*|}，其中 \m{f^*} 是流網絡 \m{G} 的一個最大流。
+\stopEXERCISE
+
+\startANSWER
+\startformula
+s.e = -\sum_{(s,v)\in E}c(s,v)
+\stopformula
+\stopANSWER
+
+%e26.4-2
+\startEXERCISE
+說明如何實現通用的推送-重貼標籤算法，
+使得每個重貼標籤的操作成本爲 \m{O(V)}，
+每個推送操作的成本爲 \m{O(1)}，
+並且可以在 \m{O(1)} 時間內選擇一個合適的操作，
+從而使得整個算法運行時間爲 \m{O(V^2E)}。
+\stopEXERCISE
+
+\startANSWER
+\m{s} 和 \m{t} 不會溢出，也就不會被重貼標籤。
+ \m{t} 可以吸收無限多流，也就不會推送。
+
+有邊 \m{(u,v)\in E_f}， \m{u.h = v.h + 1}。
+則可以進行推送，一旦調用 \ALGO{PUSH(u,v)}，若 \m{u.e = 0}，則爲非飽和推送，
+在下一次迭代中我們不會對 \m{u} 進行推送或重貼標籤，因爲 \m{u} 不再溢出。
+而如果推送後 \m{u.e > 0}，則爲飽和推送，
+在下一次迭代中我們會對 \m{u} 進行推送或重貼標籤。
+除此之外， \m{v.e} 一定大於零，
+因爲 \m{v.e} 一直非負，在執行 \ALGO{PUSH(u,v)} 時還會增大。
+至於 \m{v}，是推送，還是重貼標籤，就很難判斷了。
+
+令 \m{G} 和 \m{G_f} 分別代表流和殘存網絡。
+在 \m{G_f} 中，對於每個節點 \m{u\in V_f}，
+令 \m{u.r} 表示 \m{G_f} 中 \m{u} 的一個鄰接點，即 \m{(u,u.r)\in E_f}，
+且 \m{u.h = u.r.h + 1}。
+如果不存在這樣的節點，則 \m{u.r = NIL}，
+ \ALGO{RELABEL(u)} 會正確設置 \m{u.r}。
+除此之外，我們用兩個鏈表實現通用的推送重貼標籤算法。
+
+\m{L_1} 是待處理鏈表，對於所有 \m{u\in L_1}，都有 \m{u.e\le 0}。
+根據之前的討論，在下一次迭代中，我們不會對這些節點進行推送或重貼標籤，
+因爲他們沒有溢出。
+
+\m{L_2} 是推送重貼標籤鏈表，對於所有 \m{u\in L_2}，都有 \m{u.e > 0}。
+即這些節點全部溢出，我們會對其進行推送或重貼標籤。
+如果 \m{L_2} 爲空，則算法終止。
+
+初始化的時候進行如下操作。
+在執行完 \ALGO{INITIALIZE-PREFLOW} 後，對於所有節點 \m{u\in V}，
+如果 \m{u.e\le 0}，則將其移入 \m{L_1}，否則將其移入 \m{L_2}。
+
+從 \m{L_2} 中取出一個節點 \m{u} 後，
+根據 \m{u.r} 的值進行不同的處理。
+如果 \m{u.r} 是 \m{NIL}，則重貼標籤，然後插入到 \m{L_2} 的最前端。
+否則令 \m{v = u.r}，
+先檢查 \m{u.h = v.h + 1} 是否成立，
+如果不成立，還是重貼標籤，然後插入到 \m{L_2} 的最前端，
+否則調用 \ALGO{PUSH(u,v)}。
+調用 \ALGO{PUSH(u,v)} 之後，如果 \m{u.e = 0}，
+則將 \m{u} 移入 \m{L_1}；
+如果 \m{u.e > 0}，則先將 \m{u.h} 重置爲 \m{NIL}，
+然後將其插入到 \m{L_2} 末尾。
+但 \m{v.e} 還是正值，如果下一次迭代中可以推送 \m{v}，就必須推送。
+幸運的是，通過跟蹤 \m{v.r}，很容易做到這一點。
+只需在執行完 \ALGO{PUSH(u,v)} 後，將 \m{v} 移到 \m{L_2} 的最前端，
+下一次迭代時，算法會自動判斷。
+
+我們知道每個重貼標籤操作的代價是 \m{O(V)}，
+每個推送操作的代價是 \m{O(1)}，
+選擇操作需要 \m{O(1)}。
+
+然而我們還有點不放心：
+（1）調用完 \ALGO{PUSH(u,v)} 後，
+如果 \m{u.e=0}，則會將其移到正確位置。
+而如果 \m{u.e>0}，我們將其移到了 \m{L_2} 尾端，
+如果還可以繼續推送 \m{u} （但沒有立刻推送），會出現什麼情況？
+最壞情況下，調用完 \ALGO{PUSH(u,v)} 後（正好是一個飽和推送），
+我們會額外執行一個重貼標籤操作。
+根據引理 26.22，最多會有 \m{2|V||E|} 個飽和推送，
+因此總代價最多爲 \m{2|V||E| \times O(V) = O(V^2 E)}。
+（2）從 \m{L_2} 中取出一個節點 \m{u}，
+如果 \m{u.r = v}，且 \m{u.h \ne v.h+1}，
+則從 \m{v} 到 \m{u} 迴流，
+即 \m{u} 仍然溢出，不能再從 \m{u} 推送到 \m{v}。
+對於每條邊 \m{(u,v)\in E_f}，
+這種情況最多有 \m{2|V|} 次。
+ \m{u.r=v} 意味着之前進行過一次非飽和推送 \m{(u,v)}，
+即 \m{u.h = v.h+1}。
+但現在 \m{u.h\ne v.h + 1}，即 \m{u.h\le v.h}， \m{v.h} 增大了。
+下一次執行 \ALGO{PUSH(u,v)} 時會發現仍然有 \m{u.h=v.h + 1}，
+即 \m{u.h} 又增大了。
+因此對於每條邊 \m{(u,v)\in E_f}，
+最多有 \m{2|V|} 次重貼標籤操作。
+總代價爲 \m{|E|\times (2|V|) \times O(V)=O(V^2 E)}。
+\stopANSWER
+
+%e26.4-3
+\startEXERCISE
+證明：在通用推送重貼標籤算法中，
+所有 \m{O(V^2)} 個重貼標籤操作，總共只用了 \m{O(VE)} 的時間。
+\stopEXERCISE
+
+\startANSWER
+每次調用 \ALGO{RELABEL(u)}，我們會檢查所有邊 \m{(u,v)\in E_f}。
+對於每個節點而言，最多重貼標籤 \m{2|V|-1} 次，
+而對於每條邊 \m{(u,v)}，在重貼標籤過程中，
+最多會檢查 \m{4|V|-2} 次，
+其中一半用於 \m{u}，另一半用於 \m{v}。
+殘存網絡中最多有 \m{2|E|=O(E)} 條邊，
+因此重貼標籤總時間爲 \m{O(VE)}。
+\stopANSWER
+
+%e26.4-4
+\startEXERCISE
+假定使用推送重貼標籤算法找到了流網絡 \m{G=(V,E)} 的一個最大流，
+如何快速找到 \m{G} 的一個最小切割。
+\stopEXERCISE
+
+\startANSWER
+可以在 \m{O(V)} 時間內做到。
+
+首先，找到 \m{\hat{h}}，滿足 \m{0<\hat{h}<|V|}，
+且算法終止時沒有節點高度爲 \m{\hat{h}}。
+
+由於 \m{s.h = |V|}，且 \m{t.h = 0}，
+我們僅需考慮 \m{|V|-2} 個節點。
+也就是說 \m{\hat{h}} 的值有 \m{|V|-1} 種可能，
+我們知道在 \m{1,2,\ldots,|V|-1} 中，至少有一個值不是任何節點的高。
+因此如何選取 \m{\hat{h}}，就很明確了，
+很容易通過一個布爾數組，在 \m{O(V)} 時間內就可以找到 \m{\hat{h}}。
+
+令 \m{S=\{u\in V: u.h > \hat{h}\}}， \m{T=\{v\in V: v.h<\hat{h}\}}。
+由於 \m{s.h=|V|>\hat{h}}，所以 \m{s\in S}，
+又由於 \m{t.h=0<\hat{h}}，所以 \m{t\in T}，
+這也符合切割的要求。
+
+我們需要使得對於所有 \m{u\in S} 和 \m{v\in T}， \m{f(u,v)=c(u,v)}。
+一旦如此，則 \m{f(S,T)=c(S,T)}，
+根據推論 26.6， \m{(S,T)} 就是最小切割。
+
+爲了反證，設存在節點 \m{u\in S} 和 \m{v\in T}， \m{(u,v)\in E_f}。
+因爲 \m{h} 始終是高度函數（引理 26.17），有 \m{u.h\le v.h + 1}。
+但同時 \m{v.h < \hat{h} < u.h}，
+又因爲所有高度都是整數， \m{v.h\le u.h - 2}。
+因此， \m{u.h\le v.h + 1\le u.h - 2 + 1 = u.h - 1}，
+即 \m{0\le -1}，顯然不成立。
+因此 \m{(S,T)} 就是最小切割。
+
+\stopANSWER
+
+%e26.4-5
+\startEXERCISE
+給出一個有效的推送重貼標籤算法，
+使其可以在一個二分圖中找到一個最大匹配，
+並分析其效率。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e26.4-6
+\startEXERCISE
+假定在流網絡 \m{G=(V,E)} 中所有邊的容量都在集合 \m{\{1,2,\ldots,k\}} 中。
+分析通用推送重貼標籤算法的運行時間，
+請以 \m{|V|}、 \m{|E|} 和 \m{k} 來予以表示。
+（\hint 每條邊在變爲飽和之前可以支持多少次非飽和推送操作）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e26.4-7
+\startEXERCISE
+證明：我們可以將 \ALGO{INITIALIZE-PREFLOW} 的第 6 行改爲：
+\startformula
+s.h = |G.V| - 2
+\stopformula
+而不會影響通用推送重貼標籤算法的正確性和漸進性能。
+\stopEXERCISE
+
+\startANSWER
+如果設置 \m{s.h = |V|-2}，則需要修改高度函數的定義。
+
+要證明正確性，只需要更新引理 26.18 的證明。
+原始證明推導出的是 \m{s.h\le k < |V|} 與 \m{s.h=|V|} 矛盾。
+改成 \m{s.h=|V|-2} 之後，這個矛盾不存在了。
+
+在原始證明中，假定有一簡單增廣路徑 \m{\langle v_0,v_1,\ldots,v_k\rangle}，
+其中 \m{v_0=s}， \m{v_k = t}，因此 \m{k<|V|}。
+ \m{(s,v_1)} 怎樣才能成爲殘存邊？
+此邊在 \ALGO{INITIALIZE-PREFLOW} 中已經飽和了，
+這意味着曾經有從 \m{v_1} 推送到 \m{s} 的操作。
+爲了做到這一點，必須滿足 \m{v_1.h = s.h + 1}。
+如果我們設置了 \m{s.h=|V|-2}，
+也就意味着 \m{v_1.h} 是 \m{|V|-1}。
+在那之後， \m{v_1.h} 不再減小，因此 \m{v_1.h\ge |V|-1}。
+回溯增廣路徑，有 \m{v_{k-i}.h\le t.h + i}，
+對於 \m{i=0,1,\ldots,k} 均成立。
+回顧假設，由於增廣路徑是簡單路徑， \m{k<|V|}。
+令 \m{i=k-1}，有 \m{v_1.h\le t.h+k-1 < 0+|V|-1}。
+現在就有矛盾了， \m{v_1.h \ge |V|-1} 和 \m{v_1.h < |V|-1}。
+也就是說，引理 26.18 依然成立。
+
+漸進分析沒什麼變化。
+\stopANSWER
+
+%e26.4-8
+\startEXERCISE
+設 \m{\delta_{f}(u,v)} 爲殘存網絡 \m{G_f} 中從節點 \m{u} 到節點 \m{v} 的距離（邊的條數）。
+證明： \ALGO{GENERIC-PUSH-RELABEL} 維持性質 \m{u.h < |V|} 意味着 \m{u.h\le \delta_{f}(u,t)}，
+維持性質 \m{u.h \ge |V|} 意味着 \m{u.h-|V|\le \delta_{f}(u,s)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e26.4-9
+\startEXERCISE\DIFFICULT
+如前一個練習，設 \m{\delta_{f}(u,v)} 爲殘存網絡 \m{G_f} 中從節點 \m{u} 到節點 \m{v} 的距離。
+請說明如何修改通用推送重貼標籤算法，
+使其維持性質 \m{u.h<|V|} 意味着 \m{u.h=\delta_{f}(u,t)}，
+維持性質 \m{u.h\ge |V|} 意味着 \m{u.h-|V|=\delta_{f}(u,s)}。
+你所設計的算法中，維持該性質所用總時間應爲 \m{O(VE)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e26.4-10
+\startEXERCISE\DIFFICULT
+證明：在流網絡 \m{G=(V,E)} 上運行 \ALGO{GENERIC-PUSH-RELABEL}，
+非飽和推送的次數爲 \m{4|V|^{2}|E|}，假定 \m{|V|\ge 4}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

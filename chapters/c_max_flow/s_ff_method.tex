@@ -1,0 +1,267 @@
+\startsection[
+  title={The Ford-Fulkerson method},
+]
+
+%e26.2-1
+\startEXERCISE
+證明式 26.6 中的和值等於式 26.7 中的和值。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC |f\uparrow f'| \NC = \sum_{v\in V_1}f(s,v) - \sum_{v\in V_2}f(v,s)
+  + \sum_{v\in V_1\cup V_2}f'(s,v) - \sum_{v\in V_1\cup V_2}f'(v,s) \NR
+\NC \NC = \sum_{v\in V}f(s,v) - \sum_{v\in V}f(v,s)
+  + \sum_{v\in V}f'(s,v) - \sum_{v\in V}f'(v,s) \NR
+\NC \NC = |f| + |f'| \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e26.2-2
+\startEXERCISE
+在圖 26-1（b）中，橫跨切割（\m{\{s,v_2,v_4\}}， \m{\{v_1,v_3,t\}}）的流是多少？
+該切割的容量又是多少？附圖 26-1：
+
+\externalfigure[output/e26_2_2-1]
+\stopEXERCISE
+
+\startANSWER
+\startformula
+f(s,t) = f(s,v_1) + f(v_2,v_1) + f(v_4,v_3) + f(v_4,t) - f(v_3,v_2) = 19
+\stopformula
+
+\startformula
+f(s,t) = c(s,v_1) + c(v_2,v_1) + c(v_4,v_3) + c(v_4,t) = 31
+\stopformula
+\stopANSWER
+
+%e26.2-3
+\startEXERCISE
+在圖 26-1（a）所示的流網絡上演示 \ALGO{EDMONDS-KARP} 的執行過程。
+附圖 26-1（a）：
+
+\externalfigure[output/e26_2_3-1]
+\stopEXERCISE
+
+\startANSWER
+\startcombination[nx=2]
+{\externalfigure[output/e26_2_3-2]}{}
+{\externalfigure[output/e26_2_3-3]}{}
+\stopcombination
+\startcombination[nx=2]
+{\externalfigure[output/e26_2_3-4]}{}
+{\externalfigure[output/e26_2_3-5]}{}
+\stopcombination
+\startcombination[nx=2]
+{\externalfigure[output/e26_2_3-6]}{}
+{\externalfigure[output/e26_2_3-7]}{}
+\stopcombination
+\startcombination[nx=2]
+{\externalfigure[output/e26_2_3-8]}{}
+{}{}
+\stopcombination
+\stopANSWER
+
+%e26.2-4
+\startEXERCISE
+在圖 26-6 的例子中，對應圖中所示最大流的最小切割是什麼？
+在例子中出現的增廣路徑裏，哪一條路徑抵消了先前被傳輸的流？
+\stopEXERCISE
+
+\startANSWER
+最小切割爲 \m{(\{s,v_1,v_2,v_4\},\{v_3,t\})}。
+（c）中的 \m{(v_1,v_2)} 抵消了（b）中的 \m{(v_2,v_1)}。
+（c）中的 \m{(v_2,v_3)} 抵消了（a）中的 \m{(v_3,v_2)}。
+\stopANSWER
+
+%e26.2-5
+\startEXERCISE
+在\refsection{flow_networks} 中，我們通過增加容量無限的邊，
+把多源點多匯點的流網絡轉換爲單源點單匯點的流網絡。
+證明：
+如果原來的網絡容量是有限的，則轉換後的網絡中任何一個流的值都是有限的。
+\stopEXERCISE
+
+\startANSWER
+因爲我們可以找到一個最小切割，只包含有限個有限權重的邊。
+\stopANSWER
+
+%e26.2-6
+\startEXERCISE
+假定在一個多源點多匯點的流網絡中，
+每個源節點 \m{s_i} 生產出恰好 \m{p_i} 個單位的流，
+因此， \m{\sum_{v\in V}f(s_i,v)=p_i}。
+假定每個匯點 \m{t_j} 恰好消費 \m{q_j} 個單位的流，
+因此 \m{\sum_{v\in V}f(v,t_j)=q_j}，其中 \m{\sum_{i}p_i = \sum_{j}q_j}。
+說明如何在此網絡中尋找最大流 \m{f} （可以先將其轉換爲一個單源點單匯點的流網絡）。
+\stopEXERCISE
+
+\startANSWER
+新添加源點 \m{s} 和匯點 \m{t}。
+邊 \m{(s,s_i)} 的容量爲 \m{c(s,s_i) = p_i}。
+邊 \m{(t_j,t)} 的容量爲 \m{c(t_j,t) = q_j}。
+\stopANSWER
+
+%e26.2-7
+\startEXERCISE
+證明引理 26.2。附引理 26.2：
+
+設 \m{G=(V,E)} 爲一個流網絡，
+ \m{f} 是圖 \m{G} 的一個流，
+設 \m{p} 爲殘存網路 \m{G_f} 中的一條增光路徑。
+定義一個函數 \m{f_p: V\times V\rightarrow R} 如下：
+\startformula
+f_p(u,v)=\startcases
+\NC c_f(p) \MC \text{如果 \m{(u,v)} 在 \m{p} 上} \NR
+\NC 0 \MC 否則 \NR
+\stopcases
+\stopformula
+則 \m{f_p} 是殘存網絡 \m{G_f} 中的一個流，
+其值爲 \m{|f_p| = c_f(p) > 0}。
+\stopEXERCISE
+
+\startANSWER
+容量限制：由於 \m{c_f(p)} 是 \m{p} 上所有邊的最小權重，
+因此滿足 \m{0\le f_p(u,v) = c_p(u,v) \le c_f(p)}。
+
+流量守恆： \m{\sum_{v\in V}f(v,u) = c_f(p) = \sum_{v\in V}f(u,v)}。
+\stopANSWER
+
+%e26.2-8
+\startEXERCISE
+假定我們重新定義殘存網絡，
+進制一切進入源節點 \m{s} 的邊。
+算法 \ALGO{FORD-FULKERSON} 所計算出的最大流是否仍然正確？
+\stopEXERCISE
+
+\startANSWER
+正確。
+\stopANSWER
+
+%e26.2-9
+\startEXERCISE
+假定 \m{f} 和 \m{f'} 都是流網絡 \m{G} 中的流，
+計算流 \m{f\uparrow f'}。
+加增後的流滿足流量守恆嗎？
+滿足容量限制嗎？
+\stopEXERCISE
+
+\startANSWER
+滿足流量守恆，不滿足容量限制。
+\stopANSWER
+
+%e26.2-10
+\startEXERCISE
+說明在流網絡 \m{G=(V,E)} 中，
+如何使用一個最多包含 \m{|E|} 條增廣路徑的序列找到最大流。
+（\hint 找到最大流後再確定路徑）
+\stopEXERCISE
+
+\startANSWER
+先找到最大流，可以得到網絡的最小切割。
+在最小切割的基礎上，每次增加一條邊，上限爲 \m{|E|}。
+\stopANSWER
+
+%e26.2-11
+\startEXERCISE
+無向圖的{\EMP 邊連通性}是指使圖變爲非連通圖所需要刪除的最少邊數 \m{k}。
+例如，樹的邊連通性爲 \m{1}，環路的邊連通性爲 \m{2}。
+請說明如何在最多 \m{|V|} 個流網絡上運行最大流算法，
+從而確定無向圖 \m{G=(V,E)} 的邊連通性，
+這裏的每個流網絡節點數爲 \m{O(V)}，邊數爲 \m{O(E)}。
+\stopEXERCISE
+
+\startANSWER
+先將圖 \m{G} 轉換成帶權有向圖 \m{G'}，兩圖頂點相同。
+ \m{G} 中的每條邊 \m{(u,v)} 對應 \m{G'} 中的兩條邊 \m{(u,v)} 和 \m{(v,u)}。
+ \m{G'} 中所有邊權重均爲 \m{1}。
+在 \m{G'} 基礎上構造 \m{|V|} 個網絡流，
+分別令每個頂點作爲匯點，源點可任意選取，只要不是匯點即可。
+依次求這 \m{|V|} 個流網絡的最大流。
+所有最大流的最小值即爲 \m{G} 的邊連通性。
+\stopANSWER
+
+%e26.2-12
+\startEXERCISE
+給定一個流網絡 \m{G}， \m{G} 中包含進入源節點 \m{s} 的邊。
+設 \m{f} 爲網絡 \m{G} 中的一個流，
+在該流中，其中一條進入源點的邊 \m{(v,s)} 有 \m{f(v,s)=1}。
+證明：圖 \m{G} 中必存在另一個流 \m{f'}，
+滿足 \m{f'(v,s)=0}，使得 \m{|f|=|f'|}。
+給出一個 \m{O(E)} 時間複雜度的算法，
+在給定流 \m{f} 的情況下計算 \m{f'}，
+這裏假定所有邊的容量都是正整數。
+\stopEXERCISE
+
+\startANSWER
+在流網絡 \m{G=(V,E)} 中，對於節點 \m{v\in V-s}，
+如果沒有路徑 \m{s\leadsto v}，則 \m{f(v,s)=0}。
+
+令從 \m{s} 可達的節點集合爲 \m{Y}，
+從 \m{s} 不可達的節點集合爲 \m{Z}，有：
+\startformula\startmathalignment
+\NC \sum_{z\in Z} \sum_{x\in V} f(x,z) \NC = \sum_{z\in Z}\sum_{x\in V} f(z,x) \qquad \text{流量守恆} \NR
+\NC \sum_{z\in Z}\sum_{x\in Z}f(x,z) + \sum_{z\in Z}\sum_{x\in Y}f(x,z) \NC
+  \sum_{z\in Z}\sum_{x\in Z}f(z,x) + \sum_{z\in Z}\sum_{x\in Y}f(z,x) \NR
+\stopmathalignment\stopformula
+
+根據流量守恆有 \m{\sum_{z\in Z}\sum_{x\in Z}f(x,z) = \sum_{z\in Z}\sum_{x\in Z}f(z,x)}。
+又由於 \m{\sum_{z\in Z}\sum_{x\in Y} f(x,z) = 0}，所以：
+對於所有 \m{z\in Z} 和 \m{x\in Y}，都有 \m{f(z,x) = 0}。
+因此，對於所有 \m{v\in Z} 和 \m{s\in Y}，都有 \m{f(v,s) = 0}。
+
+而如果 \m{f(v,s)=1}，那麼 \m{v\notin Z}，即肯定存在路徑 \m{s\leadsto v}。
+從而有環路 \m{s\leadsto v \leadsto s}，給其中每條邊都減 \m{1}，形成新的流 \m{f'}，
+不會影響總流量，即 \m{|f| = |f'|}。
+
+首先搜索節點 \m{v}，使得 \m{(v,s)\in E} 且 \m{f(v,s)=1}，
+可以通過 \ALGO{BFS} 搜索路徑 \m{s\leadsto s}。
+確保路徑上所有邊 \m{(u,v)} 都有 \m{f(u,v)\ge 1}。
+
+然後將所得路徑上所有邊 \m{(u,v)} 的 \m{f(u,v)} 都減去 \m{1}。得到 \m{f'}，返回即可。
+\stopANSWER
+
+%e26.2-13
+\startEXERCISE
+假定我們希望找到流網絡 \m{G} 的一個最小切割，使其邊數是所有最小切割中最少的。
+這裏假定 \m{G} 的所有容量都是整數。
+說明如何修改 \m{G} 的容量來創建一個新的流網絡 \m{G'}，
+使得 \m{G'} 中的任一最小切割都是 \m{G} 中邊數最少的最小切割。
+\stopEXERCISE
+
+\startANSWER
+\m{G'} 的頂點、邊與 \m{G} 的相同，但邊的容量有所區別。
+對於所有 \m{(u,v)\in E}，有 \m{c_{G'}(u,v) = c_{G}(u,v) + \sigma}。
+其中 \m{\sigma} 是一個常數，保證最小切割的邊數最多不會超過 \m{G} 中邊數最小的最小切割。
+同時 \m{\sigma} 也不能太大，因爲在減少最小切割邊數的同時可能導致切割不再是最小切割。
+
+\startformula
+\sigma = \frac{m}{2|E|}
+\stopformula
+其中 \m{m} 是 \m{G} 中最小切割與非最小切割的最小差異。
+要證明其正確性，我們需要證明：
+
+1） \m{G} 中邊數最少的最小切割是 \m{G'} 中的唯一最小切割。
+
+2） \m{G} 中非最小切割不是 \m{G'} 的最小切割。
+
+先證明（1），令 \m{(S,T),(X,Y)} 是 \m{G} 的最小切割， \m{|(S,T)|<|(X,Y)|}，有：
+\startformula\startmathalignment
+\NC c'(S,T) \NC = c(S,T) + |(S,T)|\sigma \NR
+\NC \NC < c(X,Y) + |(X,Y)|\sigma \qquad c(S,T) = c(X,Y) \text{且} |(S,T)| < |(X,Y)| \NR
+\NC \NC = c'(X,Y) \NR
+\stopmathalignment\stopformula
+
+再證明（2），令 \m{(S,T)} 爲 \m{G} 的最小切割， \m{c(S,T)<c(X,Y)}，
+我們來證明 \m{c'(X,Y)} 不是 \m{G'} 的最小切割：
+\startformula\startmathalignment
+\NC c'(S,T) \NC = c(S,T) + |(S,T)|\sigma \NR
+\NC \NC \le c(S,T) + |E|\sigma \qquad |(S,T)| \le |E| \NR
+\NC \NC = c(S,T) + \frac{m}{2} \NR
+\NC \NC \le c(X,Y) \qquad c(X,Y) - c(S,T) \ge m \NR
+\NC \NC < c'(X,Y) \NR
+\stopmathalignment\stopformula
+
+\stopANSWER
+
+\stopsection

@@ -1,0 +1,100 @@
+\startsection[
+  title={The relabel-to-front algorithm},
+]
+
+%e26.5-1
+\startEXERCISE
+請以圖 26-10 所示的方式，
+在圖 26-1（a）所示的流網絡上演示前置貼標籤算法的執行過程。
+假設鏈表 \m{L} 中節點的最初順序是 \m{\langle v_1,v_2,v_3,v_4\rangle}，
+並且各個鄰接鏈表的內容如下：
+\startformula\startmathalignment
+\NC v_1 \cdot N \NC = \langle s,v_2,v_3\rangle \NR
+\NC v_2 \cdot N \NC = \langle s,v_1,v_3,v_4\rangle \NR
+\NC v_3 \cdot N \NC = \langle v_1,v_2,v_4,t\rangle \NR
+\NC v_4 \cdot N \NC = \langle v_2,v_3,t\rangle \NR
+\stopmathalignment\stopformula
+附圖 26-1（a）：
+
+\externalfigure[output/e26_5_1-1]
+\stopEXERCISE
+
+\startANSWER
+
+\externalfigure[output/e26_5_1-2]
+
+\externalfigure[output/e26_5_1-3]
+
+\externalfigure[output/e26_5_1-4]
+
+\externalfigure[output/e26_5_1-5]
+
+\externalfigure[output/e26_5_1-6]
+
+\externalfigure[output/e26_5_1-7]
+
+\externalfigure[output/e26_5_1-8]
+
+\externalfigure[output/e26_5_1-9]
+
+\externalfigure[output/e26_5_1-10]
+
+\externalfigure[output/e26_5_1-11]
+
+\externalfigure[output/e26_5_1-12]
+\stopANSWER
+
+%e26.5-2
+\startEXERCISE\DIFFICULT
+我們希望以如下方式來實現推送重貼標籤算法：
+在算法中維持一個先進先出隊列，用來存放溢出節點。
+算法重複將隊列頭部的節點進行釋放，
+任何在釋放前沒有溢出但釋放後出現溢出的節點均被放置在隊列末尾。
+在隊列頭部的節點被釋放後，該節點即被刪除。
+當隊列爲空時，算法終止。
+說明如何實現該算法，以在 \m{O(V^3)} 時間內計算出一個最大流。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e26.5-3
+\startEXERCISE
+證明：如果 \ALGO{RELABEL} 操作對 \m{u.h} 的更新只是簡單地計算 \m{u.h=u.h+1}，
+通用算法仍然能夠正確工作。
+另外，請說明該變化對前置重貼標籤算法的分析有什麼影響。
+\stopEXERCISE
+
+\startANSWER
+會增加循環次數。
+\stopANSWER
+
+%e26.5-4
+\startEXERCISE\DIFFICULT
+證明：如果總是釋放高度最高的溢出節點，
+則可以使推送重貼標籤算法在 \m{O(V^3)} 時間內完成。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e26.5-5
+\startEXERCISE
+假定在推送重貼標籤算法執行過程中，
+某一時刻存在一個整數 \m{0\le k\le |V|-1}，
+使得沒有任何一個節點的高度爲 \m{k} （即不存在節點 \m{v}，使得 \m{u.h=k}）。
+證明：所有高度大於 \m{k} 的節點都位於某個最小切割的源節點這一邊。
+如果存在這樣一個 \m{k}，
+則{\EMP 跨越式啓發}（gap heuristic）會更新所有高度大於 \m{k} 的節點 \m{v\in V-\{s\}}，
+將 \m{v.h} 設置爲 \m{\max(v.h,|V|+1}。
+證明：結果屬性 \m{h} 是一個高度函數。
+（實際上，跨越式啓發對於高效實現推送重貼標籤算法起着關鍵作用。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

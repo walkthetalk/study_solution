@@ -1,0 +1,50 @@
+\startsection[
+  title={Preliminary approaches},
+]
+
+%e20.1-1
+\startEXERCISE
+修改本節中的數據結構，使其支持重複關鍵字。
+\stopEXERCISE
+
+\startANSWER
+每一個節點不再是一個布爾量，而是一個整數，代表此關鍵字的個數。
+\stopANSWER
+
+%e20.1-2
+\startEXERCISE
+修改本節中的數據結構，使其支持帶有衛星數據的關鍵字。
+\stopEXERCISE
+
+\startANSWER
+每一個節點改成一個指針，指向衛星數據。
+如果指針爲空，則代表沒有此節點。
+\stopANSWER
+
+%e20.1-3
+\startEXERCISE
+使用本節的數據結構會發現，
+查找 \m{x} 的後繼和前驅並不依賴於 \m{x} 當時是否包含在集合中。
+當 \m{x} 不包含在樹中時，
+試說明如何在一棵二叉搜索樹中查找 \m{x} 的後繼。
+\stopEXERCISE
+
+\startANSWER
+沿 \m{x} 向上搜索，直到找到值爲 1 的節點，並且是通過其左孩子找到的，其右孩子也是 1。
+然後沿這個節點的右子樹向下搜索，找最左邊的 1。
+\stopANSWER
+
+%e20.1-4
+\startEXERCISE
+假設不使用一棵疊加的度爲 \m{\sqrt{u}} 的樹，
+而是使用一棵疊加的度爲 \m{u^{1/k}} 的樹，
+這裏 \m{k} 是大於 1 的常數，
+則這樣的一棵樹的高度是多少？
+又每個操作將需要多長時間？
+\stopEXERCISE
+
+\startANSWER
+高度是 \m{k}，每個操作需要時間爲 \m{O(k u^{1/k})}。
+\stopANSWER
+
+\stopsection

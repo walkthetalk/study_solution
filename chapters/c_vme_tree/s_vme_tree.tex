@@ -1,0 +1,73 @@
+\startsection[
+  title={The van Emde Boas tree},
+]
+
+%e20.3-1
+\startEXERCISE
+修改 vEB 樹以支持重複關鍵字。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e20.3-2
+\startEXERCISE
+修改 vEB 樹以支持帶有衛星數據的關鍵字。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e20.3-3
+\startEXERCISE
+寫出創建空 van Emde Boas 樹的僞碼。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e20.3-4
+\startEXERCISE
+如果調用 \ALGO{vEB-TREE-INSERT} 來插入一個已包含在 vEB 樹中的元素，
+會出現什麼情況？
+如果調用 \ALGO{vEB-TREE-DELETE} 來刪除一個不包含在 vEB 樹中的元素，
+會出現什麼情況？
+解釋這些函數爲什麼有相應的運行狀況？
+怎樣修改 vEB 樹和操作，
+使得常數時間內能判斷一個元素是否在其中？
+\stopEXERCISE
+
+\startANSWER
+可以嘗試將 \m{u=2} 的最終節點中的數組放在一起。
+\stopANSWER
+
+%e20.3-5
+\startEXERCISE
+假設我們創建一個包含 \m{u^{1/k}} 個簇的 vEB 樹，
+每個簇的全域大小爲 \m{u^{1-1/k}}，其中 \m{k>1}，且 \m{k} 是常數；
+而不是全域大小爲 \m{\sqrt[^\downarrow]{u}} 的 \m{\sqrt[^\uparrow]{u}} 個簇。
+如果恰當地修改這些操作，則這些操作的運行時間是多少？
+爲了分析方便，假設 \m{u^{1/k}} 和 \m{u^{1-1/k}} 總是爲整數。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e20.3-6
+\startEXERCISE
+創建一個全域大小爲 \m{u} 的 vEB 樹，
+需要 \m{O(u)} 的運行時間。
+假設我們想得到確切時間。
+如果 vEB 樹中每個操作的攤還時間爲 \m{O(\lg \lg u)}，
+那麼最小的操作數 \m{n} 是多少？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

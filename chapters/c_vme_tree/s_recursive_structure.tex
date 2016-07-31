@@ -1,0 +1,92 @@
+\startsection[
+  title={A recursive structure},
+]
+
+%e20.2-1
+\startEXERCISE
+寫出 \ALGO{PROTO-vEB-MAXIMUM} 和 \ALGO{PROTO-vEB-PREDECESSOR} 過程的僞碼。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e20.2-2
+\startEXERCISE
+寫出 \ALGO{PROTO-vEB-DELETE} 的僞碼。
+通過掃描簇內的相關位，
+來更新相應的 \m{summary} 位。
+你實現的僞碼最壞運行時間是多少？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e20.2-3
+\startEXERCISE
+爲每個 proto-vEB 結構增加屬性 \m{n}，
+以給出其所在集合的元素個數，
+然後寫出 \ALGO{PROTO-vEB-DELETE} 的僞碼，
+要求使用屬性 \m{n} 來確定何時將 \m{summary} 重置爲 0。
+你的僞碼最壞運行時間是多少？
+由於加入了新的屬性 \m{n}，
+其他操作要變更嗎？
+這些變化是否會影響其運行時間？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e20.2-4
+\startEXERCISE
+修改 proto-vEB 結構，以支持重複關鍵字。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e20.2-5
+\startEXERCISE
+修改 proto-vEB 結構，以支持帶有衛星數據的關鍵字。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e20.2-6
+\startEXERCISE
+寫出一個創建 proto-vEB(u) 結構的僞碼。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e20.2-7
+\startEXERCISE
+試說明如果 \ALGO{PROTO-vEB-MINIMUM} 中的第 9 行被執行，
+則 proto-vEB 結構爲空。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e20.2-8
+\startEXERCISE
+假設有這樣一個 proto-vEB 結構，
+其中每個簇數組僅有 \m{u^{1/4}} 個元素。
+那麼每個操作的運行時間是多少？
+\stopEXERCISE
+
+\startANSWER
+每個簇的大小爲 \m{u^{1-1/4}}，遞歸可知最終簇大小爲 \m{u^{{3/4}^j} = 2}。
+因此 \m{j = \log_{4/3}\log_{2}u}，
+因此運行時間爲 \m{O(\log\log u)}。
+\stopANSWER
+
+\stopsection

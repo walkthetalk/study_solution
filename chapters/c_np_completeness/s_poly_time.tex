@@ -7,10 +7,14 @@
 定義最優化問題 \ALGO{LONGEST-PATH-LENGTH} 爲一個關係，
 他將一個無向圖的每個實例、兩個頂點與這兩個頂點間的
 一條最長簡單路徑中所包含的邊數聯繫了起來。
-定義判定問題 \m{\text{\ALGO{LONGEST-PATH}} = \{\langle G,u,v,k\rangle\}: \text{
-\m{G=(V,E)} 爲一個無向圖， \m{u,v\in V}， \m{k\ge 0} 是一個整數，
-且 \m{G} 中存在一條從 \m{u} 到 \m{v} 的簡單路徑，
-他至少包含 \m{k} 條邊}\}}。
+定義判定問題 \ALGO{LONGEST-PATH} 爲 \m{\langle G,u,v,k\rangle}：
+\startigBase[2]
+\item \m{G=(V,E)} 爲無向圖；
+\item \m{u,v\in V}；
+\item \m{k\ge 0} 是整數；
+\item 且 \m{G} 中存在一條從 \m{u} 到 \m{v} 的簡單路徑，他至少包含 \m{k} 條邊。
+\stopigBase
+
 證明：最優化問題 \ALGO{LONGEST-PATH-LENGTH} 可以在多項式時間內解決，
 當且僅當 \m{\text{\ALGO{LONGEST-PATH}}\in P}。
 \stopEXERCISE

@@ -1,0 +1,105 @@
+\startsection[
+  title={Deletion},
+]
+
+%e13.4-1
+\startEXERCISE
+證明：執行 \ALGO{RB-DELETE-FIXUP} 之後，樹根一定是黑色的。
+\stopEXERCISE
+
+\startANSWER
+\ALGO{RB-DELETE-FIXUP} 中的 while 循環會向上搜索，直到到達樹根或者一個紅色節點。
+如果找到樹根，則會將其染成黑色，無論這個根是怎麼來的。
+
+如果在到達根節點之前先碰到了紅色節點，則根節點還會繼續保持黑色。
+\stopANSWER
+
+%e13.4-2
+\startEXERCISE
+證明：在 \ALGO{RB-DELET} 中，如果 \m{x} 和 \m{x.p} 都是紅色的，
+可以通過調用 \ALGO{RB-DELETE-FIXUP(T, x)} 來恢復性質 4。
+\stopEXERCISE
+
+\startANSWER
+如果 \m{x} 是紅色，則 \m{y} （即 \m{x} 的父節點，
+同時也是 \m{z} 或者 \m{z} 的後繼）有至少一個非空孩子（\m{x}）且不是紅色
+（否則， \m{x} 會是黑色），否則會針對 \m{x} 調用 \ALGO{RB-DELETE-FIXUP}。
+ \m{y} 也有一個黑色兄弟節點。
+
+\m{y} 曾經只有一個孩子 \m{x}：如果 \m{y} 跟 \m{z} 一樣，只有一個孩子，
+則 \m{z} 只有左孩子， \m{x} 就是左孩子， \m{z} 只有右孩子， \m{x} 就是右孩子；
+如果 \m{y} 是 \m{z} 的後繼（ \m{z} 有兩個孩子），那麼 \m{x} 就是右孩子。
+這兩種情況類似，我們以 \m{x} 是 \m{y} 的左孩子爲例：
+
+結果取決於 \m{x} 的兄弟 \m{w} 是否有兩個黑色孩子，前者是 case 2，後者是 case 3；
+然後都會變成 case 4，並恢復性質 4。
+\stopANSWER
+
+%e13.4-3
+\startEXERCISE
+在練習 13.3-2 中，將關鍵字 41、 38、 31、 12、 19、 8 連續插入一棵初始爲空的樹，
+最終得到了一棵紅黑樹。請給出從該樹中連續刪除關鍵字 8、 12、 19、 31、 38、 41 後
+的紅黑樹。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[nx=6,location={top}]
+{\externalfigure[output/e13_4_3-1]}{}
+{\externalfigure[output/e13_4_3-2]}{}
+{\externalfigure[output/e13_4_3-3]}{}
+{\externalfigure[output/e13_4_3-4]}{}
+{\externalfigure[output/e13_4_3-5]}{}
+{\externalfigure[output/e13_4_3-6]}{}
+\stopcombination
+\stopANSWER
+
+%e13.4-4
+\startEXERCISE
+在 \ALGO{RB-DELETE-FIXUP} 代碼的哪些行中，可能會檢查或修改哨兵 \m{T.nil}？
+\stopEXERCISE
+
+\startANSWER
+刪除黑色節點後，首先會告訴其孩子（所刪除節點最多只有一個孩子），
+如果他沒有孩子，則會檢查或修改 \m{T.nil}。
+
+\m{x} 的兄弟 \m{w} 沒有孩子，或者沒有左孩子但要左旋，或者沒有右孩子卻要右旋。
+\stopANSWER
+
+%e13.4-5
+\startEXERCISE
+在圖 13-7 的每種情況中，給出所示子樹的根節點至每棵子樹 \m{\alpha}、 \m{\beta}、
+ \m{\ldots}、 \m{\epsilon} 之間的黑色節點個數，
+並驗證他們在轉換後保持不變。
+當一個節點的 color 屬性爲 c 或 c' 時，
+在計數中用記號 count(c) 或 count(c') 來表示。
+\stopEXERCISE
+
+\startANSWER
+\TODO{}
+\stopANSWER
+
+%e13.4-6
+\startEXERCISE
+Skelton 和 Baron 教授擔心在 \ALGO{RB-DELETE-FIXUP} 的 case 1 開始時，
+節點 \m{x.p} 可能不是黑色的，這樣第 5 ～ 6 行就是錯的。
+證明： \m{x.p} 在 case 1 開始時肯定是黑色的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{}
+\stopANSWER
+
+%e13.4-7
+\startEXERCISE
+假設用 \ALGO{RB-INSERT} 將一個節點 \m{x} 插入一棵紅黑樹，
+緊接着又用 \ALGO{RB-DELETE} 將他從樹中刪除。
+所得紅黑樹有什麼變化？
+\stopEXERCISE
+
+\startANSWER
+可能不同。
+新加入節點可能會導致某些旋轉操作，刪除後不會旋轉回來。
+即使樹的結構不變，節點的顏色也可能發生變化。
+\stopANSWER
+
+\stopsection

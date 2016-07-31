@@ -1,0 +1,119 @@
+\startsection[
+  title={Properties of red-black trees},
+]
+
+%e13.1-1
+\startEXERCISE
+有關鍵字 \m{\left{1,2,\ldots,15\right}}，以圖 13.1（a）的形式，畫出高度爲 3 的完全二叉樹。
+以三種不同的方式給此樹塗色並添加 NIL 葉子，使其變成紅黑樹，其黑高分別爲 2，3 和 4。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e13_1_1-1]
+\stopANSWER
+
+%e13.1-2
+\startEXERCISE
+有紅黑樹如圖 13-1，畫出插入關鍵字 36 後的結果。
+如果插入的節點標爲紅色，所得樹是不是紅黑樹？如果該節點標爲黑色呢？
+\stopEXERCISE
+
+\startANSWER
+無論標記爲紅色，還是黑色，都不再是紅黑樹。
+\stopANSWER
+
+%e13.1-3
+\startEXERCISE
+定義{\EMP 鬆弛紅黑樹（relaxed red-black tree）}爲滿足紅黑性質 1、 3、 4 和 5 的二叉搜索樹。
+換句話說，根節點的顏色沒有限制，即可以是紅色，也可以是黑色。
+考慮根節點爲紅色的鬆弛紅黑樹 T，如果將 T 的根節點標爲黑色，而其他都不變，
+那麼所得是否是紅黑樹？
+\stopEXERCISE
+
+\startANSWER
+是。
+\stopANSWER
+
+%e13.1-4
+\startEXERCISE
+如果將紅黑樹的每一個紅色節點都“吸收”進其黑色父節點中，
+使得紅色節點的子節點變成黑色父節點的子節點（忽略關鍵字的變化）。
+當一個黑色節點的所有紅色子節點都被吸收後，他的度會是多少？
+所得樹的葉節點深度如何？
+\stopEXERCISE
+
+\startANSWER
+黑度不變，深度減半。
+\stopANSWER
+
+%e13.1-5
+\startEXERCISE
+證明：在紅黑樹中，從某節點 \m{x} 到其後代葉節點的所有簡單路徑中，
+最長的一條至多是最短一條的 2 倍。
+\stopEXERCISE
+
+\startANSWER
+最短路徑：全黑，包括葉子節點，長度爲 \m{bh+1}。
+
+最長路徑：黑紅黑紅……黑，紅比黑少 1，長度爲 \m{2bh+1}。
+\stopANSWER
+
+%e13.1-6
+\startEXERCISE
+有一紅黑樹，其黑高爲 \m{k}，則最多有多少內部節點？最少又是多少？
+\stopEXERCISE
+
+\startANSWER
+內部節點最多：樹高爲 \m{2k+1}，偶數層紅色，奇數層黑色，內部節點個數爲 \m{2^{2k}-1}。
+
+內部節點最少：高爲 \m{k} 的滿二叉樹，全部爲黑色節點，內部節點數爲 \m{2^k-1}，可用歸納法證明，參見定理 13.1。
+
+附定理13.1：若紅黑樹內部節點個數爲 \m{n}，則樹高最多爲 \m{2\lg(n+1)}。
+\stopANSWER
+
+%e13.1-7
+\startEXERCISE
+有一紅黑樹，含 \m{n} 個關鍵字，其內部節點中紅色的個數和黑色的個數比值最大是多少？最小又是多少？
+\stopEXERCISE
+
+\startANSWER
+紅黑樹內部節點個數爲 \m{n}，則樹高爲：
+\startformula
+h=\lfloor \lg{n} \rfloor + 1
+\stopformula
+
+若紅色節點最多：
+\startigBase[a]
+\startitem
+若 \m{h} 爲偶數，從根節點到數據節點的最長路徑爲 BRBR...BR：
+\startformula\startmathalignment
+\NC \#(B) \NC =2^0+2^2+\ldots + 2^{h-2} \NR
+\NC ratio \NC = \frac{n-\#(B)}{\#(B)} \NR
+\stopmathalignment\stopformula
+\stopitem
+
+\startitem
+若 \m{h} 爲奇數，從根結點到數據結點的最長路徑爲 BRBR...BBR：
+\startformula\startmathalignment
+\NC \#(B) \NC = \startmathcases
+\NC 1		\MC h=1 \NR
+\NC 2^0+2^2+\ldots +2^{h-3}+2^{h-2}	\MC h\ge 3 \NR
+\stopmathcases \NR
+\NC ratio \NC = \frac{n-\#(B)}{\#(B)} \NR
+\stopmathalignment\stopformula
+\stopitem
+\stopigBase
+
+若紅色節點最少：
+\startformula\startmathalignment
+\NC \#(R) \NC = \startmathcases
+\NC 0		\MC h=2^h-1 \NR
+\NC n-(2^{n-1}-1)	\MC n\ne 2^h-1 \NR
+\stopmathcases \NR
+\NC ratio \NC = \frac{n-\#(R)}{\#(R)} \NR
+\stopmathalignment\stopformula
+
+當 \m{n=3} 時，最多有 2 個紅色節點，紅黑比值爲 2。
+當 \m{n} 生成滿二叉樹時，紅黑比值爲 0。
+\stopANSWER
+\stopsection

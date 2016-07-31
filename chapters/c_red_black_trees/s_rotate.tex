@@ -1,0 +1,78 @@
+\startsection[
+  title={Rotations},
+]
+
+%e13.2-1
+\startEXERCISE
+寫出 \ALGO{RIGHT-ROTATE} 的僞碼。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{RIGHT-ROTATE(T, y)}
+\startCLRS
+x = y.left
+y.left = x.right
+if x.right != T.nil
+	x.right.p = y
+x.p = y.p
+if y.p == T.nil
+	T.root = x
+elseif y == y.p.left
+	y.p.left = x
+else y.p.right = x
+x.right = y
+y.p = x
+\stopCLRS
+\stopANSWER
+
+%e13.2-2
+\startEXERCISE
+證明：對於任何一棵二叉搜索樹，如果節點數爲 \m{n}，則有 \m{n-1} 種可能的旋轉。
+\stopEXERCISE
+
+\startANSWER
+只有孩子節點才能旋轉，而根節點不是任何節點的孩子。
+\stopANSWER
+
+%e13.2-3
+\startEXERCISE
+如圖 13-2 中左側樹，在子樹 \m{\alpha}、 \m{\beta}、 \m{\gamma} 中分別任取節點 \m{a}、 \m{b}、 \m{c}。
+在將節點 \m{x} 左旋後， \m{a}、 \m{b}、 \m{c} 的深度有什麼變化？ 附圖 13-2：
+
+\externalfigure[output/e13_2_3-1]
+\stopEXERCISE
+
+\startANSWER
+\m{\alpha} 下降一层， \m{\beta} 深度不变， \m{\gamma} 上升一层。
+\stopANSWER
+
+%e13.2-4
+\startEXERCISE
+證明：任一二叉搜索樹，其節點個數爲 \m{n}，則可以通過 \m{O(n)} 次旋轉，
+轉換爲其他任一含 \m{n} 個節點的二叉搜索樹。
+（\hint 先證明至多 \m{n-1} 次右旋足以將樹轉變爲一條右側伸展的鏈。）
+\stopEXERCISE
+
+\startANSWER
+右旋會使左孩子數少 1，而右孩子多 1。
+\stopANSWER
+
+%e13.2-5
+\startEXERCISE
+有二叉搜索樹 \m{T_1}，通過一系列右旋操作變成二叉搜索樹 \m{T_2}，
+則稱 \m{T_1} 可以{\EMP 右轉（right-converted）}成 \m{T_2}。
+試舉反例，描述 \m{T_1} 不能右轉成 \m{T_2} 的情況。
+然後證明：如果 \m{T_1} 可以右轉成 \m{T_2}，那麼可以通過 \m{O(n^2)} 次右旋來實現。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e13_2_5-1]
+\externalfigure[output/e13_2_5-2]
+
+\m{T_1} 中右孩子都不可能變成根節點。
+所以新的根節點只能是 \m{T_1} 的根節點到最小節點路徑上的節點。
+我們可以在 \m{O(n)} 時間解決根節點，然後遞歸解決左右子樹，時間複雜度爲：
+\m{T(n)=T(n_L)+T(n_R)+O(n)=O(n^2)}，其中 \m{n_L+n_R=n-1}。
+\stopANSWER
+
+\stopsection

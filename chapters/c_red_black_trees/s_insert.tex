@@ -1,0 +1,72 @@
+\startsection[
+  title={Insertion},
+]
+
+%e13.3-1
+\startEXERCISE
+在 \ALGO{RB-INSERT} 的第 16 行，將新節點 z 着爲紅色，從而可能破壞紅黑樹性質 4。
+如果將 z 着爲黑色，則不會破壞紅黑樹的性質 4。
+爲什麼不將 z 着爲黑色？
+\stopEXERCISE
+
+\startANSWER
+如果將 z 着爲黑色，會破壞紅黑樹的性質 5。
+\stopANSWER
+
+%e13.3-2
+\startEXERCISE
+現有一紅黑樹，初始爲空，將關鍵字 41、 38、 31、 12、 19、 8 相繼插入，試畫出結果。
+\stopEXERCISE
+
+\startANSWER
+請參閱 \goto{可視化紅黑樹}[url(https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)]。
+
+\externalfigure[output/e13_3_2-1]
+\stopANSWER
+
+%e13.3-3
+\startEXERCISE
+假設圖 13-5 和圖 13-6 中子樹 \m{\alpha}、 \m{\beta}、 \m{\gamma}、 \m{\delta} 和 \m{\epsilon} 的黑高都是 k。
+給兩圖中的所有節點都標上黑高，以驗證圖中所示的轉換能保持性質 5。
+\stopEXERCISE
+
+\startANSWER
+略。
+\stopANSWER
+
+%e13.3-4
+\startEXERCISE
+Teach 教授擔心 \ALGO{RB-INSERT-FIXUP} 會將 \m{T.nil.color} 設爲紅色，
+從而在 \m{z} 爲根時，第 1 行的測試不會終止循環。
+試說明 \ALGO{RB-INSERT-FIXUP} 永遠不會將 \m{T.nil.color} 設爲紅色。
+\stopEXERCISE
+
+\startANSWER
+略。
+\stopANSWER
+
+%e13.3-5
+\startEXERCISE
+用 \ALGO{RB-INSERT} 插入 \m{n} 個節點形成一棵紅黑樹。
+證明：如果 \m{n>1}，則該樹至少有一個紅節點。
+\stopEXERCISE
+
+\startANSWER
+\m{n=2} 時，有一個內部節點是紅的。
+以後每次運行 \ALGO{RB-INSERT-FIXUP} 時，
+如果是 case 1，則 \m{z} 保持紅色，case 2 和 case 3 都不會減少紅色節點的數量。
+\stopANSWER
+
+%e13.3-6
+\startEXERCISE
+說明如果紅黑樹中不提供父指針，如果有效地實現 \m{RB-INSERT}。
+\stopEXERCISE
+
+\startANSWER
+可以採用自頂向下的插入，一旦紅黑樹性質遭到破壞就通過修改顏色、旋轉恢復紅黑樹的性質。
+ case 2 和 case 3 都能在本節點完成，
+ case 1 會使節點 \m{z} 上升兩層至 \m{z.p.p}，
+但這時不會再遇到 case 1，因爲向下搜索時已經把這種情況消除了。
+\stopANSWER
+
+\stopsection

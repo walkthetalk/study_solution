@@ -144,7 +144,7 @@ function commands.clrsalgo(algoname)
 			tex.sprint(tex.ctxcatcodes, "\\!\\allowbreak " .. postfix .. "\\!")
 		end
 	end
-	if args then
+	if args ~= "" then
 		tex.sprint(tex.ctxcatcodes, "\\allowbreak " .. args)
 	end
 	tex.sprint(tex.ctxcatcodes, "}")

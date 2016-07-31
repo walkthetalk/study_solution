@@ -1,0 +1,82 @@
+\startsection[
+  title={Disjoint-set forests},
+  reference=section:disjoint_set_forests,
+]
+
+%e21.3-1
+\startEXERCISE
+用按秩合併與路徑壓縮啓發式策略的不相交集合森林重做\refexercise{21.2-2}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.3-2
+\startEXERCISE
+寫出使用路徑壓縮的 \ALGO{FIND-SET} 過程的非遞歸版本。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{FIND-SET(x)}
+\startCLRS
+y = x
+z = x.p
+while y != z
+	tmp = z.p
+	z.p = y
+	y = z
+	z = tmp
+ret = y
+y = z.p
+while z != x
+	tmp = z.p
+	z.p = ret
+	z = tmp
+x.p = ret
+return ret
+\stopCLRS
+\stopANSWER
+
+%e21.3-3
+\startEXERCISE
+給出一個包含 \m{m} 個 \ALGO{MAKE-SET}、 \ALGO{UNION} 和 \ALGO{FIND-SET} 操作的序列
+（其中有 \m{n} 個是 \ALGO{MAKE-SET} 操作），
+當僅使用按秩合併時，需要 \m{\Omega(m\lg n)} 的時間。
+\stopEXERCISE
+
+\startANSWER
+提示： \ALGO{UNION} 操作的結果是一棵高度爲 \m{\lg n} 的樹。
+\stopANSWER
+
+%e21.3-4
+\startEXERCISE
+假設想要增加一個 \ALGO{PRINT-SET(x)} 操作，
+他是對於給定的節點 \m{x} 打印出 \m{x} 所在集合的所有成員，順序可以任意。
+如何對一棵不相交集合森林的每個節點僅增加一個屬性，
+使得 \ALGO{PRINT-SET(x)} 所花費的時間同 \m{x} 所在集合元素的個數呈線性關係，
+並且其他操作的漸進運行時間不改變。
+這裏假設我們可在 \m{O(1)} 時間內打印除集合的每個成員。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.3-5
+\startEXERCISE\DIFFICULT
+證明：任何具有 \m{m} 個 \ALGO{MAKE-SET}、 \ALGO{FIND-SET} 和 \ALGO{LINK} 操作的序列，
+這裏所有的 \ALGO{LINK} 操作都出現在 \ALGO{FIND-SET} 操作之前，
+如果同時使用路徑壓縮和按秩合併啓發式策略，
+則這些操作只需 \m{O(m)} 的時間。
+在同樣情況下，如果只使用路徑壓縮啓發式策略，又會如何？
+\stopEXERCISE
+
+\startANSWER
+\m{n-1} 個 \ALGO{UNION} 需要 \m{O(n)} 時間，會創建 \m{n-1} 條邊。
+ \ALGO{FIND-SET} 會壓縮到根節點路徑上的所有邊。
+所以 \m{m} 個 \ALGO{FIND-SET} 需要的時間不會多於 \m{O(m+n)}。
+只使用路徑壓縮，結果也一樣。
+\stopANSWER
+
+\stopsection

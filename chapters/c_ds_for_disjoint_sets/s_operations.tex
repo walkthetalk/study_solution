@@ -1,0 +1,43 @@
+\startsection[
+  title={Disjoint-set operations},
+  reference=section:disjoint_set_op,
+]
+
+%e21.1-1
+\startEXERCISE
+假設 \ALGO{CONNECTED-COMPONENTS} 作用於一個無向圖 \m{G=(V,E)}，
+這裏 \m{V=\{a,b,c,d,e,f,g,h,i,j,k\}}，
+且 \m{E} 中的邊處理順序如下：
+ \m{(d,i)}， \m{(f,k)}， \m{(g,i)}， \m{(b,g)}， \m{(a,h)}， \m{(i,j)}， \m{(d,k)}， \m{(b,j)}， \m{(d,f)}， \m{(g,j)}， \m{(a,e)}。
+請列出每次執行完第 3～5 行後各連通分量的頂點。
+\stopEXERCISE
+
+\startANSWER
+\input{tbl/tbl21.1-1}
+\stopANSWER
+
+%e21.1-2
+\startEXERCISE
+證明： \ALGO{CONNECTED-COMPONENTS} 處理完所有的邊後，
+兩個頂點在相同的連通分量中當且僅當他們在同一個集合中。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.1-3
+\startEXERCISE
+在 \ALGO{CONNECTED-COMPONENTS} 作用於一個有 \m{k} 個連通分量的無向圖 \m{G=(V,E)} 的過程中，
+ \ALGO{FIND-SET} 需要調用多少次？
+ \ALGO{UNION} 需要調用多少次？
+用 \m{|V|}、 \m{|E|} 和 \m{k} 來表示你的答案。
+\stopEXERCISE
+
+\startANSWER
+\ALGO{FIND-SET} 需要調用 \m{2|E|} 次。
+
+\ALGO{UNION} 需要調用 \m{|V|-k} 次。
+\stopANSWER
+
+\stopsection

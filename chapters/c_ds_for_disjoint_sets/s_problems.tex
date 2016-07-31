@@ -1,0 +1,220 @@
+\startsubject[
+  title={Problems},
+]
+
+%p21-1
+\startPROBLEM
+（Off-line minimum）
+{\EMP 脫機最小值問題}（off-line minimum problem）是使用 \ALGO{INSERT} 和 \ALGO{EXTRACT-MIN} 操作
+維護一個元素取自域 \m{\{1,2,\ldots,n\}} 的動態集合 \m{T}。
+給定一組包含 \m{n} 個 \ALGO{INSERT} 和 \m{m} 個 \ALGO{EXTRACT-MIN} 的調用序列 \m{S}，
+其中屬於 \m{\{1,2,\ldots,n\}} 中的每個關鍵字只被插入一次。
+我們希望確定每個 \ALGO{EXTRACT-MIN} 調用返回的是哪個關鍵字。
+特別地，希望對一個 \m{extracted[1..m](i=1,2,\ldots,m)} 數組進行填充，
+其中 \m{extracted[i]} 是由第 \m{i} 次 \ALGO{EXTRACT-MIN} 調用所返回的關鍵字。
+該問題是“脫機的”，其含義就是在確定任何返回的關鍵字之前處理真個序列 \m{S}。
+
+\startigBase[a]\startitem
+在下面脫機最小值問題的實例中，每個操作 \ALGO{INSERT(i)} 用一個 \m{i} 值來表示，
+並且每個 \ALGO{EXTRACT-MIN} 用字母 \m{E} 來表示：
+\startformula
+4,8,E,3,E,9,2,6,E,E,E,1,7,E,5
+\stopformula
+將正確的值填入 \m{extracted} 數組。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+爲了設計出解決此問題的算法，我們把序列 \m{S} 劃分成若干個同構的子序列，
+即如下表示 \m{S}：
+\startformula
+I_1,E,I_2,E,I_3,\ldots,I_m,E,I_{m+1}
+\stopformula
+這裏每個 \m{E} 代表單次 \ALGO{EXTRACT-MIN} 調用，
+並且每個 \m{I_j} 代表一個（可能爲空的） \ALGO{INSERT} 調用序列。
+對於每個子序列 \m{I_j}，
+開始時把由這些操作插入的關鍵字插入一個集合 \m{K_j}，
+如果 \m{I_j} 爲空，那麼他也爲空。然後執行下面的程序：
+
+\CLRSH{OFF-LINE-MINIMUM(m, n)}
+\startCLRS
+for i = 1 to n
+	determine j such that i in K[j]
+	if j != m + 1
+		extracted[j] = i
+		let l be the smallest value greater than j
+			for which set K[l] exists
+		K[l] = K[j] merge K[l], destroying K[j]
+return extracted
+\stopCLRS
+
+\startigBase[continue]\startitem
+證明：由 \ALGO{OFF-LINE-MINIMUM} 返回的數組 \m{extracted} 是正確的。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+描述如何用不相交集合數據結構來實現高效的 \ALGO{OFF-LINE-MINIMUM}。
+給出其最壞情況下運行時間的緊確界。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p21-2
+\startPROBLEM
+（Depth determination）
+在{\EMP 深度確定}（Depth determination）問題中，
+我們通過以下三個操作來維護一個有根樹的森林 \m{\cal{F} = \{T_i\}}：
+
+\ALGO{MAKE-TREE(v)}：創建一棵只包含唯一節點 \m{v} 的樹。
+
+\ALGO{FIND-DEPTH(v)}：返回節點 \m{v} 在樹中的深度。
+
+\ALGO{GRAFT(r, v)}：使得節點 \m{r} （假定他爲一棵樹的樹根）成爲節點 \m{v} 的孩子
+（假定他在另一棵樹中，但是他本身可能是、也可能不是一棵樹的根）
+
+\startigBase[a]\startitem
+假設採用類似於不相交集合森林的樹表示：
+ \m{v.p} 是節點 \m{v} 的父節點，
+除了 \m{v} 是根時 \m{v.p = v} 的這種情況。
+進一步假設，我們可以通過置 \m{r.p=v} 來實現 \ALGO{GRAFT(r,v)}，
+並且可以通過沿着查找路徑上升至根，
+返回一個除 \m{v} 以外的節點樹來實現 \ALGO{FIND-PATH(v)}。
+證明：一組 \m{m} 個 \ALGO{MAKE-TREE}、 \ALGO{FIND-DEPTH} 和 \ALGO{GRAFT} 操作
+序列的最壞情況運行時間是 \m{\Theta(m^2)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+通過使用按秩合併與路徑壓縮啓發式策略，
+能減少最壞情況運行時間。
+我們使用不相交集合森林 \m{{\cal{S}} = \{S_i\}}，
+其中每個集合 \m{S_i} （他本身是一棵樹）對應於一棵森林 \m{\cal{F}} 中的樹 \m{T_i}。
+然而，集合 \m{S_i} 中的樹結構沒有必要對應於 \m{T_i} 的樹結構。
+實際上， \m{S_i} 的實現並沒有記錄準確的父子關係，
+但他允許我們確定 \m{T_i} 中任意節點的深度。
+
+關鍵的思想是維護每個節點 \m{v} 的一個“僞距離” \m{v.d}，
+他倍定義爲使得沿着從 \m{v} 到他的集合 \m{S_i} 的根的簡單路徑上的僞距離之和等於 \m{T_i} 中節點 \m{v} 的深度。
+也就是說，如果從 \m{v} 到他在 \m{S_i} 的根的簡單路徑爲 \m{v_0,v_1,\ldots,v_k}（這裏 \m{v_0=v} 並且 \m{v_k} 是 \m{S_i} 的根），
+那麼節點 \m{v} 在樹 \m{T_i} 上的深度爲 \m{\sum_{j=0}^{k}v_j\cdot d}。
+
+\startigBase[continue]\startitem
+給出 \ALGO{MAKE-TREE} 的一種實現。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明應如何修改 \ALGO{FIND-SET} 來實現 \ALGO{FIND-DEPTH}。
+你的實現要採用路徑壓縮，
+並且他的運行時間應與查找路徑的長度呈線性關係。
+試確保你的實現能正確地更新僞距離。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明如何實現 \ALGO{GRAFT(r,v)}，
+他通過修改 \ALGO{UNION} 和 \ALGO{LINK} 來合併包含 \m{r} 和 \m{v} 的集合。
+試確保你的實現能正確地更新僞距離。
+並注意到，
+集合 \m{S_i} 的根沒有必要是對應樹 \m{T_i} 的根。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+試給出一組 \m{m} 個 \ALGO{MAKE-TREE}、 \ALGO{FIND-DEPTH} 和 \ALGO{GRAFT} 操作的序列
+（其中 \m{n} 個是 \ALGO{MAKE-TREE} 操作）最壞情況運行時間的一個緊確界。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p21-3
+\startPROBLEM
+（Tarjan’s off-line least-common-ancestors algorithm）
+在一棵有根樹 \m{T} 中，
+兩個節點 \m{u} 和 \m{v} 的{\EMP 最小公共祖先}
+（leat common ancestor） \m{\omega} 是節點 \m{u} 和 \m{v} 的一個共同祖先，
+且他有最大的深度。
+在{\EMP 脫機最小公共祖先問題}（off-line least-common-ancestors problem）中，
+給定一棵有根樹 \m{T} 和一個在 \m{T} 中的無序節點對的任意集合 \m{P=\{\{u,v\}\}} ，
+我們希望確定 \m{P} 中每對的最小公共祖先。
+
+爲了解決脫機最小公共祖先問題，
+下面的過程通過對 \ALGO{LCA(T.root)} 的初始調用，
+來執行對 \m{T} 的樹遍歷。
+假設在執行遍歷之前，每個節點被着色爲白色。
+
+\CLRSH{LCA(u)}
+\startCLRS
+MAKE-SET(u)
+FIND-SET(u).ancestor = u
+for each child v of u in T
+	LCA(v)
+	UNION(u,v)
+	FIND-SET(u).ancestor = u
+u.color = BLACK
+for each node v such that {u,v} in P
+	if v.color = BLACK
+		print "The least common ancestor of "
+			u " and " v " is " FIND-SET(v).ancestor
+\stopCLRS
+
+\startigBase[a]\startitem
+證明：對每對 \m{\{u,v\}\in P}，第 10 行恰好只執行一次。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：在調用 \ALGO{LCA(u)} 時，不相交集合數據結構的集合數等於 \m{T} 中 \m{u} 的深度。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：對於每對 \m{\{u,v\}\in P}， \ALGO{LCA} 能正確地輸出 \m{u} 和 \m{v} 的最小公共祖先。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+假設我們使用\refsection{disjoint_set_forests} 中的不相交集合數據結構實現，試分析 \ALGO{LCA} 的運行時間。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+\stopsubject%Problems

@@ -1,0 +1,75 @@
+\startsection[
+  title={Analysis of union by rank with path compression},
+]
+
+%e21.4-1
+\startEXERCISE
+證明引理 21.4。附引理 21.4：
+
+對於所有節點 \m{x}，有 \m{x.rank\le x.p.rank}，如果 \m{x\ne x.p}，
+則此式是嚴格不等式。 \m{x.rank} 初值爲 0，並且隨時間而增加，直到 \m{x\ne x.p}；
+從此以後， \m{x.rank} 的值就不再發生變化。
+ \m{x.p.rank} 的值隨時間單調遞增。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.4-2
+\startEXERCISE[exercise:21.4-2]
+證明每個節點的秩最多爲 \m{\lfloor \lg n\rfloor}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.4-3
+\startEXERCISE
+根據\refexercise{21.4-2} 的結論，對於每個節點 \m{x}，需要多少位（bit）來存儲 \m{x.rank}？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.4-4
+\startEXERCISE
+利用\refexercise{21.4-2} 請給出一個簡單的證明，
+證明在一個不相交集合森林上使用按秩合併策略而不使用路徑壓縮策略的運行時間爲 \m{O(m\lg n)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.4-5
+\startEXERCISE
+Dante 教授認爲，因爲各節點的秩在一條指向根的簡單路徑上是嚴格遞增的，
+所以節點的級沿着路徑也一定是單調遞增的。
+換句話說，如果 \m{x.rank > 0}，
+並且 \m{x.p} 不是一個根，那麼 \m{level(x)\le level(x.p)}。
+請問這位教授的想法正確嗎？
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.4-6
+\startEXERCISE\DIFFICULT
+考慮函數 \m{\alpha'(n)=\min\{k:A_k(1)\ge\lg(n+1)\}}。
+證明：
+對於 \m{n} 的所有實際值，有 \m{\alpha'(n)\le 3}，
+並利用 \refexercise{21.4-2}，
+說明如何修改勢函數的參數來證明對於一組 \m{m} 個 \ALGO{MAKE-SET}、 \ALGO{UNION} 和 \ALGO{FIND-SET} 操作的序列
+（其中 \m{n} 個是 \ALGO{MAKE-SET} 操作），
+我們能在一個不相交集合森林上使用按秩合併與路徑壓縮在最壞情況時間 \m{O(m\alpha'(n))} 內處理完。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

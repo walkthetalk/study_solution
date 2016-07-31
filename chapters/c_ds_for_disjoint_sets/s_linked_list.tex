@@ -1,0 +1,101 @@
+\startsection[
+  title={Linked-list representation of disjoint sets},
+]
+
+%e21.2-1
+\startEXERCISE
+使用鏈表表示和加權合併啓發式策略，
+寫出 \ALGO{MAKE-SET}、 \ALGO{FIND-SET} 和 \ALGO{UNION} 操作的僞碼。
+並指定你在集合對象和表對象中所使用的對象。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.2-2
+\startEXERCISE[exercise:21.2-2]
+給出下面程序的結果數據結構，
+並回答該程序中 \ALGO{FIND-SET} 操作返回的答案。
+這裏使用加權合併啓發式策略的鏈表表示。
+
+\startCLRS
+for i=1 to 16
+	MAKE-SET(x[i])
+for i=1 to 15 by 2
+	UNION(x[i], x[i+1])
+for i=1 to 13 by 4
+	UNION(x[i], x[i+2])
+UNION(x[1], x[5])
+UNION(x[11], x[13])
+UNION(x[1], x[10])
+FIND-SET(x[2])
+FIND-SET(x[9])
+\stopCLRS
+
+假定如果包含 \m{x_i} 和 \m{x_j} 的集合有相同的大小，
+則 \ALGO{UNION(x_i, x_j)} 表示將 \m{x_j} 所在的表鏈接到 \m{x_i} 所在的表後。
+\stopEXERCISE
+
+\startANSWER
+兩個 \ALGO{FIND-SET} 返回的都是第一個集合。
+\stopANSWER
+
+%e21.2-3
+\startEXERCISE
+對定理 21.1 的整體證明進行改造，
+得到使用鏈表表示和加權合併啓發式策略下的 \ALGO{MAKE-SET} 和 \ALGO{FIND-SET} 的攤還時間上界爲 \m{O(1)}，
+以及 \ALGO{UNION} 的攤還時間上界爲 \m{O(\lg n)}。
+\stopEXERCISE
+
+\startANSWER
+\ALGO{MAKE-SET} 只是初始化一個空集合， \ALGO{FIND-SET} 只是返回節點的父指針，
+兩者攤還時間上界爲 \m{O(1)}。
+
+\ALGO{UNION} 的總時間爲 \m{O(n\lg n)}，因此其攤還時間上界爲 \m{O(\lg n)}。
+\stopANSWER
+
+%e21.2-4
+\startEXERCISE
+請給出圖 21-3 所示操作序列的一個運行時間的漸進緊確界，
+假定使用鏈表表示和加權合併啓發式策略。
+附圖 21-3：
+\input{tbl/tbl21-3}
+\stopEXERCISE
+
+\startANSWER
+\m{O(n)}
+\stopANSWER
+
+%e21.2-5
+\startEXERCISE
+Gompers 教授猜想也許有可能在每個集合對象中僅使用一個指針，
+而不是兩個指針（\m{head} 和 \m{tail}），
+同時仍然保留每個鏈表元素的 2 個指針。
+請說明教授的猜想是有道理的，
+並通過描述如何使用一個鏈表來表示每個集合，
+使得每個操作與本章中描述的操作有相同的運行時間，來加以解釋。
+同時描述這些操作是如何工作的。
+你的方法應該允許使用加權合併啓發式策略，
+並與本節所描述的有相同效果。
+（\hint 使用一個鏈表的尾作爲集合的代表。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e21.2-6
+\startEXERCISE
+如何對 \ALGO{UNION} 過程做一個簡單的改動，
+在採用鏈表表示中拿掉讓集合對象的 \m{tail} 指針總是指向每個表的最後一個對象的要求。
+無論是否使用加權合併啓發式策略，
+這個修改不應該改變 \ALGO{UNION} 過程的漸進運行時間。
+（\hint 而不是把一個表連接到另一個表後面，將他們拼接在一起。）
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

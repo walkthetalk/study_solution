@@ -1,0 +1,194 @@
+\startsection[
+  title={Topological sort},
+]
+
+%e22.4-1
+\startEXERCISE
+給出算法 \ALGO{TOPOLOGICAL-SORT} 運行於圖 22-8 上時所生成的節點次序。
+這裏的所有假設與\refexercise{22.3-2} 一樣。
+附圖 22-8：
+
+\externalfigure[output/e22_4_1-1]
+\stopEXERCISE
+
+\startANSWER
+\m{pnosmryvwzxuqt}。
+\stopANSWER
+
+%e22.4-2
+\startEXERCISE
+請給出線性時間算法，其輸入爲一個有向無環圖 \m{G=(V,E)} 以及兩個節點 \m{s} 和 \m{t}，
+其輸出是從節點 \m{s} 到節點 \m{t} 之間的簡單路徑的數量。
+例如，對於圖 22-8 所示的有向無環圖，
+從節點 \m{p} 到節點 \m{v} 一共有 4 條簡單路徑，
+分別是 \m{pov}、 \m{poryv}、 \m{posryv} 和 \m{psryv}。
+（本題僅要求計數簡單路徑的條數，而不要求將簡單路徑本身列舉出來。）
+\stopEXERCISE
+
+\startANSWER
+先進行拓撲排序，並取 \m{s} 到 \m{t} 間的子集，令序列爲 \m{v_1, v_2, \ldots, v_n}，
+其中 \m{v_1=s}， \m{v_n = t}。給序列中每一項加一個屬性用來計數，初始值全爲 0。
+然後從左至右遍歷此序列。如果 \m{v_i=s}，則 \m{c_i = 1}；
+否則， \m{c_i = \sum_{v_j:(v_j,v_i)\in E}p[j]}。
+
+\startCLRS
+for i = 1 upto n
+	if v[i] == s
+		c[i] = 1
+	else
+		c[i] = 0
+for i = 1 upto n - 1
+	for each (v[i],v[j]) in E and j <= n
+		c[j] += c[i]
+
+return c[n]
+\stopCLRS
+\stopANSWER
+
+%e22.4-3
+\startEXERCISE
+給出一個算法來判斷給定無向圖 \m{G=(V,E)} 是否包含一個環路。
+算法運行時間應該在 \m{O(V)} 數量級，且與 \m{|E|} 無關。
+\stopEXERCISE
+
+\startANSWER
+運行 \ALGO{DFS}，如果發現前向邊，則有環路。
+如果沒有環路，則 \m{|E| < |V|}。
+如果有環路，則掃描的邊數肯定小於 \m{|V|}，因此算法時間複雜度爲 \m{O(V)}。
+\stopANSWER
+
+%e22.4-4
+\startEXERCISE
+證明或反證下述論斷：
+如果有向圖 \m{G} 包含環路，
+則在算法 \ALGO{TOPOLOGICAL-SORT(G)} 所生成的節點序列裏，
+圖 \m{G} 中與所生成序列不一直的“壞”邊的條數最少。
+\stopEXERCISE
+
+\startANSWER
+不成立。選擇不同的起點，會得到不同的序列，壞邊的數目也不盡相同，因此不能保證壞邊數目最少。
+如下圖，若從 \m{a} 點開始，則得到序列 \m{a,b,c}，有 1 條壞邊 \m{(c,a)}。
+若從 \m{b} 點開始，則得到序列 \m{b,c,a}，有 2 條壞邊 \m{(a,c)}、 \m{(a,b)}。
+
+\externalfigure[output/e22_4_4-1]
+\stopANSWER
+
+%e22.4-5
+\startEXERCISE
+在有向無環圖 \m{G=(V,E)} 上執行拓撲排序還有一種辦法，
+就是重複尋找入度爲 0 的節點，輸出該節點，
+將該節點及從其發出的邊從圖中刪除。
+請解釋如何在 \m{O(V+E)} 時間內實現這種思想。
+如果圖 \m{G} 包含環路，將會發生什麼情況？
+\stopEXERCISE
+
+\startANSWER
+首先運行 \ALGO{DFS} 或 \ALGO{BFS} 可以在 \m{O(V+E)} 時間內統計出每個點的入度和出度，
+以後在刪除邊的時候要維護這些信息。
+每次輸出入度爲 0 的那個點並刪除其出邊，並更新相應節點的入度。
+要執行 \m{O(V)} 次輸出和 \m{O(E)} 次的刪除。
+總時間爲 \m{O(V+E)}。
+
+如果有環路，那可能沒有入度爲 0 的點。
+\stopANSWER
+
+\stopsection
+
+\startsection[
+  title={Strongly connected components},
+]
+
+%e22.5-1
+\startEXERCISE
+如果在圖 \m{G} 中加入一條新的邊， \m{G} 中的強連通分量的數量會發生怎樣的變化？
+\stopEXERCISE
+
+\startANSWER
+如果增加的邊位於某一強連通分量內部，則不會發生變化。
+如果增加的邊跨越兩個分量，則分量的數量可能不變，也可能減少，甚至減少到只有一個強連通分量。
+\stopANSWER
+
+%e22.5-2
+\startEXERCISE
+給出算法 \ALGO{STRONGLY-CONNECTED-COMPONENTS} 在圖 22-6 上的運行過程。
+具體要求是，給出算法第 1 行所計算出的完成時間和第 3 行所生成的森林。
+假定 \ALGO{DFS} 的第 5～7 行的循環是以字母表順序來對節點進行處理，
+並且連接鏈表中的節點也是以字母表順序排列好的。
+附圖 22-6：
+
+\externalfigure[output/e22_3_2-1]
+\stopEXERCISE
+
+\startANSWER
+下圖爲 \m{G^T}，其中的數字爲第一行所計算出的時間。
+黑色邊連接兩個強連通分量，其他顏色的邊標記不同的顏色分量。
+
+\externalfigure[output/e22_5_2-2]
+\stopANSWER
+
+%e22.5-3
+\startEXERCISE
+Bacon 教授聲稱，如果在第二次深度優先搜索時使用原始圖 \m{G} 而不是圖 \m{G} 的轉置圖 \m{G^T}，
+並且以完成時間的遞增次序來掃描節點，則計算強連通分量的算法將更加簡單。
+這個更加簡單的算法總是能計算出正確的結果嗎？
+\stopEXERCISE
+
+\startANSWER
+不正確。
+\stopANSWER
+
+%e22.5-4
+\startEXERCISE
+證明：對於任意有向圖 \m{G} 來說， \m{((G^T)^{SCC})^T=G^{SCC}}。
+也就是說，轉置圖 \m{G^T} 的分量圖的轉置與圖 \m{G} 的分量圖相同。
+\stopEXERCISE
+
+\startANSWER
+\m{G} 和 \m{G^T} 有相同的強連通分量，但分量間的連接關係正好相反。
+\stopANSWER
+
+%e22.5-5
+\startEXERCISE
+給出一個時間複雜度爲 \m{O(V+E)} 的算法來計算有向圖 \m{G=(V,E)} 的分量圖。
+請確保在算法所生成的分量圖中，任意兩個節點之間至多存在一條邊。
+\stopEXERCISE
+
+\startANSWER
+給各分量編號，記爲 \m{1,2,\ldots,k}， \m{k \le V}，
+並記錄每一個節點 \m{u} 所屬分量 \m{s[u]}。
+遍歷所有邊 \m{(u,v)}，如果 \m{s[u] \ne s[v]}，則將 \m{(s[u],s[v])} 加入到新集合 \m{T} 中。
+對 \m{T} 中元素進行基排序。
+將 \m{T} 中所有與前一個元素不同的元素加入到新集合 \m{S} 中，
+則 \m{S} 即爲所求。
+\stopANSWER
+
+%e22.5-6
+\startEXERCISE
+給定有向圖 \m{G=(V,E)}，
+請說明如何創建另一個圖 \m{G'=(V,E')}，
+使得：
+（a） \m{G'} 的強連通分量與 \m{G} 的相同，
+（b） \m{G'} 的分量圖與 \m{G} 的相同，
+以及（c） \m{E'} 所包含的邊儘可能少。
+請給出一個計算圖 \m{G'} 的快速算法。
+\stopEXERCISE
+
+\startANSWER
+利用上一題的結果，另外每個分量內部進行 \ALGO{DFS}，保留一個環路即可。
+\stopANSWER
+
+%e22.5-7
+\startEXERCISE
+給定有向圖 \m{G=(V,E)}，
+如果對於所有節點對 \m{u,v\in V}，
+我們有 \m{u\leadsto v} 或 \m{v\leadsto u}，
+則 \m{G} 是{\EMP 半連通}的。
+請給出一個有效的算法來判斷圖 \m{G} 是否是半連通的。
+證明算法的正確性並分析其運行時間。
+\stopEXERCISE
+
+\startANSWER
+先生成強連通分量圖，若所有分量間存在一個線性鏈（開環），則此圖是半連通的。
+\stopANSWER
+
+\stopsection

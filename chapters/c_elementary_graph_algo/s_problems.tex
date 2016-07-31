@@ -1,0 +1,215 @@
+\startsubject[
+  title={Problems},
+]
+
+%e22-1
+\startPROBLEM
+（Classifying edges by breadth-first search）
+深度優先搜索將圖中的邊分類爲樹邊、後向邊、前向邊和橫向邊。
+廣度優先搜索也可以用來進行這種分類。
+具體來說，廣度優先搜索將從源節點可以到達的邊劃分爲同樣的 4 種類型。
+\startigBase[a]
+\startitem
+證明在對無向圖進行的廣度優先搜索中，下面的性質成立：
+\startigBase[n]
+\item 不存在後向邊，也不存在前向邊。
+\item 對於每條樹邊 \m{(u,v)}，我們有 \m{v.d=u.d+1}。
+\item 對於每條橫向邊 \m{(u,v)}，我們有 \m{v.d=u.d} 或 \m{v.d=u.d+1}。
+\stopigBase
+\stopitem
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startitem
+證明在對有向圖進行廣度優先搜索時，下面的性質成立：
+\startigBase[n]
+\item 不存在前向邊。
+\item 對於每條樹邊 \m{(u,v)}，我們有 \m{v.d=u.d+1}。
+\item 對於每條橫向邊 \m{(u,v)}，我們有 \m{v.d\le u.d+1}。
+\item 對於每條後向邊 \m{(u,v)}，我們有 \m{0\le v.d\le u.d}。
+\stopigBase
+\stopitem
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+%e22-2
+\startPROBLEM
+（Articulation points, bridges, and biconnected components）
+設 \m{G=(V,E)} 爲一個連通無向圖。
+圖 \m{G} 的{\EMP 銜接點}是指圖 \m{G} 中的一個節點，
+刪除該節點將導致圖不連通。
+圖 \m{G} 的{\EMP 橋}是指圖中的一條邊，刪除該邊，圖就不再連通。
+圖 \m{G} 的{\EMP 雙連通分量}是指一個最大的邊集合，
+裏面的任意兩條邊都處於同一條簡單環路中。
+圖 22-10 描述的就是這些概念的定義。
+我們可以使用深度優先搜索算法來判斷 \m{G} 的銜接點、橋和雙連通分量。
+設 \m{G_\pi = (V, E_\pi)} 來爲圖 \m{G} 的深度優先樹。
+附圖 22-10：
+
+\externalfigure[output/p22-2-1]
+
+\startigBase[a]\startitem
+證明： \m{G_\pi} 的根節點是圖 \m{G} 的銜接點當且僅當他在 \m{G_\pi} 中至少有兩個子節點。
+\stopitem\stopigBase
+
+\startANSWER
+如果根節點是銜接點，如果只有一個子節點，那麼刪除根節點，不會影響圖的連通性，則不是銜接點，與假設不符。
+
+如果根節點有至少兩個子節點，由於沒有連接各子樹的橫向邊，那麼刪除根節點會影響圖的連通性，符合銜接點的定義。
+\stopANSWER
+
+\startigBase[continue]\startitem
+設節點 \m{v} 爲 \m{G_\pi} 的一個非根節點。證明：
+ \m{v} 是 \m{G} 的銜接點當且僅當節點 \m{v} 有一個子節點 \m{s}，
+且沒有任何從節點 \m{s} 或任何 \m{s} 的後代節點指向 \m{v} 的真祖先的後向邊。
+\stopitem\stopigBase
+
+\startANSWER
+有後向邊會導致成環。
+\stopANSWER
+
+\startigBase[continue]\startitem
+定義：
+\startformula
+v.low = \min \startcases
+\NC v.d \MC \NR
+\NC w.d \MC\text{：\m{(u,w)} 是節點 \m{v} 的某個後代節點 \m{u} 的一條後向邊}\NR
+\stopcases
+\stopformula
+請說明如何在 \m{O(E)} 的時間內爲所有節點 \m{v} 計算出 \m{v.low} 的值。
+\stopitem\stopigBase
+
+\startANSWER
+\CLRSH{DFS-VISIT(u)}
+\startCLRS
+color[u] = GRAY
+time = time + 1
+d[u] = time
+low[u] = d[u]
+for each v Adj[u]
+	if color[v] = WHITE
+		pi[v] = u
+		DFS-VISIT(v)
+		if low[v] < low[u]
+			low[u] = low[v]
+	elseif color[v] = GRAY		// back edge
+		if d[v] < low[u]
+			low[u] = d[v]
+color[u] = BLACK
+time = time + 1
+f[u] = time
+\stopCLRS
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明如何在 \m{O(E)} 時間內計算出圖 \m{G} 的所有銜接點。
+\stopitem\stopigBase
+
+\startANSWER
+對於根節點，檢查有幾個子節點，如果多於一個，則爲銜接點，在（a）中已經證明。
+對於其他節點 \m{v}，如果 \m{v} 有一個孩子 \m{b}，滿足 \m{low[b]\ge d[v]}，
+意味着以 \m{b} 爲根的子樹上沒有指向 \m{v} 的祖先的後向邊，
+即 \m{v} 是銜接點，因爲刪除 \m{v} 會破壞圖的連通性。
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明：圖 \m{G} 的一條邊是橋當且僅當該邊不屬於 \m{G} 中的任何簡單環路。
+\stopitem\stopigBase
+
+\startANSWER
+根據環路的定義，從環路中的任意節點開始，都可以返回到該節點的路。
+因此，移除環路中的任意一條邊都不會孤立這個節點。
+如果邊 \m{(u,v)} 沒有在環路中，
+則只有一條從 \m{u} 到 \m{v} 的路。
+如果可以從 \m{v} 沿其他路徑返回到 \m{u}，則會形成一個環路。
+因此，移除 \m{(u,v)} 會斷開 \m{u} 和 \m{v} 的連接，因此 \m{(u,v)} 是橋。
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明如何在 \m{O(E)} 時間內計算出圖 \m{G} 的所有橋。
+\stopitem\stopigBase
+
+\startANSWER
+在 \ALGO{DFS-VISIT} 中，計算 \m{low[v]} 時，如果發現 \m{u} 的子節點 \m{v} 滿足 \m{low[v]>d[u]}，
+則我們可以任務此邊是橋，因爲移除他會導致 \m{u} 和 \m{v} 失連，這在（d）中已經證明。
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明： \m{G} 的雙連通分量是 \m{G} 的非橋邊的一個劃分。
+\stopitem\stopigBase
+
+\startANSWER
+根據雙連通分量的定義，其內所有邊都不是橋，由由於其“最大”性，外部的邊都是橋。
+因此他是 \m{G} 的非橋邊的一個劃分。
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個 \m{O(E)} 時間複雜度的算法來給圖 \m{G} 的每條邊 \m{e} 做出標記。
+這個標記是一個正整數 \m{e.bcc} 且滿足 \m{e.bcc = e'.bcc} 當且僅當邊 \m{e} 和邊 \m{e'} 在同一個雙連通分量中。
+\stopitem\stopigBase
+
+\startANSWER
+移除橋邊，遍歷銜接點。
+\stopANSWER
+
+\stopPROBLEM
+
+%p22-3
+\startPROBLEM
+（Euler tour）
+強連通有向圖 \m{G=(V,E)} 中的一個歐拉回路是指一條遍歷圖 \m{G} 中每條邊恰好一次的環路。
+不過，這條環路可以多次訪問同一個節點。
+
+\startigBase[a]\startitem
+證明：圖 \m{G} 有一條歐拉回路當且僅當對於圖中的每個節點 \m{v}，
+有 \m{in-degree(v) = out-degree(v)}。
+\stopitem\stopigBase
+
+\startANSWER
+如果圖 \m{G} 有歐拉回路 \m{C}，所有節點的出度和入度顯然是相等的。
+
+反過來，如果所有節點的入度和出度均相等，任取節點 \m{v}，
+則肯定存在一條路徑從 \m{v} 出發最後又返回到 \m{v}。
+不停的刪除簡單環路，並刪除孤立的節點，然後再從被刪除了部分邊但還未被孤立的節點開始，
+重新尋找簡單環路……
+最終將所有簡單環路組合起來就是一條歐拉回路。
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出一個複雜度爲 \m{O(E)} 的算法來找出圖 \m{G} 的一條歐拉回路。
+（\hint 對邊不相交環路進行歸併。）
+\stopitem\stopigBase
+
+\startANSWER
+先以 \m{O(|E|)} 時間檢查是不是所有節點的入度都等於其出度。
+如果是，然後再以不停搜索、刪除簡單環路的方式給出歐拉回路。
+\stopANSWER
+
+\stopPROBLEM
+
+%p22-4
+\startPROBLEM
+（Reachability）
+設 \m{G=(V,E)} 爲一個有向圖，
+且每個節點 \m{u\in V} 都標有一個唯一的整數值標記 \m{L(u)}，
+ \m{L(u)} 的取值爲集合 \m{\{1,2,\ldots,|V|\}}。
+對於每個節點 \m{u\in V}，
+設 \m{R(u)=\{v\in V: u\leadsto v\}} 爲從節點 \m{u} 可以到達的所有節點的集合。
+定義 \m{\min(u)} 爲 \m{R(u)} 中標記爲最小的節點，
+即 \m{\min(u)} 爲節點 \m{v}，滿足 \m{L(v)=\min\{L(w): w\in R(u)\}}。
+請給出一個時間複雜度爲 \m{O(V+E)} 的算法來計算所有節點 \m{u\in V} 的 \m{\min(u)}。
+\stopPROBLEM
+
+\startANSWER
+從標記最小的節點開始反向深度優先搜索，路徑上的所有點的結果均爲起始點的標記值。
+完成後，若還有僞確定的點，繼續執行上述過程。
+\stopANSWER
+
+\stopsubject%Problems

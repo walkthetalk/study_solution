@@ -1,0 +1,126 @@
+\startsection[
+  title={Breadth-first search},
+]
+
+%e22.2-1
+\startEXERCISE
+請計算出在有向圖 22-2（a）上運行廣度優先搜索算法後的 \m{d} 值和 \m{\phi} 值。
+這裏假定節點 3 爲算法所用的源節點。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.2-2
+\startEXERCISE
+請計算出在有向圖 22-3 所示無向圖上運行廣度優先搜索算法後的 \m{d} 值和 \m{\phi} 值。
+這裏假定節點 u 爲算法所用的源節點。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.2-3
+\startEXERCISE
+證明：使用單個位來存放每個節點的顏色即可。
+這個論點可以通過證明將算法第 18 行的僞碼刪除後， \ALGO{BFS} 過程生成的結果不變得到。
+\stopEXERCISE
+
+\startANSWER
+算法只關心節點是不是白色，至於是黑還是灰則沒有區別。
+\stopANSWER
+
+%e22.2-4
+\startEXERCISE
+如果將輸入的圖用鄰接矩陣來表示，
+並修改算法來應對此種形式的輸入，
+請問 \ALGO{BFS} 的運行時間將是多少？
+\stopEXERCISE
+
+\startANSWER
+\m{O(V^2)}
+\stopANSWER
+
+%e22.2-5
+\startEXERCISE
+證明：在廣度有限搜索算法裏，
+賦給節點 \m{u} 的 \m{u.d} 值與節點在鄰接表裏出現的次序無關。
+使用圖 22-3 作爲例子，
+證明： \ALGO{BFS} 所計算出的廣度優先樹可以因鄰接鏈表中的次序不同而不同。
+\stopEXERCISE
+
+\startANSWER
+最短路徑長度當然和次序無關。
+而最短路徑可能有多條，就和次序有關了。
+\stopANSWER
+
+%e22.2-6
+\startEXERCISE
+舉出一個有向圖 \m{G=(V,E)} 的例子，
+對於源節點 \m{s\in V} 和一組樹邊 \m{E_{\pi}\subseteq E}，
+使得對於每個節點 \m{v\in V}，圖 \m{V, E_{\pi}} 中從源節點 \m{s} 到
+節點 \m{v} 的唯一簡單路徑也是圖 \m{G} 中的一條最短路徑，
+但是，不管鄰接表裏節點之間的次序如何，
+邊集 \m{E_\pi} 都不能通過在圖 \m{G} 上運行 \ALGO{BFS} 來獲得。
+\stopEXERCISE
+
+\startANSWER
+如下圖，實線屬於 \m{E_\pi}。
+
+\externalfigure[output/e22_2_6-1]
+\stopANSWER
+
+%e22.2-7
+\startEXERCISE
+職業摔跤手可以分爲兩種類型：
+“娃娃臉”（“好人”）型和“高跟鞋”（“壞人”）型。
+在任意一對職業摔跤手之間都有可能存在競爭關係。
+假定有 \m{n} 個職業摔跤手，
+並且有一個給出競爭關係的 \m{r} 對摔跤手的鏈表。
+請給出一個時間爲 \m{O(n+4)} 的算法來判斷是否可以將某些摔跤手劃分爲“娃娃臉”型，
+而剩下的劃分爲”高跟鞋“型，
+使得所有的競爭關係均只存在於娃娃臉型和高跟鞋型選手之間。
+如果可以進行這種劃分，
+則算法還應當生成一種這樣的劃分。
+\stopEXERCISE
+
+\startANSWER
+遍歷邊，給頂點染色。
+\stopANSWER
+
+%e22.2-8
+\startEXERCISE\DIFFICULT
+我們將一棵樹 \m{T=(V, E)} 的{\EMP 直徑}定義爲 \m{\max_{u,v\in V}\delta(u,v)}，
+也就是說，樹中所有最短路徑距離的最大值即爲樹的直徑。
+請給出一個有效算法來計算樹的直徑，
+並分析算法的運行時間。
+\stopEXERCISE
+
+\startANSWER
+\startigBase[n]
+\item 選擇任意節點 \m{A}，運行 \ALGO{BFS} 找到離 \m{A} 最遠的節點 \m{S}；
+\item 從 \m{S} 開始運行 \ALGO{BFS}，找到最遠節點 \m{D}；
+\item 從 \m{S} 到 \m{D} 的路徑即爲所求。
+\stopigBase
+
+主要是證明 \m{S} 必爲直徑的一個端點。用反證法，參考如下鏈接：
+
+\SIMPLEURL{http://stackoverflow.com/questions/12989578/prove-traversing-a-k-ary-tree-twice-yields-the-diameter}。
+\stopANSWER
+
+%e22.2-9
+\startEXERCISE
+設 \m{G=(V,E)} 爲一個連通無向圖。
+請給出一個 \m{O(V+E)} 時間的算法來計算圖 \m{G} 中的一條這樣的路徑：
+該路徑正反向通過 \m{E} 中每條邊恰好一次（該路徑通過每條邊兩次，但這兩次的方向相反）。
+如果給你大量的分幣作爲獎勵，
+請描述如何在迷宮中找出一條路。
+\stopEXERCISE
+
+\startANSWER
+深度優先進行遍歷，優先訪問沒有訪問過的邊，如果所有相鄰點都訪問過，沿路徑返回上一個節點，繼續執行。
+\stopANSWER
+
+\stopsection

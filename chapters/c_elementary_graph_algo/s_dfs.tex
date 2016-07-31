@@ -1,0 +1,200 @@
+\startsection[
+  title={Depth-first search},
+]
+
+%e22.3-1
+\startEXERCISE
+劃一個 \m{3\times 3} 的網格，行和列的擡頭分別標記爲白色、灰色和黑色。
+對於每個表單元 \m{(i,j)}，
+請指出在對有向圖進行深度有限搜索的過程中，是否可能存在一條邊，
+鏈接一個顏色爲 \m{i} 的節點和一個顏色爲 \m{j} 的節點。
+對於每種可能的邊，指明該種邊的類型。
+另外，請針對無向圖的深度優先搜索再製作一張這樣的網格。
+\stopEXERCISE
+
+\startANSWER
+\startcolumns[n=3, rule=on]
+\startigBase[2]
+\item T：樹邊
+\item B：後向邊
+\item F：前向邊
+\item C：橫向邊
+\stopigBase
+\column
+有向圖：
+\input{tbl/tbl22.3-1_1}
+\column
+無向圖：
+\input{tbl/tbl22.3-1_2}
+\stopcolumns
+\stopANSWER
+
+%e22.3-2
+\startEXERCISE[exercise:22.3-2]
+給出深度有限搜索算法在圖 22-6 上的運行過程。
+假定深度有限搜索算法的第 5～7 行的 {\EMP for} 循環是以字母表順序依次處理每個節點，
+並假定每條鄰接鏈表皆以字母表順序對裏面的節點進行了排序。
+請給出每個節點的發現時間和完成時間，並給出每條邊的分類。
+附圖 22-6：
+
+\externalfigure[output/e22_3_2-1]
+\stopEXERCISE
+
+\startANSWER
+如下圖，其中紅色的是樹邊，藍色的是後向邊，黑色的是前向邊，虛線是橫向邊。
+
+\externalfigure[output/e22_3_2-2]
+\stopANSWER
+
+%e22.3-3
+\startEXERCISE
+給出圖 22-4 的深度優先搜索的括號化結構。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e22_3_3-1]
+\stopANSWER
+
+%e22.3-4
+\startEXERCISE
+證明：使用單個位來存放每個節點的顏色已經足夠。
+這一點可以通過證明如下事實來得到：
+如果將 \ALGO{DFS-VISIT} 的第 2 行刪除， \ALGO{DFS} 給出的結果相同。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.3-5
+\startEXERCISE
+證明邊 \m{(u,v)} 是：
+\startigBase[a]
+\item 樹邊或前向邊當且僅當 \m{u.d < v.d < v.f < u.f}；
+\item 後向邊當且僅當 \m{v.d\le u.d < u.f \le v.f}；
+\item 橫向邊當且僅當 \m{v.d<v.f<u.d<u.f}。
+\stopigBase
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.3-6
+\startEXERCISE
+證明：在無向圖中，根據深度有限搜索算法是先探索 \m{(u,v)} 還是先探索 \m{(v,u)} 来将邊 \m{(u,v)} 分類爲樹邊或者後向邊，
+與根據分類列表中的 4 種類型的次序進行分類是等價的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.3-7
+\startEXERCISE
+請重寫 \ALGO{DFS} 算法的僞碼，以便使用棧來消除遞歸調用。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{DFS-STACK(G, s)}
+\startCLRS
+for each vertex u in V(G) - {s}
+	u.color = WHITE
+	u.pred = NIL
+time = 0
+S = EMPTY
+
+time = time + 1
+s.td = time
+s.color = GRAY
+PUSH(S, s)
+while S != EMPTY
+	t = TOP(S)
+	if exist v in V(G).Adj[t], v.color == WHITE	// v's adjacency list hasn't been fully examined
+		v.pred = t
+		time = time + 1
+		v.td = time
+		v.color = GRAY
+		PUSH(S, v)
+	else
+		t = POP(S)
+		time = time + 1
+		v.tf = time
+		v.color = BLACK
+\stopCLRS
+\stopANSWER
+
+%e22.3-8
+\startEXERCISE
+請給出如下猜想的一個反例：
+如果有向圖 \m{G} 包含一條從節點 \m{u} 到節點 \m{v} 的路徑，
+並且在對圖 \m{G} 進行深度優先搜索時有 \m{u.d < v.d}，
+則節點 \m{v} 是節點 \m{u} 在深度優先森林中的一個後代。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e22_3_8-1]
+\stopANSWER
+
+%e22.3-9
+\startEXERCISE
+請給出如下猜想的一個反例：
+如果有向圖 \m{G} 包含一條從節點 \m{u} 到節點 \m{v} 的路徑，
+則任何對圖 \m{G} 的深度優先搜索都將導致 \m{v.d\le u.f}。
+\stopEXERCISE
+
+\startANSWER
+參考上一題。
+\stopANSWER
+
+%e22.3-10
+\startEXERCISE
+修改深度優先搜索的僞碼，
+讓其打印出有向圖 \m{G} 的每條邊及其分類。
+並指出，如果圖 \m{G} 是無向圖，
+要進行何種修改才能達到相同的效果。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.3-11
+\startEXERCISE
+請解釋有向圖的一個節點 \m{u} 怎樣才能成爲深度優先樹中的唯一節點，
+即使節點 \m{u} 同時有入邊和出邊。
+\stopEXERCISE
+
+\startANSWER
+有頂點 \m{v_1,v_2,\ldots,v_k}，存在邊 \m{(v_i,u)}；
+有頂點 \m{w_1,w_2,\ldots,w_l}，存在邊 \m{(u,w_j)}；
+在執行 \ALGO{DFS} 時，可能先發現所有 \m{w_j}，
+然後再以 \m{u} 爲根進行搜索時， \m{u} 就會成爲一個孤立的節點。
+\stopANSWER
+
+%e22.3-12
+\startEXERCISE
+證明：我們可以在無向圖 \m{G} 上使用深度優先搜索來獲得圖 \m{G} 的連通分量，
+並且深度優先森林所包含的樹的棵樹與 \m{G} 的連通分量數量相同。
+更準確地說，請給出如何修改深度優先搜索來讓其給每個節點賦予一個介於 1 和 \m{k} 之間的整數值 \m{v.cc}，
+這裏 \m{k} 是 \m{G} 的連通分量數，
+使得 \m{u.cc = v.cc} 當且僅當節點 \m{u} 和節點 \m{v} 處於同一個連通分量中。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e22.3-13
+\startEXERCISE\DIFFICULT
+對於有向圖 \m{G=(V,E)} 來說，
+如果 \m{u\leadsto v} 意味着圖 \m{G} 至多包含一條從 \m{u} 到 \m{v} 的簡單路徑，
+則圖 \m{G} 是{\EMP 單連通圖}（singly connected）。
+請給出一個有效算法來判斷一個有向圖是否是單連通圖。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

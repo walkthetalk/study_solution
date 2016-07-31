@@ -1,0 +1,141 @@
+\startsection[
+  title={Representations of graphs},
+]
+
+%e22.1-1
+\startEXERCISE
+給定有向圖的鄰接鏈表，需要多長時間才能計算出每個節點的出度（發出的邊的條數）？
+多長時間才能計算出每個節點的入度（進入的邊的條數）？
+\stopEXERCISE
+
+\startANSWER
+\m{\Theta(|V|+|E|)}。
+
+\m{\Theta(|V||E|)}。而如果使用額外 \m{\Theta(|V|)} 空間，可以在 \m{\Theta(|V| + |E|)} 時間內完成。
+\stopANSWER
+
+%e22.1-2
+\startEXERCISE
+給定一棵有 7 個節點的完全二叉樹的鄰接鏈表，
+請給出等價的鄰接矩陣表示。
+這裏假設節點的編號爲從 1～7。
+\stopEXERCISE
+
+\startANSWER
+\startformulas
+\startformula\startmathalignment
+\NC 1 \NC \qquad 2,3 \NR
+\NC 2 \NC \qquad  1,4,5 \NR
+\NC 3 \NC \qquad  1,6,7 \NR
+\NC 4 \NC \qquad  2 \NR
+\NC 5 \NC \qquad  2 \NR
+\NC 6 \NC \qquad  3 \NR
+\NC 7 \NC \qquad  3 \NR
+\stopmathalignment\stopformula
+
+\startformula\startmatrix
+\NC 0 \NC 1 \NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NR
+\NC 1 \NC 0 \NC 0 \NC 1 \NC 1 \NC 0 \NC 0 \NR
+\NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NC 1 \NC 1 \NR
+\NC 0 \NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NC 0 \NR
+\NC 0 \NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NC 0 \NR
+\NC 0 \NC 0 \NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NR
+\NC 0 \NC 0 \NC 1 \NC 0 \NC 0 \NC 0 \NC 0 \NR
+\stopmatrix\stopformula
+\stopformulas
+\stopANSWER
+
+%e22.1-3
+\startEXERCISE
+有向圖 \m{G=(V,E)} 的{\EMP 轉置}是圖 \m{G^T=(V,E^T)}，
+這裏 \m{E^T=\{(v,u)\in V \times V:(u,v)\in E\}}。
+\stopEXERCISE
+
+\startANSWER
+\m{O(V+E)}，需要額外大小爲 \m{O(V)} 的指針數組。
+
+轉置矩陣即可， \m{O(|V|^2)}。
+\stopANSWER
+
+%e22.1-4
+\startEXERCISE
+給定多圖 \m{G=(V,E)} 的鄰接鏈表（多圖是允許重複邊和自循環邊的圖），
+請給出一個時間爲 \m{O(V+E)} 的算法，
+用來計算該圖的“等價”無向圖 \m{G'=(V,E')} 的鄰接鏈表表示。
+這裏 \m{E'} 是將 \m{E} 中的冗餘邊和自循環邊刪除後餘下的邊。
+刪除冗餘邊指的是將兩個節點之間的多條邊替換爲一條邊。
+\stopEXERCISE
+
+\startANSWER
+遍歷所有頂點 \m{V_i}，新建一個空數組，用來記錄是否有 \m{V_i} 到其他節點的邊，
+遍歷 \m{V_i} 的鄰接鏈表中所有元素 \m{V_j}，如果 \m{V_j} 在新數組中沒有被標記過，則標記，
+如果已被標記過，則刪除當前節點。然後清空新數組，遍歷下一個頂點的鄰接鏈表。
+\stopANSWER
+
+%e22.1-5
+\startEXERCISE
+有向圖 \m{G=(V,E)} 的{\EMP 平方圖}是圖 \m{G^2=(V,E^2)}，
+這裏，邊 \m{(u,v)\in E^2} 當且僅當圖 \m{G} 包含一條最多由兩條邊構成的從 \m{u} 到 \m{v} 的路徑。
+請給出一個有效算法來計算圖 \m{G} 的平方圖 \m{G^2}。
+這裏圖 \m{G} 既可以以鄰接表表示，
+也可以以鄰接矩陣表示。
+請分析算法的運行時間。
+\stopEXERCISE
+
+\startANSWER
+鄰接矩陣： \m{M^2[u,w] = \sum_{v}M[u,v]\cdot M[v,w]}，即矩陣相乘；時間複雜度爲 \m{O(V^3)}。
+如果採用 Strassen 算法則爲 \m{O(V^{2.376})}。
+
+若採用鄰接鏈表：遍歷所有邊 \m{(u,v)}，然後在遍歷 \m{v} 的所有鄰接頂點 \m{w}，將 \m{w} 加入到新的鄰接鏈表中（利用額外數組記錄是否已經添加過，以解決衝突）。時間複雜度爲 \m{O(VE)}。
+\stopANSWER
+
+%e22.1-6
+\startEXERCISE
+多數以鄰接矩陣作爲輸入的圖算法的運行時間爲 \m{\Omega(V^2)}，但也有例外。
+給定圖 \m{G} 的鄰接矩陣表示，
+請給出一個 \m{O(V)} 時間的算法來判斷有向圖 \m{G} 是否存在一個 {\EMP 通用匯點}（universal sink）。
+通用匯點指的是入度爲 \m{|V|-1} 但出度爲 0 的節點。
+\stopEXERCISE
+
+\startANSWER
+只需判斷一行加一列元素。
+\stopANSWER
+
+%e22.1-7
+\startEXERCISE
+有向無環圖 \m{G=(V,E)} 的{\EMP 關聯矩陣}（incidence matrix）是一個滿足下述條件的 \m{|V|\times|E|} 矩陣 \m{B=(b_{ij})}：
+\startformula
+b_{ij} = \startcases
+\NC -1 \MC \text{如果邊 \m{j} 從節點 \m{i} 出發} \NR
+\NC 1 \MC \text{如果邊 \m{j} 進入節點 \m{i}} \NR
+\NC 0 \MC \text{其他} \NR
+\stopcases
+\stopformula
+請說明矩陣乘積 \m{BB^T} 裏的每一個元素代表什麼意思。
+這裏 \m{B^T} 是矩陣 \m{B} 的轉置。
+\stopEXERCISE
+
+\startANSWER
+與頂點 \m{i} 相連的邊的數目。
+\stopANSWER
+
+%e22.1-8
+\startEXERCISE
+假定數組 \m{Adj[u]} 的每個記錄項不是鏈表，而是一個散列表，
+裏面包含的是 \m{(u,v)\in E} 的節點 \m{v}。
+如果每條邊被查詢的概率相同，
+則判斷一條邊是否在圖中的期望時間值是多少？
+這種表示方法的缺陷是什麼？
+請爲每條邊鏈表給出一個不同的數據結構來解決這個問題。
+與散列表相比較，你給出的新方法存在什麼缺陷嗎？
+\stopEXERCISE
+
+\startANSWER
+每個散列表越大，則期望時間越少，當散列表跟頂點個數一樣大時，期望的查詢時間就是 \m{O(1)} 了。
+
+缺陷是空間佔用大。
+
+用鄰接矩陣。
+\stopANSWER
+
+\stopsection

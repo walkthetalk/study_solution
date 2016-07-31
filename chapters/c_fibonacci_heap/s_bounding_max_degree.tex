@@ -1,0 +1,32 @@
+\startsection[
+  title={Bounding the maximum degree},
+]
+
+%e19.4-1
+\startEXERCISE
+Pinocchio 教授聲稱一個 \m{n} 節點的 Fibonacci 堆的高度是 \m{O(\lg n)} 的。
+對於任意的正整數 \m{n}，
+試給出經過一系列 Fibonacci 堆操作後，
+可以創建出一個 Fibonacci 堆，
+該堆僅僅包含一棵具有 \m{n} 個節點的線性鏈的樹，
+以此來說明該教授是錯誤的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e19.4-2
+\startEXERCISE
+假定對級聯切斷操作進行推廣，
+對於某個整數常數 \m{k}，
+只要一個節點失去了他的第 \m{k} 個孩子，
+就將其從他的父節點上剪切掉（\refsection{fib_heap_delete} 中爲 \m{k=2} 的情形）。
+ \m{k} 取什麼值時，有 \m{D(n)=O(\lg n)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

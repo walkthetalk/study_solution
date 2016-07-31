@@ -1,0 +1,289 @@
+\startsubject[
+  title={Problems},
+]
+
+%p19-1
+\startPROBLEM
+（Alternative implementation of deletion）
+Pisano 教授提出了下面的 \ALGO{FIB-HEAP-DELETE} 過程的一個變種，
+聲稱如果刪除的節點不是由 \m{H.min} 指向的節點，那麼程序運行得更快。
+
+\CLRSH{(PISANO-DELETE(H, x)}
+\startCLRS
+if x == H.min
+	FIB-HEAP-EXTRACT-MIN(H)
+else
+	y = x.p
+	if y != NIL
+		CUT(H, x, y)
+		CASCADING-CUT(H, y)
+	add x's child list to the root list of H
+	remove x from the root list of H
+\stopCLRS
+
+\startigBase[a]\startitem
+該教授的聲稱是基於第 7 行可以在 \m{O(1)} 實際時間內完成的這一假設，
+他的程序可以運行得更快。該假設有什麼問題嗎？
+\stopitem\stopigBase
+
+\startANSWER
+運行時間應爲 \m{O(x.degree)}，即 \m{O(\lg n)}。
+因爲雖然整個鏈表可以一次性完成插入，但是各節點的屬性 \m{p} 卻需要獨立修改。
+\stopANSWER
+
+\startigBase[continue]\startitem
+當 \m{H.min} 沒有指向 \m{x} 時，給出 \ALGO{PISANO-DELETE} 實際時間的一個好的上界。
+你給出的上界應該以 \m{x.degree} 和調用 \ALGO{CASCADING-CUT} 的次數 \m{c} 這兩個參數表示。
+\stopitem\stopigBase
+
+\startANSWER
+\startformula
+O(x.degree + c)
+\stopformula
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定調用 \ALGO{PISANO-DELETE(H, x)}，並設 \m{H'} 是執行後得到的 Fibonacci 堆。
+假定節點 \m{x} 不是一個根，
+用 \m{x.degree}、 \m{c}、 \m{t(H)} 和 \m{m(H)} 來表示 \m{H'} 勢的界。
+\stopitem\stopigBase
+
+\startANSWER
+\startformula
+\Phi(H') = [t(H) + x.degree + c] + 2[m(H) - c + 2]
+\stopformula
+\stopANSWER
+
+\startigBase[continue]\startitem
+證明： \ALGO{PISANO-DELETE} 的攤還時間漸進值不會比 \ALGO{FIB-HEAP-DELETE} 的攤還時間更好，
+即使 \m{x\ne H.min} 也是如此。
+\stopitem\stopigBase
+
+\startANSWER
+\startformula
+O(x.degree + c) + x.degree + 4 - c = O(x.degree + c) = O(\lg n) \gt O(1)
+\stopformula
+\stopANSWER
+
+\stopPROBLEM
+
+%p19-2
+\startPROBLEM
+（Binomial trees and binomial heaps）
+二項樹 \m{B_k} 是一棵遞歸定義的有序樹（參看 B.5.2 節）。
+如圖 19-6（a）所示，二項樹 \m{B_0} 僅包含一個節點。
+二項樹 \m{B_k} 是由兩個二項樹 \m{B_{k-1}} 組成的，
+這兩棵樹按照一棵樹的根是另一棵樹根的最左孩子的方式鏈接。
+圖 19-6（b）所示爲二項樹 \m{B_0} 到 \m{B_4}。
+
+附圖 19-6（a）：
+
+\midaligned{\externalfigure[output/p19_2-1][scale=600]}
+
+附圖 19-6（b）：
+
+\midaligned{\externalfigure[output/p19_2-2][scale=600]}
+
+附圖 19-6（c）：
+
+\midaligned{\externalfigure[output/p19_2-3][scale=600]}
+
+\startigBase[a]\startitem
+對於二項樹 \m{B_k}，證明：
+\stopitem
+  \startigBase[n]
+  \startitem
+  一共有 \m{2^k} 個節點。
+  \stopitem
+
+\startANSWER
+\startformula\startmathalignment
+\NC n_0 \NC = 1 \NR
+\NC n_k \NC = n_{k-1} + n_{k-1} = 2 n_{k-1} \NR
+\NC n_k \NC = 2^k \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+  \startitem
+  樹的高度是 \m{k}。
+  \stopitem
+
+\startANSWER
+\startformula\startmathalignment
+\NC h_0 \NC = 0 \NR
+\NC h_k \NC = h_{k-1} + 1 \NR
+\NC h_k \NC = k \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+  \startitem
+  對於 \m{i=0,1,\ldots,k}，恰有 \m{\binom{k}{i}} 個深度爲 \m{i} 的節點。
+  \stopitem
+
+\startANSWER
+\startformula\startmathalignment
+\NC n(k, i) \NC = n(k-1, i) + n(k-1, i-1) \NR
+\NC n(k, 0) \NC = 1 \NR
+\NC n(k, i) \NC = \binom{k}{i} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+  \startitem
+  根的度數爲 \m{k}，他比其他任意節點的度數都大。
+  此外，如圖 19-6（c）所示，
+  如果把根的孩子從左至右編號爲 \m{k-1}， \m{k-2}， \m{\ldots}， 0，
+  那麼孩子 \m{i} 是子樹 \m{B_i} 的根。
+  \stopitem
+
+\startANSWER
+\startformula\startmathalignment
+\NC d_k \NC = d_{k-1} + 1 \NR
+\NC d_0 \NC = 0 \NR
+\NC d_k \NC = k \NR
+\stopmathalignment\stopformula
+\stopANSWER
+  \stopigBase
+\stopigBase
+
+{\EMP 二項堆}（binomial heap） \m{H} 是具備如下性質的二項樹的集合：
+\startigNum[n]
+\item 每個節點具有一個關鍵字（與 Fibonacci 堆相同）。
+\item  \m{H} 中的每一個二項樹遵循最小堆性質。
+\item 對於任意的非負整數 \m{k}， \m{H} 中最多有一個二項樹的根的度數爲 \m{k}。
+\stopigNum
+
+\startigBase[continue]\startitem
+假定一個二項堆 \m{H} 一共有 \m{n} 個節點。
+討論 \m{H} 中包含的二項樹與 \m{n} 的二進制表示之間的關係。
+並證明 \m{H} 最多由 \m{\lfloor\lg n\rfloor +1} 棵二項樹組成。
+\stopitem\stopigBase
+
+\startANSWER
+令 \m{n} 的二進制表示爲 \m{a_k,a_{k-1},\ldots,a_1,a_0}，
+如果 \m{a_i} （\m{0\le i\le k}）爲 0，則此堆不包含二項樹 \m{B_i}，否則包含二項樹 \m{B_i}。
+
+假定 \m{k} 是最高位，則 \m{2^k \le n < 2^{k+1}}。
+令二項樹的數目爲 \m{n}，則 \m{n \le k+1}。
+即：
+\startformula
+n \le (k+1) \le \lfloor (\lg n\rfloor + 1)
+\stopformula
+\stopANSWER
+
+假定按如下方式表述二項堆。
+用\refsection{represent_rooted_tree} 中的左孩子、右兄弟方案表示二項堆中的每一棵二項樹。
+每個節點包含一個關鍵字，指向他父節點的指針、指向他最左孩子的指針
+和指向他右兄弟的指針（這些指針某些情況下是 NIL），
+以及他的度數（同 Fibonacci 堆，表示爲有多少個孩子）。
+這些根組成了一個單向連接的根鏈表，
+並以根的度數從小到大排列。
+可以通過一個指向根鏈表第一個節點的指針來訪問二項堆。
+
+\startigBase[continue]\startitem
+完整描述如何表示一個二項堆（例如，對屬性進行命名，描述屬性值什麼時候爲 NIL，定義根鏈表是怎麼組織的），
+並說明如何用與本章中實現 Fibonacci 堆一樣的方式實現二項堆上同樣的 7 個操作。
+每一個操作的最壞時間應該爲 \m{O(\lg n)}，
+其中 \m{n} 爲二項堆中的節點數目（或對於 \ALGO{UNION} 操作，爲要被合併的兩個二項堆中的節點數）。
+ \ALGO{MAKE-HEAP} 操作應爲常數時間。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+假定僅僅要實現在一個 Fibonacci 堆上的可合併操作
+（即並不實現 \ALGO{DECREASE-KEY} 和 \ALGO{DELETE} 操作）。
+ Fibonacci 堆中的樹與二項堆中的樹有何相似之處？
+有什麼區別？
+證明在一個 \m{n} 個節點的 Fibonacci 堆中最大度數最多爲 \m{\lfloor \lg n\rfloor}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+McGee 教授提出了一個基於 Fibonacci 堆的新的數據結構。
+一個 McGee 堆具有與 Fibonacci 堆相同的結構，
+並且只支持可合併操作。
+除了插入和合併在最後一步中合併根鏈表外，
+其他操作的實現方式均與 Fibonacci 堆中的實現方式相同。
+ McGee 堆上個操作的最壞運行時間是多少？
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p19-3
+\startPROBLEM
+（More Fibonacci-heap operations）
+要擴展 Fibonacci 堆 \m{H} 支持兩個新操作，
+要求不改變 Fibonacci 堆其他操作的攤還時間。
+\startigBase[a]\startitem
+操作 \ALGO{FIB-HEAP-CHANGE-KEY(H, x, k)} 將節點 \m{x} 中關鍵字的值改爲 \m{k}。
+給出 \ALGO{FIB-HEAP-CHANGE-KEY} 的一個有效實現，
+並分析當 \m{k} 大於、小於或等於 \m{x.key} 時，各情形下的攤還運行時間。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+給出 \ALGO{FIB-HEAP-PRUNE(H, r)} 的一個有效實現，
+該操作從 \m{H} 中刪除 \m{q=\min(r, H.n)} 個節點。
+可以選擇任意 \m{q} 個節點來刪除。
+試分析你的實現的攤還運行時間。
+（\hint 可能需要修改數據結構以及勢函數。）
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p19-4
+\startPROBLEM
+（2-3-4 heaps）
+第 18 章介紹了 2-3-4 樹，
+樹中每個內部節點（而不是根）有 2 個、 3 個或 4 個孩子，
+且所有的葉節點有相同的深度。
+本問題中，實現支持可合併堆操作的 2-3-4 堆。
+
+2-3-4 堆以下幾點與 2-3-4 樹不同。
+在 2-3-4 堆中，僅僅葉節點存儲關鍵字，
+並且每個葉節點 \m{x} 僅僅在屬性 \m{x.key} 中存儲一個關鍵字。
+葉節點中的關鍵字可能以任意順序存在。
+每個內部節點 \m{x} 包含一個值 \m{x.small}，
+他等於以 \m{x} 爲根的子樹中葉節點存儲的最小的關鍵字。
+根 \m{r} 包含一個屬性 \m{r.height}，存儲樹的高度。
+最後， 2-3-4 堆設計爲存放在主存中，
+這樣就不需要讀寫磁盤了。
+
+實現下面的 2-3-4 堆操作。
+在一個具有 \m{n} 個元素的 2-3-4 堆上，
+（a）～（e）中每一個操作應該在 \m{O(\lg n)} 時間內完成。
+（f） 中的 \ALGO{UNION} 操作應該在 \m{O(\lg n)} 時間內完成，
+其中 \m{n} 爲輸入的兩個堆元素個數之和。
+
+\startigBase[a]
+\item \ALGO{MINIMUM}，該操作返回一個指向具有最小關鍵字的葉節點的指針；
+\item \ALGO{DECREASE-KEY}，該操作將一個給定的葉節點 \m{x} 的關鍵字減小爲給定的值 \m{k\le x.key}；
+\item \ALGO{INSERT}，該操作插入一個關鍵字爲 \m{k} 的葉節點 \m{x}；
+\item \ALGO{DELETE}，該操作刪除一個給定的葉節點 \m{x}；
+\item \ALGO{EXTRACT-MIN}，該操作抽取具有最小關鍵字的葉節點；
+\item \ALGO{UNION}，該操作合併兩個 2-3-4 堆，並返回一個單獨的 2-3-4 堆，銷燬掉輸入的堆。
+\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+\stopsubject%Problems

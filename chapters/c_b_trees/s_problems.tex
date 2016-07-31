@@ -1,0 +1,173 @@
+\startsubject[
+  title={Problems},
+]
+
+%p18-1
+\startPROBLEM
+（stacks on secondary storage）
+對於一臺計算機，如果較快的主存較少，而較慢的磁盤存儲空間較多，
+如何在其上實現一個棧。
+ \ALGO{PUSH} 和 \ALGO{POP} 的操作對象爲單字。
+我們希望計算機支持的棧可以增長的很大，
+甚至無法全部裝入主存，即大部分放在磁盤上。
+
+一種簡單但低效的實現方法是將整個棧放在磁盤上。
+在主存中保持一個棧的指針，指向棧頂元素的磁盤地址。
+如果該指針的值爲 \m{p}，
+則棧頂元素是磁盤的 \m{\left\lfloor \frac{p}{m}\right\rfloor} 頁上的第 \m{p \mod m} 個字，
+這裏 \m{m} 爲每頁所含字數。
+
+爲了實現 \ALGO{PUSH} 操作，我們增加棧指針，
+從磁盤將適當的頁讀到主存中後，
+複製要被壓入棧的元素到該頁上適當字的位置，
+最後將該頁寫回到磁盤。
+ \ALGO{POP} 操作與之類似。
+我們減小棧指針，從磁盤上讀入所需的頁，再返回棧頂元素。
+我們不需要寫回該頁，因爲他沒有被修改。
+
+由於磁盤操作代價相對較高，
+我們統計任何實現的兩部分代價：
+總的磁盤存取次數和總的 CPU 時間。
+任何對一個包含 \m{m} 個字的頁面的磁盤存取，
+都會引起一次磁盤存取 \m{\Theta(m)} 的 CPU 時間。
+
+\startigBase[a]\startitem
+從漸進意義上看，使用這種簡單實現，最壞情況下， \m{n} 個棧操作需要存取多少次磁盤？
+ CPU 時間又是多少？
+（用 \m{m} 和 \m{n} 來表示這個問題及後面幾個問題的答案）
+\stopitem\stopigBase
+
+\startANSWER
+\m{2n} 次， \m{\Theta(mn)}。
+\stopANSWER
+
+現在考慮棧的另一種實現，
+即在主存中始終保持存放棧中的一頁。
+（還用少量的主存來記錄當前哪一頁在主存中）
+只有相關的磁盤頁面駐留在主存中，才能執行棧操作。
+如果需要，可以將當前主存中的頁寫回磁盤，
+並且可以從磁盤讀入新的一頁放入主存。
+如果相關磁盤頁已經在主存中，那麼就無需任何磁盤存取。
+
+\startigBase[continue]\startitem
+最壞情況下， \m{n} 個 \ALGO{PUSH} 操作所需的磁盤存取次數是多少？
+所需的 CPU 時間是多少？
+\stopitem\stopigBase
+
+\startANSWER
+\m{n/m} 次， \m{\Theta(n)}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+最壞情況下， \m{n} 個棧操作所需的磁盤存取次數是多少？
+所需的 CPU 時間是多少？
+\stopitem\stopigBase
+
+\startANSWER
+\m{n/2} 次， \m{\Theta(mn)}。
+\stopANSWER
+
+假設在另一種實現方式中，在主存中保持棧的 2 頁（此外還有少量的字來記錄哪些頁在主存中）。
+\startigBase[continue]\startitem
+請描述如何管理棧頁，使得任何棧操作的攤還磁盤存取次數爲 \m{O(1/m)}，
+攤還 CPU 時間爲 \m{O(1)}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopPROBLEM
+
+%p18-2
+\startPROBLEM
+（joining and splitting 2-3-4 tree）
+{\EMP 連接}：輸入爲兩個動態集合 \m{S'} 和 \m{S''}，以及一個元素 \m{x}，
+且對任何 \m{x'\in S'} 和 \m{x''\in S''}，
+都有 \m{x'.key < x.key < x''.key}；
+返回一個集合 \m{S=S'\cup \{x\} \cup S''}。
+
+{\EMP 分裂}：{\EMP 連接}的逆操作。
+給定一個動態集合 \m{S} 和一個元素 \m{x\in S}，
+他創建了一個集合 \m{S'}，
+其包含 \m{S-\{x\}} 中所有關鍵字小於 \m{x.key} 的元素；
+同時創建了一個集合 \m{S''}，
+其包含 \m{S - \{x\}} 中所有關鍵字大於 \m{x.key} 的元素。
+在這個問題中，我們討論如何在 2-3-4 樹上實現這些操作。
+爲方便起見，假定所有元素都只包含關鍵字，
+並且所有的關鍵字都不相同。
+
+\startigBase[a]\startitem
+對 2-3-4 樹中的每個節點 \m{x}，
+說明如何將以 \m{x} 爲根的子樹的高度作爲一個屬性 \m{x.height} 來維護。
+要確保所給出的實現不影響查找、插入和刪除的漸進運行時間。
+\stopitem\stopigBase
+
+\startANSWER
+插入：分裂時給新根節點的 \m{height} 賦值。
+\stopANSWER
+
+\startigBase[continue]\startitem
+說明如何實現連接操作。
+給定兩棵 2-3-4 樹 \m{T'}、 \m{T''} 以及一個關鍵字 \m{k}，
+連接操作應在 \m{O(1+|h'-h''|)} 運行時間內完成，
+其中 \m{h'} 和 \m{h''} 分別是樹 \m{T'} 和 \m{T''} 的高度。
+\stopitem\stopigBase
+
+\startANSWER
+以較高的樹，從根節點開始沿最左側子樹搜索，
+直到 height 屬性比較低樹的根節點 height 大 1，記爲節點 \m{x}；
+對於路徑上任何一個節點，只要是滿的，就將其分裂。
+然後將較低的樹與新關鍵字 \m{k} 加入 \m{x}。
+\stopANSWER
+
+\startigBase[continue]\startitem
+考慮從一棵 2-3-4 樹 \m{T} 的根到一個給定關鍵字 \m{k} 的簡單路徑 \m{p}，
+ \m{T} 中小於 \m{k} 的關鍵字集合 \m{S'}，
+以及 \m{T} 中大於 \m{k} 的關鍵字集合 \m{S''}。
+證明： \m{p} 將 \m{S'} 分爲一個樹的集合 \m{\{T_0',T_1',\ldots,T_m'\}} 和
+一個關鍵字的集合 \m{\{k_1',k_2',\ldots,k_m'\}}，
+且對任何關鍵字 \m{y\in T_{i-1}'} 和 \m{z\in T_i'} （\m{i=1,2,\ldots,m}），
+都有 \m{y<k_i'<z}。
+ \m{T_{i-1}'} 和 \m{T_i'} 的高度之間有什麼關係？
+請說明 \m{p} 是如何將 \m{S''} 分爲樹集合和關鍵字集合的。
+\stopitem\stopigBase
+
+\startANSWER
+從根節點開始沿路徑 \m{p} 搜索 \m{k}，
+對於路徑上每一個節點 \m{x}，假設 \m{x.c_i} 在路徑 \m{p} 上：
+如果 \m{i = 1}，則分出的子樹爲空，響應關鍵字也爲空；
+否則，則分出以 \m{x.c_{i-1}} 爲根的子樹，以及關鍵字 \m{x.key_{i-1}}。
+所得即爲樹的集合 \m{\{T_0',T_1',\ldots,T_m'\}} 和
+關鍵字的集合 \m{\{k_1',k_2',\ldots,k_m'\}}。
+
+對稱的可得樹的集合 \m{\{T_0'',T_1'',\ldots,T_m''\}} 和
+關鍵字的集合 \m{\{k_1'',k_2'',\ldots,k_m''\}}。
+
+\m{T_{i-1}'} 的高度大於等於 \m{T_i'} 的高度。
+\stopANSWER
+
+\startigBase[continue]\startitem
+請說明如何實現 \m{T} 上的分裂操作。
+利用連接操作將 \m{S'} 中的關鍵字拼成一棵簡單的 2-3-4 樹 \m{T'}，
+將 \m{S''} 中的關鍵字拼成一棵簡單的 2-3-4 樹 \m{T''}。
+分裂操作的運行時間要求爲 \m{O(\lg n)}，
+這裏 \m{n} 是 \m{T} 中關鍵字數目。
+（\hint 連接的代價應是套迭的）
+\stopitem\stopigBase
+
+\startANSWER
+沿到某一個關鍵字的路徑進行分裂。參考上一項的答案。
+然後將分裂出的集合進行合併。
+所用時間爲：
+\startformula
+\sum_{i=1}^{m}(1+|h(T_{i-1}') - h(T_i')|)
+= m + \sum_{i=1}^{m}(h(T_{i-1}') - h(T_i'))
+= m + h(T_0') - h(T_m')
+\in O(\lg n)
+\stopformula
+\stopANSWER
+
+\stopPROBLEM
+
+\stopsubject%Problems

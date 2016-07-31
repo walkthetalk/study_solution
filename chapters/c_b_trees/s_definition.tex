@@ -1,0 +1,67 @@
+\startsection[
+  title={Definition of B-trees},
+]
+%e18.1-1
+\startEXERCISE
+爲什麼不允許最小度數 \m{t=1}？
+\stopEXERCISE
+
+\startANSWER
+根據定義，最小度數 \m{t} 意味着所有節點（根節點除外）都至少含有 \m{t-1} 個關鍵字。
+從而使得根節點以外的內部節點都至少有 \m{t} 個孩子節點。
+所以，如果 \m{t=1}，則意味着根節點之外的節點最少可以只有 \m{t-1=0} 個關鍵字，
+根節點之外的內部節點最少可以只有 \m{t=1} 個孩子節點。
+
+因此，最小度數不能是 1。
+\stopANSWER
+
+%e18.1-2
+\startEXERCISE
+當 \m{t} 取何值時，圖 18-1 所示的樹是一棵合法的 B 樹？
+\stopEXERCISE
+
+\startANSWER
+根節點之外的節點至少要有 \m{t-1} 個關鍵字，最多有 \m{2t-1} 個關鍵字。
+根據圖 18-1，有 \m{t-1\le 2} 且 \m{3\le 2t-1}，求解得 \m{2\le \le 3}，
+因此 \m{t} 可以是 2 或 3。
+\stopANSWER
+
+%e18.1-3
+\startEXERCISE
+請給出表示 \m{\{1,2,3,4,5\}} 的最小度數爲 2 的所有合法 B 樹。
+\stopEXERCISE
+
+\startANSWER
+略。
+\stopANSWER
+
+%e18.1-4
+\startEXERCISE
+一棵高度爲 \m{h} 的 B 樹中，可以存儲最多多少個關鍵字？
+用最小度數 \m{t} 的函數表示。
+\stopEXERCISE
+
+\startANSWER
+每個節點最多包含 \m{2t-1} 個關鍵字。每個節點最多有 \m{2t} 個孩子。
+\startformula\startmathalignment
+\NC \NC (2t-1)[(2t)^0 + (2t)^1 + \ldots + (2t)^h] \NR
+\NC = \NC (2t-1)\sum_{i=0}^{h}(2t)^i \NR
+\NC = \NC (2t-1)\frac{(2t)^{h+1} - 1}{2t-1} \NR
+\NC = \NC (2t)^{h+1} - 1 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%18.1-5
+\startEXERCISE
+如果紅黑樹中每個黑節點吸收他的紅色孩子，
+並把他們的孩子併入作爲自己的孩子，
+描述這個結果的數據結構。
+\stopEXERCISE
+
+\startANSWER
+對於黑色節點而言，他可能有一個或兩個紅孩子，也可能沒有，合併後，此節點將有 1、 2 或 3 個關鍵字。
+此後所有葉子節點將具有同樣的高度（根據紅黑樹性質 5：從一個節點到所有其後代葉子節點路徑上的黑色節點數目相同）。
+因此，這棵紅黑樹變成了一棵 \m{t=2} 的 B 樹，即 2-3-4 樹。
+\stopANSWER
+
+\stopsection

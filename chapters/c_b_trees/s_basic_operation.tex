@@ -1,0 +1,121 @@
+\startsection[
+  title={Basic operations on B-trees},
+]
+
+%e18.2-1
+\startEXERCISE
+請給出關鍵字 \m{F}、 \m{S}、 \m{Q}、 \m{K}、 \m{C}、 \m{L}、 \m{H}、 \m{T}、 \m{V}、 \m{W}、
+ \m{M}、 \m{R}、 \m{N}、 \m{P}、 \m{A}、 \m{B}、 \m{X}、 \m{Y}、 \m{D}、 \m{Z}、 \m{E} 依序
+插入一棵最小度數爲 2 的空 B 樹的結果。
+只要畫出在某些節點分裂之前的結構以及最終的結構。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e18_2_1-1]
+\stopANSWER
+
+%e18.2-2
+\startEXERCISE
+請解釋在什麼情況下（如果有的話），
+在調用 \ALGO{B-TREE-INSERT} 的過程中，
+會執行冗餘的 \ALGO{DISK-READ} 或 \ALGO{DISK-WRITE} 操作。
+（所謂冗餘的 \ALGO{DISK-READ}，是指對已經在主存中的某頁做 \ALGO{DISK-READ}。
+冗餘的 \ALGO{DISK-WRITE} 是指將已經存在於磁盤上某頁又完全相同的重寫一遍）
+\stopEXERCISE
+
+\startANSWER
+若所要插入的節點是滿的，但其父節點未滿，我們需要做如下操作：
+\startigBase[2]
+\item \ALGO{DISK-READ}：放置關鍵字；
+\item \ALGO{DISK-WRITE}：節點裂變；
+\item \ALGO{DISK-READ}：讀取父節點；
+\item \ALGO{DISK-READ}：填充父節點。
+\stopigBase
+
+如果父節點也是滿的，則會重複第二和第三步。也就是說不會出現冗餘。
+\stopANSWER
+
+%e18.2-3
+\startEXERCISE
+請說明如何在一棵 B 樹中找出最小關鍵字，
+以及如何找出某一給定關鍵字的前驅。
+\stopEXERCISE
+
+\startANSWER
+找最小關鍵字的過程與二叉搜索樹類似。最小關鍵字即最左葉子節點的第一個關鍵字。
+
+找前驅要首先找到給定的關鍵字，假設爲 \m{x.key_i}。
+\startigBase[2]
+\item 如果 \m{x} 不是葉子節點，則要找到以 \m{x.c_i} 爲根的子樹的最大關鍵字。
+\item 如果 \m{x} 是葉子節點，且 \m{i>1}，則返回 \m{x.key_{i-1}}。
+\item 如果 \m{x} 是葉子節點，且 \m{i=1}，則自底向上搜索，
+找到最後一個節點 \m{y}，使得 \m{x.key_i} 是以 \m{y.c_j} 爲根的最左關鍵字（\m{j>0}）。
+如果 \m{j=1}，則返回 \ALGO{NIL}，這時 \m{x.key_i} 是整個 B 樹的最小關鍵字，沒有前驅；
+否則，返回 \m{y.key_{j-1}}。
+\stopigBase
+\stopANSWER
+
+%e18.2-4
+\startEXERCISE
+假設將關鍵字 \m{\{1,2,\ldots,n\}} 插入一棵最小度數爲 2 的空 B 樹中，
+那麼最終的 B 樹有多少個節點？
+\stopEXERCISE
+
+\startANSWER
+\m{O(n)}。
+\stopANSWER
+
+%e18.2-5
+\startEXERCISE
+因爲葉子節點無需指向孩子節點的指針，
+那麼對於同樣大小的磁盤頁面，可選用一個與內部節點不同的（更大的） \m{t} 值。
+請說明如何修改 B 樹的創建和插入過程來處理這個變化。
+\stopEXERCISE
+
+\startANSWER
+最小度數爲 \m{t} 的 B 樹，一個節點最多可存儲 \m{2t-1} 個關鍵字以及 \m{2t} 個指針。
+而葉子節點沒有子節點，因此 \m{2t} 個指針可以用來存儲關鍵字。
+若將新的 \m{t} 值記爲 \m{t'}，總空間要足夠容納 \m{2t'-1} 個關鍵字，
+即根據關鍵字和指針各佔空間多少，即可求出 \m{t'} 的最大值。
+
+B 樹的創建過程當無需修改（空節點）。
+插入過程需要修改。
+葉子節點分裂出來的節點仍是葉子節點，且仍只分裂出一個葉子節點，
+不會出現一個葉子節點一次分裂出多個葉子節點的情況。
+插入過程需要修改兩處：1）葉子節點和內部節點的分裂條件不同。
+2）分裂後葉子節點和內部節點需要複製的關鍵字數目不同。
+\stopANSWER
+
+%e18.2-6
+\startEXERCISE
+假設 \ALGO{B-TREE-SEARCH} 的實現是在每個節點內採用二分查找，而不是線性查找。
+證明：
+無論怎樣選擇 \m{t} （\m{t} 爲 \m{n} 的函數），
+這種實現所需的 CPU 時間都爲 \m{O(\lg n)}。
+\stopEXERCISE
+
+\startANSWER
+令 B 樹高爲 \m{h}，所含關鍵字數目爲 \m{n}，
+則 \m{O(h)=O(\log_{t}n)}，且 \m{h\le \log_{t}\frac{n+1}{2}}。
+每個節點中關鍵字數目不會大於 \m{2t-1}，二分查找用時 \m{O(\lg t)}。
+因此總時間爲：
+\startformula
+O(\lg t \times \log_{t}n) = O(\lg t \times \frac{\lg n}{\lg t}) = O(\lg n)
+\stopformula
+\stopANSWER
+
+%e18.2-7
+\startEXERCISE
+假設磁盤硬件允許我們任意選擇磁盤頁面的大小，
+但讀取磁盤頁面的時間是 \m{a+bt}，
+其中 \m{a} 和 \m{b} 爲規定的常數， \m{t} 爲確定磁盤頁大小後的 B 樹的最小度數。
+請描述如何選擇 \m{t} 以（近似的）最小化 B 樹的查找時間。
+對 \m{a=5ms} 和 \m{b=10ms}，請給出 \m{t} 的一個最優值。
+\stopEXERCISE
+
+\startANSWER
+令 B 樹高爲 \m{h}，關鍵字數目爲 \m{n}，搜索過程最多需要讀取次數爲 \m{h}，
+則讀頁面總用時爲 \m{(a+bt)\times h}，對 \m{t} 求導數。
+\stopANSWER
+
+\stopsection

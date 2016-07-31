@@ -1,0 +1,120 @@
+\startsection[
+  title={Deleting a key from a B-tree},
+]
+
+%e18.3-1
+\startEXERCISE
+請說明依次從圖 18-8(f) 中刪除 \m{C}、 \m{P} 和 \m{V} 後的結果。
+附圖 18-8(f)：
+
+\externalfigure[output/e18_3_1-1]
+\stopEXERCISE
+
+\startANSWER
+\startcombination[nx=3]
+{\externalfigure[output/e18_3_1-2][scale=800]}{刪除 C}
+{\externalfigure[output/e18_3_1-3][scale=800]}{刪除 P}
+{\externalfigure[output/e18_3_1-4][scale=800]}{刪除 V}
+\stopcombination
+\stopANSWER
+
+%e18.3-2
+\startEXERCISE
+請寫出 \ALGO{B-TREE-DELETE} 的僞碼。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{B-TREE-MERGE(T, x, i)}
+\startCLRS
+y = x.c[i]
+z = x.c[i+1]
+
+++y.n
+y.key[y.n] = x.key[i]
+for j = 1 upto z.n
+	++y.n
+	y.key[y.n] = z.key[j]
+	if not y.leaf
+		y.c[y.n] = z.c[j]
+if not y.leaf
+	y.c[y.n + 1] = z.c[z.n + 1]
+free z
+
+for j = i upto x.n - 1
+	x.key[i] = x.key[i+1]
+	x.c[i+1] = x.c[i+2]
+--x.n
+
+if x.n == 0 and T.root == x
+	T.root = y
+\stopCLRS
+
+\CLRSH{B-TREE-DELETE(T, x, k)}
+\startCLRS
+i = 1
+while i <= x.n and x.key[i] < k
+	++i
+if i <= x.n and x.key[i] == k
+	if x.leaf
+		delete x from x
+	else
+		y = x.c[i]
+		z = x.c[i+1]
+		if y.n >= T.t
+			y' = y
+			while not y'.leaf
+				y' = y'.c[y'.n + 1]
+			x.key[i] = y'.key[y'.n]
+			B-TREE-DELETE(T, y, x.key[i])
+		else if z.n >= T.t
+			z' = z
+			while not z'.leaf
+				z' = z'.c[1]
+			x.key[i] = z'.key[1]
+			B-TREE-DELETE(T, z, x.key[i])
+		else
+			B-TREE-MERGE(T, x, i)
+			B-TREE-DELETE(T, y, k)
+else
+	if x.leaf
+		print not found k
+	else
+		if x.c[i].n == T.t - 1
+			if i <= x.n and x.c[i+1].n >= T.t
+				y = x.c[i]
+				z = x.c[i+1]
+				++y.n
+				y.key[y.n] = x.key[i]
+				if not y.leaf
+					y.c[y.n+1] = z.c[1]
+				x.key[i] = z.key[1]
+				for j = 1 upto z.n - 1
+					z.key[j] = z.key[j+1]
+					if not z.leaf
+						z.c[j] = z.c[j+1]
+				if not z.leaf
+					z.c[z.n] = z.c[z.n+1]
+				--z.n
+			else if i > 1 and x.c[i-1].n >= T.t
+				y = x.c[i-1]
+				z = x.c[i]
+				++z.n
+				for j = z.n downto 2
+					z.key[j] = z.key[j-1]
+					if not z.leaf
+						z.c[j+1] = z.c[j]
+				z.key[1] = x.key[i]
+				if not z.leaf
+					z.c[2] = z.c[1]
+					z.c[1] = y.c[y.n+1]
+				x.key[i] = y.key[y.n]
+				--y.n
+			else
+				if i > x.n
+					--i
+				B-TREE-MERGE(T, x, i)
+		B-TREE-DELETE(T, x.c[i], k)
+\stopCLRS
+\stopANSWER
+
+\stopsection

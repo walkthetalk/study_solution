@@ -1,0 +1,91 @@
+\startsubject[
+  title={Problems},
+]
+
+%p14-1
+\startPROBLEM
+（Point of maximum overlap）
+假設我們希望記錄一個區間集合的{\EMP 最大重疊點}，即覆蓋此點的區間數目最多。
+\startigBase[a]
+\startitem
+證明：總有一個最大重疊點是某個區間的端點。
+\stopitem
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startitem
+設計一個數據結構，使其能有效地支持 \ALGO{INTERVAL-INSERT}、 \ALGO{INTERVAL-DELETE}，
+以及返回最大重疊點的 \ALGO{FIND-POM} 操作。（\hint 使紅黑樹記錄所有的端點。
+左端點關聯 +1，右端點關聯 -1，並且給樹中的每個節點擴張一個額外信息來維護最大重疊點。）
+\stopitem
+\startANSWER
+令 \m{e_1,e_2,\cdots,e_n} 爲已排序的所有端點，滿足 \m{e_1\le e_2 \le \cdots \le e_n}。
+從左至右掃描，若爲左端點，則 p 的值爲 +1，若爲右端點，則 p 的值爲 -1。
+令 \m{s(i,j)=p_i + p_{i+1} + \cdots + p_j}，其中 \m{1\le i\le j\le n}。
+目標是要找到使 \m{s(1,j)} 最大的 j。
+
+每個節點記錄三個值： v，子樹所有節點的 p 之和； m，子樹上 \m{s(i,j)} 的最大值；
+ j，即 m 所對應的 j。
+定義 NIl 的 m 和 v 均爲 0。
+用自底向上的方式計算這些值。
+\startformula
+x.m = \startcases
+\NC x.left.m	\NC (x.j = x.left.j) \NR
+\NC x.left.m + x.v \NC (x.j = x) \NR
+\NC x.left.m + x.v + x.right.m \NC (x.j = x.right.j) \NR
+\stopcases
+\stopformula
+
+\ALGO{FIND-POM} 直接返回 T.root.j 即可。
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+%p14-2
+\startPROBLEM
+（Josephus permutation）
+此問題定義如下：假設有 n 個人，編號分別爲 \m{1,2,3,\ldots,n}，按順序圍成一圈。
+給定一個正整數 m 滿足 \m{m\le n}。
+從某個指定的人開始報數，數到 m 的那個人出列；下一個人又從 1 開始報數，
+以此類推，直到所有人全部出列。
+按出列的次序將所有人的編號進行排列，稱其爲 (n,m)-Josephus 排列，
+例如， (7,3)-Josephus 排列爲 \m{\langle 3,6,2,7,5,1,4\rangle}。
+\startigBase[a]
+%a
+\startitem
+假設 m 是常數，描述一個 \m{O(n)} 時間的算法，
+使得對於給定的 n，能夠輸出 (n,m)-Josephus 排列。
+\stopitem
+
+\startANSWER
+用循環鏈表即可，總時間爲 \m{O(mn)}，由於 m 是常數，有 \m{O(mn)=O(n)}。
+\stopANSWER
+
+%b
+\startitem
+假設 m 不是常數，描述一個 \m{O(n\lg n)} 時間的算法，
+使得對於給定的 n，能夠輸出 (n,m)-Josephus 排列。
+\stopitem
+
+\startANSWER
+使用順序統計樹。順序統計樹相關操作的時間爲 \m{O(\lg n)}，總時間爲 \m{O(n\lg n)}。
+
+\CLRSH{JOSEPHUS(n,m)}
+\startCLRS
+T = NIL
+for j = 1 to n
+	create a node x with key[x] = j
+	OS-INSERT(T, x)
+j = 1
+for k = n downto 1
+	j = (j + m - 2) mod k + 1
+	x = OS-SELECT(root[T], j)
+	print key[x]
+	OS-DELETE(T, x)
+\stopCLRS
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+\stopsubject%Problems

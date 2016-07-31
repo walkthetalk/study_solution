@@ -1,0 +1,113 @@
+\startsection[
+  title={Dynamic order statistics},
+]
+
+%e14.1-1
+\startEXERCISE
+對於圖 14-1 中的紅黑樹 T，說明執行 \ALGO{OS-SELECT(T.root, 10)} 的過程。
+\stopEXERCISE
+\startANSWER
+略。
+\stopANSWER
+
+%e14.1-2
+\startEXERCISE
+對於圖 14-1 中的紅黑樹 T 和關鍵字 \m{x.key} 爲 35 的節點 x，說明執行 \ALGO{OS-RANK(T, x)} 的過程。
+\stopEXERCISE
+\startANSWER
+略。
+\stopANSWER
+
+%e14.1-3
+\startEXERCISE
+寫出 \ALGO{OS-SELECT} 的非遞迴版本。
+\stopEXERCISE
+\startANSWER
+\CLRSH{OS-SELECT(x, i)}
+\startCLRS
+root = x
+idx = i
+while root != NIL
+	r = root.left.size + 1
+	if idx == r
+		return x
+	elseif idx < r
+		root = root.left
+	else
+		root = root.right
+		idx = idx - r
+\stopCLRS
+\stopANSWER
+
+%14.1-4
+\startEXERCISE
+寫出一個遞迴過程 \ALGO{OS-KEY-RANK(T, k)}，
+以一棵順序統計樹 T 和一個關鍵字 k 作爲輸入，
+要求返回 k 在由 T 表示的動態集合中的秩。
+假設 T 的所有關鍵字都不相同。
+\stopEXERCISE
+\startANSWER
+\CLRSH{OS-KEY-RANK(T, k)}
+\startCLRS
+if T == NIL
+	return 0
+if k == T.key
+	if T.left == NIL
+		return 1
+	else
+		return 1 + T.left.size
+elseif k < T.key
+	return OS-KEY-RANK(T.left, k)
+else
+	ret = OS-KEY-RANK(T.right, k)
+	if T.left == NIL
+		return ret + 1
+	else
+		return ret + T.left.size
+\stopCLRS
+\stopANSWER
+
+%e14.1-5
+\startEXERCISE
+給定一個元素 x 和一個自然數 i，
+其中 x 屬於一個含有 n 個元素的順序統計樹，
+如何在 \m{O(\lg n)} 的時間內確定 x 在該樹線性序中的第 i 個後繼？
+\stopEXERCISE
+\startANSWER
+先計算 x 的秩，記爲 r，然後在此樹中搜索秩爲 \m{r+i} 的節點。
+\stopANSWER
+
+%e14.1-6
+\startEXERCISE
+在 \ALGO{OS-SELECT} 或 \ALGO{OS-RANK} 中，
+注意到無論什麼時候引用節點的 size 屬性都是爲了計算秩。
+相應地，假設每個節點都存儲他在以自己爲根的子樹中的秩。
+試說明在插入和刪除時，如何維護這個信息。
+（注意，這兩種操作都可能引起旋轉）
+\stopEXERCISE
+\startANSWER
+略。
+\stopANSWER
+
+%e14.1-7
+\startEXERCISE
+說明如何在 \m{O(n\lg n)} 時間內，
+利用順序統計樹對大小爲 n 的數列中的逆序對（參見問題 2-4）進行計數。
+\stopEXERCISE
+\startANSWER
+\TODO{}
+\stopANSWER
+
+%e14.1-8
+\startEXERCISE
+現有一個圓上的 n 條弦，每條弦都由其端點來定義。
+請給出一個能在 \m{O(n\lg n)} 時間內確定圓內相交弦對數的算法。
+（例如，如果 n 條弦都爲直徑，他們相交於圓心，
+則正確的答案爲 \m{\binom{n}{2}}）
+假設任意兩條弦都不會共享端點。
+\stopEXERCISE
+\startANSWER
+\hint 逆序對。
+\stopANSWER
+
+\stopsection

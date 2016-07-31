@@ -1,0 +1,84 @@
+\startsection[
+  title={How to augment a data structure},
+]
+
+%14.2-1
+\startEXERCISE[exercise:add_pointer_for_node]
+通過爲節點增加指針的方式，試說明如何在擴張的順序統計樹上，
+動態集合的查詢操作 \ALGO{MINIMUM}、 \ALGO{MAXIMUM}、 \ALGO{SUCCESSOR} 和 \ALGO{PREDECESSOR} 都能在
+最壞時間 \m{O(1)} 內完成。
+順序統計樹上的其他操作漸進性能不應受影響。
+\stopEXERCISE
+\startANSWER
+在每個節點中加入兩個指針數據項，分別指向左子樹中最小的元素和右子樹中最大的元素。
+\startformula\startmathalignment
+\NC MINIMUM(x) \NC = x.min\NR
+\NC MAXIMUM(x) \NC = x.max\NR
+\NC SUCCESSOR(x) \NC = x.right.min\NR
+\NC PREDECESSOR(x) \NC = x.left.max\NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e14.2-2
+\startEXERCISE
+能否在不影響紅黑樹任何操作漸進性能的前提下，
+將節點的黑高作爲樹中節點的一個屬性來維護？
+說明如何做，如果不能請說明理由。
+如何維護節點的深度？
+\stopEXERCISE
+\startANSWER
+可以，在節點中添加屬性來記錄黑高。
+每個節點的黑高可以根據自身顏色和兩個子節點的黑高來確定。
+根據定理 14.1，插入、刪除仍然是 \m{O(\lg n)}。
+
+深度則不行，因爲節點的深度由其父節點的深度決定。
+當一個節點的深度發生變化後，最壞情況下需要的時間可能要比 \m{O(n\lg n)} 多。
+\stopANSWER
+
+%e14.2-3
+\startEXERCISE
+設 \m{\otimes} 爲一個滿足結合律的二元運算符，
+ \m{a} 爲紅黑樹中每個節點上的一個要維護的屬性。
+假設在每個節點 \m{x} 上增加一個屬性 \m{f}，
+使得 \m{x.f=x_1\cdot a \otimes x_2\cdot a \otimes \cdots \otimes x_m\cdot a}，
+其中 \m{x_1,x_2,\cdots,x_m} 是以 \m{x} 爲根的子樹中按中序次序排列的所有節點。
+說明在一次旋轉後，如何在 \m{O(1)} 時間內更新屬性 \m{f}。
+對你的擴張稍作修改，使得他能夠應用到順序統計樹的屬性 \m{size} 中。
+\stopEXERCISE
+\startANSWER
+根據結合律可知： \m{x.f = x.left.f \otimes x \cdot a \otimes x.right.f}。
+
+考慮下面的左旋操作：
+
+\startcombination[2*1]
+{\externalfigure[output/e14_2_3-1]}{a}
+{\externalfigure[output/e14_2_3-2]}{b}
+\stopcombination
+
+可得：
+\startformula\startmathalignment
+\NC x'.f \NC = \alpha.f \otimes x \cdot a \otimes \beta.f \NR
+\NC y'.f \NC = x.f \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e14.2-4
+\startEXERCISE
+希望設計一個操作 \ALGO{RB-ENUMERATE(x, a, b)}，來擴張紅黑樹。
+該操作輸出所有的關鍵字 \m{k}，
+使得在以 \m{x} 爲根的紅黑樹中有 \m{a\le k \le b}。
+描述如何在 \m{\Theta(m+\lg n)} 時間內實現 \ALGO{RB-ENUMERATE}，
+其中 \m{m} 爲輸出的關鍵字數目，
+ \m{n} 爲樹中的內部節點數。
+（\hint 不需要給紅黑樹增加新屬性）
+\stopEXERCISE
+\startANSWER
+先調用 \ALGO{TREE-SEARCH(x, a)}，對其稍作修改，使其返回大於等於 a 的最小元素，
+如果沒有就返回空。此步需要時間 \m{O(\lg n)}。
+然後不停調用 \ALGO{TREE-SUCCESSOR(x)}，直到遇到比 b 大的節點。共需 m 次。
+根據\refexercise{cont_successor}，這 m 次調用需要時間爲 \m{O(m+h)}。
+因此總時間爲 \m{\Theta(m + \lg n)}。
+我們也可以根據\refexercise{add_pointer_for_node} 使用指向前驅、後繼節點的指針，但總的時間還是 \m{O(m+\lg n)}。
+\stopANSWER
+
+\stopsection

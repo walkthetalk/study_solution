@@ -1,0 +1,120 @@
+\startsection[
+  title={Interval trees},
+]
+
+%e14.3-1
+\startEXERCISE
+寫出用於左旋區間樹的 \ALGO{LEFT-ROTATE} 的僞碼，使其可以在 \m{O(1)} 時間內更新 \m{\max} 屬性。
+\stopEXERCISE
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e14.3-2
+\startEXERCISE
+改寫 \ALGO{INTERVAL-SEARCH}，使其在所有區間均爲開區間的情況下也能正確工作。
+\stopEXERCISE
+\startANSWER
+\CLRSH{INTERVAL-SEARCH(T, i)}
+\startCLRS
+x = T.root
+while x != T.nil and i does not overlap x.int
+	if x.left != T.nil and x.left.max > i.low
+		x = x.left
+	else x = x.right
+return x
+\stopCLRS
+\stopANSWER
+
+%e14.3-3
+\startEXERCISE
+請給出一個有效算法，對一個給定區間 i，返回一個與 i 重疊，且具有最小左端點的區間；
+如果不存在在這樣的區間，則返回 T.nil。
+\stopEXERCISE
+\startANSWER
+\CLRSH{MIN_INTERVAL_SEARCH(x, i)}
+\startCLRS
+if x == NIL
+	return NIL
+if x.left != NIL and x.left.max >= i.low
+	ret = MIN_INTERVAL_SEARCH(x.left, i)
+	if ret != NIL
+		return ret
+if x.int overlap i
+	return x
+return MIN_INTERVAL_SEARCH(x.right, i)
+\stopCLRS
+\stopANSWER
+
+%e14.3-4
+\startEXERCISE
+給定一棵區間樹 T 和一個區間 i，
+請描述如何在 \m{O(\min(n, k\lg n))} 時間內列出 T 中所有與 i 重疊的區間，
+其中 k 爲輸出的區間數。
+（\hint 一種簡單的方法是做若干次查詢，並且在這些查詢操作中修改樹，
+另一種略爲複雜點的方法是不對樹進行修改。）
+\stopEXERCISE
+\startANSWER
+\CLRSH{INTERVAL-OVERLAP-LIST(T, x, i)}
+\startCLRS
+if x.int overlap i
+	print x
+if x.left != T.nil and x.left.max >= i.low
+	INTERVAL-OVERLAP-LIST(T, x.left, i)
+if x.right != T.nil and x.low <= i.high && x.right.max >= i.low
+	INTERVAL-OVERLAP-LIST(T, x.right, i)
+\stopCLRS
+\stopANSWER
+
+%e14.3-5
+\startEXERCISE
+對區間樹 T 和一個區間 i，
+請修改有關區間樹的過程來支持新的操作 \ALGO{INTERVAL-SEARCH-EXACTLY(T, i)}，
+他返回一個指向 T 中節點 x 的指針，使得 \m{x.int.low = i.low} 且 \m{x.int.high = i.high}；
+或者，如果 T 不包含這樣的區間時返回 T.nil。
+所有的操作（包括 \ALGO{INTERVAL-SEARCH-EXACTLY}）對於包含 n 個節點的區間樹的運行時間都應爲 \m{O(\lg n)}。
+\stopEXERCISE
+\startANSWER
+先調用 \ALGO{TREE-SEARCH} 找到 x，滿足 \m{x.int.low = i.low}，
+然後檢查 \m{x.int.hight = i.high} 是否成立，成立則返回 x，否則返回 T.nil。
+顯然所需時間爲 \m{O(h)} 即 \m{O(\lg n)}。
+\stopANSWER
+
+%e14.3-6
+\startEXERCISE
+說明如何來維護一個支持操作 \ALGO{MIN-GAP} 的一些數的動態集 Q，
+使得該操作能給出 Q 中兩個最接近的數之間的差值。
+例如， \m{Q=\{1,5,9,15,18,22\}}，則 \ALGO{MIN-GAP} 返回 \m{18-15=3}，
+因爲 15 和 18 是 Q 中兩個最接近的數。
+要使得操作 \ALGO{INSERT}、 \ALGO{DELETE}、 \ALGO{SEARCH} 和 \ALGO{MIN-GAP} 儘可能高效，
+並分析他們的運行時間。
+\stopEXERCISE
+\startANSWER
+給紅黑樹節點增加屬性： min-gap，min，max。葉子節點的 min-gap 爲 \m{\infty}。
+這三個屬性均可由節點自身和其左右孩子節點的信息算出來。
+根據定理 4.1，不會影響插入、刪除等操作的運行時間。
+
+\ALGO{MIN-GAP} 的運行時間爲 \m{O(1)}。
+\stopANSWER
+
+%e14.3-7
+\startEXERCISE\DIFFICULT
+VLSI 數據庫通常將一塊集成電路表示成一組矩形，
+假設每個矩形的邊都平行於 x 軸或者 y 軸，
+這樣可以用矩形的最小、最大 x 軸 y 軸座標來表示一個矩形。
+請給出一個時間爲 \m{O(n\lg n)} 的算法，
+來確定 n 個這種表示的矩形集合中是否存在兩個重疊的矩形。
+你的算法不一定要輸出所有重疊的矩形，
+但對於一個矩形完全覆蓋另一個的情況要給出正確的判斷（邊界線不一定相交）。
+（\hint 移動一條“掃描”線，穿過所有的矩形。）
+\stopEXERCISE
+\startANSWER
+從上至下移動掃描線。每次遇到一個矩形，假定是其最小的 y 座標，
+我們需要檢查其 x 座標區間是否與樹中的任何矩形重疊。
+如果沒有找到，則將此矩形插入樹中（以 x 座標區間爲關鍵字）。
+
+對於區間樹的操作（插入、刪除、檢查是否重疊），其運行時間爲 \m{O(\lg n)}。
+實際上還需要 \m{O(n\lg n)} 時間將矩形按 y 座標排序（用於掃描）。
+\stopANSWER
+
+\stopsection

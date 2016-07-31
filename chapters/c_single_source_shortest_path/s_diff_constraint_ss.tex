@@ -1,0 +1,159 @@
+\startsection[
+  title={Difference constraints and shortest paths},
+]
+
+%e24.4-1
+\startEXERCISE
+請給出下面差分約束系統的可行解或證明該系統沒有可行解。
+\startformula\startmathalignment
+\NC x_1 - x_2 \le \NC 1 \NR
+\NC x_1 - x_4 \le \NC -4 \NR
+\NC x_2 - x_3 \le \NC 2 \NR
+\NC x_2 - x_5 \le \NC 7 \NR
+\NC x_2 - x_6 \le \NC 5 \NR
+\NC x_3 - x_6 \le \NC 10 \NR
+\NC x_4 - x_2 \le \NC 2 \NR
+\NC x_5 - x_1 \le \NC -1 \NR
+\NC x_5 - x_4 \le \NC 3 \NR
+\NC x_6 - x_3 \le \NC -8 \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e24_4_1-8]
+\stopANSWER
+
+%e24.4-2
+\startEXERCISE
+請給出下面差分約束系統的可行解或證明該系統沒有可行解。
+\startformula\startmathalignment
+\NC x_1 - x_2 \le \NC 4 \NR
+\NC x_1 - x_5 \le \NC 5 \NR
+\NC x_2 - x_4 \le \NC -6 \NR
+\NC x_3 - x_2 \le \NC 1 \NR
+\NC x_4 - x_1 \le \NC 3 \NR
+\NC x_4 - x_3 \le \NC 5 \NR
+\NC x_4 - x_5 \le \NC 10 \NR
+\NC x_5 - x_3 \le \NC -4 \NR
+\NC x_5 - x_4 \le \NC -8 \NR
+\stopmathalignment\stopformula
+\stopEXERCISE
+
+\startANSWER
+無解，因爲形成了權重爲負值的環路。
+
+\externalfigure[output/e24_4_2-7]
+\stopANSWER
+
+%e24.4-3
+\startEXERCISE
+約束圖中從新節點 \m{v_0} 到其他節點之間的最短路徑權重能夠爲正值嗎？請解釋。
+\stopEXERCISE
+
+\startANSWER
+不會，因爲從 \m{v_0} 直接到達其他節點的邊權重爲 0，最短路徑的權重不能大於這個值，否則這條邊就是最短路徑了。
+\stopANSWER
+
+%e24.4-4
+\startEXERCISE
+請將單源目的地最短路徑問題表示爲一個線性規劃問題。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e24.4-5
+\startEXERCISE
+請修改 \ALGO{BELLMAN-FORD} 算法，
+使其能在 \m{O(nm)} 時間內解決由 \m{n} 個未知變量和 \m{m} 個約束條件所構成的差分約束系統問題。
+\stopEXERCISE
+
+\startANSWER
+額外添加的 \m{v_0} 及其 \m{n} 條權值爲 0 的邊沒有意義。
+我們可以在開始將所有節點 \m{v} 的 \m{d} 初始化爲 0。
+\stopANSWER
+
+%e24.4-6
+\startEXERCISE
+假定在除差分約束系統外，
+我們希望處理形式爲 \m{x_i=x_j+b_k} 的{\EMP 相等約束}。
+請說明如何修改算法 \ALGO{BELLMAN-FORD} 來解決這種約束系統。
+\stopEXERCISE
+
+\startANSWER
+每一個等式轉換成兩條邊： \m{x_i-x_j\le b_k} 和 \m{x_j-x_i\le -b_k}。
+\stopANSWER
+
+%e24.4-7
+\startEXERCISE
+說明如何在一個沒有額外節點 \m{v_0} 的約束圖上運行類似 \ALGO{BELLMAN-FORD} 來求解差分約束系統。
+\stopEXERCISE
+
+\startANSWER
+額外添加的 \m{v_0} 及其 \m{n} 條權值爲 0 的邊沒有意義。
+我們可以在開始將所有節點 \m{v} 的 \m{d} 初始化爲 0。
+\stopANSWER
+
+%e24.4-8
+\startEXERCISE\DIFFICULT
+設 \m{Ax\le b} 爲一個有 \m{n} 個變量和 \m{m} 個約束條件的差分約束系統。
+證明：在對應的約束圖上運行 \ALGO{BELLMAN-FORD} 將獲得 \m{\sum_{i=1}^{n}x_i} 的最大值，
+這裏 \m{Ax\le b} 並且 \m{x_i\le 0}。
+\stopEXERCISE
+
+\startANSWER
+此算法的解中最大的那個肯定是 0，根據 \m{x_i\le 0} 可知已經最大，其他 \m{x} 根據不等式依次可知均已最大。
+因此總和亦爲最大。
+\stopANSWER
+
+%e24.4-9
+\startEXERCISE\DIFFICULT
+設 \m{Ax\le b} 爲一個有 \m{n} 個變量和 \m{m} 個約束條件的差分約束系統。
+證明：在對應的約束圖上運行 \ALGO{BELLMAN-FORD} 將獲得 \m{\max\{x_i\} - \min\{x_i\}} 的最小值，
+其中 \m{Ax\le b}。
+如果該算法被用於安排建設工程的進度，請說明如何應用上述事實。
+\stopEXERCISE
+
+\startANSWER
+根據上一題可知，如果 \m{x_i\le 0}，則得到的所有 \m{x} 都是最大的，
+因此 \m{\max\{x_i\} - \min\{x_i\}} 是最小的。
+\stopANSWER
+
+%e24.4-10
+\startEXERCISE
+假定線性規劃問題 \m{Ax\le b} 的矩陣 \m{A} 中每一行對應一個約束條件，
+具體來說，對應的是一個形式爲 \m{x_i\le b_k} 的單個變量的約束條件，
+或一個形式爲 \m{-x_i\le b_k} 的單變量約束條件。
+請說明如何修改算法 \ALGO{BELLMAN-FORD} 來解決這個差分約束系統問題。
+\stopEXERCISE
+
+\startANSWER
+將新節點 \m{v_0} 加入單變量約束條件。初始化的時候 \m{v_0.d = 0}。
+
+\m{x_i\le b_k}： \m{x_i - x_0 \le b_k}。
+
+\m{-x_i\le b_k}： \m{x_0 - x_i \le b_k}。
+\stopANSWER
+
+%e24.4-11
+\startEXERCISE
+請給出一個有效算法來解決 \m{Ax\le b} 的差分約束系統問題，
+這裏 \m{b} 的所有元素爲實數，所有的變量 \m{x_i} 都是整數。
+\stopEXERCISE
+
+\startANSWER
+將 \m{b} 向下取整。
+\stopANSWER
+
+%e24.4-12
+\startEXERCISE\DIFFICULT
+請給出一個有效算法來解決 \m{Ax\le b} 的差分約束系統問題，
+這裏 \m{b} 的所有元素爲實數，所有的變量 \m{x_i} 中某個給定的子集是整數。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

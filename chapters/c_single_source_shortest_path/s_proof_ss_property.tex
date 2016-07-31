@@ -1,0 +1,126 @@
+\startsection[
+  title={Proofs of shortest-paths properties},
+]
+
+%e24.5-1
+\startEXERCISE
+圖 24-2 中有兩棵最短路徑樹，請給出與其不同的另外兩棵最短路徑樹。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[nx=2]
+{\externalfigure[output/e24_5_1-1]}{a}
+{\externalfigure[output/e24_5_1-2]}{b}
+\stopcombination
+\stopANSWER
+
+%e24.5-2
+\startEXERCISE
+\m{G=(V,E)} 是一個帶權重的有向圖，
+權重函數爲 \m{\omega:E\rightarrow R}。
+設 \m{s\in V} 爲某個源節點。
+請舉出一個例子，使得圖 \m{G} 滿足下列條件：
+對於每條邊 \m{(u,v)\in E}，
+存在一棵根節點爲 \m{s} 的包含邊 \m{(u,v)} 的最短路徑樹，
+也包含一棵根節點爲 \m{s} 的不包含邊 \m{(u,v)} 的最短路徑樹。
+\stopEXERCISE
+
+\startANSWER
+也許只有存在權重爲 0 的邊才行。
+
+\externalfigure[output/e24_5_2-1]
+\stopANSWER
+
+%e24.5-3
+\startEXERCISE
+對引理 24.10 的證明進行改善，使其可以處理最短路徑權重爲 \m{\infty} 和 \m{-\infty} 的情況。
+附引理 24.10：
+
+（三角不等式）設 \m{G=(V,E)} 爲一個帶權重的有向圖，
+其權重函數爲 \m{\omega: E\rightarrow R}，源節點爲 \m{s}。
+那麼對於所有的邊 \m{(u,v)\in E}，有
+\startformula
+\delta(s,v) \le \delta(s,u) + \omega(u,v)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+如果從 \m{s} 無法到達 \m{v}，但從 \m{s} 可以到達 \m{u}，
+則肯定無法從 \m{u} 到達 \m{v}。
+
+\m{\infty + x = \infty}
+\stopANSWER
+
+%e24.5-4
+\startEXERCISE
+設 \m{G=(V,E)} 是一個帶權重的有向圖，
+權重函數爲 \m{\omega:E\rightarrow R}。
+設 \m{s\in V} 爲某個源節點。
+調用 \ALGO{INITIALIZE-SINGLE-SOURCE(G,s)} 對其進行初始化。
+證明：如果一系列鬆弛操作將 \m{s.\pi} 的值設爲一個非空值，
+則圖 \m{G} 包含一個權重爲負值的環路。
+\stopEXERCISE
+
+\startANSWER
+假定是遍歷節點 \m{u} 的時候設置 \m{s.\pi}，
+那麼 \m{\delta(s,u) + \delta(u,s) < 0}，命題得證。
+\stopANSWER
+
+%e24.5-5
+\startEXERCISE
+設 \m{G=(V,E)} 是一個帶權重的有向圖，沒有負值環路。
+設 \m{s\in V} 爲源節點。
+對於節點 \m{v\in V-\{s\}}，如果從源節點 \m{s} 可達，
+我們允許 \m{v.\pi} 是節點 \m{v} 在任意一條最短路徑上的前驅；
+如果不可達，則 \m{v.\pi} 爲 NIL。
+請舉出一個圖例和一種 \m{\pi} 的賦值，
+使得 \m{G_\pi} 中形成一條環路。
+（根據引理 24.16，這樣的一種賦值不可能由一系列鬆弛操作生成。）
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e24_5_5-1]
+\stopANSWER
+
+%e24.5-6
+\startEXERCISE
+設 \m{G=(V,E)} 爲一個帶權重的有向圖，
+權重函數爲 \m{\omega: E\rightarrow R}，
+且不包含權重爲負值的環路。
+設 \m{s\in V} 爲源節點，
+假定圖 \m{G} 由 \ALGO{INITIALIZE-SINGLE-SOURCE(G,s)} 進行初始化。
+證明：對於每個節點 \m{v\in V_\pi}， \m{G_\pi} 中存在一條從源節點 \m{s} 到節點 \m{v} 的路徑，
+並且該性質在任何鬆弛操作序列中維持爲不變式。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e24.5-7
+\startEXERCISE
+設 \m{G=(V,E)} 爲一個帶權重的有向圖，
+且不包含權重爲負值的環路。
+設 \m{s\in V} 爲源節點，
+假定圖 \m{G} 由 \ALGO{INITIALIZE-SINGLE-SOURCE(G,s)} 進行初始化。
+證明：對於所有節點 \m{v\in V_\pi}，
+存在一個由 \m{|V|-1} 個鬆弛步驟所組成的鬆弛序列來生成 \m{v.d=\delta(s,v)}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e24.5-8
+\startEXERCISE
+設 \m{G=(V,E)} 爲一個帶權重的有向圖，
+且包含一個從源節點 \m{s} 可達的權重爲負值的環路。
+請說明如何構造一個 \m{E} 的鬆弛操作的無線序列，
+使得每一步鬆弛操作都能更新一個最短路徑的估值。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\stopsection

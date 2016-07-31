@@ -1,0 +1,83 @@
+\startsection[
+  title={Single-source shortest paths in directed acyclic graphs},
+]
+
+%e24.2-1
+\startEXERCISE
+請在圖 24-5 上運行 \ALGO{DAG-SHORTEST-PATHS}，使用節點 \m{r} 作爲源節點。
+\stopEXERCISE
+
+\startANSWER
+\externalfigure[output/e24_2_1-6]
+\stopANSWER
+
+%e24.2-2
+\startEXERCISE
+假定將 \ALGO{DAG-SHORTEST-PATHS} 的第 3 行改爲：
+\startCLRS
+for the first |V| - 1 vertices, taken in topologically sorted order
+\stopCLRS
+證明：該算法的正確性保持不變。
+\stopEXERCISE
+
+\startANSWER
+拓撲排序後，沒有從最後一個頂點出發的邊，因此不需要遍歷最後一個頂點。
+\stopANSWER
+
+%e24.2-3
+\startEXERCISE
+上面描述的 PERT 圖的公式有一點不大自然。
+在一個更自然的結構下，
+圖中的節點代表要執行的工作，
+邊代表工作之間的次序限制，
+即邊 \m{(u,v)} 表示工作 \m{u} 必須在工作 \m{v} 之前執行。
+在這種結構的圖中，我們將權重賦給節點，而不是邊。
+請修改 \ALGO{DAG-SHORTEST-PATHS} 過程，
+使其可以在線性時間內找出這種有向無環圖一條最長的路徑。
+\stopEXERCISE
+
+\startANSWER
+替換 \ALGO{DAG-SHORTEST-PATHS} 中的兩個函數：
+
+\CLRSH{NEW-INITIALIZE-SINGLE-SOURCE(G,s,w)}
+\startCLRS
+for each vertex v in G.V
+	v.d = infty
+	v.pi = NIL
+s.d = w(s)
+\stopCLRS
+
+\CLRSH{NEW-RELAX(u,v,w)}
+\startCLRS
+if v.d > u.d + w(v)
+	v.d = u.d + w(v)
+	v.pi = u
+\stopCLRS
+\stopANSWER
+
+%e24.2-4
+\startEXERCISE
+給出一個有效算法計算有向無環圖中的路徑總數，
+並分析其時間複雜度。
+\stopEXERCISE
+
+\startANSWER
+\m{s.c = 1}， \m{v.c = \sum_{(u,v)\in E}u.c}。
+
+時間複雜度爲 \m{\Theta(V+E)}。
+
+\CLRSH{DAG-PATHS(G,s)}
+\startCLRS
+topologically sort the vertices of G
+
+for each vertex v in G.V
+	v.c = 0
+s.c = 1
+
+for each vertex u, taken in topologically sorted order
+	for each vertex v in u.Adj
+		v.c = v.c + u.c
+\stopCLRS
+\stopANSWER
+
+\stopsection

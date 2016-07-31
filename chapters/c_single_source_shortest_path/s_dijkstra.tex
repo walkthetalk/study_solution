@@ -1,0 +1,180 @@
+\startsection[
+  title={Dijkstra’s algorithm},
+]
+
+%e24.3-1
+\startEXERCISE
+在圖 24-2 上運行 Dijkstra 算法，
+第一次使用節點 \m{s} 作爲源節點，
+第二次使用節點 \m{z} 作爲源節點。
+以類似於圖 24-6 的風格，給出每次 {\EMP while} 循環後的 \m{d} 和 \m{\pi}，
+以及集合 \m{S} 中的所有節點。
+\stopEXERCISE
+
+\startANSWER
+從 \m{s} 開始：
+
+\startcombination[3*2]
+{\externalfigure[output/e24_3_1-1]}{a}
+{\externalfigure[output/e24_3_1-2]}{b}
+{\externalfigure[output/e24_3_1-3]}{c}
+{\externalfigure[output/e24_3_1-4]}{d}
+{\externalfigure[output/e24_3_1-5]}{e}
+{\externalfigure[output/e24_3_1-6]}{f}
+\stopcombination
+
+從 \m{z} 開始：
+
+\startcombination[3*2]
+{\externalfigure[output/e24_3_1-7]}{a}
+{\externalfigure[output/e24_3_1-8]}{b}
+{\externalfigure[output/e24_3_1-9]}{c}
+{\externalfigure[output/e24_3_1-10]}{d}
+{\externalfigure[output/e24_3_1-11]}{e}
+{\externalfigure[output/e24_3_1-12]}{f}
+\stopcombination
+\stopANSWER
+
+%e24.3-2
+\startEXERCISE
+請舉出一個包含負權重的有向圖，
+使 Dijkstra 算法在騎上運行時將產生不正確的結果。
+爲什麼有負權重的情況下，定理 24.6 的證明不能成立？
+\stopEXERCISE
+
+\startANSWER
+Dijkstra 算法原理：每次新拓展一個最近的點，
+就更新與其相鄰的點的距離。
+當所有邊權重均爲正值時，不會存在一個距離更短的沒有拓展過的點。
+所以這個點的距離永遠不會被改變，因而保證了算法的正確性。
+而一旦邊的權重有負值，這個假設就不成立了。
+\stopANSWER
+
+%e24.3-3
+\startEXERCISE
+假定將 Dijkstra 算法第 4 行改爲：
+\startCLRS
+while |Q| > 1
+\stopCLRS
+這種改變將讓 {\EMP while} 循環的執行才樹從 \m{|V|} 次降爲 \m{|V|-1} 次。
+這樣修改後的算法正確嗎？
+\stopEXERCISE
+
+\startANSWER
+正確。
+\stopANSWER
+
+%e24.3-4
+\startEXERCISE
+Gaedel 教授寫了一個還曾需，他聲稱該程序實現了 Dijkstra 算法。
+對於每個節點 \m{v\in V}，
+該程序生成 \m{v.d} 和 \m{v.\pi}。
+請給出一個時間複雜度爲 \m{O(V+E)} 的算法來檢查教授所編寫程序的輸出。
+該算法應該判斷每個節點的 \m{d} 和 \m{\pi} 屬性是否與某棵最短路徑樹中的信息匹配。
+這裏可以假設所有邊的權重均非負。
+\stopEXERCISE
+
+\startANSWER
+沿最短路徑樹上的邊執行鬆弛操作。
+\stopANSWER
+
+%e24.3-5
+\startEXERCISE
+Newman 教授覺得自己發現了 Dijkstra 算法的一個更簡單的證明。
+他聲稱 Dijkstra 算法對最短路徑上面的每條邊的鬆弛次序與該條邊在該條最短路徑中的次序相同，
+因此，路徑鬆弛性質適用於從源節點可以到達的所有節點。
+請構造一個有向圖來說明 Dijkstra 算法並不一定按照最短路徑中邊的出現次序來對邊進行鬆弛，
+從而證明教授是錯的。
+\stopEXERCISE
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+%e24.3-6
+\startEXERCISE
+給定有向圖 \m{G=(V,E)}，
+每條邊 \m{(u,v)\in E} 有一個關聯值 \m{r(u,v)}，
+該值是一個實數，範圍爲 \m{0\le r(u,v)\le 1}，
+表示從節點 \m{u} 到節點 \m{v} 之間通信鏈路的可靠性。
+可以認爲， \m{r(u,v)} 代表從 \m{u} 到 \m{v} 的通信鏈路不失效的概率，
+並且假設這些概率之間相互獨立。
+請給出一個有效的算法找到任意兩個節點之間最可靠的通信鏈路。
+\stopEXERCISE
+
+\startANSWER
+權重之和最小變成了概率之積最大。
+\stopANSWER
+
+%e24.3-7
+\startEXERCISE
+給定帶權重的有向圖 \m{G=(V,E)}，
+其權重函數爲 \m{\omega: E\rightarrow \{1,2,\ldots,W\}}，
+其中 \m{W} 爲某個正整數，
+假設圖中從源節點 \m{s} 到任意兩個節點之間的最短路徑權重都不相同。
+現在，假設定義一個沒有權重的有向圖 \m{G'=(V\cup V',E')}。
+該圖是將每條邊 \m{(u,v)\in E} 予以替換，
+替換所用的是 \m{\omega(u,v)} 條具有單位權重的邊。
+請問圖 \m{G'} 一共有多少個節點？
+現在假設在 \m{G'} 上運行廣度優先搜索算法。
+證明： \m{G'} 的廣度優先搜索將 \m{V} 中節點塗上黑色的次序
+與 Dijkstra 算法運行在圖 \m{G} 上時從優先隊列中抽取節點的次序相同。
+\stopEXERCISE
+
+\startANSWER
+對於邊 \m{(u,v)} 會增加 \m{\omega(u,v)-1} 個節點，
+因此 \m{G'} 中節點的數目爲：
+\startformula
+|V| + \sum_{(u,v)\in E}\omega(u,v) - |E|
+\stopformula
+
+對於遍歷順序：對於節點 \m{v}，假設 Dijkstra 算法算出的值爲 \m{v.d}，
+則廣度優先搜索時恰好是在第 \m{v.d} 步將 \m{v} 染色。
+\stopANSWER
+
+%e24.3-8
+\startEXERCISE[exercise:24.3-8]
+給定帶權重的有向圖 \m{G=(V,E)}，
+其權重函數爲 \m{\omega: E\rightarrow \{1,2,\ldots,W\}}，
+其中 \m{W} 爲某個非負整數。
+請修改 Dijkstra 算法來計算從給定源節點 \m{s} 到所有將誒點之間的最短路徑。
+該算法時間應爲 \m{O(WV+E)}。
+\stopEXERCISE
+
+\startANSWER
+用一個數組 \m{A} 實現優先級隊列，下標爲節點的 \m{d} 值，
+相應元素存儲的是節點列表，這些節點的 \m{d} 值均與下標相同。
+
+\ALGO{EXTRACT-MIN} 時，所得節點的 \m{d} 值是逐漸增大的，
+因此每次從數組中找 \m{d} 值最小元素時只需從上次所得節點的 \m{d} 值開始遍歷即可，
+此操作總共需要時間 \m{O(WV)}。
+
+\ALGO{DECREASE-KEY} 總共需要時間 \m{O(E)}。
+每次檢查一條邊執行 \ALGO{RELAX} 時，只需根據新的 \m{d} 值移動節點在數組 \m{A} 中的位置即可。
+\stopANSWER
+
+%e24.3-9
+\startEXERCISE
+修改\refexercise{24.3-8} 中的算法，
+使其運行時間爲 \m{O((V+E)\lg W)}。
+（\hint 在任意時刻，集合 \m{V-S} 裏有多少個不同的最短路徑估計？）
+\stopEXERCISE
+
+\startANSWER
+改用二叉堆實現優先級隊列。
+\stopANSWER
+
+%e24.3-10
+\startEXERCISE
+假設給定帶權重的有向圖 \m{G=(V,E)}，
+從源節點 \m{s} 出發的邊的權重可以爲負值，
+而其他所有邊的權重全部是非負值，
+同時，圖中不包含權重爲負值的環路。
+證明： Dijkstra 算法可以正確計算出從源節點 \m{s} 到所有其他節點之間的最短路徑。
+\stopEXERCISE
+
+\startANSWER
+這種情況下不會破壞 \m{S} 中節點的 \m{d} 值。
+\stopANSWER
+
+\stopsection

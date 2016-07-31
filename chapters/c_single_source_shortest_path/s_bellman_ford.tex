@@ -1,0 +1,141 @@
+\startsection[
+  title={The Bellman-Ford algorithm},
+  reference=section:24.1,
+]
+
+%e24.1-1
+\startEXERCISE
+在圖 24-4 上運行 Bellman-Ford 算法，
+使用節點 \m{z} 作爲源節點。
+在每一遍鬆弛過程中，以圖中相同的次序對每條邊進行鬆弛，
+給出每遍鬆弛操作後的 \m{d} 值和 \m{\pi} 值。
+然後，把邊 \m{(z,x)} 的權重改爲 4，
+再次運行該算法，這次使用 \m{s} 作爲源節點。
+\stopEXERCISE
+
+\startANSWER
+從 \m{z} 點開始：
+
+\startcombination[nx=3,ny=2]
+{\externalfigure[output/e24_1_1-1]}{}
+{\externalfigure[output/e24_1_1-2]}{}
+{\externalfigure[output/e24_1_1-3]}{}
+{\externalfigure[output/e24_1_1-4]}{}
+{\externalfigure[output/e24_1_1-5]}{}
+\stopcombination
+
+改了 \m{(z,x)} 的權重後，會出現總權重爲負值的環路。
+
+\externalfigure[output/e24_1_1-10]
+\stopANSWER
+
+%e24.1-2
+\startEXERCISE
+證明推論 24.3。附推論 24.3：
+
+設 \m{G=(V,E)} 是一帶權重的源節點爲 \m{s} 的有向圖，
+其權重函數爲 \m{\omega: E\rightarrow R}。
+假定圖 \m{G} 不包含從 \m{s} 可以到達的權重爲負值的環路，
+則對於所有節點 \m{v\in V}，
+存在一條從源節點 \m{s} 到節點 \m{v} 的路徑
+當且僅當 \ALGO{BELLMAN-FORD} 算法終止時有 \m{v.d < \infty}。
+\stopEXERCISE
+
+\startANSWER
+首先，假設 \m{G} 中存在 \m{s} 到 \m{v} 的路徑，
+證明算法終止時  \m{v.d < \infty}。
+根據引理 24.2 可知 \m{v.d=\delta(s,v)}，滿足 \m{v.d < \infty}。
+
+現在，假定算法 \ALGO{BELLMAN-FORD} 終止時 \m{v.d<\infty}。
+而根據引理 24.2，可知 \m{v.d=\infty} 或者 \m{v.d=\delta(s,v)}。
+根據假設可知 \m{v.d=\delta(s,v)}。
+因此 \m{G} 中存在從 \m{s} 到 \m{v} 的路徑。
+
+附引理 24.2：
+
+設 \m{G=(V,E)} 爲一個帶權重的源節點爲 \m{s} 的有向圖，
+其權重函數爲 \m{\omega: E\rightarrow R}。
+假定圖 \m{G} 不包含從 \m{s} 可以到達的權重爲負值的環路。
+那麼算法 \ALGO{BELLMAN-FORD} 的第 2～4 行的 {\EMP for} 循環
+執行了 \m{|V|-1} 次之後，
+對於所有從源節點 \m{s} 可以到達的節點 \m{v}，
+我們有 \m{v.d=\delta(s,v)}。
+\stopANSWER
+
+%e24.1-3
+\startEXERCISE
+給定有向圖 \m{G=(V,E)} 帶權重且沒有權重爲負值的環路，
+對於所有節點 \m{v\in V}，
+從源節點 \m{s} 到節點 \m{v} 之間的最短路徑中，
+包含邊的條數的最大值爲 \m{m}。
+（這裏，判斷最短路徑的根據是權重，不是邊的條數。）
+請修改算法 \ALGO{BELLMAN-FORD}，
+讓其可以在 \m{m+1} 遍鬆弛操作後終止，
+即使事先不知道 \m{m} 的值。
+\stopEXERCISE
+
+\startANSWER
+如果一次遍歷過程中沒有任何節點需要鬆弛操作，則終止循環。
+\stopANSWER
+
+%e24.1-4
+\startEXERCISE[exercise:24.1-4]
+修改算法 \ALGO{BELLMAN-FORD}，使其對於所有節點 \m{v} 來說，
+如果從源節點 \m{s} 到節點 \m{v} 的一條路徑上存在權重爲負值的環路，
+則將 \m{v.d} 的值設置爲 \m{-\infty}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{BELLMAN-FORD-B(G,w,s)}
+\startCLRS
+INITIALIZE-SINGLE-SOURCE(G,s)
+for i = 1 to |G.V| - 1
+	for each edge (u,v) in G.E
+		RELAX(u,v,w)
+for each edge (u,v) in G.E
+	if v.d > u.d + w(u,v)
+		v.d = -infty
+		let t = v.pi
+		while t != NIL and t.d != -infty
+			t.d = -infty
+			t = t.pi
+for each edge (u,v) in G.E
+	if v.d > u.d + w(u,v)
+		return FALSE
+return TRUE
+\stopCLRS
+\stopANSWER
+
+%e24.1-5
+\startEXERCISE\DIFFICULT
+設 \m{G=(V,E)} 爲一個帶權重的有向圖，
+其權重函數爲 \m{\omega: E\rightarrow R}。
+請給出一個時間複雜度爲 \m{O(VE)} 的算法，
+對於每個節點 \m{v\in V}，
+計算出數值 \m{\delta*(v)=\min_{u\in V}\{\delta(u,v)\}}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{RELAX-MOD(u,v,w)}
+\startCLRS
+min = w(u,v) + (u.d < 0 ? u.d : 0)
+if v.d > min
+	v.d = min
+\stopCLRS
+
+\ALGO{BELLMAN-FORD} 的時間複雜度不變，仍爲 \m{O(VE)}。
+\stopANSWER
+
+%e24.1-6
+\startEXERCISE\DIFFICULT
+設 \m{G=(V,E)} 爲一個帶權重的有向圖，
+且圖中存在權重爲負值的環路。
+請給出一個有效的算法來列出所有屬於該環路上的節點。
+並證明算法的正確性。
+\stopEXERCISE
+
+\startANSWER
+利用\refexercise{24.1-4} 的代碼。
+\stopANSWER
+
+\stopsection

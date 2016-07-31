@@ -1,0 +1,172 @@
+\startsection[
+  title={Priority queues},
+]
+
+%e6.5-1
+\startEXERCISE
+試說明 \ALGO{HEAP-EXTRACT-MAX} 在堆 \m{A = \langle
+15, 13, 9, 5, 12, 8, 7, 4, 0, 6, 2, 1 \rangle} 上的操作過程。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[2*2]
+{\externalfigure[output/e6_5_1-1]}{}
+{\externalfigure[output/e6_5_1-2]}{}
+{\externalfigure[output/e6_5_1-3]}{}
+\stopcombination
+\stopANSWER
+
+%e6.5-2
+\startEXERCISE
+試說明 \ALGO{MAX-HEAP-INSERT(A, 10)} 在堆 \m{A = \langle
+15, 13, 9, 5, 12, 8, 7, 4, 0, 6, 2, 1 \rangle} 上的操作過程。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[2*2]
+{\externalfigure[output/e6_5_2-1]}{}
+{\externalfigure[output/e6_5_2-2]}{}
+{\externalfigure[output/e6_5_2-3]}{}
+\stopcombination
+\stopANSWER
+
+%e6.5-3
+\startEXERCISE
+要求用最小堆實現最小優先隊列，請寫出 \ALGO{HEAP-MINIMUM}、 \ALGO{HEAP-EXTRACT-MIN}、
+ \ALGO{HEAP-DECREASE-KEY} 和 \ALGO{MIN-HEAP-INSERT} 的僞碼。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{HEAP-MINIMUM(A)}
+\startCLRS
+return A[1]
+\stopCLRS
+
+\CLRSH{HEAP-EXTRAC-MIN(A)}
+\startCLRS
+if A.heap-size < 1
+	error "heap underflow"
+min = A[1]
+A[1] = A[A.heap-size]
+A.heap-size = A.heap-size - 1
+MIN-HEAPIFY(A, 1)
+\stopCLRS
+
+\CLRSH{HEAP-DECREASE-KEY(A, i, key)}
+\startCLRS
+if key > A[i]
+	error "new key is bigger than current key"
+A[i] = key
+while i > 1 and A[PARENT(i)] > A[i]
+	exchange A[i] with A[PARENT(i)]
+	i = PARENT(i)
+\stopCLRS
+
+\CLRSH{MIN-HEAP-INSERT(A, key)}
+\startCLRS
+A.heap-size = A.heap-size + 1
+A[A.heap-size] = +∞
+HEAP-DECREASE-KEY(A, A.heap-size, key)
+\stopCLRS
+\stopANSWER
+
+%e6.5-4
+\startEXERCISE
+在 \ALGO{MAX-HEAP-INSERT} 的第 2 行，爲什麼要先把關鍵字設爲 \m{-\infty}，
+然後又將其增加到所需的值？
+\stopEXERCISE
+
+\startANSWER
+是爲了能通過 \ALGO{HEAP-INCREASE-KEY} 中的校驗 \m{key < A[i]}。
+\stopANSWER
+
+%e6.5-5
+\startEXERCISE
+試分析在使用下列循環不變式時， \ALGO{HEAP-INCREASE-KEY} 的正確性：
+
+在算法的第 4～6 行 {\EMP while} 循環每次迭代開始時，
+子數列 \m{A[1..A.heap-size]} 要滿足最大堆的性質。
+如果由違背，只有一個可能： \m{A[i]} 大於 \m{A[PARENT(i)]}。
+
+這裏，可以假定調用 \ALGO{HEAP-INCREASE-KEY} 時， \m{A[1..A.heap-size]} 是滿足最大堆性質的。
+\stopEXERCISE
+
+\startANSWER
+{\EMP 初始化：} \m{A} 是最大堆，除非 \m{A[i]} 比他的父節點大，因此只有 \m{A[i]} 被修改過。
+ \m{A[i]} 比其子節點大，否則無法通過參數校驗，即不會進入循環（新值大於舊值，
+ 且舊值大於其父節點）；
+
+{\EMP 保持：} 調換 \m{A[i]} 和其父節點時，仍然滿足最大堆的性質，
+只有 \m{A[PARENT(i)]} 可能比其父節點大。 \m{i} 變爲 \m{PARENT(i)} 後此不變式仍然成立；
+
+{\EMP 終止：}當到達根節點，或者 \m{A[i]} 和其父節點關系滿足最大堆的性質時，循環終止。
+循環終止後， \m{A} 就是一個最大堆了。
+\stopANSWER
+
+%e6.5-6
+\startEXERCISE
+在 \ALGO{HEAP-INCREASE-KEY} 的第 5 行，一般要通過三次賦值才能完成交換操作。
+想一想如何利用 \ALGO{INSERTION-SORT} 內循環部分的思想，
+只用一次賦值就完成這一交換操作？
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{HEAP-INCREASE-KEY(A, i, key)}
+\startCLRS
+if key < A[i]
+	error "new key is smaller than current key"
+while i > 1 and A[PARENT(i)] < key
+	A[i] = A[PARENT(i)]
+	i = PARENT(i)
+A[i] = key
+\stopCLRS
+\stopANSWER
+
+%e6.5-7
+\startEXERCISE
+試說明如何使用優先隊列來實現一個先進先出隊列，以及如何使用優先隊列實現棧
+（隊列和棧的定義見\refsection{stack_and_queue}）。
+\stopEXERCISE
+
+\startANSWER
+對於棧，新元素具有最高優先級，而對於隊列，新元素具有最小優先級。
+對於棧，新元素優先級爲 \m{HEAP-MAXIMUM(A) + 1}。
+而對於隊列，則需要跟蹤新元素，每次增加新元素時，都用更小的優先級。
+但是兩者性能均不高。
+而且如果優先級會上溢或下溢，我們需要重新指定優先級。
+\stopANSWER
+
+%e6.5-8
+\startEXERCISE
+\ALGO{HEAP-DELETE(A, i)} 能將節點 \m{i} 從堆 \m{A} 中刪除。
+對於一個包含 \m{n} 個元素的堆，
+請設計一個能在 \m{O(\lg{n})} 時間內完成的 \ALGO{HEAP-DELETE} 算法。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{HEAP-DELETE(A, i)}
+\startCLRS
+A[i] = A[A.heap-size]
+A.heap-size = A.heap-size - 1
+MAX-HEAPIFY(A, i)
+\stopCLRS
+\stopANSWER
+
+%e6.5-9
+\startEXERCISE[exercise:k_merge]
+請設計一個時間復雜度爲 \m{O(n\lg{k})} 的算法，
+可以將 \m{k} 個有序鏈表合並爲一個有序鏈表，
+這裏 \m{n} 是所有輸入鏈表包含的元素總數。
+（\hint 用最小堆來完成 \m{k} 路歸並）
+\stopEXERCISE
+
+\startANSWER
+從各鏈表中取一個元素，放入最小堆中。
+對於每個元素，我們需要跟蹤是從哪個鏈表中取出來的。
+歸並時，每從堆中取出最小的元素，則從此元素所屬鏈表中取一個元素放入堆中（除非這個鏈表爲空）。
+一直重復此操作直到堆爲空。
+
+一共需 \m{n} 步，每一步都包含一個堆的插入操作（時間爲 \m{\lg{k}}）。
+\stopANSWER
+
+\stopsection

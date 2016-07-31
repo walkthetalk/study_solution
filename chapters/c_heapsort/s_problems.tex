@@ -1,0 +1,189 @@
+\startsubject[
+  title={Problems},
+]
+
+\startPROBLEM
+（用插入的方式建堆 Building a heap using insertion）
+我們可以通過反復調用 \ALGO{MAX-HEAP-INSERT} 不斷向堆中插入元素來構建一個堆。
+考慮 \ALGO{BUILD-MAX-HEAP} 如下實現方式：
+
+\CLRSH{BUILD-MAX-HEAP'(A)}
+\startCLRS
+A.heap-size = 1
+for i = 2 to A.length
+	MAX-HEAP-INSERT(A, A[i])
+\stopCLRS
+
+\startigBase[a]
+\startitem
+當輸入數據相同時， \ALGO{BUILD-MAX-HEAP} 和 \ALGO{BUILD-MAX-HEAP'} 所生成的堆是否相同？
+如果是，請證明；否則請舉出反例。
+
+\startANSWER
+不同。例如，輸入數據爲 \m{\langle 1, 2, 3, 4, 5, 6 \rangle} 時，兩個堆分別如下：
+
+\startcombination[2*1]
+{\externalfigure[output/p6_1_a-1]}{}
+{\externalfigure[output/p6_1_a-2]}{}
+\stopcombination
+
+\stopANSWER
+\stopitem
+\startitem
+證明：最壞情況下，調用 \ALGO{BUILD-MAX-HEAP'} 建立包含 \m{n} 個元素的堆，
+其時間復雜度爲 \m{\Theta(n\lg{n})}。
+
+\startANSWER
+最壞情況下， \ALGO{MAX-HEAP-INSERT} 的運行時間爲 \m{\Theta(\lg{n})}，會被調用 \m{n-1} 次。
+最壞情況下， \ALGO{MAX-HEAP-INSERT} 會將所有元素都移到堆的根節點上， 即需要 \m{\lg{k}} 次交換，
+無論 \m{k} 的值是多少。
+如果輸入數列已經是排好序的，則就是最壞情況。時間復雜度爲（參見\refexercise{lg_n_fac}）：
+\startformula
+\sum_{i=2}^{n}\lg{i} = \lg(n!) = \Theta(n\lg{n})
+\stopformula
+\stopANSWER
+\stopitem
+\stopigBase
+\stopPROBLEM
+
+\startPROBLEM[problem:6-2]
+（堆 d 叉堆的分析 Analysis of d -ary heaps）
+d 叉堆與二叉堆類似，只是每個非葉子節點有 \m{d} 個子節點，而不是 2 個子節點。
+\startigBase[a]
+\startitem
+如何在一個數列中表示 \m{d} 叉堆？
+
+\startANSWER
+需要修改 \ALGO{LEFT}、 \ALGO{RIGHT} 和 \ALGO{PARENT} 的定義。
+第 \m{i} 個元素的第 \m{k} 個子節點的索引爲 \m{di + k - 1}，
+而父節點的索引爲 \m{\lfloor i/d \rfloor}。（索引從 1 開始）
+\stopANSWER
+\stopitem
+
+\startitem
+包含 \m{n} 個元素的 \m{d} 叉堆的高度是多少？用 \m{n} 和 \m{d} 表示。
+
+\startANSWER
+\m{\log_d{n}}。
+\stopANSWER
+\stopitem
+
+\startitem
+請給出 \ALGO{EXTRACT-MAX} 在 \m{d} 叉最大堆上的一個有效實現，
+並用 \m{d} 和 \m{n} 表示其時間復雜度。
+
+\startANSWER
+\ALGO{EXTRACT-MAX} 的時間復雜度爲 \m{O(d\log_d{n})}。
+\stopANSWER
+\stopitem
+
+\startitem
+請給出 \ALGO{INSERT} 在 \m{d} 叉最大堆上的一個有效實現，
+並用 \m{d} 和 \m{n} 表示其時間復雜度。
+
+\startANSWER
+\ALGO{INSERT} 的時間復雜度爲 \m{O(\log_d{n})}。
+\stopANSWER
+\stopitem
+
+\startitem
+請給出 \ALGO{INCREASE-KEY(A, i, k)} 在 \m{d} 叉最大堆上的一個有效實現。
+當 \m{k<A[i]} 時，他會觸發一個錯誤，否則執行 \m{A[i]=k}，並更新相應的堆。
+並用 \m{d} 和 \m{n} 表示其時間復雜度。
+
+\startANSWER
+\ALGO{INCREASE-KEY(A, i, k)} 的時間復雜度爲 \m{O(\log_d{n})}。
+\stopANSWER
+\stopitem
+\stopigBase
+\stopPROBLEM
+
+\startPROBLEM
+（Young 氏矩陣 Young tableaus）
+在一個 \m{m\times n} 的{\EMP Young 氏矩陣}中，
+每一行的數據都是從左到右有序的，每一列數據都是從上到下有序的。
+其中也會有一些值爲 \m{\infty} 的數據項，用來表示不存在的元素。
+因此， Young 氏矩陣可以用來存儲 \m{r\le mn} 個有限的數。
+
+\startigBase[a]
+\startitem
+畫出一個包含元素爲 \m{\{9, 16, 3, 2, 4, 8, 5, 14, 12\}} 的 \m{4\times 4} Young 氏矩陣。
+
+\startANSWER
+\startformula\startpmatrix%[location=low]
+\NC      2 \NC      3 \NC     12 \NC     14 \NR
+\NC      4 \NC      8 \NC     16 \NC \infty \NR
+\NC      5 \NC      9 \NC \infty \NC \infty \NR
+\NC \infty \NC \infty \NC \infty \NC \infty \NR
+\stoppmatrix\stopformula
+\stopANSWER
+\stopitem
+
+\startitem
+對於一個 \m{m\times n} 的 Young 氏矩陣 \m{Y} 而言，請證明：
+如果 \m{Y[1,1]=\infty}，則 \m{Y} 爲空；
+如果 \m{Y[m,n]<\infty}，則 \m{Y} 爲滿（即包含 \m{mn} 個元素）。
+
+\startANSWER
+如果 \m{Y[1,1]=\infty}，則第一行元素都要大於等於左上角元素，即第一行元素均爲 \m{\infty}，
+而對於任一列而言，所有元素都要大於此列中第一行的元素，即整個矩陣所有元素均爲 \m{\infty}。
+類似，如果 \m{Y[m,n]<\infty}，則其他元素均小於等於由下角元素，即所有元素都不是 \m{\infty}，即矩陣爲滿。
+\stopANSWER
+\stopitem
+
+\startitem
+請給出一個在 \m{m\times n} Young 氏矩陣上時間復雜度爲 \m{O(m+n)} 的 \ALGO{EXTRACT-MIN} 的算法實現。
+可以考慮使用一個遞迴過程，將規模爲 \m{m\times n} 的問題分解爲規模爲 \m{(m-1)\times n} 或
+者 \m{m\times(n-1)} 的子問題（\hint 考 \ALGO{MAX-HEAPIFY}）。
+這裏，定義 \m{T(p)} 用來表示 \m{EXTRACT-MIN} 在任一 \m{m\times n} 的 Young 氏矩陣上的時間復雜度，
+其中 \m{p=m+n}。給出並求解 \m{T(p)} 的遞迴表達式，其結果爲 \m{O(m+n)}。
+
+\startANSWER
+\m{A[1,1]} 是最小的，就是返回值，將其替換爲 \m{\infty}，這會破壞 Young 氏矩陣的性質，
+用類似 \ALGO{MAX-HEAPIFY} 的過程來維持其性質。
+將 \m{A[i,j]} 與其鄰居比較，並將鄰居中最小的與其交換位置。
+這樣會使得 \m{A[i,j]} 遵循 Young 氏矩陣的性質，然後將變成 \m{A[i,j+1]} 或 \m{A[i+1,j]} 的問題。
+當 \m{A[i,j]} 比所有鄰居都小時，就終止程序。則：
+\startformula
+T(p) = T(p - 1) + O(1) = T(p-2) + O(1) + O(1) = \ldots = O(p)
+\stopformula
+\stopANSWER
+\stopitem
+
+\startitem
+試說明如何在 \m{O(m+n)} 的時間內，將一個新元素插入到一個未滿的 \m{m\times n} 的 Young 氏矩陣中。
+
+\startANSWER
+與上一題類似，只是改爲從右下角開始，向左向上移動。時間不變。
+\stopANSWER
+\stopitem
+
+\startitem
+在不用其他配序算法的情況下，試說明如何利用一個 \m{n\times n} 的 Young 氏矩陣在 \m{O(n^3)} 時間內
+將 \m{n^2} 個數進行排序。
+
+\startANSWER
+矩陣開始爲空，最終爲滿，插入元素 \m{n^2} 個。
+每次插入操作都需時間 \m{O(n+n)=O(n)}。復雜度爲 \m{n^2O(n)=O(n^3)}。
+然後在矩陣中一個一個的取元素，放入原數列中，時間復雜度一樣。
+總共時間爲 \m{O(n^3)}。
+
+如果允許矩陣中只有左上角一部分元素具有 Young 氏矩陣的性質，則可以原地排序。
+\stopANSWER
+\stopitem
+
+\startitem
+設計一個時間復雜度爲 \m{O(m+n)} 的算法，
+用來判斷一個給定的數是否存儲在 \m{m\times n} 的 Young 氏矩陣中。
+
+\startANSWER
+從左下角開始，比較 \m{current} 和 \m{key}，
+如果 \m{current > key}，則上移，如果 \m{current < key}，則右移。
+如果 \m{current = key}，則返回成功，否則直到終止。
+\stopANSWER
+\stopitem
+
+\stopigBase
+\stopPROBLEM
+
+\stopsubject

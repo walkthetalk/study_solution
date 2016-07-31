@@ -1,0 +1,103 @@
+\startsection[
+  title={The heapsort algorithm},
+]
+
+\startEXERCISE
+參照圖 6-4 的方法，
+說明 \ALGO{HEAPSOR} 在數列 \m{A = \langle 5, 13, 2, 25, 7, 17, 20, 8, 4 \rangle} 上的操作過程。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[4*3]
+{\externalfigure[output/e6_4_1-1]}{}
+{\externalfigure[output/e6_4_1-2]}{}
+{\externalfigure[output/e6_4_1-3]}{}
+{\externalfigure[output/e6_4_1-4]}{}
+{\externalfigure[output/e6_4_1-5]}{}
+{\externalfigure[output/e6_4_1-6]}{}
+{\externalfigure[output/e6_4_1-7]}{}
+{\externalfigure[output/e6_4_1-8]}{}
+{\externalfigure[output/e6_4_1-9]}{}
+\stopcombination
+\stopANSWER
+
+\startEXERCISE
+試分析在使用下列循環不變式時， \ALGO{HEAPSORT} 的正確性：
+
+在算法的第 2～5 行 {\EMP for} 循環每次迭代開始時，
+子數列 \m{A[1..i]} 是一個包含了數列 \m{A[1..n]} 中第 \m{i} 小元素的最大堆，
+而子數列 \m{A[i+1..n]} 則包含了數列 \m{A[1..n]} 中已排好序的 \m{n-i} 個最大元素。
+\stopEXERCISE
+
+\startANSWER
+{\EMP 初始化：}子數列 \m{A[i+1..n]} 爲空，不變式成立；
+
+{\EMP 保持：} \m{A[1]} 是 \m{A[1..i]} 中最大的，但是小於 \m{A[i+1..n]} 中所有元素。
+將 \m{A[1]} 和 \m{A[i]} 調換後，則 \m{A[i..n]} 中的元素是最大的，且是排好序的。
+堆的大小減一，並調用 \ALGO{MAX-HEAPIFY} 會將 \m{A[1..i-1]} 構造成最大堆。
+將 \m{i} 減一，繼續下一次迭代；
+
+{\EMP 終止：}待 \m{i=1} 時， \m{A[2..n]} 是排好序的，而 \m{A[1]} 是最小的，
+因此整個數列爲排好序的。
+\stopANSWER
+
+\startEXERCISE[exercise:heapsort_time]
+如果數列 \m{A} 含有 \m{n} 個元素，且已經是升序排列， \ALGO{HEAPSORT} 的時間復雜度是多少？
+如果已經按降序排列呢？
+\stopEXERCISE
+
+\startANSWER
+兩者均爲 \m{\Theta(n\lg{n})}。
+
+如果已經按升序排列，將其轉換成堆需要 \m{O(n)}，然後需要調用 \ALGO{MAX-HEAPIFY} 共 \m{n-1} 次，
+每次調用需要 \m{\lg{k}} 次運算。因此：
+\startformula
+\sum_{i=1}^{n-1}\lg{k} = \lg((n-1)!) = \Theta(n\lg{n})
+\stopformula
+
+如果已經按降序排列，則 \ALGO{BUILD-MAX-HEAP} 會快一些（常量因子），
+但時間主要花在 \ALGO{HEAPSORT} 中的循環上，時間爲 \m{\Theta(n\lg{n})}。
+\stopANSWER
+
+\startEXERCISE
+證明：最壞情況下， \ALGO{HEAPSORT} 的時間復雜度是 \m{\Omega(n\lg{n})}。
+\stopEXERCISE
+
+\startANSWER
+與\refexercise{heapsort_time}的第一部分相同。
+如果數列已經排好序，我們需要線性時間將其轉換成最大堆，然後需要 \m{n\lg{n}} 的時間排序。
+\stopANSWER
+
+\startEXERCISE\DIFFICULT
+證明： 在所有元素都不同的情況下， \ALGO{HEAPSORT} 的時間復雜度爲 \m{\Omega(n\lg{n})}。
+\stopEXERCISE
+
+\startANSWER
+假設堆是完全二叉樹，元素個數爲 \m{n=2^k - 1}。有 \m{2^{k-1}} 個葉子節點以及 \m{2^{k-1} - 1} 個內部節點。
+
+先來看爲堆中前 \m{2^{k-1}} 個元素排序。
+給葉子節點着紅色，內部節點着藍色。
+已着色的節點是堆的子樹。
+由於有 \m{2^{k-1}} 個節點已着色，紅色的最多有 \m{2^{k-2}} 個，藍色的最少 \m{2^{k-2}-1} 個。
+
+紅色節點可以直接跳到根節點位置上，而藍色節點則需要先上移。
+讓我們統計以下要將藍色節點移到根節點位置上，需要交換多少次。
+交換次數最少的情況必須滿足兩點，
+有 \m{2^{k-2} -1} 個藍色節點，
+且他們在樹中的相對位置已經滿足最大堆的要求。
+如果有 \m{d} 個這樣的藍色節點，則有 \m{i=\lg{d}} 層，
+第 \m{i} 層含有 \m{2^i} 個節點。
+因此交換次數爲：
+\startformula
+\sum_{i=0}^{\lg{d}}i2^i = 2 + (\lg{d} - 2)2^{\lg{d}} = \Omega(d\lg{d})
+\stopformula
+
+遞迴式：
+\startformula
+T(n) = T(n/2) + \Omega(n\lg{n})
+\stopformula
+
+由主定理可得 \m{T(n)=\Omega(n\lg{n})}。
+\stopANSWER
+
+\stopsection

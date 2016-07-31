@@ -1,0 +1,99 @@
+\startsection[
+  title={Maintaining the heap property},
+]
+
+\startEXERCISE
+參照圖 6-2 的方法，說明 \ALGO{MAX-HEAPIFY(A, 3)} 在
+數列 \m{A = \langle 27, 17, 3, 16, 13, 10, 1, 5, 7, 12, 4, 8, 9, 0\rangle} 上的操作過程。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[2*2]
+{\externalfigure[output/e6_2_1-1]}{}
+{\externalfigure[output/e6_2_1-2]}{}
+{\externalfigure[output/e6_2_1-3]}{}
+{}{}
+\stopcombination
+\stopANSWER
+
+\startEXERCISE
+參考 \ALGO{MAX-HEAPIFY}，寫出能維護相應最小堆的 \ALGO{MIN-HEAPIFY(A, i)} 的僞碼，
+並比較 \ALGO{MIN-HEAPIFY} 和 \ALGO{MAX-HEAPIFY} 的運行時間。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{MIN-HEAPIFY(A, i)}
+\startCLRS
+l = LEFT(i)
+r = RIGHT(i)
+if l ≤ A.heap-size and A[l] < A[i]
+	smallest = l
+else
+	smallest = i
+if r ≤ A.heap-size and A[r] < A[i]
+	smallest = r
+if smallest ≠ i
+	exchange A[i] with A[smallest]
+	MIN-HEAPIFY(A, smallest)
+\stopCLRS
+
+\ALGO{MIN-HEAPIFY} 和 \ALGO{MAX-HEAPIFY} 的運行時間的運行時間相同。
+\stopANSWER
+
+\startEXERCISE
+當元素 \m{A[i]} 比其兩個子節點的值都大時，調用 \ALGO{MAX-HEAPIFY(A, i)} 會有什麼結果？
+\stopEXERCISE
+
+\startANSWER
+沒有變化。執行比較後，發現 \m{A[i]} 本身就是最大的，直接返回了。
+\stopANSWER
+
+\startEXERCISE
+當 \m{i > A.heap-size / 2} 時，調用 \ALGO{MAX-HEAPIFY(A, i)} 會有什麼結果？
+\stopEXERCISE
+
+\startANSWER
+沒有變化。因爲 \m{A[i]} 是葉子節點。 \ALGO{LEFT} 和 \ALGO{RIGHT} 所返回的值都大於 \m{A} 的元素個數；
+ \m{i} 即 \m{largest}，然後就返回了。
+\stopANSWER
+
+\startEXERCISE
+就常量因子而言， \ALGO{MAX-HEAPIFY} 的執行效率很不錯，
+但第 \m{10} 行可能時隔例外，有的編譯器可能會產生低效的代碼。
+請用循環控制結構取代遞迴，重寫 \ALGO{MAX-HEAPIFY}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{MAX-HEAPIFY-LOOP(A, i)}
+\startCLRS
+while true
+	l = LEFT(i)
+	r = RIGHT(i)
+	if l ≤ A.heap-size and A[l] < A[i]
+		largest = l
+	else
+		largest = i
+	if r ≤ A.heap-size and A[r] < A[i]
+		largest = r
+	if largest == i
+		return
+	exchange A[i] with A[largest]
+	i = largest
+\stopCLRS
+\stopANSWER
+
+\blank
+
+\startEXERCISE
+證明：對於一個大小爲 \m{n} 的堆， \ALGO{MAX-HEAPIFY} 的最壞情況運行時間爲 \m{\Omega(\lg{n})}。
+（\hint 於 \m{n} 個節點的堆，可以通過對每個節點設定恰當的值，
+使得從根節點到葉節點路徑上的每個節點都會遞迴調用 \ALGO{MAX-HEAPIFY}。）
+\stopEXERCISE
+
+\startANSWER
+結論是顯然的。以最左邊的路徑爲例，如果堆中最大元素在此路徑上，而根節點是最小元素，
+則爲將最小元素放到葉子節點上，此路徑上的每一個節點都會調用一次 \ALGO{MAX-HEAPIFY}。
+由於堆的高度爲 \m{\lfloor \lg{n} \rfloor} \refexercise{heap_height}，最壞情況運行時間爲 \m{\Omega(\lg{n})}。
+\stopANSWER
+
+\stopsection

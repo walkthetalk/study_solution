@@ -1,0 +1,123 @@
+\startsection[
+  title={Probabilistic analysis and further uses of indicator random variables},
+]
+
+\startEXERCISE
+屋子裏至少要有多少人，才能使得某人與你生日相同的概率不小於 \m{1/2}？
+至少要有多少人，才能使得至少兩人生日爲 7 月 4 日的概率大於 \m{1/2}？
+\stopEXERCISE
+\startANSWER
+任一人生日與己不同的概率爲 \m{(n-1)/n}，
+則 \m{k} 個人生日都與己不同的概率爲 \m{（\frac{n-1}{n})^k}。
+利用互補事件求 \m{k}：
+\startformula\startmathalignment[n=1]
+1 - (\frac{n-1}{k})^k \ge \frac{1}{2} \NR
+(\frac{n-1}{k})^k \le \frac{1}{2} \NR
+k \lg(\frac{n-1}{n}) \ge \lg\frac{1}{2} \NR
+k = \frac{\log(1/2)}{\log(364/365)} \approx 263 \NR
+\stopmathalignment\stopformula
+
+另外一個問題：
+\startformula\startmathalignment
+\NC \Pr\{\text{至少兩人生日爲 7 月 4 日}\} \NC=
+        1 - \Pr\{\text{只有 1 人生日爲 7 月 4 日}\} - Pr\{\text{沒有人生日爲 7 月 4 日}\} \NR
+\NC \NC= 1 - \frac{k}{n}(\frac{n-1}{n})^{k-1} - (\frac{n-1}{n})^k \NR
+\NC \NC= 1 - (\frac{n-1}{n})^{k-1}(\frac{n+k-1}{n}) \NR
+\stopmathalignment\stopformula
+計算可得 \m{k} 爲 115。
+\stopANSWER
+
+\startEXERCISE
+假設我們將球投到 \m{b} 個箱子裏，直到某個箱子中有兩個球。
+每一次投擲都是獨立的，並且每個球落入任一箱子的機會均等。
+請問投擲次數的期望值是多少？
+\stopEXERCISE
+\startANSWER
+本質還是生日問題，更多討論參見 \goto{wikipedia}[url(http://en.wikipedia.org/wiki/Birthday_problem#Average_number_of_people)]。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+生日悖論的分析中，要求各人生日彼此獨立是否很重要？
+或者，是否只要兩兩成對獨立就足夠了？
+證明你的答案。
+\stopEXERCISE
+\startANSWER
+成對獨立足夠了。對於（5.6）之後的推導，有此即可。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+一次聚會需要邀請多少人，才能讓其中 3 人的生日很可能相同？
+\stopEXERCISE
+\startANSWER
+感覺不大對勁:(
+
+令 \m{X_{ijk}} 爲 \m{i}、 \m{j}、 \m{k} 三人生日相同時間的指示器隨機變量，
+其概率爲 \m{1/n^2}。則：
+\startformula\startmathalignment
+\NC E[X] \NC= \sum_{i=1}^n\sum_{j=i+1}^n\sum_{k=j+1}^nX_{ijk} \NR
+\NC      \NC= \sum_{i=1}^n\sum_{j=i+1}^n\sum_{k=j+1}^n\frac{1}{n^2} \NR
+\NC      \NC= \binom{n}{3}\frac{1}{n^2} \NR
+\NC      \NC= \frac{k(k-1)(k-2)}{6n^2} \NR
+\stopmathalignment\stopformula
+解得 \m{k = 94}。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+一個長度爲 \m{k} 的字串，其中所有字符均選自一個元素個數爲 \m{n} 的集合，
+那麼此字串構成一個 \m{k} 排列的概率是多少？
+此問題與生日悖論有何關聯？
+\stopEXERCISE
+\startANSWER
+\startformula
+\Pr\{k\text{-perm in }n\} = 1 \cdot
+                                 \frac{n-1}{n} \cdot
+                                 \frac{n-2}{n} \cdots
+                                 \frac{n-k+1}{n}
+      = \frac{(n-1)!}{(n-k)!n^k}
+\stopformula
+這是生日問題的互補事件，即 \m{k} 個人生日各不相同。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+假設將 \m{n} 個球投入 \m{n} 個箱子裏，其中每次投球相互獨立，
+並且每個球落入任一箱子的機會均等。
+空箱子的數目期望值是多少？
+正好有一個球的箱子數目期望值是多少？
+\stopEXERCISE
+\startANSWER
+當 \m{n} 足夠大時，兩個答案都漸進於 \m{n/e}。
+首先來看空箱子的數目：
+
+令 \m{X_i} 代表的事件爲：第 \m{i} 個箱子爲空：
+\startformula
+\Pr\{X_i\} = \left(\frac{n-1}{n}\right)^n
+                = \left(1 - \frac{1}{n}\right)^n
+                \approx \frac{1}{e}
+\stopformula
+其期望值爲：
+\startformula
+E[X] = \sum_{i=1}^n E[X_i] = \frac{n}{e}
+\stopformula
+
+箱子裏只有一個球的情況類似，其概率爲：
+\startformula
+\Pr\{Y_i\} = n\frac{1}{n}\left(\frac{n-1}{n}\right)^{n-1}
+                = \left(\frac{n-1}{n}\right)^{n-1} \approx \frac{1}{e}
+\stopformula
+期望值一樣。
+
+參見 \goto{stackexchange}[url(http://math.stackexchange.com/questions/545920/expectation-of-throwing-n-balls-into-n-bins)]。
+\stopANSWER
+
+%e5.4-7
+\startEXERCISE \DIFFICULT
+为使特征序列长度的下界变得更精确，
+请说明在 \m{n} 次硬币的公平抛掷中，
+不出现比 \m{\lg{n} - 2\lg\lg{n}} 更长的连续正面特征序列的概率小于 \m{1/n}。
+\stopEXERCISE
+
+\startANSWER
+\TODO{需要證明}
+\stopANSWER
+
+\stopsection

@@ -1,0 +1,102 @@
+\startsection[
+  title={Indicator random variables},
+]
+
+\startEXERCISE
+在 \ALGO{HIRE-ASSISTANT} 中，假設應聘者以隨機順序出現，
+你只僱傭一次的概率是多少？正好僱傭 \m{n} 次的概率是多少？
+\stopEXERCISE
+\startANSWER
+當最好的應聘者出現在第一個時，我們只需僱傭一次，其概率爲 \m{1/n} （一共有 \m{n!} 種全排列，而最好的出現在第一個的全排列共 \m{(n-1)!} 種）。
+而正好僱傭 \m{n} 次，則需應聘者必須以增序出現，概率爲 \m{1/n!}。
+\stopANSWER
+
+\startEXERCISE
+在 \ALGO{HIRE-ASSISTANT} 中，假設應聘者以隨機順序出現，
+你正好僱傭兩次的概率是多少？
+\stopEXERCISE
+\startANSWER
+如果正好僱傭了兩次，那麼假設第一個僱傭的人級別爲 \m{i}，
+第二次僱傭的人級別肯定爲 \m{n}，且 \m{i < n}。
+
+比第一個僱傭的人級別高的應聘者有 \m{n-i} 個，
+這些人中級別爲 \m{n} 的那個排在最前面，其概率爲 \m{1/(n-i)}
+（我們可以忽略其他應聘者，他們不影響概率）。
+因此在第一個應聘者級別爲 \m{i}，則正好僱傭兩次的概率爲：
+\startformula
+\Pr{T_i} = \frac{1}{n}\frac{1}{n-i}
+\stopformula
+其中第一部分反映的是級別爲 \m{i} 的應聘者排在第一個的概率。
+
+正好僱傭兩次的概率爲：
+\startformula\startmathalignment
+\NC \Pr{T} \NC= \sum_{i=1}^{n-1}\Pr{T_i} \NR
+\NC        \NC= \sum_{i=1}^{n-1}\frac{1}{n}\frac{1}{n-i} \NR
+\NC        \NC= \frac{1}{n} \sum_{i=1}^{n-1}\frac{1}{i} \NR
+\NC        \NC= \frac{1}{n} (\lg(n-1) + O(1)) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+利用指示器隨機變量計算擲 \m{n} 個骰子之和的期望值。
+\stopEXERCISE
+\startANSWER
+如果是單個骰子，期望值 \m{X_i} 爲：
+\startformula\startmathalignment
+\NC E[X_k] \NC= \sum_{i=0}^6 i \Pr{X_k = i} \NR
+\NC        \NC= \frac{1 + 2 + 3 + 4 + 5 + 6}{6} \NR
+\NC        \NC= \frac{21}{6} \NR
+\NC        \NC= 3.5 \NR
+\stopmathalignment\stopformula
+
+對於多個骰子，則：
+\startformula\startmathalignment
+\NC E[X] \NC= E[\sum_{i=1}^nX_i] \NR
+\NC      \NC= \sum_{i=1}^n E[X_i] \NR
+\NC      \NC= \sum_{i=1}^n 3.5 \NR
+\NC      \NC= 3.5 \cdot n \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
+利用指示器隨機變量來求解如下{\EMP 帽子核對問題}（hat-check problem）：
+\m{n} 位顧客，每個人都將自己的帽子交給服務生。
+服務生以隨機次序將帽子歸還給顧客。
+請問拿到自己帽子的顧客數目的期望值是多少？
+\stopEXERCISE
+\startANSWER
+每位顧客拿回自己帽子的概率都是 \m{1/n}。
+記 \m{X_i} 爲第 \m{i} 個顧客拿回自己帽子的事件。
+因此：
+\startformula
+E[X] = E[X_1 + X_2 + \ldots + X_n]
+         = \sum_{i=1}^n E[X_i]
+         = \sum_{i=1}^n \frac{1}{n}
+         = 1
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+設 \m{A[1..n]} 是由 \m{n} 個不同的數構成的數列。
+如果 \m{i < j} 且 \m{A[i] > A[j]}，則稱 \m{(i,j)} 爲 \m{A} 的一個{\EMP 逆序對}（inversion）。
+（參見\refproblem{inversion} 中更多關於逆序對的例子）
+假設 \m{A} 的元素構成 \m{\langle1,2,\ldots,n\rangle} 上的一個均勻隨機排列，
+請用指示器隨機變量來計算其中逆序對的數目期望值。
+\stopEXERCISE
+\startANSWER
+記 \m{X_{ij}} 爲 \m{i} 和 \m{j} 爲逆序對的情況。
+每個逆序對發生的概率爲 \m{1/2}，
+因爲有 \m{\binom{n}{2}} 種可能，而大的那個在前面的概率爲 \m{\frac{1}{n(n-1)}}。
+兩式相乘得 \m{1/2}。由此可得 \m{E[X_{ij}] = 1/2}。
+\startformula\startmathalignment
+\NC E[X] \NC= \sum_{i=1}^{n-1} \sum_{j=i+1}^n E[X_{ij}] \NR
+\NC      \NC= \sum_{i=1}^{n-1} \sum_{j=i+1}^n \frac{1}{2} \NR
+\NC      \NC= \frac{1}{2} \sum_{i=1}^{n-1} \sum_{j=i+1}^n 1 \NR
+\NC      \NC= \frac{1}{2} \sum_{i=1}^{n-1} (n-i) \NR
+\NC      \NC= \frac{1}{2} \sum_{i=1}^{n-1} i \NR
+\NC      \NC= \frac{n(n-1)}{4} \NR
+\NC      \NC= \binom{n}{2}/2 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\stopsection

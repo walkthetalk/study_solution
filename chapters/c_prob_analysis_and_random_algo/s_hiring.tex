@@ -1,0 +1,78 @@
+\startsection[
+  title={The hiring problem},
+]
+
+\startEXERCISE
+證明：假設在 HIRE-ASSISTANT 算法的第 4 行中，
+我們總能確定哪一個應聘者更佳，
+則意味着我們知道應聘者排名的全部次序。
+
+\CLRSH{HIRE-ASSISTANT(n)}
+\startCLRS
+best = 0	// candidate 0 is a least-qualified dummy candidate
+for i = 1 to n
+	interview candidate i
+	if candidate i is better than candidate best
+		best = i
+		hire candidate i
+\stopCLRS
+\stopEXERCISE
+\startANSWER
+全序是一種包含了所有關系的偏序\m{\forall a,b \in A: a R b \text{或} b R a}。
+一個關系若是偏序關系，他必須是自反的、反對稱的以及可傳遞的。
+
+令這個關系爲“同樣好或更好”：
+\startigBase[1]
+\item 自反：顯然，任何人與自身相比都滿足次關系；
+\item 反對稱：如果 \m{A} 比 \m{B} 好，那麼 \m{B} 不會比 \m{A} 好；
+\item 可傳遞：如果 \m{A} 比 \m{B} 好， \m{B} 又比 \m{C} 好，那麼 \m{A} 比 \m{C} 好。
+\stopigBase
+到此可知，此關系是偏序關系。
+
+又由於我們假設可以比較任意兩個應聘者，也就說包含了所有關系，即全序。
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+利用 \ALGO{RANDOM(0,1)} 實現過程 \ALGO{RANDOM(a,b)}。
+作爲 \m{a} 和 \m{b} 的函數，其運行時間是多少？
+\stopEXERCISE
+\startANSWER
+令 \m{n=b-a}，算法爲：
+\startigBase[n]
+\item 找到最小整數 \m{c}，使得 \m{2^c\ge n} （\m{c=\lceil\ln{n}\rceil}）；
+\item 調用 \ALGO{RANDOM(0,1)} \m{c} 次，得到一個 \m{c} 比特的二進制數 \m{r}；
+\item 如果 \m{r>n}，跳轉到上一步；
+\item 否則返回 \m{a+r}。
+\stopigBase
+這會在範圍 \m{[a, b]} 內均勻的生成一個隨機數。
+但是，第二步可能會重復多次。
+有 \m{p=n/2^c} 概率不會重復第二步。
+由幾何分布可知有 \m{1/p} 的概率會重復第二步，即 \m{2^c/n}。
+由於每次執行第二步，需要調用 \ALGO{RANDOM(0,1)} \m{c} 次，運行時間爲：
+\startformula
+O(\frac{2^c}{n} c) = O(\frac{\ln(b-a)2^{\ln(b-a)}}{b-a}) = O(\ln(b-a))
+\stopformula
+\stopANSWER
+
+\startEXERCISE \DIFFICULT
+假設你希望以各爲 1/2 的概率輸出 0 和 1。
+已有一個可以輸出 0 或 1 的過程 \ALGO{BIASED-RANDOM} 可用。
+此過程輸出 1 的概率爲 \m{p}，輸出 0 的概率爲 \m{1-p}，
+其中 \m{0<p<1}，但 \m{p} 的值未知。
+請給出一個利用 \ALGO{BIASED-RANDOM} 作爲子程式的算法，返回一個無偏的結果，
+即各以 1/2 的概率返回 0 和 1。
+作爲 \m{p} 的函數，此算法的運行時間爲多少？
+\stopEXERCISE
+\startANSWER
+簡單！
+\startigBase[n]
+\item 生成兩個隨機數 \m{x} 和 \m{y}；
+\item 如果這兩個數不同，則返回 \m{x}；
+\item 否則，重復第一步。
+\stopigBase
+\m{x=0, y=1} 和 \m{x=1, y=0} 的概率相同。
+第二步直接返回的概率是 \m{2pq}。
+重試次數的期望值是 \m{1/(2pq)}，運行時間爲 \m{O(\frac{1}{p(1-p)})}。
+\stopANSWER
+
+\stopsection

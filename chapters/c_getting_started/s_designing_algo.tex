@@ -1,0 +1,139 @@
+\startsection[
+  title={Designing algorithms},
+]
+
+\startEXERCISE
+參照圖 2.4，對數列 $A=\langle 3,41,52,26,38,57,9,49\rangle$ 進行歸並排序。
+\stopEXERCISE
+\startANSWER
+\externalfigure[output/e2_3_1-1]
+\stopANSWER
+
+\startEXERCISE
+不使用哨兵，重寫 MERGE 例程。
+\stopEXERCISE
+\startANSWER
+\startCLRS
+n1 = q - p + 1
+n2 = r - q
+let L[1..n1+1] and R[1..n2+1] be new arrays
+for i = 1 to n1
+	L[i] = A[p + i - 1]
+for j = 1 to n2
+	R[j] = A[q + j]
+i = 1
+j = 1
+for k = p to r
+	if i > n1
+		while j <= n2
+			A[k] = R[j]
+			k = k + 1
+			j = j + 1
+		return
+	if j > n2
+		while i <= n1
+			A[k] = L[i]
+			k = k + 1
+			i = i + 1
+		return
+	if L[i] <= R[j]
+		A[k] = L[i]
+		i = i + 1
+	else A[k] = R[j]
+		j = j + 1
+\stopCLRS
+\stopANSWER
+
+\startEXERCISE
+用數學歸納法證明 \m{T(n) = n \lg(n)}：
+\startformula
+T(n) = \startmathcases
+\NC 2		\MC \text{若 \m{n = 2}，} \NR
+\NC 2T(n/2) + n	\MC \text{若 \m{n = 2^k}， \m{k > 1}。} \NR
+\stopmathcases
+\stopformula
+\stopEXERCISE
+\startANSWER
+如果 \m{T(n) = n \lg(n)}，那麼：
+\startformula\startalign
+\NC T(2n)	\NC = 2n \lg(2n) \NR
+\NC		\NC = 2n (\lg(n) + 1) \NR
+\NC		\NC = 2n \lg(n) + 2n \NR
+\NC		\NC = 2T(n) + 2n \NR
+\stopalign\stopformula
+\stopANSWER
+
+\startEXERCISE
+用遞迴方式重寫插入排序。
+\stopEXERCISE
+\startANSWER
+\CLRSH{INSERTION(A, n)}
+\startCLRS
+if n < 2
+	return
+INSERTION-SORT(A, n-1)
+key = A[n]
+i = n - 1
+while i > 0 and A[i] > key
+	A[i+1] = A[i]
+	i = i - 1
+A[i + 1] = key
+\stopCLRS
+
+\startformula
+T(n) = \startmathcases
+\NC \Theta(1)		\MC \text{若 \m{n = 1}，} \NR
+\NC T(n-1) + C(n-1)	\MC \text{否則。} \NR
+\stopmathcases
+\stopformula
+\stopANSWER
+
+\startEXERCISE[exercise:bin_search]
+二分查找。
+\stopEXERCISE
+\startANSWER
+\CLRSH{BINARY-SEARCH(A, v)}
+\startCLRS
+low = 1
+high = A.length
+while low <= high
+	m = (low + high) / 2
+	if A[m] == v
+		return m
+	if A[m] < v
+		low = m + 1
+	else
+		high = m - 1
+return NIL
+\stopCLRS
+
+\startformula
+T(n+1) = T(n/2) + c
+\stopformula
+\stopANSWER
+
+\startEXERCISE
+插入排序時用二分法查找要插入的位置，以改進插入排序最壞情況的總運行時間至 \m{\Theta(nlgn)}？
+\stopEXERCISE
+\startANSWER
+不行，二分查找只可能減少比較的次數，而無法減少數據搬移的次數。
+\stopANSWER
+
+%e2.3-7
+\startEXERCISE
+設計一個所用時間爲 \m{\Theta(nlgn)} 的算法，用來在集合 \m{S} 中查找是否有兩個數的和正好是 \m{x}。
+\stopEXERCISE
+\startANSWER
+\CLRSH{PAIR-EXISTS(S, x)}
+\startCLRS
+A = MERGE-SORT(S)
+
+for i = 1 to S.length
+	if BINARY-SEARCH(A, x - S[i]) != NIL
+		return true
+
+return false
+\stopCLRS
+\stopANSWER
+
+\stopsection

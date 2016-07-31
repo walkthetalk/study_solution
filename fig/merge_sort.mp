@@ -49,9 +49,9 @@ image(
 			pair center;
 			center := ((k-(r+p)/2) * gsize, 0);
 			%fr := unitsquare shifted(-0.5,-0.5) xyscaled gsize shifted(center);
-			fr := fullcircle xyscaled gsize shifted(center);
+			fr := fullcircle scaled gsize shifted(center);
 
-			fill fr withcolor darkgray;
+			fill fr withcolor .8 white;
 			label(decimal(A[k]), center) withcolor black;
 			draw fr withcolor black;
 		endfor;
@@ -60,7 +60,7 @@ image(
 enddef;
 
 vardef mslvl primary x =
-	(if x == 0:
+	(if x = 0:
 		0
 	else:
 		mlog(x)/mlog(2)
@@ -84,15 +84,15 @@ image(
 		aratio = 1.1;
 		drawarrow (lshift + (0, gsize/2 * aratio)) .. (-gsize/2,-gsize/2 * aratio);
 		drawarrow (rshift + (0, gsize/2 * aratio)) .. ( gsize/2,-gsize/2 * aratio);
-	elseif p == r:
+	elseif p = r:
 		if needdraw:
 			path fr;
 			pair center;
 			center = (0, 0);
 			%fr := unitsquare shifted(-0.5,-0.5) xyscaled gsize shifted(center);
-			fr = fullcircle xyscaled gsize shifted(center);
+			fr = fullcircle scaled gsize shifted(center);
 
-			fill fr withcolor darkgray;
+			fill fr withcolor .8 white;
 			label(decimal(p), center) shifted(0, -gsize) withcolor red;
 			label(decimal(A[p]), center) withcolor black;
 			draw fr withcolor black;

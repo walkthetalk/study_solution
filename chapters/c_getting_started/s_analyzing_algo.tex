@@ -1,0 +1,46 @@
+\startsection[
+  title={Analyzing algorithms},
+]
+
+\startEXERCISE
+用 $\Theta$ 標記表示函式 $n^3 / 1000 - 100 n^2 - 100 n + 3$。
+\stopEXERCISE
+\startANSWER
+$\Theta(n^3)$
+\stopANSWER
+
+\startEXERCISE
+選擇排序。
+\stopEXERCISE
+\startANSWER
+\startCLRS
+n = A.length
+for j = 1 to n - 1
+	smallest = j
+	for i = j + 1 to n
+		if A[i] < A[smallest]
+			smallest = i
+	exchange A[j] with A[smallest]
+\stopCLRS
+
+所用時間爲 $\Theta(n^2)$。
+\stopANSWER
+
+\startEXERCISE
+線性查找所用時間。
+\stopEXERCISE
+\startANSWER
+一般情況 $\Theta(n)$。
+最壞情況 $\Theta(n)$。
+\stopANSWER
+
+\startEXERCISE
+如何修改算法時期最好情況下運行時間最短。
+\stopEXERCISE
+\startANSWER
+測試輸入是否滿足某個特例，如果滿足，則直接輸出預先算好的結果。
+
+最好情況下的運行時間一般不能作爲衡量一個算法好壞的標準。
+\stopANSWER
+
+\stopsection

@@ -1,6 +1,9 @@
 
 vardef insert_sort_step(suffix A, Alength)(expr gsize, j, nondecrease, needdraw) :=
 image(
+	draw unitsquare xscaled (Alength * gsize)
+	                yscaled(2.4 * gsize)
+	                shifted(0.5gsize, -1.1gsize) withcolor white;
 	numeric B[];
 	color   bg[];
 	color   fg[];
@@ -37,23 +40,23 @@ image(
 
 	if (needdraw):
 		% record move range
-		numeric start, end;
-		start := i;
-		end := j;
+		numeric istart, iend;
+		istart := i;
+		iend := j;
 
-		for i := 1 upto (start-1):
+		for i := 1 upto (istart-1):
 			bg[i] := white;
 			fg[i] := black;
 		endfor;
-		for i := start upto (end-1):
-			bg[i] := darkgray;
+		for i := istart upto (iend-1):
+			bg[i] := .8 white;
 			fg[i] := black;
 		endfor;
-		for i := end upto end:
+		for i := iend upto iend:
 			bg[i] := black;
 			fg[i] := white;
 		endfor;
-		for i := (end+1) upto Alength:
+		for i := (iend+1) upto Alength:
 			bg[i] := white;
 			fg[i] := black;
 		endfor;
@@ -61,7 +64,7 @@ image(
 		for k := 1 upto Alength:
 			path fr;
 			pair center;
-			fr := unitsquare shifted(-0.5,-0.5) xyscaled gsize shifted(k * gsize, 0);
+			fr := unitsquare shifted(-0.5,-0.5) scaled gsize shifted(k * gsize, 0);
 			center := (k * gsize, 0);
 
 			fill fr withcolor bg[k];
@@ -71,16 +74,16 @@ image(
 		endfor;
 
 		pair arrows, arrowe, arrowc;
-		for k := (start+1) upto (end - 1):
+		for k := (istart+1) upto (iend - 1):
 			arrows := (k*gsize + 0.2 * gsize, -gsize/2);
 			arrowe := (k*gsize + 0.8 * gsize, -gsize/2);
 			arrowc := (k*gsize + 0.5 * gsize, -gsize);
 
-			drawarrow (arrows{down}..arrowc..{up}arrowe) withcolor darkgray;
+			drawarrow (arrows{down}..arrowc..{up}arrowe) withcolor .8 white;
 		endfor;
-		arrows := (end*gsize + 0.3 * gsize, -gsize/2);
-		arrowe := ((start+1)*gsize - 0.3 * gsize, -gsize/2);
-		arrowc := ((start+1 + end) / 2 *gsize, -gsize * 1.1);
+		arrows := (iend*gsize + 0.3 * gsize, -gsize/2);
+		arrowe := ((istart+1)*gsize - 0.3 * gsize, -gsize/2);
+		arrowc := ((istart+1 + iend) / 2 *gsize, -gsize * 1.1);
 
 		drawarrow (arrows{dir -100}..arrowc..{dir 100}arrowe) withcolor black;
 	fi;
@@ -89,6 +92,9 @@ enddef;
 
 vardef insert_sort_result(suffix A, Alength)(expr gsize) :=
 image(
+	draw unitsquare xscaled (Alength * gsize)
+	                yscaled(2.4 * gsize)
+	                shifted(0.5gsize, -1.1gsize) withcolor white;
 	color   bg[];
 	color   fg[];
 	for i := 1 upto Alength:
@@ -99,7 +105,7 @@ image(
 	for k := 1 upto Alength:
 		path fr;
 		pair center;
-		fr := unitsquare shifted(-0.5,-0.5) xyscaled gsize shifted(k * gsize, 0);
+		fr := unitsquare shifted(-0.5,-0.5) scaled gsize shifted(k * gsize, 0);
 		center := (k * gsize, 0);
 
 		fill fr withcolor bg[k];

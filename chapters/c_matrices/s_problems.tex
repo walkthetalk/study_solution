@@ -93,7 +93,111 @@ A=\left[\startmatrix
 R(A) = \{y: y=Ax,x\in S_n\}
 \stopformula
 這樣， \m{R(A)} 是 \m{S_n} 中一類數的集合，
-這類數可以由將 \m{S_n} 中每個值 \m{x} 乘以 \m{A} 得到。
+這類數可通過爲 \m{S_n} 中每個值都 \m{x} 乘以 \m{A} 得到。
+\startigBase[a]\startitem
+如果 \m{r} 是矩陣 \m{A} 的秩，證明 \m{|R(A)|=2^4}。
+證明：當且僅當 \m{A} 是滿秩的， \m{A} 才可定義 \m{S_n} 上的一個排列。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+對於一個給定的 \m{\times n} 矩陣 \m{A} 和一個給定的值 \m{y\in R(A)}，
+定義 \m{y} 的{\EMP preimage}爲
+\startformula
+P(A,y) = \{x:Ax=y\}
+\stopformula
+從而， \m{P(A,y)} 即爲 \m{S_n} 中的集合，這些集合乘以 \m{A} 後會映射到 \m{y}。
+
+\startigBase[continue]\startitem
+如果 \m{r} 是 \m{n\times n} 矩陣 \m{A} 的秩且 \m{y\in R(A)}，
+證明 \m{|P(A,y)| = 2^{n-r}}。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+令 \m{0\le m\le n}，假定將集合 \m{S_n} 劃分成相鄰數字的塊，
+其中第 \m{i} 個塊包含 \m{2^m} 個數 \m{i2^m,\allowbreak
+i2^m+1,\allowbreak
+i2^m+2,\allowbreak
+\ldots,\allowbreak
+(i+1)2^m-1}。
+對於任意子集 \m{S\subseteq S_n}，
+定義 \m{B(S,m)} 爲 \m{S_n} 中的塊的集合，
+這些塊的大小爲 \m{2^m}，且包含 \m{S} 中的元素。
+例如，當 \m{n=3,m=1}，且 \m{S=\{1,4,5\}} 時，
+ \m{B(S,m)} 包含塊 0 （因爲在第 0 塊中）
+和塊 2 （因爲 4 和 5 均在塊 2 中）。
+
+\startigBase[continue]\startitem
+令 \m{A} 的左下部 \m{(n-m)\times m} 子矩陣的秩爲 \m{r}，
+即通過取矩陣 \m{A} 底部 \m{n-m} 行和最左端 \m{m} 列的交獲得的矩陣。
+令 \m{S} 是 \m{S_n} 中任意大小爲 \m{2^m} 的塊，
+且令 \m{S'=\{y:y=Ax,\exists x\in S\}}。
+證明： \m{|B(S',m)|=2^r} 且對於 \m{B(S',m)} 中的每一個塊，
+有且僅有 \m{2^{m-r}} 個 \m{S} 中的數映射到該塊上。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+將零向量乘以任意矩陣得到的都是零向量，
+所以通過 \m{GF(2)} 上乘以滿秩 \m{n\times n} 0-1 矩陣
+所定義的 \m{S_n} 的排列集合不能囊括 \m{S_n} 的所有排列。
+這裏，對由矩陣——向量乘法定義的那類排列進行擴展，以包含一個附加項，
+從而將 \m{x\in S_n} 映射到 \m{Ax+c} 上，
+其中 \m{c} 是 \m{n} 位向量，加法按 \m{GF(2)} 執行。
+例如，當
+\startformulas
+\startformula
+A=\left[\startmatrix
+\NC 1 \NC 0 \NR
+\NC 1 \NC 1 \NR
+\stopmatrix\right]
+\stopformula
+\startformula
+c=\left[\startmatrix
+\NC 0 \NR
+\NC 1 \NR
+\stopmatrix\right]
+\stopformula
+\stopformulas
+我們可以獲得如下排列 \m{\pi_{A,c}}：
+\startformulas
+\startformula\startmathalignment[n=1]
+\NC \pi_{A,c}(0) = 2 \NR
+\NC \pi_{A,c}(1) = 1 \NR
+\stopmathalignment\stopformula
+\startformula\startmathalignment[n=1]
+\NC \pi_{A,c}(2) = 0 \NR
+\NC \pi_{A,c}(3) = 3 \NR
+\stopmathalignment\stopformula
+\stopformulas
+對於某個 \m{n\times n} 0-1 滿秩矩陣 \m{A} 和 某個 \m{n} 位向量 \m{c}，
+如果一個排列可以將 \m{x\in S_n} 映射到 \m{Ax+c}，則稱其爲 {\EMP linear permutation}。
+
+\startigBase[continue]\startitem
+用計數觀點證明：
+ \m{S_n} 線性排列的數目遠小於 \m{S_n} 排列的數目。
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+
+\startigBase[continue]\startitem
+請給出一個 \m{S_n} 的排列的例子及 \m{n} 的值，
+其中該排列不能通過任何線性排列獲得。
+（\hint 對於一個給定的排列，考慮矩陣在乘以單位向量後，與矩陣原有列的關係。）
+\stopitem\stopigBase
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
 \stopPROBLEM
 
 \stopsubject%Problems

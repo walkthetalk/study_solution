@@ -1,0 +1,73 @@
+\startsection[
+  title={Direct-address tables},
+]
+
+%e11.1-1
+\startEXERCISE
+假設一動態集合 S 用一個長度爲 m 的直接尋址表 T 來表示。
+請給出一個查找 S 中最大元素的過程。
+你所給出的過程在最壞情況下的運行時間如何？
+\stopEXERCISE
+
+\startANSWER
+我們從表的底部（最大元素）查起，並向後掃描整張表，直到找到非空的槽。
+最壞情況下運行時間爲 \m{\Theta(m)}，此時最大元素在表的起始位置，或者動態集合爲空。
+\stopANSWER
+
+%e11.1-2
+\startEXERCISE
+{\EMP 位向量}（{\EMP bit vector}）是一個僅包含 0 和 1 的數列。
+長度爲 m 的位向量所佔空間比 m 個指針要少的多。
+試說明如何用位向量表示動態集合，此集合中的元素互不相同，且沒有衛星數據。
+字典操作的運行時間應爲 \m{O(1)}。
+\stopEXERCISE
+
+\startANSWER
+動態集合的元素必須是整數。
+
+對於位向量中的每一位，如果是 1 則表示集合中有此元素，如果是 0 則表示集合中沒有此元素。
+在沒有衛星數據的情況下這足夠了。
+修改或查找操作需要用到位操作，如 \&、 \|。
+
+字典操作都是直接獲得結果。只有向量大小稍微有點復雜。
+如果動態集合中有 1000 個元素，則位向量中至少要有 1000 位才行。
+\stopANSWER
+
+%e11.1-3
+\startEXERCISE
+如何實現直接尋址表，才能使得元素的關鍵字可以重復且可以有衛星數據？
+三個字典操作（\ALGO{INSERT}、 \ALGO{DELETE} 和 \ALGO{SEARCH}）的運行時間均爲 \m{O(1)}。
+（不要忘記 \ALGO{DELETE} 的參數是要刪除對象的指針而不是關鍵字）
+\stopEXERCISE
+
+\startANSWER
+用雙向鏈表。
+
+\startigBase[a]
+\item \ALGO{INSERT} 插入鏈表需要常數時間；
+\item \ALGO{DELETE} 由鏈表移除元素也需常數時間；
+\item \ALGO{SEARCH} 返回鏈表中的第一個元素，也是常數時間。
+\stopigBase
+\stopANSWER
+
+%e11.1-4
+\startEXERCISE\DIFFICULT
+我們想在一個{\EMP 非常大}的數列上用直接尋址來實現一個字典。
+一開始，數列中可能包含一些無用信息，並且由於他非常大，初始化整個數列也不切實際。
+請給出你的方案。
+所存儲的每個對象所佔空間爲 \m{O(1)}；
+且 \ALGO{SEARCH}、 \ALGO{INSERT} 和 \ALGO{DELETE} 所需時間也是 \m{O(1)}。
+（\hint 用一個附加數列，將其視爲棧，其大小就是字典中實際存儲的關鍵字的數目，
+用他來確定數列中的某一項是否有效。）
+\stopEXERCISE
+
+\startANSWER
+只需將大數列中的元素和棧中的元素建立關聯，如：
+棧中元素存儲數列元素的地址，而數列元素存儲棧上元素的索引。
+ \ALGO{SEARCH} 時需要檢查上述關聯是否成立，若成立則有效，否則無效。
+ \ALGO{INSERT} 對棧執行 \ALGO{PUSH}；
+ \ALGO{DELETE} 時則將棧當成普通數列，如果要刪除的不是棧頂元素，則將棧頂元素轉移到所刪除的元素處，
+並同步更新大數列中的相應元素。
+\stopANSWER
+
+\stopsection

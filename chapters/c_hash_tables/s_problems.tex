@@ -1,0 +1,383 @@
+\startsubject[
+  title={Problems},
+]
+
+%p11-1
+\startPROBLEM
+（Longest-probe bound for hashing）
+採用開放尋址法，用一個大小爲 m 的散列表存儲 n （\m{n\le m/2}）個數據項。
+\startigBase[a]
+\startitem
+假設採用均勻散列，證明：
+對於 \m{i=1,2,\ldots,n}，第 i 次插入需要嚴格多於 k 次探查概率至多爲 \m{2^{-k}}。
+\stopitem
+
+\startANSWER
+\startformula\startmathalignment
+\NC \Pr\{x>k\}
+    \NC = \Pr\{x\ge k+1\} \NR
+\NC \NC = \frac{n}{m} \cdot \frac{n-1}{m-1} \cdot \ldots \cdot \frac{n-k+1}{m-k+1} \qquad \text{參見定理 11.6} \NR
+\NC \NC < (\frac{n}{m})^k \NR
+\NC \NC \le (\frac{1}{2})^k \NR
+\NC \NC = 2^{-k} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startitem
+證明：對於 \m{i=1,2,\ldots,n}，第 i 次插入需要多於 \m{2\lg{n}} 次探查的概率爲 \m{O(1/n^2)}。
+\stopitem
+
+\startANSWER
+根據上一項的結果：
+\startformula
+\Pr\{x>k\} \le 2^{-k} = 2^{-2\lg{n}} = \frac{1}{n^2}
+\stopformula
+\stopANSWER
+
+設隨機變量 \m{X_i} 表示第 i 次插入所需的探查次數。
+在上面 (b) 中已證明 \m{\Pr\{X_i>2\lg{n} = O(1/n^2)\}}。
+設隨機變量 \m{X=\max_{1\le i\le n}X_i} 表示 n 次插入過程中所需探查數的最大值。
+
+\startitem
+證明： \m{\Pr\{X>2\lg{n}\} = O(1/n)}。
+\stopitem
+
+\startANSWER
+\startformula
+\Pr\{X>2\lg{n}\}
+  = \sum_{i=1}^{n}\Pr\{X_i>2\lg{n}\}
+  \le \sum_{i=1}^{n}\frac{1}{n^2}
+  = n \cdot \frac{1}{n^2}
+  = \frac{1}{n}
+\stopformula
+\stopANSWER
+
+\startitem
+證明：最長探查序列的期望長度爲 \m{E[x]=O(\lg{n})}。
+\stopitem
+
+\startANSWER
+參見 \goto{csdn blog}[url(http://blog.csdn.net/z84616995z/article/details/21329071)]。
+\startformula\startmathalignment
+\NC E[x]
+    \NC = \sum_{k=1}^{n}k\Pr\{X=k\} \NR
+\NC \NC = \sum_{k=1}^{2\lg{n}}k\Pr\{X=k\} + \sum_{k=2\lg{n}+1}^{n}k\Pr\{X=k\} \NR
+\NC \NC < 2\lg{n}\sum_{k=1}^{2\lg{n}}\Pr\{X=k\} + n\sum_{k=2\lg{n}+1}^{n}\Pr\{X=k\} \NR
+\NC \NC = 2\lg{n}\Pr\{X\le 2\lg{n}\} + n\Pr\{X>2\lg{n}\} \qquad \text{其中 }
+	  \Pr\{X\le 2\lg{n}\}\le 1 \qquad
+	  \Pr\{X>2\lg{n}\} \le \frac{1}{n^2} \NR
+\NC \NC \le 2\lg{n} + n \cdot \frac{1}{n^2} \NR
+\NC \NC < 2\lg{n} + 1 \NR
+\NC \NC = O(\lg{n}) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+%p11-2
+\startPROBLEM
+（Slot-size bound for chaining）
+假設有一個含 n 個槽的散列表，向表中插入 n 個關鍵字，並用鏈接法解決衝突問題。
+每個關鍵字被等可能地散列到每個槽中。
+插入所有關鍵字後，設 M 是各槽中所含關鍵字數目的最大值。
+讀者的任務是證明 M 的期望值 \m{E[M]} 的一個上界爲 \m{O(\lg{n}/\lg\lg{n})}。
+\startigBase[a]
+\startitem
+證明：正好有 k 個關鍵字被散列到某一特定槽中的概率 \m{Q_k} 爲：
+\startformula
+Q_k = (\frac{1}{n})^k (1-\frac{1}{n})^{n-k} \binom{n}{k}
+\stopformula
+\stopitem
+
+\startANSWER
+先在 n 個關鍵字中選出 k 個，
+這 k 個關鍵字都會散列到特定槽中（每次散列的概率爲 \m{1/n}），
+其他關鍵字都散列到其他槽中（每次散列的概率爲 \m{1- 1/n}）。
+\stopANSWER
+
+\startitem
+設 \m{P_k} 爲 \m{M=k} 的概率，
+即包含最多關鍵字的槽中有 \m{k} 個關鍵字的概率。
+證明： \m{P_k\le n Q_k}。
+\stopitem
+
+\startANSWER
+所選特定槽可能是 n 個槽中的任何一個，且概率相等。
+\stopANSWER
+
+\startitem
+應用 Stirling 近似公式 3.18 證明： \m{Q_k < e^k / k^k}。
+附 Stirling 近似公式：
+\startformula
+n! = \sqrt{2\pi n} (\frac{n}{e})^n (1 + \Theta(\frac{1}{n}))
+\stopformula
+\stopitem
+
+\startANSWER
+\startformula\startmathalignment
+\NC Q_k
+    \NC = (\frac{1}{n})^k (1-\frac{1}{n})^{n-k} \binom{n}{k} \NR
+\NC \NC < \frac{1}{n^k} \frac{n!}{k!(n-k)!} \NR
+\NC \NC < \frac{1}{k!} \NR
+\NC \NC < \frac{1}{(\frac{k}{e})^k} \NR
+\NC \NC = \frac{e^k}{k^k} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startitem
+證明：存在常數 \m{c>1}，使得 \m{Q_{k_0} < 1/n^3} 對 \m{k_0 = c \lg{n}/\lg\lg{n}} 成立。
+並有結論：對 \m{k\ge k_0 = c\lg{n}/\lg\lg{n}}， \m{P_k < 1/n^2} 成立。
+\stopitem
+
+\startANSWER
+\startformula\startmathalignment[n=1]
+\NC \frac{e^k}{k^k} < \frac{1}{n^3} \NR
+\NC (\frac{k_0}{e})^{k_0} > n^3 \qquad \text{兩邊同取對數} \NR
+\NC k_0 (\lg{k_0} - 1) > 3 \lg{n} \NR
+\NC c \frac{\lg{n}}{\lg\lg{n}} (\lg(\frac{c\lg{n}}{\lg\lg{n}}) - 1) > 3 \lg{n} \NR
+\NC c \frac{\lg{n}}{\lg\lg{n}} (\lg{c} + \lg\lg{n} - \lg\lg\lg{n} - 1) > 3 \lg{n} \NR
+\NC c (\lg{c} + \lg\lg{n} - \lg\lg\lg{n} - 1) > 3 \lg\lg{n} \NR
+\NC c (\lg{c} - \lg\lg\lg{n} - 1) + c \lg\lg{n} > 3 \lg\lg{n} \NR
+\NC c (\lg{c} - \lg\lg\lg{n} - 1) > 0 \qquad c > 3 \NR
+\NC \lg{c} - \lg\lg\lg{n} > 1 \qquad c > 3 \NR
+\NC c / \lg\lg{n} > e \qquad c > 3 \NR
+\NC c > e \lg\lg{n} \qquad c > 3 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startitem
+證明：
+\startformula
+E[M] \le \Pr\{ M>\frac{c\lg{n}}{\lg\lg{n}} \} \cdot n
+         + \Pr\{ M\le \frac{c\lg{n}}{\lg\lg{n}} \} \cdot \frac{c\lg{n}}{\lg\lg{n}}
+\stopformula
+並有結論： \m{E[M] = O(\lg{n}/\lg\lg{n})}。
+\stopitem
+
+\startANSWER
+令 \m{k_0 = \frac{c\lg{n}}{\lg\lg{n}}}，則：
+\startformula\startmathalignment
+\NC E[M]
+    \NC = \sum_{k=1}^{n}k\Pr\{M=k\} \NR
+\NC \NC = \sum_{k=1}^{k_0}k\Pr\{M=k\}
+          + \sum_{k=k_0+1}^{n}k\Pr\{M=k\} \NR
+\NC \NC < k_0 \sum_{k=1}^{k_0}\Pr\{M=k\}
+          + n\sum_{k=k_0+1}^{n}\Pr\{M=k\} \NR
+\NC \NC = k_0 \Pr\{M\le k_0\}
+          + n\Pr\{M>k_0\} \qquad \text{其中 }
+	  \Pr\{M\le k_0\}\le 1 \qquad
+	  \Pr\{M>k_0\} = P_k < \frac{1}{n^2} \NR
+\NC \NC < k_0 + n \cdot \frac{1}{n^2} \NR
+\NC \NC < k_0 + 1 \NR
+\NC \NC = O(k_0) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+%p11-3
+\startPROBLEM
+（Quadratic probing）
+假設要在一個散列表中查詢關鍵字 k，散列表中各個位置爲 \m{0,1,\ldots,m-1}。
+假設散列函數 h 可以將關鍵字空間映射到集合 \m{0,1,\ldots,m-1} 上，按如下方法進行查找：
+\startigBase[n]
+\item 計算值 \m{j=h(k)}，並置 \m{i=0}。
+\item 在位置 j 上搜索關鍵字 k，無論是找到了 k 還是該位置爲 空，都結束查找。
+\item 置 \m{i=i+1}。如果 \m{i=m}，則表示找不到 k，終止查找；否則，令 \m{j=(i+j)\mod m}，跳轉到步驟 2。
+\stopigBase
+
+假設 m 是 2 的冪。
+\startigBase[a]
+\startitem
+利用等式 11.5，給出合適的 \m{c_1} 和 \m{c_2}，證明該方案是一般的“二次探查”法的一個實例。
+附等式 11.5：
+\startformula
+h(k,i) = (h'(k) + c_1 i + c_2 i^2) \mod m
+\stopformula
+\stopitem
+
+\startANSWER
+\startformula
+j_i
+  = (j_{i-1} + i) \mod m
+  = (j_1 + 1 + 2 + \ldots + i) \mod m
+  = (h(k) + \frac{1}{2}i^2 + \frac{1}{2}i) \mod m
+\stopformula
+因此 \m{c_1 = 1/2, c_2 = 1/2}。
+\stopANSWER
+
+\startitem
+證明：在最壞情況下，這個算法要檢查表中的每一個位置。
+\stopitem
+
+\startANSWER
+假設兩次的值分別爲 \m{h(k,i)} 和 \m{h(k,j)} （\m{0<i<j<m}）。
+\startformula\startmathalignment[n=1]
+\NC h(k,i) = (h(k) + i^2/2 + i/2) \mod m \NR
+\NC h(k,j) = (h(k) + j^2/2 + j/2) \mod m \NR
+\stopmathalignment\stopformula
+如果二者相等，則：
+\startformula\startmathalignment[n=1]
+\NC (h(k) + i^2/2 + i/2) \equiv (h(k) + j^2/2 + j/2) (\mod m) \NR
+\NC (i^2/2 + i/2) \equiv (j^2/2 + j/2) (\mod m) \NR
+\NC (j^2/2 + j/2 - i^2/2 - i/2) \equiv 0 (\mod m) \NR
+\NC (j-i)(j+i+1)/2 = km \qquad \text{令 }m=2^t\NR
+\NC (j-i)(j+i+1) = k 2^{t+1} \NR
+\stopmathalignment\stopformula
+
+另外 \m{j-i} 和 \m{j+i+1} 定是一個奇數、另一個偶數。
+其中奇數不含因子 2，所以所有的因子 2 都在偶數中。即 \m{2^{t+1} = 2m} 能整除其中的偶數。
+
+即設 \m{j-i} 是偶數，則 \m{j-i < m}，而 \m{2m | (j-i)} 不成立。
+而如果 \m{j+i+1} 是偶數，則 \m{j+i+1 < 2m}，而 \m{2m | (j-i+1)} 不成立。
+因此 \m{h(k,i)\ne h(k,j)}。
+即 m 次循環所得散列值各部相等，又因爲都小於 m，所以覆蓋了整個散列表。
+\stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+%p11-4
+\startPROBLEM
+（Hashing and authentication）
+令 \m{{\cal H}} 爲一組散列函數，
+其中每個函數 \m{h\in{\cal H}} 都可以將關鍵字的全域 U 映射到 \m{\{0,1,\ldots,m-1\}} 上。
+如果對於任一 k 個互不相同的關鍵字構成的的固定序列 \m{\langle x^{(1)},x^{(2)},\ldots,x^{(k)} \rangle}，
+以及從 \m{{\cal H}} 中隨機選出的 \m{h}，
+序列 \m{\langle h(x^{(1)}),h(x^{(2)}),\ldots,h(x^{(k)}） \rangle} 是 \m{m^k} 個長度爲 \m{k} 的序列
+（其元素取自 \m{\{0,1,\ldots,m-1\}}）中任意一個，其可能性相同,
+我們稱 \m{{\cal H}} 是 {\EMP k 全域}（k-universal）的。
+\startigBase[a]
+\startitem%a
+證明：如果散列函數族 \m{{\cal H}} 是 2 全域的，則他是全域的。
+\stopitem
+
+\startANSWER
+如果 \m{{\cal H}} 是 2 全域的，則對於兩個特定關鍵字 \m{x\ne y}，
+序列 \m{\langle x, y\rangle} 是 \m{m^2} 種序列中的任一個，概率相同。
+因此，由於 \m{h} 是 \m{{\cal H}} 中的任意一個，
+產生衝突 \m{h(x) = h(y)} 的概率爲 \m{(1/m)|{\cal H}|}，
+所以 \m{{\cal H}} 是全域的。
+
+參見 \goto{blog}[url(http://ripcrixalis.blog.com/2011/02/08/clrs-chapter-11/)]。
+\stopANSWER
+
+\startitem%b
+設全域 U 爲取自 \m{\integers_p = \{0,1,\ldots,p-1\}} 中數值的 n 元組集合，
+其中 p 是素數。
+考慮元素 \m{x=\langle x_0,x_1,\ldots,x_{n-1} \rangle \in U}。
+對於任意 n 元組 \m{a=\langle a_0,a_1,\ldots,a_{n-1} \rangle \in U}，
+定義散列函數 \m{h_a} 爲：
+\startformula
+h_a(x) = \left( \sum_{j=0}^{n-1}a_j x_j \right) \mod p
+\stopformula
+並設 \m{{\cal H}=\{h_a\}}。
+證明： \m{{\cal H}} 是全域的，但不是 2 全域的。
+（\hint 找一個關鍵字，使得 \m{{\cal H}} 中所有散列函數對其都得到相同的值。）
+\stopitem
+
+\startANSWER
+假設在 \m{{\cal H}} 中選擇函數 \m{h}，
+如果 \m{a=\langle 0,0,\ldots,0\rangle}，則對於序列 \m{\langle x,y\rangle}，
+有 \m{h_a(x)=h_a(y) = 0 \mod p = 0}，即這種情況下無論關鍵字是什麼，映射對結果永遠是 \m{\langle 0,0\rangle}，所以不是 2 全域的。
+
+參見 \goto{blog}[url(http://ripcrixalis.blog.com/2011/02/08/clrs-chapter-11/)]。
+\stopANSWER
+
+\startitem%c
+即設將 (b) 中的 \m{{\cal H}} 略作修改：對任意 \m{a\in U} 和任意 \m{b\in\integers_p}，定義：
+\startformula
+h'_{ab}(x) = \left( \sum_{j=0}^{n-1}a_j x_j + b \right) \mod p
+\stopformula
+且 \m{{\cal H}'=\{h'_{ab}\}}。論證 \m{{\cal H}'} 是 2 全域的。
+（\hint 慮固定的 n 元組 \m{x\in U} 和 \m{y\in U}，
+對某個 i 有 \m{x_i\ne y_i}。當 \m{a_i} 和 b 包括 \m{\integers_p} 時，
+ \m{h'_{ab}(x)} 和 \m{h'_{ab}(y)} 會如何？）
+\stopitem
+
+\startANSWER
+對於每一對關鍵字 \m{\langle x,y\rangle}，其中 \m{x\ne y}，
+我們要證明所有值對 \m{(h_{ab}(x),h_{ab}(y))} 的概率相同，
+其中 \m{h_{ab}} 是從 \m{{\cal H}} 中隨機選出，
+即 \m{\langle a_0,a_1,\ldots,a_{n-1}} 和 b 是隨機選出的。
+
+既然 \m{x\ne y}，那麼肯定存在 i 使得 \m{x_i\ne y_i}，
+假設 \m{i=0}，令：
+\startformula
+\alpha = h_{ab}(x)
+\qquad \beta = h_{ab}(y)
+\stopformula
+且：
+\startformula
+X=\sum_{j=1}^{n-1}a_j x_j
+\qquad Y=\sum_{j=1}^{n-1}a_j y_j
+\stopformula
+則：
+\startformula
+\alpha = (a_0 x_0 + b + X) \mod p
+\qquad \beta = (a_0 y_0 + b + Y) \mod p
+\stopformula
+由於 \m{x_0 \ne y_0} 且 p 是素數，那麼對於 \m{\alpha} 和 \m{\beta} 而言，
+上式有唯一解 \m{a_0} 和 \m{b}。
+
+更明顯一點，考慮我們要生成所有可能的值對 \m{\alpha,\beta}，
+他與值對 \m{\alpha,\alpha-\beta} 是雙射的。而：
+\startformula
+\alpha-\beta=a_0(x_0-y_0) + X - Y (\mod p)
+\stopformula
+所以：
+\startformula
+a_0 = (\alpha - \beta -X + Y) (x_0 - y_0)^{(-1)} (\mod p)
+\stopformula
+
+由於 \m{x_0 \ne y_0} 且 p 是素數，則 \m{(x_0 - y_0)^{(-1)}} 肯定存在且唯一。
+對於特定 \m{a_0} 而言，我們可以隨意選擇 \m{\alpha-\beta} 的值。
+對於特定 \m{b} 而言，我們可以隨意選擇 \m{\alpha} 的值。
+即對於特定的 \m{a_0} 和 \m{b}，我們可以隨意選擇 \m{\alpha} 和 \m{\beta}，
+只要保證 \m{(\alpha-\beta)\mod p} 的值相同即可。
+
+因此，對於任意給定的 \m{\langle a_0,a_1,\ldots,a_{n-1}\rangle}，
+我們可以找到散列函數 \m{h_{ab}}，通過選擇合適的 \m{a_0} 和 \m{b}，
+使其可以生成任何可能的 \m{\langle\alpha,\beta\rangle}。
+
+由於 \m{a_0} 和 \m{b} 的選擇共有 \m{p^2} 種，
+並且 \m{\langle\alpha,\beta\rangle} 也有 \m{p^2} 種，
+每個 \m{\langle\alpha,\beta\rangle} 都對應唯一的 \m{\langle a_0,b\rangle}。
+這對 \m{a_1,\ldots,a_{n-1}} 的 \m{p^{n-1}} 種選擇均成立。
+
+因此，有 \m{p^{n-1}} 種函數 \m{h_{ab}} 可以生成每個值對 \m{\langle\alpha,\beta\rangle}。
+如果 \m{h_{ab}} 是隨機選擇的，則每個值對的概率相同，因此 \m{{\cal H}} 是 2 全域的。
+
+參見 \goto{blog}[url(http://ripcrixalis.blog.com/2011/02/08/clrs-chapter-11/)]。
+\stopANSWER
+
+\startitem%d
+假設 Alice 和 Bob 悄悄地約定了一個取自 2 全域散列函數族 \m{{\cal H}} 中的散列函數 h。
+每個 \m{h\in {\cal H}} 將關鍵字全域 U 映射到 \m{\integers_p} 上，此處 p 爲素數。
+後來， Alice 通過互聯網向 Bob 發送了一個消息 m，其中 \m{m\in U}。
+她同時還通過發送一個認證標記 \m{t=h(m)} 來向 Bob 認證這一消息，
+而 Bob 則要檢查他所收到的 \m{(m,t)} 對是否確實滿足 \m{t=h(m)}。
+假設某一對手半路截獲了 \m{(m,t)}，並試圖將該值對替換爲令一值對 \m{(m',t')} 來欺騙 Bob。
+論證無論該對手的計算機性能多好，他成功欺騙 Bob 接受 \m{(m',t')} 的概率至多爲 \m{1/p}，
+即使他知道所用的散列函數族 \m{{\cal H}}。
+\stopitem
+
+\startANSWER
+對於關鍵字對 \m{\langle m,m'\rangle}，如果 h 是隨機選取的，
+則所有散列值對 \m{\langle h(m),h(m')\rangle} 的概率相同。
+這就是 \m{{\cal H}} 爲 2 全域的意思。
+
+即 p 種值對 \m{\langle t,t'\rangle} 的概率相同，
+所以即使他知道 \m{{\cal H}}，根據 m 和 t 也無法得出 \m{h(m')}。
+由於 p 種情況的概率相同，且總和爲 1，
+任一種可能的 \m{h(m')} 概率均爲 \m{1/p}，
+所以他只能靠猜，沒有更好的辦法。
+
+參見 \goto{blog}[url(http://ripcrixalis.blog.com/2011/02/08/clrs-chapter-11/)]。
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+\stopsubject%Problems

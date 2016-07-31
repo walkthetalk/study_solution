@@ -1,0 +1,112 @@
+\startsection[
+  title={Open addressing},
+]
+
+%e11.4-1
+\startEXERCISE
+用開放尋址法將關鍵字 10、 22、 31、 4、 15、 28、 17、 88、 59 插入到一個長度 \m{m=11} 的散列表中，
+輔助散列函數 \m{h'(k)=k}。
+試說明分別用線性探查、二次探查（\m{c_1=1}， \m{c_2=3}）和雙重散列
+（\m{h_1(k)=k}， \m{h_2(k)=1+(k\mod (m-1))}）
+將這些關鍵字插入散列表的過程。
+\stopEXERCISE
+
+\startANSWER
+\startcombination[3*1]
+{\externalfigure[output/e11_4_1-1]}{}
+{\externalfigure[output/e11_4_1-2]}{}
+{\externalfigure[output/e11_4_1-3]}{}
+\stopcombination
+\stopANSWER
+
+%e11.4-2
+\startEXERCISE
+試寫出 \ALGO{HASH-DELETE} 的僞碼；
+修改 \ALGO{HASH-INSERT}，使之能處理特殊值 \ALGO{DELETED}。
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{HASH-DELETE(T, k)}
+\startCLRS
+i = 0
+repeat
+	j = h(k, i)
+	if T[j] == k
+		T[j] = DELETED
+		return
+	else
+		i = i + 1
+until i == m
+error "hash table underflow"
+\stopCLRS
+
+\CLRSH{HASH-INSERT(T, k)}
+\startCLRS
+i = 0
+repeat
+	j = h(k, i)
+	if T[j] == NIL or T[j] == DELETED
+		T[j] = k
+		return j
+	else
+		i = i + 1
+until i == m
+error "hash table overflow"
+\stopCLRS
+\stopANSWER
+
+%e11.4-3
+\startEXERCISE
+考慮一個採用均勻散列的開放尋址散列表。
+當裝載因子爲 3/4 和 7/8 時，
+試分別給出一次不成功查找和一次成功查找的探查期望數上界。
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment[%
+  m=3, n=1,
+  align={middle,middle,middle},
+  distance=2em]
+\NC \NC \frac{3}{4} \NC \frac{7}{8} \NR
+\NC \frac{1}{1-\alpha} \NC 4 \NC 8 \NR
+\NC \frac{1}{\alpha}\ln\frac{1}{1-\alpha}
+    \NC \frac{8}{3}\ln{2}
+    \NC \frac{24}{7}\ln{2} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e11.4-4
+\startEXERCISE\DIFFICULT
+假設採用雙重散列來解決衝突，
+即所用的散列函數爲 \m{h(k, i)=(h_1(k)+i h_2(k)) \mod m}。
+試證明：
+如果對某個關鍵字 k， m 和 \m{h_2(k)} 有最大公約數 \m{d\ge 1}，
+則在對關鍵字 k 的一次不成功查找中，在返回槽 \m{h_1(k)} 之前，
+要檢查散列表中所有元素的 \m{1/d}。
+於是，當 \m{d=1} 時， \m{m} 與 \m{h_2(k)} 互素，
+查找操作可能要檢查整個散列表。
+（\hint 見\refchapter{number_theoretic}）
+\stopEXERCISE
+
+\startANSWER
+在循環過程中，每 d 次循環，模 m 的結果會重複一遍。
+\stopANSWER
+
+%e11.4-5
+\startEXERCISE\DIFFICULT
+假設開放尋址散列表的裝載因子爲 \m{\alpha}。
+找到非零值 \m{\alpha}，使得查找不成功時探測次數的期望值是查找成功時探測次數期望值的兩倍。
+對於探測次數期望值，使用定理 11.6 和 11.8 所給出的上界。
+\stopEXERCISE
+
+\startANSWER
+查找不成功時探測次數的期望值爲 \m{1/(1-\alpha)}。
+
+查找成功時探測次數的期望值爲 \m{\frac{1}{\alpha}\ln\frac{1}{1-\alpha}}。
+
+\startformula
+\frac{1}{1-\alpha} = 2 \frac{1}{\alpha}\ln\frac{1}{1-\alpha}
+\stopformula
+\stopANSWER
+
+\stopsection

@@ -1,0 +1,165 @@
+\startsection[
+  title={Hash tables},
+]
+%e11.2-1
+\startEXERCISE
+假設用一個散列函數 h 將 n 個不同的關鍵字散列到一個長度爲 m 的數列 T 中。
+假設採用的是簡單均勻散列，那麼期望的衝突數是多少？
+更準確地，集合 \m{\{\{k,l\}: k\ne l, \text{且 }h(k)=h(l)\}} 基的期望值是多少？
+\stopEXERCISE
+
+\startANSWER
+對於每對關鍵字 k 和 l，其中 \m{k\ne l}，
+定義指示器隨機變量 \m{X_{kl}=I\{h(k)=h(l)\}}。
+由於我們假設簡單均勻散列，
+因此 \m{\Pr\{X_{kl}=1\} = \Pr\{h(k)=h(l)\} = 1/m}，
+從而 \m{E[X_{kl}] = 1/m}。
+
+現在定義指示器隨機變量 Y，用來表示衝突的總數，
+因此 \m{Y=\sum_{k\ne l}X_{kl}}。衝突數的期望值爲：
+\startformula\startmathalignment
+\NC E[Y]
+    \NC = E\left[ \sum_{k\ne l} X_{kl} \right] \NR
+\NC \NC = \sum_{k\ne l} E\left[ X_{kl} \right] \NR
+\NC \NC = \binom{n}{2}\frac{1}{m} \NR
+\NC \NC = \frac{n(n-1)}{2}\times \frac{1}{m} \NR
+\NC \NC = \frac{n(n-1)}{2m} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e11.2-2
+\startEXERCISE
+對於一個用鏈接法解決衝突的散列表，
+說明將關鍵字 5、 28、 19、 15、 20、 33、 12、 17、 10 插入到該表中的過程。
+設該表中有 9 個槽位，並設其散列函數爲 \m{h(k)=k \mod 9}。
+\stopEXERCISE
+
+\startANSWER
+\midaligned{
+\startcombination[3*3]
+{\externalfigure[output/e11_2_2-1]}{a}
+{\externalfigure[output/e11_2_2-2]}{b}
+{\externalfigure[output/e11_2_2-3]}{c}
+{\externalfigure[output/e11_2_2-4]}{d}
+{\externalfigure[output/e11_2_2-5]}{e}
+{\externalfigure[output/e11_2_2-6]}{f}
+{\externalfigure[output/e11_2_2-7]}{g}
+{\externalfigure[output/e11_2_2-8]}{h}
+{\externalfigure[output/e11_2_2-9]}{i}
+\stopcombination
+}
+\stopANSWER
+
+%e11.2-3
+\startEXERCISE
+Marley 教授做了這樣一個假設，即如果將鏈模式改動一下，
+使得每個鏈表都能保持已排好序的順序，
+散列的性能就可以有較大的提高。
+ Marley 教授的改動對成功查找、不成功查找、插入和刪除操作的運行時間有何影響？
+\stopEXERCISE
+
+\startANSWER
+對於成功查找，平均情況下的運行時間沒什麼變化，還是 \m{\Theta(1+\alpha)}。
+要檢查的元素數目比鏈表中小於目標的元素數目多一個。
+
+不成功查找的平均時間也是 \m{\Theta(1+\alpha)}，但是比成功查找要少一半。
+因爲鏈表是排好序的，目標元素按數序所在位置是隨機的，平均情況下要搜索鏈表元素的一半。
+
+插入元素的平均時間爲 \m{\Theta(1+\alpha)}，相對於原來的 \m{\Theta(1)} 有所下降。
+因爲鏈表需要保持有序。於不成功查找的過程類似。
+
+刪除元素於成功查找類似，也是 \m{\Theta(1+\alpha)}。
+\startformula
+E[n_j] = \alpha = \frac{n}{2m}
+\stopformula
+\stopANSWER
+
+%e11.2-4
+\startEXERCISE
+通過將所有空閒槽位組成一個空閒鏈表，如何爲散列表中的元素分配、釋放存儲空間？
+假設一個槽位中可以存儲一個標記，外加一個元素和一個指針，或者兩個指針。
+所有字典、空閒鏈表操作的期望時間應爲 \m{O(1)}。
+空閒鏈表是否需要是雙向鏈表，或者說單向空閒鏈表是否足夠？
+\stopEXERCISE
+
+\startANSWER
+用這個標記來指示槽位是否空閒。
+
+空閒槽位處於空閒鏈表中，通過雙線鏈接將所有空閒槽位組成空閒鏈表。
+空閒槽位中含有兩個指針。
+
+而非空閒槽位中除了標記以外，還含有一個元素值和一個指針（可能是 NIL），這個指針只想散列到此槽位的下一個元素。
+（當然，這個指針指向的其實是另一個槽位）
+
+{\EMP 插入：}
+
+如果新元素散列到空閒槽位上，則將此槽位從空閒鏈表中移除，將此元素的值填如，並將指針賦值爲 NIL。
+爲了使其時間滿足 \m{O(1)}，鏈表需爲雙向。
+
+而如果新元素散列到了一個已用的槽位 j 上，則檢查此槽位原有元素 x 是否應當散列到此槽位上。
+
+如果是，則將新元素加入原由鏈表中即可。需要先分配一個空閒槽位（即取出空閒鏈表的頭部節點），填充數據，
+並將此槽位加入槽位 j 中的鏈表。
+
+否則，新分配一個槽位，用來在 j 所屬鏈表中替換 j。並將 j 作爲新鏈表的頭節點，填入新元素的值，並將指針賦值爲 NIL。
+其中替換 j 時，需要從 j 所屬鏈表的頭部順序查找，才能找到 j 的前驅節點。
+
+{\EMP 刪除：}
+
+令要刪除的元素爲 x，其散列到槽位 j 上。
+
+如果 x 是 j 中的元素，且 j 沒有後繼節點，則釋放 j 即可。
+
+如果 x 是 j 中的元素，但 j 有後繼節點，則交換 j 與其後繼節點的所有內容，並釋放其後繼節點。
+
+否則需要從 j 開始，在鏈表中搜索 x，找到後直接將其從鏈表中剔除，釋放即可。
+
+{\EMP 查找：}
+
+檢查關鍵字所散列到的槽位，如果此槽位的原有元素也是散列到此位置上，則在其鏈表中搜索（包括此槽位自身）；
+否則查找直接失敗。
+
+所有操作期望時間均爲 \m{O(1)}。
+在鏈表中查找的期望時間爲 \m{O(1+\alpha)}，於鏈表的存儲位置無關，
+所有元素都在表中則意味着 \m{\alpha\le 1}。
+而如果空閒鏈表是單向的，就無法在 \m{O(1)} 時間內刪除任意槽位了。
+\stopANSWER
+
+%11.2-5
+\startEXERCISE
+將 n 個關鍵字存儲在大小爲 m 的散列表中。證明：
+如果這些關鍵字源於全域 U，且 \m{|U| > nm}，
+且 U 中有大小爲 n 的子集，其中關鍵字會散列到散列表中的同一槽位上，
+那麼用鏈表解決衝突的情況下，最壞情況的查找時間爲 \m{\Theta(n)}。
+\stopEXERCISE
+
+\startANSWER
+必有一個槽位的元素數量大於 n （鴿籠原理）。
+\stopANSWER
+
+%e11.2-6
+\startEXERCISE
+將 n 個關鍵字存儲在大小爲 m 的散列表中，以鏈表解決衝突，
+我們直到每個鏈表的長度，並且知道最長鏈表的長度 L。
+如何從所有關鍵字中均勻隨機選取其一，
+並在期望時間 \m{O(L\cdot (1+1/\alpha))} 內完成。
+\stopEXERCISE
+
+\startANSWER
+首先，隨機選擇一個槽位，令其所含元素數目爲 k。
+
+然後，在 \m{1,2,\ldots,L} 中均勻隨機選擇一個，令其爲 p。
+
+如果 \m{p\le k} 則返回 k 個元素中的第 p 個，否則重復執行以上步驟。
+
+上述過程所返回每個元素的概率是相同的。
+每個槽位所含元素數目的期望值爲 \m{n/m}。
+採樣嘗試成功的概率爲 \m{(n/m)/L}。
+採樣成功所要進行的嘗試次數期望值爲 \m{L \times m / n}。
+加上在具體槽位上獲取最終元素的開銷 \m{O(L)}，
+總的期望時間爲 \m{O(L\times (1+m/n))}。
+
+請參考 \goto{stackexchange}[url(http://stackoverflow.com/questions/8629447/efficiently-picking-a-random-element-from-a-chained-hash-table)]。
+\stopANSWER
+
+\stopsection

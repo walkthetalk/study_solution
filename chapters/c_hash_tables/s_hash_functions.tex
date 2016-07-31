@@ -1,0 +1,160 @@
+\startsection[
+  title={Hash functions},
+]
+
+%e11.3-1
+\startEXERCISE
+假設我們希望查找一個長度爲 n 的鏈表，
+其中每一個元素都包含一個關鍵字 k 並具有散列值 \m{h(k)}。
+每一個關鍵字都是長字串。
+那麼在表中查找具有給定關鍵字的元素時，如何利用各元素的散列值？
+\stopEXERCISE
+
+\startANSWER
+比較關鍵字散列值而不是比較關鍵字。
+\stopANSWER
+
+%e11.3-2
+\startEXERCISE
+假設將一個長度爲 r 的字串散列到 m 個槽位中，
+並將其視爲一個以 128 爲基數的數，要求應用除法散列法。
+我們可以很容易地把數 m 表示爲一個 32 位的機器字，
+但是對於長度爲 r 的字串，由於他被當作以 128 爲基數的數來處理，
+就要佔用若幹個機器字。
+假設應用除法散列法來計算一個字串的散列值，
+那麼如何才能在除了該字串本身所佔空間外，只利用常數個機器字？
+\stopEXERCISE
+
+\startANSWER
+程序如下，其中 p、 b、 c 均小於 m， c 爲最終結果：
+\startCLRS
+p = 1
+b = 128 mod m
+c = 0
+for i = 0 upto r - 1
+	c = (c + a[i] * p mod m) mod m
+	p = p * b mod m
+return c
+\stopCLRS
+\stopANSWER
+
+%e11.3-3
+\startEXERCISE
+考慮除法散列法的另一個版本，
+其中 \m{h(k) = k \mod m}， \m{m=2^p-1}， \m{k} 爲按基數 \m{2^p} 表示的字串。
+試證明：如果串 x 可由串 y 通過其自身的字符置換排列導出，
+則 x 和 y 具有相同的散列值。
+給出一個應用的例子，其中這一特性在散列函數中是不希望出現的。
+\stopEXERCISE
+
+\startANSWER
+若 \m{m=2^p-1}，則 \m{k = \sum_{i=0}^{n}a_i(m+1)^i}。
+因此 \m{k \mod m = \left(\sum_{i=0}^{n}a_i\right)\mod m}。
+
+因此只要字串 x 和 y 可相互置換，則散列值必定相同。
+\stopANSWER
+
+%e11.3-4
+\startEXERCISE
+考慮一個大小爲 \m{m=1000} 的散列表和一個對應的散列函數 \m{h(k)=\left\lfloor m(kA\mod 1)\right\rfloor}，
+其中 \m{A=(\sqrt{5}-1)/2}，
+試計算關鍵字 61、 62、 63、 64 和 65 被映射到的位置。
+\stopEXERCISE
+
+\startANSWER
+用 maxima 執行下列命令：
+\startcodebox
+for a:61 step 1 thru 65 do display(floor(mod((sqrt(5)-1)/2 * a, 1) * 1000));
+\stopcodebox
+結果爲：
+\startcodebox
+                               61 (sqrt(5) - 1)
+                   floor(1000 (---------------- - 37)) = 700
+                                      2
+
+                   floor(1000 (31 (sqrt(5) - 1) - 38)) = 318
+
+                               63 (sqrt(5) - 1)
+                   floor(1000 (---------------- - 38)) = 936
+                                      2
+
+                   floor(1000 (32 (sqrt(5) - 1) - 39)) = 554
+
+                               65 (sqrt(5) - 1)
+                   floor(1000 (---------------- - 40)) = 172
+                                      2
+\stopcodebox
+\stopANSWER
+
+%e11.3-5
+\startEXERCISE
+定義一個從有限集合 U 到有限集合 B 上的散列函數族 \m{{\cal H}} 爲 {\EMP \m{\epsilon} 全域}的，
+則必須滿足：
+如果對 U 中任意兩個不同元素 k 和 l，都有：
+\startformula
+\Pr\{h(k)=h(l)\}\le\epsilon
+\stopformula
+其中概率是相對從函數族 \m{{\cal H}} 中隨機抽取的散列函數 \m{h} 而言的。
+證明：一個 \m{\epsilon} 全域的散列函數族必定滿足：
+\startformula
+\epsilon \ge \frac{1}{|B|} - \frac{1}{|U|}
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+令 \m{n=|U|}、 \m{m=|B|}。
+對於 B 中的第 i 個槽位，其元素個數爲 \m{x_i}，
+則 \m{C(x_i, 2) = x_i * (x_i - 1) / 2} 種衝突。
+則衝突總數爲：
+\startformula\startmathalignment
+\NC \sum_{i=1}^{m}x_i (x_i - 1)/2
+     =\NC \frac{1}{2}\sum_{i=1}^{m}x_i^2 - \frac{1}{2}\sum_{i=1}^{m}x_i \NR
+\NC\ge\NC \frac{n^2}{2m} - \frac{n}{2}
+\stopmathalignment\stopformula
+
+因此：
+\startformula\startmathalignment
+\NC \Pr\{h(k)=h(l)\}
+    \ge \NC \frac{\frac{n(n-m)}{2m}}{C(n,2)} \NR
+\NC =   \NC \frac{n-m}{m(n-1)} \NR
+\NC \ge \NC \frac{n-m}{mn} \NR
+\NC =   \NC \frac{1}{m} - \frac{1}{n} \NR
+\NC =   \NC \frac{1}{|B|} - \frac{1}{|U|} \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e11.3-6
+\startEXERCISE\DIFFICULT
+設 U 爲 n 元組集合，其中所有元素均取自 \m{\integers_p}，且 \m{B=\integers_p}，
+其中 p 爲素數。
+對於一個取自 U 的輸入 n 元組 \m{\langle a_0,a_1,\ldots,a_{n-1}\rangle}，
+定義其上的散列函數 \m{h_b: U\rightarrow B(b\in \integers_p)} 爲：
+\startformula
+h_b(\langle a_0, a_1, \ldots, a_{n-1} \rangle) =
+   \left(\sum_{j=0}^{n-1} a_j b^j \right) \mod p
+\stopformula
+令 \m{{\cal H} = \{h_b : b \in \integers_p\}}。
+根據上一個練習種 \m{\epsilon} 全域的定義，
+證明 \m{{\cal H}} 是 \m{((n-1)/p)} 全域的。
+（\hint 參考\refexercise{model_zero}）
+\stopEXERCISE
+
+\startANSWER
+令 \m{k=\langle k_0,k_1,\ldots,k_{n-1}\rangle \in U}，
+ \m{l=\langle l_0,l_1,\ldots,l_{n-1}\rangle \in U}，
+且 \m{k_i \ne l_i}， \m{b\in \mathbb{Z}_p}。
+則：
+\startformula\startmathalignment
+\NC \Pr\{h_b(k)=h_b(l)\}
+   = \NC \Pr\{h_b(k)-h_b(l)=0\} \NR
+\NC= \NC \Pr\{\sum_{j=0}^{n-1}(k_j-l_j)b^j = 0\} \NR
+\stopmathalignment\stopformula
+其中 \m{\sum_{j=0}^{n-1}(k_j-l_j)b^j = 0} 爲 \m{n-1} 次多項式，最多有 \m{n-1} 個解。
+因此：
+\startformula
+\Pr\{h_b(k)=h_b(l)\} \le \frac{n-1}{p} \qquad b \in \integers_p
+\stopformula
+所以 \m{{\cal H}} 是 \m{((n-1)/p)} 全域的。
+\stopANSWER
+
+\stopsection

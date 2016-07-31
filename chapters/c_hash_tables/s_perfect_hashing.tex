@@ -1,0 +1,31 @@
+\startsection[
+  title={Perfect hashing},
+  reference=section:perfect_hashing,
+]
+
+%e11.5-1
+\startEXERCISE
+假設用開放尋址法和均勻散列技術將 n 個關鍵字插入到一個大小爲 m 的散列表中。
+設 \m{p(n,m)} 爲沒有衝突發生的概率。
+試證明： \m{p(n,m)\le e^{-n(n-1)/2m}}。
+（\hint 式（3.12））
+論證當 n 超過 \m{\sqrt{m}} 時，不發生衝突的概率快速趨於 0。
+
+附式 3.12： \m{e^x \ge 1 + x}。
+\stopEXERCISE
+
+\startANSWER
+發生衝突的概率期望值爲 \m{\binom{n}{2}\frac{1}{m}}。
+所以沒有衝突發生的概率爲：
+\startformula
+p(n,m)
+  = 1 - \binom{n}{2}\frac{1}{m}
+  = 1 - \frac{n(n-1)}{2m}
+  = 1 + (- \frac{n(n-1)}{2m})
+  \le e^{-n(n-1)/2m}
+\stopformula
+
+\TODO{如何證明？}
+\stopANSWER
+
+\stopsection

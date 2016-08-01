@@ -20,13 +20,13 @@
 \startformula
 T(n) = \startmathcases
  \NC O(1) \MC \text{若 } n < n_0 \NR
- \NC T(\lceil n/7 \rceil) + T(5n/7 + 8) + O(n) \MC \text{若 } n \ge n_0 \NR
+ \NC T(\left\lceil n/7 \right\rceil) + T(5n/7 + 8) + O(n) \MC \text{若 } n \ge n_0 \NR
 \stopmathcases
 \stopformula
 
 猜測 \m{T(n)\le cn}，令非遞迴項爲 \m{an}：
 \startformula\startmathalignment
-\NC T(n) \NC \le c\lceil n/7 \rceil + c(5n/7 + 8) + an \NR
+\NC T(n) \NC \le c\left\lceil n/7 \right\rceil + c(5n/7 + 8) + an \NR
 \NC \NC \le cn/7 + c + 5cn/7 + 8c + an \NR
 \NC \NC = 6cn/7 + 9c + an \NR
 \NC \NC = cn + (-cn/7 + 9c + an) \NR
@@ -55,12 +55,12 @@ T(n) = \startmathcases
 
 遞迴式如下：
 \startformula
-T(n) = T(\lceil n/3 \rceil) + T(2n/3 + 4) + O(n)
+T(n) = T(\left\lceil n/3 \right\rceil) + T(2n/3 + 4) + O(n)
 \stopformula
 
 用代入法證明 \m{T(n)=\omega(n)}。猜測 \m{T(n) > cn}，令非遞迴項爲 \m{an}：
 \startformula\startmathalignment
-\NC T(n) \NC > c\lceil n/3 \rceil + c(2n/3 + 2) + an \NR
+\NC T(n) \NC > c\left\lceil n/3 \right\rceil + c(2n/3 + 2) + an \NR
 \NC \NC > cn/3 + c + 2cn/3 + 2c + an \NR
 \NC \NC = cn + 3c + an \qquad c>0,a>0,n>0\NR
 \NC \NC > cn \NR
@@ -73,8 +73,8 @@ T(n) = T(\lceil n/3 \rceil) + T(2n/3 + 4) + O(n)
 % e9.3-2
 \startEXERCISE[exercise:partition_1_4]
 分析 \ALGO{SELECT}，並證明：
-如果 \m{n\ge 140}，則至少 \m{\lceil n/4 \rceil} 個元素大於中位數的中位數 \m{x}，
-至少 \m{\lceil n/4 \rceil} 個元素小於 \m{x}。
+如果 \m{n\ge 140}，則至少 \m{\left\lceil n/4 \right\rceil} 個元素大於中位數的中位數 \m{x}，
+至少 \m{\left\lceil n/4 \right\rceil} 個元素小於 \m{x}。
 \stopEXERCISE
 
 \startANSWER

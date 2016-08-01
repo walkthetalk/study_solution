@@ -2,6 +2,7 @@
   title={Problems},
 ]
 
+%p8-1
 \startPROBLEM
 （Probabilistic lower bounds on comparison sorting）
 在這一問題中，我們將證明對於給定的 \m{n} 個互異的輸入元素，
@@ -30,7 +31,7 @@
  \m{LT} 和 \m{RT} 分別是 \m{T} 的左子樹和右子樹。
 證明：
 \startformula
-\m{D(T) = D(LT) + D(RT) + k}。
+D(T) = D(LT) + D(RT) + k。
 \stopformula
 \stopitem
 
@@ -345,7 +346,10 @@ h \ge \lg(n!) = \Omega(n\lg{n})
 而 \m{A_s[i] = A[s + i \times k]}，其中 \m{i=0,1,2,\ldots,n/k-1}。
 
 只需將這 \m{k} 個子數列排序即可。每個子數列元素個數爲 \m{n/k}，
-總時間爲 \m{O((n/k)\lg(n/k)) \times k = O(n\lg(n/k))}。
+總時間爲
+\startformula
+O((n/k)\lg(n/k)) \times k = O(n\lg(n/k))
+\stopformula
 \stopANSWER
 \stopigBase
 
@@ -372,6 +376,7 @@ h \ge \lg(n!) = \Omega(n\lg{n})
 \stopigBase
 \stopPROBLEM
 
+%p8-6
 \startPROBLEM
 （Lower bound on merging sorted lists）
 我們經常遇到合並兩個有序列表的問題。
@@ -402,19 +407,19 @@ h \ge \lg(n!) = \Omega(n\lg{n})
 \startANSWER
 由\refexercise{c_2n_n} 可知：
 \startformula
-\binom{2n}{n} = \frac{2^{2n}}{\sqrt{\pi n}}(1 + \O(1/n))
+\binom{2n}{n} = \frac{2^{2n}}{\sqrt{\pi n}}(1 + O(1/n))
 \stopformula
 
 如果決策樹中有 \m{l} 個葉子節點，且高度爲 \m{h}，則：
 \startformula
-\frac{2^{2n}}{\sqrt{\pi n}}(1 + \O(1/n)) \le l \le 2^h
+\frac{2^{2n}}{\sqrt{\pi n}}(1 + O(1/n)) \le l \le 2^h
 \stopformula
 
 不等式兩端取對數：
 \startformula\startmathalignment
-\NC h \NC \ge \lg\left(\frac{2^{2n}}{\sqrt{\pi n}}(1 + \O(1/n))\right) \NR
+\NC h \NC \ge \lg\left(\frac{2^{2n}}{\sqrt{\pi n}}(1 + O(1/n))\right) \NR
 \NC   \NC = \lg{2^{2n}} - \lg\sqrt{\pi n} + \lg(1 + O(1/n)) \NR
-\NC   \NC = 2n - \o(n) \NR
+\NC   \NC = 2n - O(n) \NR
 \stopmathalignment\stopformula
 \stopANSWER
 \stopigBase
@@ -443,6 +448,7 @@ h \ge \lg(n!) = \Omega(n\lg{n})
 \stopigBase
 \stopPROBLEM
 
+%p8-7
 \startPROBLEM
 （The 0-1 sorting lemma and columnsort）
 對兩個數列元素 \m{A[i]} 和 \m{A[j]} （其中 \m{i < j}）進行{\EMP 比較交換}（{\EMP compare-exchange}）的形式如下：
@@ -511,7 +517,7 @@ B[i] = \startmathcases
 {\EMP 列排序}算法用於包含 \m{n} 個元素的矩形數列的排序。
 這一矩形數列有 \m{r} 行 \m{s} 列（因此 \m{n=rs}），
 滿足下列三個限制條件：
-\startigBase[2][indentnext=no]
+\startigNum[2]
 \item \m{r} 必須是偶數；
 \item \m{s} 必須是 \m{r} 的因子；
 \item \m{r\ge 2s^2}；
@@ -625,7 +631,7 @@ B[i] = \startmathcases
 }{(i)}
 \stopcombination}
 
-\startigBase[a,continue]
+\startigBase[continue]
 \startitem
 討論：即使不知道奇數步採用了什麼排序算法，
 我們也可以把列排序看作一種遺忘比較交換算法。
@@ -642,7 +648,7 @@ B[i] = \startmathcases
 否則稱這個區域是{\EMP 髒}的。
 這裏，假設輸入數據只包含 0 和 1，
 且輸入數據能轉換成 \m{r} 行 \m{s} 列。
-\startigBase[a,continue]
+\startigBase[continue]
 \startitem
 證明：經過第 1～3 布，數列由三部分組成：
 頂部一些由全 0 組成的乾淨行，底部一些由全 1 組成的乾淨行，

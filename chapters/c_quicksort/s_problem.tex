@@ -126,8 +126,8 @@ if p < r
 他將 \m{A[p..r]} 中的元素排序後，
 返回值是兩個數列下標 \m{q} 和 \m{t}，
 其中 \m{p\le q\le t\le r}，且：
-\startigBase[a]
-\item \m{A[q..t]} 中的所有元素都項燈；
+\startigBase
+\item \m{A[q..t]} 中的所有元素都相等；
 \item \m{A[p..q-1]} 中的所有元素都小於 \m{A[q]}；
 \item \m{A[t+1..r]} 中的所有元素都大於 \m{A[q]}。
 \stopigBase
@@ -187,7 +187,7 @@ if p < r
 \stopitem
 
 \startANSWER
-\TODO{需要處理}
+\TODO{略。}
 \stopANSWER
 \stopigBase
 \stopPROBLEM
@@ -257,14 +257,14 @@ E[T(n)] = \frac{2}{n}\sum_{q=2}^{n-1}E[T(q)] + \Theta(n)
 \startformula
 \sum_{k=2}^{n-1}k\lg{k} \le \frac{1}{2}n^2\lg{n} - \frac{1}{8}n^2
 \stopformula
-（\hint 以將其分成兩部分，一部分是 \m{k=2,3,\ldots,\lceil n/2\rceil-1}，
-另一部分是 \m{k=\lceil n/2 \rceil,\ldots,n-1}。）
+（\hint 以將其分成兩部分，一部分是 \m{k=2,3,\ldots,\left\lceil n/2\right\rcel-1}，
+另一部分是 \m{k=\left\lceil n/2 \right\rcel,\ldots,n-1}。）
 \stopitem
 
 \startANSWER
 \startformula\startmathalignment
 \NC \sum_{k=2}^{n-1}k\lg{k}
-   \NC=   \sum_{k=2}^{\lceil n/2 \rceil - 1}k\lg{k} + \sum_{k=\lceil n/2 \rceil}^{n - 1}k\lg{k} \NR
+   \NC=   \sum_{k=2}^{\left\lceil n/2 \right\rcel - 1}k\lg{k} + \sum_{k=\left\lceil n/2 \right\rcel}^{n - 1}k\lg{k} \NR
 \NC\NC\le \sum_{k=2}^{n/2}k\lg{k} + \sum_{k=n/2 + 1}^{n}k\lg{k} \NR
 \NC\NC\le \sum_{k=2}^{n/2}k\lg(n/2) + \sum_{k=n/2 + 1}^{n}k\lg{n} \NR
 \NC\NC=   \lg(n/2)\sum_{k=2}^{n/2}k\ + \lg{n}\sum_{k=n/2 + 1}^{n}k \NR
@@ -327,7 +327,7 @@ while p < r
 \stopANSWER
 \stopigBase
 
-編譯器通常試用{\EMP 棧}來存儲遞迴過程中的相關信息，
+編譯器通常使用{\EMP 棧}來存儲遞迴過程中的相關信息，
 包括每一次遞迴調用的參數等。
 最新調用的信息存在棧的頂部；
 當他結束時，其信息則被{\EMP 彈出}。

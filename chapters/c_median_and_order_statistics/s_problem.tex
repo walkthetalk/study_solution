@@ -169,7 +169,7 @@ U_i(n)=\startmathcases
 \NC U_i(n)
     \NC = \lfloor n/2 \rfloor + U_i(\lceil n/2 \rceil) + T(2i) \NR
 \NC \NC = \lfloor n/2 \rfloor + \lceil n/2 \rceil +
-             \O(T(2i)\lg(\lfloor n/2 \rfloor / i)) + T(2i) \NR
+             O(T(2i)\lg(\lfloor n/2 \rfloor / i)) + T(2i) \NR
 \NC \NC = n + O(T(2i)\lg(n/i)) + T(2i) \NR
 \NC \NC = n + O(T(2i)\lg(n/i)) \NR
 \stopmathalignment\stopformula

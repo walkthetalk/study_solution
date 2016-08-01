@@ -59,9 +59,9 @@ n_j = \left\lceil \frac{n_{j-1}}{b} \right\rceil
 \stopANSWER
 
 \startEXERCISE[exercise:master_method_generalized] \DIFFICULT
-證明：如果 \m{f(n) = \Theta(n^{\log_b{a}}\lg^k{n})}，其中 \m{k\ge 0}，
-則主遞迴式的解爲 \m{T(n) = \Theta(n^{\log_b{a}}\lg^{k+1}n)}。
-簡單起見，假定 \m{n} 是 \m{b} 的冪。（\m{T(n)=aT(n/b)+f(n)}）
+證明：若 \m{f(n) = \Theta(n^{\log_b{a}}\lg^k{n})}，其中 \m{k\ge 0}，
+則主遞迴式的解爲 \m{T(n) = \Theta(n^{\log_b{a}}\lg^{k+1}n )}。
+簡單起見，假定 \m{n} 是 \m{b} 的冪。（\m{T(n) = aT(n/b)+f(n)}）
 \stopEXERCISE
 \startANSWER
 \startformula\startmathalignment[n=2]

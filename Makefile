@@ -49,6 +49,7 @@ fig_pdfs: ${fig_pdfs}
 $(pdf_name).pdf: $(tex_deps) ${fig_pdfs}
 	@echo [gen] $@
 	@context --jit --purge \
+	  --nocompression \
 	  --environment=env_cmm \
 	  --path=$(dir_main)/env/ \
 	  --result=$(pdf_name).pdf \

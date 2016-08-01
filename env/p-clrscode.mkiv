@@ -158,9 +158,25 @@ commands.clrsalgo([[#1]])
 
 \define[1]\CLRSH{\noindentation\ALGO{#1}}
 
-\define[1]\SIMPLEURL{%
-\goto{#1}[url(#1)]%
-}
+\startluacode
+function commands.simpleurl(url)
+	tex.sprint(tex.ctxcatcodes, "\\goto{")
+	local idx = 0
+	for word in string.gmatch(url, "([^/%-]+[/%-]?)") do
+		if idx ~= 0 then
+			tex.sprint(tex.ctxcatcodes, "{\\allowbreak}")
+		end
+
+		tex.sprint(tex.ctxcatcodes, word)
+
+		idx = idx + 1
+	end
+	tex.sprint(tex.ctxcatcodes, "}[url(" .. url .. ")]")
+end
+\stopluacode
+\define[1]\simpleurl{\ctxlua{%
+commands.simpleurl([[#1]])%
+}}%
 
 \definemathcommand [COST]    [limop] {\mfunction{cost}}
 \definemathcommand [EXTRAS]  [limop] {\mfunction{extras}}

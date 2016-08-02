@@ -232,9 +232,9 @@ X_{ijk}=I\{\text{在查找 \m{z_k} 的算法執行過程中會比較 \m{z_i} 和
 則要比較 \m{z_i} 和 \m{z_j}。準確的表達式依賴於 \m{k} 與 \m{i}、 \m{j} 的相對位置：
 \startformula
 E[X_{ijk}] = \startmathcases
-\NC 2 / (k - i + 1) \MC \text{若 } i < j \le k \NR
-\NC 2 / (j - i + 1) \MC \text{若 } i \le k \le j \NR
-\NC 2 / (j - k + 1) \MC \text{若 } k \le i < j \NR
+\NC 2 / (k - i + 1) \NC 若 \m{i < j \le k} \NR
+\NC 2 / (j - i + 1) \NC 若 \m{i \le k \le j} \NR
+\NC 2 / (j - k + 1) \NC 若 \m{k \le i < j} \NR
 \stopmathcases
 \stopformula
 \stopANSWER

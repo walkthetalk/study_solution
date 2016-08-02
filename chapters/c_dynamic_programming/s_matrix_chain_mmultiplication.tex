@@ -14,8 +14,8 @@
 或者直接使用下列方程：
 \startformula
 m[i,j]=\startmathcases
-\NC 0 \MC \text{如果} i = j\NR
-\NC \min_{i\le k < j}\{m[i,k]+m[k+1,j] + p_{i-1} p_k p_j\}\MC \text{如果} i<j\NR
+\NC 0 \NC 如果 \m{i = j} \NR
+\NC \min_{i\le k < j}\{m[i,k]+m[k+1,j] + p_{i-1} p_k p_j\} \NC 如果 \m{i<j} \NR
 \stopmathcases
 \stopformula
 其中對於所有 \m{i}，都有 \m{m[i,i] = 0}，可用以計算 \m{m[i,i+1]}。
@@ -52,8 +52,8 @@ else
 用代入法證明遞迴公式（15.6）的結果爲 \m{\Omega(2^n)}。附公式（15.6）：
 \startformula
 P(n) = \startmathcases
-\NC 1 \MC \text{如果} n = 1 \NR
-\NC \sum_{k=1}^{n-1} P(k) P(n-k) \MC \text{如果} n\ge 2 \NR
+\NC 1 \NC 如果 \m{n = 1} \NR
+\NC \sum_{k=1}^{n-1} P(k) P(n-k) \NC 如果 \m{n\ge 2} \NR
 \stopmathcases
 \stopformula
 \stopEXERCISE

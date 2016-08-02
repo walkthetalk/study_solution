@@ -17,8 +17,8 @@
 令 \m{T} 爲圖 \m{G} 的傳遞閉包矩陣：
 \startformula
 T[i,j] = \startcases
-\NC 1 \MC if i = j \NR
-\NC 0 \MC otherwise \NR
+\NC 1 \NC if \m{i = j} \NR
+\NC 0 \NC otherwise \NR
 \stopcases
 \stopformula
 
@@ -76,6 +76,8 @@ for i = 1 upto |V|
 而整個矩陣只有 \m{O(V^2)} 個元素，也就是說最後三行最多執行 \m{O(V^2)} 次。
 所以總時間爲 \m{O(V^3)}。
 \stopANSWER
+
+\stopPROBLEM
 
 %p25-2
 \startPROBLEM

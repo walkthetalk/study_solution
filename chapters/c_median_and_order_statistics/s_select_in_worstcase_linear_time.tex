@@ -19,8 +19,8 @@
 劃分將問題規模減小爲最大 \m{5n/7+8}。則有如下遞迴式：
 \startformula
 T(n) = \startmathcases
- \NC O(1) \MC \text{若 } n < n_0 \NR
- \NC T(\left\lceil n/7 \right\rceil) + T(5n/7 + 8) + O(n) \MC \text{若 } n \ge n_0 \NR
+ \NC O(1) \NC 若 \m{n < n_0} \NR
+ \NC T(\left\lceil n/7 \right\rceil) + T(5n/7 + 8) + O(n) \NC 若 \m{n \ge n_0} \NR
 \stopmathcases
 \stopformula
 

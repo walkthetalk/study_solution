@@ -91,8 +91,8 @@ M = \sum_{i=1}^k Q[i] \times d[i]
 令找零 j 美分至少需要 \m{c[j]} 枚硬幣。
 \startformula
 c[j] = \startcases
-\NC 0 \MC \text{如果 \m{j\le 0}；} \NR
-\NC 1 + \min_{1\le i \le k}\{c[j-d_i]\} \MC \text{如果 \m{j>1}。} \NR
+\NC 0 \NC 如果 \m{j\le 0}； \NR
+\NC 1 + \min_{1\le i \le k}\{c[j-d_i]\} \NC 如果 \m{j>1}。 \NR
 \stopcases\stopformula
 \stopANSWER
 

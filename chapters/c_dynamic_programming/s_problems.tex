@@ -43,8 +43,8 @@ return L[t]
 設 \m{m} 爲最長回文子序列的長度，則：
 \startformula
 m[i,j] = \startcases
-\NC m[i+1,j-1] + 1 \MC \text{如果 \m{A[i] = A[j]}；} \NR
-\NC \max\{m[i,j-1], m[i+1,j]\} \MC \text{如果 \m{A[i] \ne A[j]}。}\NR
+\NC m[i+1,j-1] + 1 \NC 如果 \m{A[i] = A[j]}； \NR
+\NC \max\{m[i,j-1], m[i+1,j]\} \NC 如果 \m{A[i] \ne A[j]}。 \NR
 \stopcases
 \stopformula
 
@@ -133,9 +133,9 @@ J.L. Bentley 建議將問題簡化，
 定義此行的代價爲 \m{\LINECOST[i,j]}，則：
 \startformula
 \LINECOST[i,j] = \startcases
-\NC \infty \MC \text{如果 \m{\EXTRAS[i,j] < 0} （即單詞 \m{i,\ldots,j} 不滿足要求）； }\NR
-\NC 0 \MC \text{如果 \m{j=n} 且 \m{\EXTRAS\ge 0} （最後一行代價爲 0）；} \NR
-\NC (\EXTRAS[i,j])^3 \MC \text{否則。} \NR
+\NC \infty \NC 如果 \m{\EXTRAS[i,j] < 0} （即單詞 \m{i,\ldots,j} 不滿足要求）； \NR
+\NC 0 \NC 如果 \m{j=n} 且 \m{\EXTRAS\ge 0} （最後一行代價爲 0）； \NR
+\NC (\EXTRAS[i,j])^3 \NC 否則。 \NR
 \stopcases
 \stopformula
 
@@ -255,11 +255,11 @@ return L
 \startformula\startmathalignment
 \NC D(0,0) \NC = 0 \NR
 \NC D(i,j) \NC = \min\startcases
-\NC D(i-1,j-1) + \COST(\text{複製}) \MC \text{如果\m{x_i=y_j}；}\NR
-\NC D(i-1,j-1) + \COST(\text{替換}) \MC \text{如果\m{x_i\ne y_j}；}\NR
-\NC D(i-1,j) + \COST(\text{刪除}) \MC \NR
-\NC D(i,j-1) + \COST(\text{插入}) \MC \NR
-\NC D(i-2,j-2) + \COST(\text{交換}) \MC \text{如果\m{[x_{i-1}x_i]=[y_i y_{i-1}]}；}\NR
+\NC D(i-1,j-1) + \COST(\text{複製}) \NC 如果\m{x_i=y_j}； \NR
+\NC D(i-1,j-1) + \COST(\text{替換}) \NC 如果\m{x_i\ne y_j}； \NR
+\NC D(i-1,j) + \COST(\text{刪除}) \NC \NR
+\NC D(i,j-1) + \COST(\text{插入}) \NC \NR
+\NC D(i-2,j-2) + \COST(\text{交換}) \NC 如果\m{[x_{i-1}x_i]=[y_i y_{i-1}]}； \NR
 \stopcases \NR
 \stopmathalignment\stopformula
 除 \m{D} 外，我們還可以維護一張表用來記錄執行了哪些操作。
@@ -594,9 +594,9 @@ Rinky Dink 公司是一家製造溜冰場冰面整修設備的公司。
 令 \m{L_i} 爲第 \m{i} 月的產品剩餘； \m{C_i} 爲第 \m{i} 月的成本。
 \startformula
 C_i = \startcases
-\NC h(L_{i-1}-d_i) \MC \text{如果 \m{L_{i-1}\ge d_i}；（\m{L_i=L_{i-1}-d_i}）} \NR
-\NC 0 \MC \text{如果 \m{d_i - m\le L_{i-1} \le d_i}；（\m{L_i=0}）} \NR
-\NC c\times (L_{i-1}+m-d_i) \MC \text{如果 \m{L_{i-1} < di - m}；（\m{L_i=0}）} \NR
+\NC h(L_{i-1}-d_i) \NC 如果 \m{L_{i-1}\ge d_i}；（\m{L_i=L_{i-1}-d_i}） \NR
+\NC 0 \NC 如果 \m{d_i - m\le L_{i-1} \le d_i}；（\m{L_i=0}） \NR
+\NC c\times (L_{i-1}+m-d_i) \NC 如果 \m{L_{i-1} < di - m}；（\m{L_i=0}） \NR
 \stopcases
 \stopformula
 

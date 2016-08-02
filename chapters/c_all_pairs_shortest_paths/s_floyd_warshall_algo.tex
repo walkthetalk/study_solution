@@ -105,16 +105,16 @@ D^{(6)} = \left(\startmatrix
 附式 25.6：
 \startformula
 \pi_{ij}^{(0)} = \startcases
-\NC NIL \MC \text{若 \m{i=j} 或 \m{\omega_{ij} = \infty}} \NR
-\NC i \MC \text{若 \m{i\ne j} 且 \m{\omega_{ij} < \infty}} \NR
+\NC NIL \NC 若 \m{i=j} 或 \m{\omega_{ij} = \infty} \NR
+\NC i   \NC 若 \m{i\ne j} 且 \m{\omega_{ij} < \infty} \NR
 \stopcases
 \stopformula
 
 式 25.7：
 \startformula
 \pi_{ij}^{(k)} = \startcases
-\NC \pi_{ij}^{(k-1)} \MC \text{若 \m{d_{ij}^{(k-1)} \le d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
-\NC \pi_{kj}^{(k-1)} \MC \text{若 \m{d_{ij}^{(k-1)} > d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
+\NC \pi_{ij}^{(k-1)} \NC 若 \m{d_{ij}^{(k-1)} \le d_{ik}^{(k-1)} + d_{kj}^{(k-1)}} \NR
+\NC \pi_{kj}^{(k-1)} \NC 若 \m{d_{ij}^{(k-1)} > d_{ik}^{(k-1)} + d_{kj}^{(k-1)}} \NR
 \stopcases
 \stopformula
 \stopEXERCISE
@@ -172,8 +172,8 @@ return D
 假定我們修改式 25.7 對等式的處理辦法如下：
 \startformula
 \pi_{ij}^{(k)} = \startcases
-\NC \pi_{ij}^{(k-1)} \MC \text{若 \m{d_{ij}^{(k-1)} < d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
-\NC \pi_{kj}^{(k-1)} \MC \text{若 \m{d_{ij}^{(k-1)} \ge d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
+\NC \pi_{ij}^{(k-1)} \NC 若 \m{d_{ij}^{(k-1)} < d_{ik}^{(k-1)} + d_{kj}^{(k-1)}} \NR
+\NC \pi_{kj}^{(k-1)} \NC 若 \m{d_{ij}^{(k-1)} \ge d_{ik}^{(k-1)} + d_{kj}^{(k-1)}} \NR
 \stopcases
 \stopformula
 請問這種前驅矩陣 \m{\prod} 的定義正確嗎？
@@ -208,8 +208,8 @@ return D
 \startANSWER
 \startformula
 \phi_{ij}^{(k)} = \startcases
-\NC \phi_{ij}^{(k-1)} \MC \text{若 \m{d_{ij}^{(k-1)} \le d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
-\NC k \MC \text{若 \m{d_{ij}^{(k-1)} > d_{ik}^{(k-1)} + d_{kj}^{(k-1)}}} \NR
+\NC \phi_{ij}^{(k-1)} \NC 若 \m{d_{ij}^{(k-1)} \le d_{ik}^{(k-1)} + d_{kj}^{(k-1)}} \NR
+\NC k \NC 若 \m{d_{ij}^{(k-1)} > d_{ik}^{(k-1)} + d_{kj}^{(k-1)}} \NR
 \stopcases
 \stopformula
 

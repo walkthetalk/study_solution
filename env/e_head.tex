@@ -75,7 +75,7 @@
   header=high, %none empty high nomarking %章節首頁無頁眉
   footer=high, %none empty high nomarking
   before={\blank[2em]}, %COMMAND
-  after={\blank[1em]}, %COMMAND
+  after={\blank[1em] \placelist[chapter]}, %COMMAND
   alternative=middle, %normal inmargin middle TEXT
   placehead=yes,
 ]
@@ -93,7 +93,7 @@
   footer=high, %none empty high nomarking
   before={\blank[2em]}, %COMMAND
 %  inbetween=, %COMMAND
-  after={\blank[1em]}, %COMMAND
+  after={\blank[1em] \placelist[section,subject]}, %COMMAND
   alternative=middle, %normal inmargin middle TEXT
 %  sectionnumber=no,
 ]
@@ -107,6 +107,11 @@
   before={\blank[1.5em]}, %COMMAND
   after={\blank[1em]}, %COMMAND
   alternative=inmargin, %normal inmargin middle TEXT
+]
+
+%list the "subject" in the ToC but don't modify the "section" counter:
+\setuphead[subject][
+  incrementnumber=list,
 ]
 
 \setuphead[subsection][
@@ -144,6 +149,14 @@
 %  aligntitle=yes,
 %  align=flushleft,
 ]
+
+\setuplist[part][
+  width=4em,	% setuplist中的設置無效，可能是bug
+  margin=0em,	%dimension % 左侧缩进
+  label=yes,
+  style=bold,
+]
+
 \setuplist[chapter][
   width=4em,	% setuplist中的設置無效，可能是bug
   margin=0em,	%dimension % 左侧缩进
@@ -151,6 +164,12 @@
 ]
 
 \setuplist[section][
+  width=4em,
+  margin=2em,	%dimension % 左侧缩进
+  label=yes,
+]
+
+\setuplist[subject][
   width=4em,
   margin=2em,	%dimension % 左侧缩进
   label=yes,
@@ -259,6 +278,11 @@
 [pagenumber]
 [pagenumber]
 []
+
+% \todo just workaround, front/body/appendix/back, the part number will reset internally
+\setuphead[part][%
+  number=no,
+]
 \stopsectionblockenvironment
 
 \startsectionblockenvironment[backpart]

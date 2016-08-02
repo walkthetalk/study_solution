@@ -10,7 +10,7 @@
 給定一組包含 \m{n} 個 \ALGO{INSERT} 和 \m{m} 個 \ALGO{EXTRACT-MIN} 的調用序列 \m{S}，
 其中屬於 \m{\{1,2,\ldots,n\}} 中的每個關鍵字只被插入一次。
 我們希望確定每個 \ALGO{EXTRACT-MIN} 調用返回的是哪個關鍵字。
-特別地，希望對一個 \m{extracted[1..m](i=1,2,\ldots,m)} 數組進行填充，
+特別地，希望對一個 \m{extracted[1..m](i=1,2,\ldots,m)} 數列進行填充，
 其中 \m{extracted[i]} 是由第 \m{i} 次 \ALGO{EXTRACT-MIN} 調用所返回的關鍵字。
 該問題是“脫機的”，其含義就是在確定任何返回的關鍵字之前處理真個序列 \m{S}。
 
@@ -20,7 +20,7 @@
 \startformula
 4,8,E,3,E,9,2,6,E,E,E,1,7,E,5
 \stopformula
-將正確的值填入 \m{extracted} 數組。
+將正確的值填入 \m{extracted} 數列。
 \stopitem\stopigBase
 
 \startANSWER
@@ -51,7 +51,7 @@ return extracted
 \stopCLRS
 
 \startigBase[continue]\startitem
-證明：由 \ALGO{OFF-LINE-MINIMUM} 返回的數組 \m{extracted} 是正確的。
+證明：由 \ALGO{OFF-LINE-MINIMUM} 返回的數列 \m{extracted} 是正確的。
 \stopitem\stopigBase
 
 \startANSWER

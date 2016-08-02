@@ -72,7 +72,7 @@ return a
 
 %e31.2-5
 \startEXERCISE[exercise:euclid_time]
-證明：如果 \m{a > b\ge 0}，則 \ALGO{EUCLID(a, b)} 最多執行 \m{1 + \log_\phi b} 次遞歸調用。
+證明：如果 \m{a > b\ge 0}，則 \ALGO{EUCLID(a, b)} 最多執行 \m{1 + \log_\phi b} 次遞迴調用。
 將這個界改進爲 \m{1+\log_\phi (b/\gcd(a,b))}。
 \stopEXERCISE
 
@@ -100,7 +100,7 @@ k > \log_{\phi}b + \log_{\phi}\sqrt{5} - 1 = \log_{\phi}b + 1.67 - 1 = \log_{\ph
 \stopformula
 解得 \m{k \le \left\lfloor \log_{\phi}b + \log_{\phi}\sqrt{5} - 1 + 0.5 \right\rfloor}：
 
-因此， \ALGO{EUCLID(a, b)} 最多執行 \m{1 + \log_\phi b} 次遞歸調用。
+因此， \ALGO{EUCLID(a, b)} 最多執行 \m{1 + \log_\phi b} 次遞迴調用。
 
 
 令 \m{d = \gcd(a,b)}，由 \ALGO{EUCLID} 的實現可知， \ALGO{EUCLID(a,b)} 的遞迴調用次數與 \ALGO{EUCLID(a/d, b/d)} 相同。

@@ -101,7 +101,7 @@ for k = i to j
 \stopANSWER
 
 \startigBase[continue]\startitem
-給出該算法的工作量和持續時間的遞歸式，並求解。
+給出該算法的工作量和持續時間的遞迴式，並求解。
 \stopitem\stopigBase
 
 \startANSWER
@@ -391,17 +391,17 @@ A = \left[\startmatrix
 \stopmatrix\right]
 \stopformula
 
-現在看到，可以遞歸地填入子數列 \m{A_{11}} 中的元素，
+現在看到，可以遞迴地填入子數列 \m{A_{11}} 中的元素，
 因爲他並不依賴其他三個子數列。
-一旦填完 \m{A_{11}}，就可以遞歸地並行填入 \m{A_{12}} 和 \m{A_{21}} 中的元素，
+一旦填完 \m{A_{11}}，就可以遞迴地並行填入 \m{A_{12}} 和 \m{A_{21}} 中的元素，
 這是因爲他們都依賴於 \m{A_{11}}，但彼此無依賴關係。
-最後遞歸地填入 \m{A_{22}}。
+最後遞迴地填入 \m{A_{22}}。
 
 \startigBase[a]\startitem
 基於上面討論，給出分治算法 \ALGO{SIMPLE-STENCIL} 的多線程僞碼，
 來執行這個簡單模板計算。
 （不用擔心基礎情形的處理，這取決於特定的模板。）
-給出並求解對應規模 \m{n} 的工作量和持續時間的遞歸式。
+給出並求解對應規模 \m{n} 的工作量和持續時間的遞迴式。
 並行度是多少？
 \stopitem\stopigBase
 
@@ -424,7 +424,7 @@ SIMPLE-STENCIL(A22)
 
 \startigBase[continue]\startitem
 修改上面 a）的答案，將 \m{n\times n} 的數列劃分成 9 個 \m{n/3 \times n/3} 子數列，
-遞歸下去使其儘可能地並行。
+遞迴下去使其儘可能地並行。
 分析該算法，與 a）相比，並行度如何？
 \stopitem\stopigBase
 
@@ -455,7 +455,7 @@ sync
 對照 a）和 b），進行如下推廣。
 選擇一個整數 \m{b\ge 2}。
 將 \m{n\times n} 數列分爲 \m{b^2} 個子數列，每個大小都是 \m{n/b\times n/b}，
-遞歸下去使其儘可能並行。
+遞迴下去使其儘可能並行。
 關於 \m{n} 和 \m{b}，
 該算法的工作量、持續時間和並行度各爲多少？
 用這種方法證明：對於任何 \m{b\ge 2}，並行度一定是 \m{o(n)}。

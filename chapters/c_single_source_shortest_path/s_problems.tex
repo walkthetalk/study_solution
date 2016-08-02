@@ -83,7 +83,7 @@
 
 \startANSWER
 可以先對兩個盒子各自按非遞減順序排序，需要時間 \m{O(d\lg d)}。
-然後比較排序後兩個數組中的對應元素即可，比較所需時間爲 \m{O(d)}。
+然後比較排序後兩個數列中的對應元素即可，比較所需時間爲 \m{O(d)}。
 總時間爲 \m{O(d\lg d)}。
 \stopANSWER
 
@@ -213,7 +213,7 @@ R[i_1,i_2] \cdot R[i_2,i_3]\cdot \ldots \cdot R[i_{k-1},i_k]\cdot R[i_k,i_1] > 1
 由於權重是整數，且最短路徑權重上限爲 \m{|E|}，還有改進的餘地。
 我們可以用計數排序維護節點鏈表。
 我們知道路徑權重範圍爲 \m{[0,|E|]}，
-可以用一個數組 \m{l} 來維護一個鏈表，以存儲權重。
+可以用一個數列 \m{l} 來維護一個鏈表，以存儲權重。
 使用算法 \ALGO{DIJKSTRA}，我們需要實現 \ALGO{INSERT}、 \ALGO{DECREASE-KEY} 和 \ALGO{EXTRACT-MIN}。
 
 \ALGO{INSERT} 比較簡單，如果一個節點可由權重 \m{i} 到達，
@@ -225,7 +225,7 @@ R[i_1,i_2] \cdot R[i_2,i_3]\cdot \ldots \cdot R[i_{k-1},i_k]\cdot R[i_k,i_1] > 1
 對於 \ALGO{EXTRACT-MIN}，我們注意到算法運行過程中，
 如果上一次所節點路徑權重爲 \m{i}，那麼下一次所取節點路徑權重肯定不小於 \m{i}。
 即下一次我們只需從 \m{l[i]} 開始搜索。
-這樣整個 \m{l} 數組只需掃描一遍。每次提取操作需要 \m{O(1)}。
+這樣整個 \m{l} 數列只需掃描一遍。每次提取操作需要 \m{O(1)}。
 從而所有 \ALGO{EXTRACT-MIN} 所需時間爲 \m{O(E + V)}。
 
 共 \m{V} 次 \ALGO{INSERT}， \m{E} 次 \ALGO{DECREASE-KEY}， \m{V} 次 \ALGO{EXTRACT-MIN}。

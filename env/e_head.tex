@@ -213,18 +213,44 @@
 
 \stopsectionblockenvironment
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% body part env %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \startsectionblockenvironment[bodypart]
+
+% \note workaround for get total chapter number
+%\determinelistcharacteristics
+%   [chapter]
+%   [criterium=all]
+%\utilitylistlength
+
+\definelayer
+  [pagenumber]
+  [preset=middle]
+\startsetups layer
+\setlayerframed[pagenumber][
+  x=\paperwidth-\layerwidth,
+  y=\paperheight/2,
+  frae=off,
+  align=middle]{\headnumber[chapter]}
+\stopsetups
+\setupbackgrounds[page][setups=layer,background=pagenumber]
+
 \resetpagenumber
 %\setupheader[state=none]
-\define\BodyTextRightHeader{%
-\framedtext[frame=off,bottomframe=on,width=broad,offset=none,frameoffset=2pt,]{%
-\rlap{} \hfill {第\;\headnumber[chapter]\;章\;\;\getmarking[chapter]}\hfill \llap{}%
-}%
-}
-% 由於可能某頁中沒有任何 section，所以不打印節編號，只打印節名。 no workaround
 \define\BodyTextLeftHeader{%
 \framedtext[frame=off,bottomframe=on,width=broad,offset=none,frameoffset=2pt,]{%
-\rlap{} \hfill {\getmarking[section][first]}\hfill \llap{}%
+\rlap{} \hfill
+  {第\;\getmarking[chapternumber][first]\;章\;\;\getmarking[chapter][first]}
+\hfill \llap{}%
+}%
+}
+% \note 不要使用 \getnumber，使用 \getmarking
+\define\BodyTextRightHeader{%
+\framedtext[frame=off,bottomframe=on,width=broad,offset=none,frameoffset=2pt,]{%
+\rlap{} \hfill
+  %\doiftextelse{\getmarking[subject][current]}
+  %  {\getmarking[subject][current]}
+    {節\;\getmarking[sectionnumber][first]\;\;\getmarking[section][first]}
+\hfill \llap{}%
 }%
 }
 
@@ -238,9 +264,9 @@
 
 \setupfootertexts[text]
 []
-[\centerline{第\;\pagenumber\;頁}]
+[\centerline{第\;\pagenumber\;頁，共\;\lastpagenumber\;頁}]
 []
-[\centerline{第\;\pagenumber\;頁}]
+[\centerline{第\;\pagenumber\;頁，共\;\lastpagenumber\;頁}]
 
 \define\BodyEdgeLeftFooter{\rotate[%
   rotation=-90,

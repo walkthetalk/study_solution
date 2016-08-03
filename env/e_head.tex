@@ -217,22 +217,52 @@
 \startsectionblockenvironment[bodypart]
 
 % \note workaround for get total chapter number
-%\determinelistcharacteristics
-%   [chapter]
-%   [criterium=all]
+\determinelistcharacteristics
+   [chapter]
+   [criterium=all]
 %\utilitylistlength
 
-\definelayer
-  [pagenumber]
-  [preset=middle]
-\startsetups layer
-\setlayerframed[pagenumber][
-  x=\paperwidth-\layerwidth,
-  y=\paperheight/2,
-  frae=off,
-  align=middle]{\headnumber[chapter]}
+\definelayer[specificlayer][preset=middle]
+\startsetups rightlayer
+\doiftextelse{\headnumber[chapter]}{
+  \determineheadnumber[chapter]% \note: for \currentheadnumber, can't use \headnumber[] in calculation
+  \doifnot{\utilitylistlength}{0}{% \note: 運行過程中可能是 0
+    \setlayerframed[specificlayer][
+      x={\paperwidth-\layerwidth},
+      y={\paperheight/\utilitylistlength*(2*\currentheadnumber-1)/2}, % \note: 表達式不支持小數
+      frame=off,
+      background=color,
+      backgroundcolor=black,
+      foregroundcolor=white,
+      backgroundoffset=.2em,
+      location={lohi,middle},
+      offset=none]{%
+      \tfb\headnumber[chapter]%
+    }
+  }
+}{}
 \stopsetups
-\setupbackgrounds[page][setups=layer,background=pagenumber]
+\startsetups leftlayer
+\doiftextelse{\headnumber[chapter]}{
+  \determineheadnumber[chapter]% \note: for \currentheadnumber, can't use \headnumber[] in calculation
+  \doifnot{\utilitylistlength}{0}{% \note: 運行過程中可能是 0
+    \setlayerframed[specificlayer][
+      x=0pt,
+      y={\paperheight-\paperheight/\utilitylistlength*(2*\currentheadnumber-1)/2}, % \note: 表達式不支持小數
+      frame=off,
+      background=color,
+      backgroundcolor=black,
+      foregroundcolor=white,
+      backgroundoffset=.2em,
+      location={lohi,middle},
+      offset=none]{%
+      \tfb\headnumber[chapter]%
+    }
+  }
+}{}
+\stopsetups
+\setupbackgrounds[rightpage][setups=rightlayer,background=specificlayer]
+\setupbackgrounds[leftpage][setups=leftlayer,background=specificlayer]
 
 \resetpagenumber
 %\setupheader[state=none]
@@ -244,6 +274,7 @@
 }%
 }
 % \note 不要使用 \getnumber，使用 \getmarking
+% \todo 不知如何判斷是處在 section 中，還是處在 subject 中
 \define\BodyTextRightHeader{%
 \framedtext[frame=off,bottomframe=on,width=broad,offset=none,frameoffset=2pt,]{%
 \rlap{} \hfill
@@ -262,11 +293,20 @@
 []
 [\BodyTextLeftHeader]
 
+\define\BodyTextLeftFooter{%
+\framedtext[frame=off,topframe=on,width=broad,offset=none,frameoffset=2pt,]{%
+\rlap{共\;\lastpagenumber\;頁} \hfill  {第\;\pagenumber\;頁} \hfill \llap{}%
+}}%
+\define\BodyTextRightFooter{%
+\framedtext[frame=off,topframe=on,width=broad,offset=none,frameoffset=2pt,]{%
+\rlap{} \hfill  {第\;\pagenumber\;頁} \hfill \llap{共\;\lastpagenumber\;頁}%
+}}%
+
 \setupfootertexts[text]
 []
-[\centerline{第\;\pagenumber\;頁，共\;\lastpagenumber\;頁}]
+[\BodyTextRightFooter]
 []
-[\centerline{第\;\pagenumber\;頁，共\;\lastpagenumber\;頁}]
+[\BodyTextLeftFooter]
 
 \define\BodyEdgeLeftFooter{\rotate[%
   rotation=-90,

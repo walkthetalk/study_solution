@@ -5,10 +5,10 @@
 
 % 2. the footnote can't process linebreak correctly
 % workaround is:
-%\let\stdfootnote\footnote
-%\def\footnote#1{%
-%\stdfootnote{\setscript[hanzi]#1}%
-%}
+\let\stdfootnote\footnote
+\def\footnote#1{%
+\stdfootnote{\setscript[hanzi]#1}%
+}
 % \postponenotes\footnote{...}
 
 % 3. 中文caption第一行字符中间有空格

@@ -1,9 +1,11 @@
 tex_name=main
 
-pdf_name=CLRS_notes
+pdf_name=CLRS_solution
 
 dir_self := $(shell dirname $(shell readlink -fe $(lastword ${MAKEFILE_LIST})))
 dir_main := $(shell readlink -fe ${dir_self})
+
+dir_env  := $(shell readlink -fe ${dir_self}/../env)
 dir_output := ${dir_main}/output
 output_dirs:=${dir_output}
 
@@ -51,7 +53,7 @@ $(pdf_name).pdf: $(tex_deps) ${fig_pdfs}
 	@context --jit --purge \
 	  --nocompression \
 	  --environment=env_cmm \
-	  --path=$(dir_main)/env/ \
+	  --path=$(dir_env) \
 	  --result=$(pdf_name).pdf \
 	  $(tex_name).tex; \
 	$(call clean_misc)

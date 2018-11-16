@@ -16,7 +16,10 @@
   %textcolor=,
 ]
 
-%%% workaround for vdots
-\define\vdots{%
-\rotate[rotation=90]{\ldots}%
-}
+%% workaround for vdots
+\ifdefined\vdots
+\else
+ \define\vdots{%
+  \rotate[rotation=90]{\ldots}%
+ }
+\fi

@@ -38,24 +38,3 @@
 
 \startMPinclusions
 \stopMPinclusions
-
-
-\startuniqueMPgraphic{frontcoverBG}
-    path p;
-    u := 1cm; w := OverlayWidth; h := OverlayHeight;
-    roundcorner := 8pt; offset := 12pt;
-
-    color shade;
-    shade := (.6,.6,.6);
-
-    for i = 0 step .02 until 1:
-        fill unitsquare xyscaled (w-i*u,h-i*u) squeezed (8pt,6pt)
-             shifted (offset+i*u/2,-offset+i*u/2)
-             withcolor transparent (1,.1,shade);
-    endfor;
-
-    p := unitsquare xyscaled (w, h) shifted (offset/2, -offset/2) squeezed (8pt,6pt);
-    fill p withcolor \MPcolor{gray};
-    draw p withcolor (0.6,0.8,1);
-\stopuniqueMPgraphic
-\defineoverlay[frontcoverBG][\uniqueMPgraphic{frontcoverBG}]

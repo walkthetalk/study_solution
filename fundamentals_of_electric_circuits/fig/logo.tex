@@ -1,0 +1,174 @@
+\startreusableMPgraphic{foeclogo}
+numeric intRadius, extRadius;
+u=2.5mm * 3.8;
+intRadius := 8u;
+extRadius := 12.5u;
+
+def centOff(expr intR, extR) =
+(extR - intR)*5/18
+enddef;
+
+def pathBlock(expr aSE) =
+begingroup
+path intHC, extHC, lineFO;
+path pathA, pathB, pathC, pathD;
+path pathAA, pathBB, pathCC, pathDD;
+pair isA, isB, isC, isD;
+numeric rcFactor; %rounded corner factor
+
+intHC := (subpath(4,0) of fullcircle) scaled intRadius;
+extHC := (subpath(0,4) of fullcircle) scaled extRadius shifted (centOff(intRadius,extRadius),0);
+lineFO := (0,0)--(10u,0);
+
+rcFactor := 0.03;
+
+pathA := lineFO rotated xpart aSE;
+pathB := extHC;
+pathC := subpath(1,0) of lineFO rotated ypart aSE;
+pathD := intHC;
+isA := pathA intersectiontimes pathB;
+isB := pathB intersectiontimes pathC;
+isC := pathC intersectiontimes pathD;
+isD := pathD intersectiontimes pathA;
+
+pathBB := subpath(ypart isA + rcFactor, xpart isB - rcFactor) of pathB;
+pathCC := subpath(ypart isB + rcFactor, xpart isC - rcFactor) of pathC;
+pathDD := subpath(ypart isC + rcFactor, xpart isD - rcFactor) of pathD;
+pathAA := subpath(ypart isD + rcFactor, xpart isA - rcFactor) of pathA;
+%buildcycle(lineFO rotated aS, extHC, lineFO rotated aE, intHC)
+pathAA..pathBB..pathCC..pathDD..cycle
+endgroup
+enddef;
+
+def pathTear(expr intR, extR, aSE) =
+begingroup
+path intHC, extHC, lineFO;
+
+intHC := (subpath(4,0) of fullcircle) scaled intR shifted (centOff(intRadius,intR),0);
+extHC := (subpath(0,4) of fullcircle) scaled extR shifted (centOff(intRadius,extR),0);
+lineFO := (0,0)--(10u,0);
+
+buildcycle(lineFO rotated xpart aSE, extHC, lineFO rotated ypart aSE, intHC)
+endgroup
+enddef;
+
+def drawTear(expr intR, extR, n, cS, cE) =
+begingroup
+	sh := define_linear_shade(
+			(4u,0) rotated xpart aSE[n],
+			(4u,0) rotated ypart aSE[n],
+			cS,
+			cE);
+	fill pathTear(intR,extR,aSE[n]) withshade sh;
+endgroup
+enddef;
+
+def drawBlock =
+begingroup
+color cS, cE;
+numeric minA, maxA, intA, nA;
+numeric sA, wA, aA;
+pair aSE[]; % angle start and width
+color cStart[]; % color
+color cEnd[];
+
+cS := (1,0,0);
+cE := (0,0.65,0.31);
+
+
+minA := 2; % minimum A's units
+maxA := 6; % maximum A's units
+intA := 1.2; % interval units
+nA := 9; % the number of As
+
+% compute the angle of every block
+fA := sqrt(sqrt(sqrt(maxA/minA)));
+aA := 180 / ((fA * maxA - minA)/(fA - 1) + intA * (nA - 1)); % the degrees of single A
+sA := 0; % the start of the current A
+wA := maxA; % the width of the current A
+for i=(nA - 1) step -1 until 0:
+	aSE[i] := (sA * aA, (sA + wA) * aA);
+	sA := sA + wA + intA;
+	wA := wA /fA;
+	cStart[i] := ((xpart aSE[i]) / 180)[cS, cE];
+	cEnd[i] := ((ypart aSE[i]) / 180)[cS, cE];
+endfor;
+
+% draw the blocks
+for i=(nA - 1) step -1 until 0:
+	draw pathBlock(aSE[i]) shifted(0,0.15u) withpen pencircle;
+	sh := define_linear_shade(
+			(4u,0) rotated xpart aSE[i],
+			(4u,0) rotated ypart aSE[i],
+			cStart[i]/2,
+			cEnd[i]/2);
+	fill pathBlock(aSE[i]) shifted(0,0.15u) withshade sh;
+
+	draw pathBlock(aSE[i]) withpen pencircle;
+	sh := define_linear_shade(
+			(4u,0) rotated xpart aSE[i],
+			(4u,0) rotated ypart aSE[i],
+			cStart[i],
+			cEnd[i]);
+	fill pathBlock(aSE[i]) withshade sh;
+endfor;
+
+% tear
+drawTear(8.5u, 9.2u, 4, cStart[4]*1.5, cEnd[4]);
+drawTear(8.5u, 9.2u, 5, cStart[4]*1.5, cStart[4]*1.5);
+drawTear(8.5u, 9.2u, 6, cStart[4]*1.5, cStart[4]*1.5);
+drawTear(8.5u, 9.2u, 7, cStart[7], cStart[4]*1.5);
+
+drawTear(9.8u, 10.1u, 4, cStart[4]*1.1, cEnd[4]);
+drawTear(9.8u, 10.1u, 5, cStart[4]*1.5, cStart[4]*1.1);
+drawTear(9.8u, 10.1u, 6, cStart[4]*1.4, cStart[4]*1.5);
+drawTear(9.8u, 10.1u, 7, cStart[7], cStart[4]*1.4);
+
+drawTear(10.7u, 11.3u, 4, cStart[4]*1.05, cEnd[4]);
+drawTear(10.7u, 11.3u, 5, cStart[4]*1.45, cStart[4]*1.1);
+drawTear(10.7u, 11.3u, 6, cStart[4]*1.6, cStart[4]*1.45);
+drawTear(10.7u, 11.3u, 7, cStart[7], .7[cStart[7],cStart[4]*1.6]);
+
+drawTear(11.5u, 11.8u, 5, cStart[4]*1.7, cEnd[5]);
+drawTear(11.5u, 11.8u, 6, cStart[4]*1.8, cStart[4]*1.7);
+drawTear(11.5u, 11.8u, 7, cStart[7], .6[cStart[7],cStart[4]*1.8]);
+
+endgroup
+enddef;
+
+% pointer
+numeric nL;
+nL := 12; % the length of the pointer, unit: point radius;
+
+def pathPointer =
+begingroup
+numeric tT, tB;
+tT := xpart (fullcircle intersectiontimes ((.5 / nL,0) -- (.5 / nL, 10)));
+tB := xpart (fullcircle intersectiontimes ((.5 / nL,0) -- (.5 / nL, -10)));
+((subpath(tT, tB) of fullcircle scaled u)--(nL/2 * u,0)--cycle)
+endgroup
+enddef;
+
+def drawPointer =
+begingroup
+
+%sh := define_linear_shade((0,-u),(0,u),white,.1black) ;
+for i=0 step 0.025 until 1:
+	fill pathPointer scaled i shifted (-0.05*i*u,-0.15*i*u) rotated 37 withcolor transparent(1, 0.1, 0.1);
+endfor;
+
+shP := define_circular_shade(
+		(0,0),
+		(0,0),
+		0,
+		nL/2 * u,
+		0.8,
+		0.64) ;
+fill pathPointer rotated 37 withshade shP;
+endgroup
+enddef;
+
+drawBlock;
+drawPointer;
+
+\stopreusableMPgraphic

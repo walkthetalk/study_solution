@@ -1,0 +1,123 @@
+% ==================== Main text ====================>
+
+\define\prdname{字贴}
+
+\setupinteraction[
+  state=start,
+  color=blue,
+  contrastcolor=blue,
+  style=bold,
+  title={字贴},
+  author={倪慶亮},
+  subtitle={一年级},
+  keyword={字贴 一年级},
+]
+
+% backgournd tian
+\startuniqueMPgraphic{bgtian}
+    linecap := butt;
+    draw ((-0.5,0)--(0.5,0)) xscaled OverlayWidth yscaled OverlayHeight dashed evenly withcolor 0.7white;
+    draw ((0,-0.5)--(0,0.5)) xscaled OverlayWidth yscaled OverlayHeight dashed evenly withcolor 0.7white;
+\stopuniqueMPgraphic
+\defineoverlay[bgtian][\uniqueMPgraphic{bgtian}]
+
+% table tian
+\definextable[tbltian]
+\setupxtable[tbltian]
+[
+  align={middle,lohi},
+  background={bgtian},
+  %bodyfont={tt,36pt},
+  width=54pt,
+  height=54pt,
+  split=yes,
+  %strut=none,
+  %loffset=9pt,
+  %roffset=9pt,
+  toffset=7pt,
+  %boffset=8pt,
+]
+
+
+\definefont [ftmiaohong] [gzakai at 36pt]
+
+% character main
+\define[1]\charm{
+  \startxcell
+  \ftmiaohong #1
+  \stopxcell
+}
+
+% character red
+\define[1]\charr{
+  \startxcell
+    \startcolor[red]
+    \starteffect[outer]
+    \ftmiaohong #1
+    \stopeffect
+    \stopcolor
+  \stopxcell
+}
+
+% character null
+\define\charn{\startxcell\stopxcell}
+
+% character chinese
+\define[1]\charexercise{
+\startxrow
+  \charm{#1}
+  \dorecurse{3}{\charr{#1}}
+  \dorecurse{4}{\charn}
+\stopxrow
+\startxrow
+  \dorecurse{8}{\charn}
+\stopxrow
+}
+
+% main text
+\starttext
+
+\startxtable[tbltian]
+  \charexercise{一}
+  \charexercise{二}
+  \charexercise{三}
+  \charexercise{上}
+  \charexercise{口}
+  \charexercise{目}
+  \charexercise{耳}
+  \charexercise{手}
+  \charexercise{日}
+  \charexercise{田}
+  \charexercise{禾}
+  \charexercise{火}
+  \charexercise{虫}
+  \charexercise{云}
+  \charexercise{山}
+  \charexercise{八}
+  \charexercise{十}
+  \charexercise{了}
+  \charexercise{子}
+  \charexercise{人}
+  \charexercise{大}
+  \charexercise{月}
+  \charexercise{儿}
+  \charexercise{头}
+  \charexercise{里}
+  \charexercise{倪}
+  \charexercise{景}
+  \charexercise{煜}
+  \charexercise{倪}
+  \charexercise{景}
+  \charexercise{煜}
+  \charexercise{倪}
+  \charexercise{景}
+  \charexercise{煜}
+  \charexercise{倪}
+  \charexercise{景}
+  \charexercise{煜}
+  \charexercise{倪}
+  \charexercise{景}
+  \charexercise{煜}
+\stopxtable
+
+\stoptext

@@ -17,7 +17,10 @@
 
 \unprotect
 
-\unexpanded\def\digitsminus         {\phys_digits_normalized{0}{\mathematics{-}}}
+% workaround: from base/mkiv/math-ini.mkiv
+%             the euler font do not have U+2013 endash character
+%\unexpanded\def\mathminus{\ifmmode –\else\iffontchar\font`−−\else –\fi\fi}
+\unexpanded\def\mathminus{\scale[sx=.75]{-}}
 
 % removed all contents copied from base/mkiv/phys-dim.mkiv
 

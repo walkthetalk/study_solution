@@ -3,6 +3,23 @@
   title={Basic Concepts},
 ]
 
+\def\sunit{\dosingleempty\dosunit}
+\unexpanded\def\dosunit[#1]#2{%
+\iffirstargument
+  \ifx{#1}{lr}
+    {\;}\unit{#2}{\;}
+  \else
+    \ifx#1l
+      {\;}\unit{#2}
+    \else
+      \unit{#2}{\;}
+    \fi
+  \fi
+\else
+  \unit{#2}
+\fi
+}
+
 % 1.1
 \startQ
 How much charge is represented by these number of electrons?
@@ -16,10 +33,10 @@ How much charge is represented by these number of electrons?
 
 \startA
 \startIG
-\item $q = \unit{6.482e17} \times (\unit{1.602e-19 coulomb}) = \unit{_0.10384 coulomb}$
-\item $q = \unit{1.24=e18} \times (\unit{1.602e-19 coulomb}) = \unit{_0.19865 coulomb}$
-\item $q = \unit{2.46=e19} \times (\unit{1.602e-19 coulomb}) = \unit{_3.941== coulomb}$
-\item $q = \unit{1.628e20} \times (\unit{1.602e-19 coulomb}) = \unit{26.08=== coulomb}$
+\item $q = (\sunit[lr]{1.602e-19 coulomb}) \times \unit{6.482e17} = \unit{_0.10384 coulomb}$
+\item $q = (\unit{1.602e-19 coulomb}) \times \unit{1.24=e18} = \unit{_0.19865 coulomb}$
+\item $q = (\unit{1.602e-19 coulomb}) \times \unit{2.46=e19} = \unit{_3.941== coulomb}$
+\item $q = (\unit{1.602e-19 coulomb}) \times \unit{1.628e20} = \unit{26.08=== coulomb}$
 \stopIG
 \stopA
 
@@ -27,22 +44,21 @@ How much charge is represented by these number of electrons?
 \startQ
 Determine the current flowing through an element if the charge flow is given by
 \startIG
-\item $q(t) = (3) mC$
-\item $q(t) = (4t^2 + 20t − 4) C$
-\item $q(t) = (15e^{−3t} − 2e^{−18t}) nC$
-\item $q(t) = 5t^2(3t^3 + 4) pC$
-\item $q(t) = 2e^{−3t} \sin (20π t) uC$
+\item $q(t) = (3t+8) \sunit[l]{milli coulomb}$
+\item $q(t) = (8t^2 + 4t − 2) \sunit[l]{coulomb}$
+\item $q(t) = (3e^{−t} − 5e^{−2t}) \sunit[l]{nano coulomb}$
+\item $q(t) = 10 \sin 120π t \sunit[l]{pico coulomb}$
+\item $q(t) = 20e^{−4t} \cos 50t \sunit[l]{micro coulomb}$
 \stopIG
 \stopQ
 
 \startA
 \startIG
-\item $i=\frac{\partial q}{\partial t} = (3) mC$
-\item $q(t) = (4t^2 + 20t − 4) C$
-\item $q(t) = (15e^{−3t} − 2e^{−18t}) nC$
-\item $q(t) = 5t^2(3t^3 + 4) pC$
-\item $q(t) = 2e^{−3t} \sin (20π t) uC
-$
+\item $i = \frac{d q}{d t} = 3 \unit{milli ampere}$
+\item $i = \frac{d q}{d t} = (16t + 4) \unit{ampere}$
+\item $i = \frac{d q}{d t} = (-3e^{−t} + 10e^{−2t}) \unit{nano ampere}$
+\item $i = \frac{d q}{d t} = 1200π \cos 120π t \unit{pico ampere}$
+\item $i = \frac{d q}{d t} = -(80 \cos 50t + 1000 \sin 50 t) e^{−4t} \unit{micro ampere}$
 \stopIG
 \stopA
 

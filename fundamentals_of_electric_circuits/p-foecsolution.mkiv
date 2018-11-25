@@ -25,7 +25,26 @@
   keyword=电路基础 笔记,
 ]
 
+% use custom phys-dim for custom padding
 \usemodule[p][phys-dim]
+
+% use \unit with space
+\def\sunit{\dosingleempty\dosunit}
+\unexpanded\def\dosunit[#1]#2{%
+  \doifelse{#1}{lr}{
+    {\;}\unit{#2}{\;}
+  }{
+    \doifelse{#1}{l}{
+      {\;}\unit{#2}
+    }{
+      \doifelse{#1}{r}{
+        \unit{#2}{\;}
+      }{
+        \unit{#2}
+      }
+    }
+  }
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for enum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % NOTE: if you want to use specific font:

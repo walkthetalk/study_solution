@@ -3,40 +3,23 @@
   title={Basic Concepts},
 ]
 
-\def\sunit{\dosingleempty\dosunit}
-\unexpanded\def\dosunit[#1]#2{%
-\iffirstargument
-  \ifx{#1}{lr}
-    {\;}\unit{#2}{\;}
-  \else
-    \ifx#1l
-      {\;}\unit{#2}
-    \else
-      \unit{#2}{\;}
-    \fi
-  \fi
-\else
-  \unit{#2}
-\fi
-}
-
 % 1.1
 \startQ
 How much charge is represented by these number of electrons?
 \startIG
-\item $\unit{6.482e17}$
-\item $\unit{1.24=e18}$
-\item $\unit{2.46=e19}$
-\item $\unit{1.628e20}$
+\item $\sunit{6.482e17}$
+\item $\sunit{1.24=e18}$
+\item $\sunit{2.46=e19}$
+\item $\sunit{1.628e20}$
 \stopIG
 \stopQ
 
 \startA
 \startIG
-\item $q = (\sunit[lr]{1.602e-19 coulomb}) \times \unit{6.482e17} = \unit{_0.10384 coulomb}$
-\item $q = (\unit{1.602e-19 coulomb}) \times \unit{1.24=e18} = \unit{_0.19865 coulomb}$
-\item $q = (\unit{1.602e-19 coulomb}) \times \unit{2.46=e19} = \unit{_3.941== coulomb}$
-\item $q = (\unit{1.602e-19 coulomb}) \times \unit{1.628e20} = \unit{26.08=== coulomb}$
+\item $q = (\sunit{1.602e-19 coulomb}) \times \sunit{6.482e17} = \sunit{_0.10384 coulomb}$
+\item $q = (\sunit{1.602e-19 coulomb}) \times \sunit{1.24=e18} = \sunit{_0.19865 coulomb}$
+\item $q = (\sunit{1.602e-19 coulomb}) \times \sunit{2.46=e19} = \sunit{_3.941== coulomb}$
+\item $q = (\sunit{1.602e-19 coulomb}) \times \sunit{1.628e20} = \sunit{26.08=== coulomb}$
 \stopIG
 \stopA
 
@@ -44,21 +27,41 @@ How much charge is represented by these number of electrons?
 \startQ
 Determine the current flowing through an element if the charge flow is given by
 \startIG
-\item $q(t) = (3t+8) \sunit[l]{milli coulomb}$
-\item $q(t) = (8t^2 + 4t − 2) \sunit[l]{coulomb}$
+\item $q(t) = (3t+8)               \sunit[l]{milli coulomb}$
+\item $q(t) = (8t^2 + 4t − 2)      \sunit[l]{coulomb}$
 \item $q(t) = (3e^{−t} − 5e^{−2t}) \sunit[l]{nano coulomb}$
-\item $q(t) = 10 \sin 120π t \sunit[l]{pico coulomb}$
-\item $q(t) = 20e^{−4t} \cos 50t \sunit[l]{micro coulomb}$
+\item $q(t) = 10 \sin 120π t       \sunit[l]{pico coulomb}$
+\item $q(t) = 20e^{−4t} \cos 50t   \sunit[l]{micro coulomb}$
 \stopIG
 \stopQ
 
 \startA
 \startIG
-\item $i = \frac{d q}{d t} = 3 \unit{milli ampere}$
-\item $i = \frac{d q}{d t} = (16t + 4) \unit{ampere}$
-\item $i = \frac{d q}{d t} = (-3e^{−t} + 10e^{−2t}) \unit{nano ampere}$
-\item $i = \frac{d q}{d t} = 1200π \cos 120π t \unit{pico ampere}$
-\item $i = \frac{d q}{d t} = -(80 \cos 50t + 1000 \sin 50 t) e^{−4t} \unit{micro ampere}$
+\item $i = \frac{d q}{d t} = 3                      \sunit[l]{milli ampere}$
+\item $i = \frac{d q}{d t} = (16t + 4)              \sunit[l]{ampere}$
+\item $i = \frac{d q}{d t} = (-3e^{−t} + 10e^{−2t}) \sunit[l]{nano ampere}$
+\item $i = \frac{d q}{d t} = 1200π \cos 120π t      \sunit[l]{pico ampere}$
+\item $i = \frac{d q}{d t} = -(80 \cos 50t + 1000 \sin 50 t) e^{−4t} \sunit[l]{micro ampere}$
+\stopIG
+\stopA
+
+% 1.3
+\startQ
+Find the charge $q(t)$ flowing through a device if the current is:
+\startIG
+\item $i(t) = \sunit{3 ampere}, q(0) = \sunit{1 coulomb}$
+\item $i(t) = (2t + 5) \sunit[l]{milli ampere}, q(0) = 0$
+\item $i(t) = 20 \cos (10t + π / 6) \sunit[l]{micro ampere}, q(0) = \sunit{2 micro coulomb}$
+\item $i(t) = 10e^{−30t} \sin 40t \sunit[l]{ampere}, q(0) = 0$
+\stopIG
+\stopQ
+
+\startA
+\startIG
+\item $q(t) = \int i(t) + q(0) = (3t+1) \sunit[l]{coulomb}$
+\item $q(t) = (t^2 + 5t) \sunit[l]{milli coulomb}$
+\item $i(t) = (2 \sin (5t^2 + π t / 6) + 1) \sunit[l]{micro coulomb}$
+\item $i(t) = 10e^{−30t} \sin 40t \sunit[l]{ampere}, q(0) = 0$
 \stopIG
 \stopA
 

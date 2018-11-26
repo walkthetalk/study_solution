@@ -58,10 +58,50 @@ Find the charge $q(t)$ flowing through a device if the current is:
 
 \startA
 \startIG
-\item $q(t) = \int i(t) + q(0) = (3t+1) \sunit[l]{coulomb}$
-\item $q(t) = (t^2 + 5t) \sunit[l]{milli coulomb}$
-\item $i(t) = (2 \sin (5t^2 + π t / 6) + 1) \sunit[l]{micro coulomb}$
-\item $i(t) = 10e^{−30t} \sin 40t \sunit[l]{ampere}, q(0) = 0$
+\item $q(t) = \int_0 i(t) + q(0) = (3t+1) \sunit[l]{coulomb}$
+\item $q(t) = \int_0 i(t) + q(0) = (t^2 + 5t) \sunit[l]{milli coulomb}$
+\item $q(t) = \int_0 i(t) + q(0) = (2 \sin (10t + π / 6) + 1) \sunit[l]{micro coulomb}$
+\item $q(t) = \int_0 i(t) + q(0) = (-e^{-30t}(0.16\cos 40t + 0.12\sin 40t) + 0.16) \sunit[l]{coulomb}$
+\stopIG
+\stopA
+
+% 1.4
+\startQ
+A total charge of $\sunit{300 coulomb}$ flows past a given cross section of a conductor in 30 seconds.
+What is the value of the current?
+\stopQ
+
+\startA
+$\sunit[r]{300 coulomb} / \sunit[l]{30 second} = \sunit{10 ampere}$
+\stopA
+
+% 1.5
+\startQ
+Determine the total charge transferred over the time interval
+of $0 \le t \le \sunit{10 second}$ when $i(t) = \frac{1}{2}t \sunit[l]{ampere}$.
+\stopQ
+
+\startA
+\startformula
+q(t) = \int_0^{10}\frac{1}{2}t = \left.\frac{t^2}{4}\right|_0^{10} = 25
+\stopformula
+\stopA
+
+% 1.6
+\startQ
+The charge entering a certain element is shown in Fig. 1.23. Find the current at:
+\startIG
+\item $t = \sunit{_1 milli second}$
+\item $t = \sunit{_6 milli second}$
+\item $t = \sunit{10 milli second}$
+\stopIG
+\stopQ
+
+\startA
+\startIG
+\item $i(\sunit{_1}) = \left.15t\right|_{\sunit{1 milli second}}= \sunit{15 milli coulomb}$
+\item $i(\sunit{_6}) = \left.30\right|_{\sunit{6 milli second}} = \sunit{30 milli coulomb}$
+\item $i(\sunit{10}) = \left.90-7.5t\right|_{\unit{10 milli second}} = \sunit{15 milli coulomb}$
 \stopIG
 \stopA
 

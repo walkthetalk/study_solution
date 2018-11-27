@@ -1,0 +1,40 @@
+\setupexternalfigures[%
+  %order={pdf,png,jpg},
+  location={local,global},
+  %directory={../output,./output}
+]
+
+% \setupmakeup[name][
+%width	dimension
+%height	dimension
+%voffset	dimension
+%hoffset	dimension
+%page	left yes right
+%commands	command
+%doublesided	yes no empty
+%headerstate	normal stop start empty none nomarking
+%footerstate	normal stop start empty none nomarking
+%textstate	normal stop start empty none nomarking
+%topstate	stop start
+%bottomstate	stop start
+%pagestate	stop start
+%color	name
+%]
+
+\definelayout[frontCover]
+\definemakeup[frontCover][
+  page=right,
+  doublesided=no,
+  headerstate=none,
+  footerstate=none,
+  pagestate=stop,
+]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% fig %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\defineframed[mplabel][frame=off,align=middle]
+\define[1]\mplabel{%
+\rm\itx%
+\framed[frame=off,align=middle]{#1}%
+}
+
+%\startMPinclusions
+%\stopMPinclusions

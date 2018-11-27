@@ -1,0 +1,18 @@
+
+\def\xcell{\dosingleempty\doxcell}
+\unexpanded\def\doxcell[#1]#2{%
+\iffirstargument
+  \startxcell[#1]#2\stopxcell
+\else
+  \startxcell#2\stopxcell
+\fi
+}
+
+\def\xmcell{\dosingleempty\doxmcell}
+\unexpanded\def\doxmcell[#1]#2{%
+\iffirstargument
+  \startxcell[#1]\m{#2}\stopxcell
+\else
+  \startxcell\m{#2}\stopxcell
+\fi
+}

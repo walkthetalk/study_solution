@@ -22,8 +22,8 @@
 
 % 用來控制編號格式
 \definestructureconversionset[frontpart:sectionnumber][][]
-\definestructureconversionset [bodypart:sectionnumber][chinesecapnumerals, numbers, numbers][numbers]
-\definestructureconversionset [appendix:sectionnumber][chinesecapnumerals, Characters, numbers][numbers]
+\definestructureconversionset [bodypart:sectionnumber][numbers, numbers, numbers][numbers]
+\definestructureconversionset [appendix:sectionnumber][numbers, Characters, numbers][numbers]
 \definestructureconversionset [backpart:sectionnumber][][]
 \setuphead[sectionconversionset=sectionnumber]
 
@@ -46,9 +46,24 @@
 \setuphead[sectionseparatorset=sepset]
 
 % 用來控制label
-\setuplabeltext[cn][frontpart={第\;,\;卷},bodypart={第\;,\;卷},appendpart={第\;,\;卷},backpart={第\;,\;卷}]
-\setuplabeltext[cn][frontchapter={第\;,\;章},bodychapter={第\;,\;章},appendchapter={附錄\;,},backchapter={第\;,\;章}]
-\setuplabeltext[cn][frontsection={節\;,},bodysection={節\;,},appendsection={,},backsection={節\;,}]
+\setuplabeltext[en][
+  frontpart={Part\;,\;},
+  bodypart={Part\;,\;},
+  appendpart={Part\;,\;},
+  backpart={Part\;,\;}
+]
+\setuplabeltext[en][
+  frontchapter={Chapter\;,\;},
+  bodychapter={Chapter\;,\;},
+  appendchapter={Appendix\;,},
+  backchapter={Chapter\;,\;}
+]
+\setuplabeltext[en][
+  frontsection={Section\;,},
+  bodysection={Section\;,},
+  appendsection={,},
+  backsection={Section\;,}
+]
 \setuphead[part][
   frontpartlabel=frontpart,
   bodypartlabel=bodypart,
@@ -74,8 +89,8 @@
 %  numbercommand=\PartNbr,
   header=high, %none empty high nomarking %章節首頁無頁眉
   footer=high, %none empty high nomarking
-  before={\blank[2em]}, %COMMAND
-  after={\blank[1em] \placelist[chapter]}, %COMMAND
+  before={\blank[2ex]}, %COMMAND
+  after={\blank[1ex] \placelist[chapter]}, %COMMAND
   alternative=middle, %normal inmargin middle TEXT
   placehead=yes,
 ]
@@ -91,9 +106,9 @@
   header=high, %none empty high nomarking %章節首頁無頁眉
 %  text=nomarking, %none empty high nomarking
   footer=high, %none empty high nomarking
-  before={\blank[2em]}, %COMMAND
+  before={\blank[2ex]}, %COMMAND
 %  inbetween=, %COMMAND
-  after={\blank[1em] \placelist[section,subject]}, %COMMAND
+  after={\blank[1ex] \placelist[section,subject]}, %COMMAND
   alternative=middle, %normal inmargin middle TEXT
 %  sectionnumber=no,
 ]
@@ -104,8 +119,8 @@
   numberstyle={\rm\bfb}, %normal bold slanted boldslanted % 編號
   number=yes, %yes no % 是否帶編號
   ownnumber=no, %yes no % 是否指定編號，如果是，則第一個參數就是編號
-  before={\blank[1.5em]}, %COMMAND
-  after={\blank[1em]}, %COMMAND
+  before={\blank[1.5ex]}, %COMMAND
+  after={\blank[1ex]}, %COMMAND
   alternative=inmargin, %normal inmargin middle TEXT
 ]
 
@@ -120,8 +135,8 @@
   numberstyle={\rm\bfa}, %normal bold slanted boldslanted % 編號
   number=yes, %yes no % 是否帶編號
   ownnumber=no, %yes no % 是否指定編號，如果是，則第一個參數就是編號
-  before={\blank[1em]}, %COMMAND
-  after={\blank[1em]}, %COMMAND
+  before={\blank[1ex]}, %COMMAND
+  after={\blank[1ex]}, %COMMAND
   alternative=inmargin, %normal inmargin middle TEXT
 ]
 
@@ -131,8 +146,8 @@
   numberstyle={\rm\ita}, %normal bold slanted boldslanted % 編號
   number=yes, %yes no % 是否帶編號
   ownnumber=no, %yes no % 是否指定編號，如果是，則第一個參數就是編號
-  before={\blank[.5em]}, %COMMAND
-  after={\blank[.5em]}, %COMMAND
+  before={\blank[.5ex]}, %COMMAND
+  after={\blank[.5ex]}, %COMMAND
   alternative=inmargin, %normal inmargin middle TEXT
 ]
 
@@ -204,9 +219,9 @@
   header=high, %none empty high nomarking %章節首頁無頁眉
 %  text=nomarking, %none empty high nomarking
   footer=normal, %none empty high nomarking
-  before={\blank[2em]}, %COMMAND
+  before={\blank[2ex]}, %COMMAND
 %  inbetween=, %COMMAND
-  after={\blank[1em]}, %COMMAND
+  after={\blank[1ex]}, %COMMAND
   alternative=middle, %normal inmargin middle TEXT
   sectionnumber=no,
 ]
@@ -269,7 +284,7 @@
 \define\BodyTextLeftHeader{%
 \framedtext[frame=off,bottomframe=on,width=broad,offset=none,frameoffset=2pt,]{%
 \rlap{} \hfill
-  {第\;\getmarking[chapternumber][first]\;章\;\;\getmarking[chapter][first]}
+  {Chapter\;\getmarking[chapternumber][first]\;\;\getmarking[chapter][first]}
 \hfill \llap{}%
 }%
 }
@@ -280,7 +295,7 @@
 \rlap{} \hfill
   %\doiftextelse{\getmarking[subject][current]}
   %  {\getmarking[subject][current]}
-    {節\;\getmarking[sectionnumber][first]\;\;\getmarking[section][first]}
+    {Section\;\getmarking[sectionnumber][first]\;\;\getmarking[section][first]}
 \hfill \llap{}%
 }%
 }
@@ -295,11 +310,11 @@
 
 \define\BodyTextLeftFooter{%
 \framedtext[frame=off,topframe=on,width=broad,offset=none,frameoffset=2pt,]{%
-\rlap{共\;\lastpagenumber\;頁} \hfill  {第\;\pagenumber\;頁} \hfill \llap{}%
+\rlap{\pagenumber\;/\;\lastpagenumber} \hfill  {} \hfill \llap{}%
 }}%
 \define\BodyTextRightFooter{%
 \framedtext[frame=off,topframe=on,width=broad,offset=none,frameoffset=2pt,]{%
-\rlap{} \hfill  {第\;\pagenumber\;頁} \hfill \llap{共\;\lastpagenumber\;頁}%
+\rlap{} \hfill  {\pagenumber} \hfill \llap{\pagenumber\;/\;\lastpagenumber}%
 }}%
 
 \setupfootertexts[text]

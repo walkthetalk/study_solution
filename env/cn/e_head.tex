@@ -1,0 +1,357 @@
+%两个quad空格	a \qquad b
+%quad空格	a \quad b
+%大空格		a\ b
+%中等空格	a\;b
+%小空格		a\,b
+%没有空格	ab
+%紧贴		a\!b
+
+% page number
+\definestructureconversionset[frontpart:pagenumber][][romannumerals]
+\definestructureconversionset [bodypart:pagenumber][][numbers]
+\definestructureconversionset [appendix:pagenumber][][numbers]
+\definestructureconversionset [backpart:pagenumber][][numbers]
+\setuppagenumber[numberconverionset=pagenumber]
+
+% 用來控制章節編號的復位 part、chapter獨立編號，section則每章重新編號
+\definestructureresetset[frontpart:default][0,0,1][0] % don't reset part, chapter, but section
+\definestructureresetset [bodypart:default][0,0,1][0] % don't reset part, chapter, but section
+\definestructureresetset [appendix:default][0,0,1][0] % don't reset part, chapter, but section
+\definestructureresetset [backpart:default][0,0,1][0] % don't reset part, chapter, but section
+\setuphead[sectionresetset=default]
+
+% 用來控制編號格式
+\definestructureconversionset[frontpart:sectionnumber][][]
+\definestructureconversionset [bodypart:sectionnumber][chinesecapnumerals, numbers, numbers][numbers]
+\definestructureconversionset [appendix:sectionnumber][chinesecapnumerals, Characters, numbers][numbers]
+\definestructureconversionset [backpart:sectionnumber][][]
+\setuphead[sectionconversionset=sectionnumber]
+
+% 用來控制章節編號間的串聯
+% can't remove partnumber
+%\definestructureprefixset [myset] [section-1,section-2,section-3,section-4,section-5,section-6][]
+%\setuphead[sectionset=myset]
+\setuphead[part][sectionsegments=1]
+\setuphead[chapter][sectionsegments=2:*]
+\setuphead[section][sectionsegments=2:*]
+\setuphead[subsection][sectionsegments=2:*]
+\setuphead[subsubsection][sectionsegments=2:*]
+\setuphead[subsubsubsection][sectionsegments=2:*]
+
+% 用來控制編號間隔符
+\defineseparatorset[frontpart:sepset][!,.,.][.]
+\defineseparatorset [bodypart:sepset][!,.,.][.]
+\defineseparatorset [appendix:sepset][!,-,.][.]
+\defineseparatorset [backpart:sepset][!,.,.][.]
+\setuphead[sectionseparatorset=sepset]
+
+% 用來控制label
+\setuplabeltext[cn][frontpart={第\;,\;卷},bodypart={第\;,\;卷},appendpart={第\;,\;卷},backpart={第\;,\;卷}]
+\setuplabeltext[cn][frontchapter={第\;,\;章},bodychapter={第\;,\;章},appendchapter={附錄\;,},backchapter={第\;,\;章}]
+\setuplabeltext[cn][frontsection={節\;,},bodysection={節\;,},appendsection={,},backsection={節\;,}]
+\setuphead[part][
+  frontpartlabel=frontpart,
+  bodypartlabel=bodypart,
+  appendixlabel=appendpart,
+  backpartlabel=backpart,
+]
+\setuphead[chapter][
+  frontpartlabel=frontchapter,
+  bodypartlabel=bodychapter,
+  appendixlabel=appendchapter,
+  backpartlabel=backchapter,
+]
+\setuphead[section][
+  frontpartlabel=frontsection,
+  bodypartlabel=bodysection,
+  appendixlabel=appendsection,
+  backpartlabel=backsection,
+]
+
+\setuphead[part][
+  textstyle={\rm\bfd}, %normal bold slanted boldslanted % 標題內容
+  numberstyle={\rm\bfd}, %normal bold slanted boldslanted % 編號
+%  numbercommand=\PartNbr,
+  header=high, %none empty high nomarking %章節首頁無頁眉
+  footer=high, %none empty high nomarking
+  before={\blank[2ex]}, %COMMAND
+  after={\blank[1ex] \placelist[chapter]}, %COMMAND
+  alternative=middle, %normal inmargin middle TEXT
+  placehead=yes,
+]
+
+\setuphead[chapter][
+  indentnext=yes,
+  textstyle={\rm\bfc}, %normal bold slanted boldslanted % 標題內容
+  numberstyle={\rm\bfc}, %normal bold slanted boldslanted % 編號
+  number=yes, %yes no % 是否帶編號
+  ownnumber=no, %yes no % 是否指定編號，如果是，則第一個參數就是編號
+  page=yes, %left right yes % 是否固定於左頁或右頁
+%  continue=no, %yes no % 第一個是否緊接上一層，優先於*page*
+  header=high, %none empty high nomarking %章節首頁無頁眉
+%  text=nomarking, %none empty high nomarking
+  footer=high, %none empty high nomarking
+  before={\blank[2ex]}, %COMMAND
+%  inbetween=, %COMMAND
+  after={\blank[1ex] \placelist[section,subject]}, %COMMAND
+  alternative=middle, %normal inmargin middle TEXT
+%  sectionnumber=no,
+]
+
+\setuphead[section][
+  indentnext=yes,
+  textstyle={\rm\bfb}, %normal bold slanted boldslanted % 標題內容
+  numberstyle={\rm\bfb}, %normal bold slanted boldslanted % 編號
+  number=yes, %yes no % 是否帶編號
+  ownnumber=no, %yes no % 是否指定編號，如果是，則第一個參數就是編號
+  before={\blank[1.5ex]}, %COMMAND
+  after={\blank[1ex]}, %COMMAND
+  alternative=inmargin, %normal inmargin middle TEXT
+]
+
+%list the "subject" in the ToC but don't modify the "section" counter:
+\setuphead[subject][
+  incrementnumber=list,
+]
+
+\setuphead[subsection][
+  indentnext=yes,
+  textstyle={\rm\bfa}, %normal bold slanted boldslanted % 標題內容
+  numberstyle={\rm\bfa}, %normal bold slanted boldslanted % 編號
+  number=yes, %yes no % 是否帶編號
+  ownnumber=no, %yes no % 是否指定編號，如果是，則第一個參數就是編號
+  before={\blank[1ex]}, %COMMAND
+  after={\blank[1ex]}, %COMMAND
+  alternative=inmargin, %normal inmargin middle TEXT
+]
+
+\setuphead[subsubsection][
+  indentnext=yes,
+  textstyle={\rm\ita}, %normal bold slanted boldslanted % 標題內容
+  numberstyle={\rm\ita}, %normal bold slanted boldslanted % 編號
+  number=yes, %yes no % 是否帶編號
+  ownnumber=no, %yes no % 是否指定編號，如果是，則第一個參數就是編號
+  before={\blank[.5ex]}, %COMMAND
+  after={\blank[.5ex]}, %COMMAND
+  alternative=inmargin, %normal inmargin middle TEXT
+]
+
+\setuplist[
+  alternative=c,	%a 空格
+			%b 右对齐
+			%c ...page
+			%d 大空格　紧接下一个list
+			%e 编号加方框，标题向左缩
+			%f
+			%g 标题居中... none command
+  %label=yes,		% bug： 如果設置此項，則編譯參考文獻時會失敗
+  interaction=all,
+%  aligntitle=yes,
+%  align=flushleft,
+]
+
+\setuplist[part][
+  width=4em,	% setuplist中的設置無效，可能是bug
+  margin=0em,	%dimension % 左侧缩进
+  label=yes,
+  style=bold,
+]
+
+\setuplist[chapter][
+  width=4em,	% setuplist中的設置無效，可能是bug
+  margin=0em,	%dimension % 左侧缩进
+  label=yes,
+]
+
+\setuplist[section][
+  width=4em,
+  margin=2em,	%dimension % 左侧缩进
+  label=yes,
+]
+
+\setuplist[subject][
+  width=4em,
+  margin=2em,	%dimension % 左侧缩进
+  label=yes,
+]
+
+\setuplist[figure][
+  width=4em,
+  label=figure, % label=yes 無效，這可能是bug
+  margin=0em,	%dimension % 左侧缩进
+]
+
+\setuplist[table][
+  width=4em,
+  label=table, % label=yes 無效，這可能是bug
+  margin=0em,	%dimension % 左侧缩进
+]
+
+\startsectionblockenvironment[frontpart]
+\resetpagenumber
+
+\setupfootertexts[text]
+[]
+[pagenumber]
+[pagenumber]
+[]
+
+\setuphead[title][
+  indentnext=yes,
+  textstyle={\rm\bfb}, %normal bold slanted boldslanted % 標題內容
+  page=yes, %left right yes % 是否固定於左頁或右頁
+  continue=no, %yes no % 第一個是否緊接上一層，優先於*page*
+  header=high, %none empty high nomarking %章節首頁無頁眉
+%  text=nomarking, %none empty high nomarking
+  footer=normal, %none empty high nomarking
+  before={\blank[2ex]}, %COMMAND
+%  inbetween=, %COMMAND
+  after={\blank[1ex]}, %COMMAND
+  alternative=middle, %normal inmargin middle TEXT
+  sectionnumber=no,
+]
+
+\stopsectionblockenvironment
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% body part env %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\startsectionblockenvironment[bodypart]
+
+% \note workaround for get total chapter number
+\determinelistcharacteristics
+   [chapter]
+   [criterium=all]
+%\utilitylistlength
+
+\definelayer[specificlayer][preset=middle]
+\startsetups rightlayer
+\doiftextelse{\headnumber[chapter]}{
+  \determineheadnumber[chapter]% \note: for \currentheadnumber, can't use \headnumber[] in calculation
+  \doifnot{\utilitylistlength}{0}{% \note: 運行過程中可能是 0
+    \setlayerframed[specificlayer][
+      x={\paperwidth-\layerwidth},
+      y={\paperheight/\utilitylistlength*(2*\currentheadnumber-1)/2}, % \note: 表達式不支持小數
+      frame=off,
+      background=color,
+      backgroundcolor=black,
+      foregroundcolor=white,
+      backgroundoffset=.2em,
+      location={lohi,middle},
+      offset=none]{%
+      \tfb\headnumber[chapter]%
+    }
+  }
+}{}
+\stopsetups
+\startsetups leftlayer
+\doiftextelse{\headnumber[chapter]}{
+  \determineheadnumber[chapter]% \note: for \currentheadnumber, can't use \headnumber[] in calculation
+  \doifnot{\utilitylistlength}{0}{% \note: 運行過程中可能是 0
+    \setlayerframed[specificlayer][
+      x=0pt,
+      y={\paperheight-\paperheight/\utilitylistlength*(2*\currentheadnumber-1)/2}, % \note: 表達式不支持小數
+      frame=off,
+      background=color,
+      backgroundcolor=black,
+      foregroundcolor=white,
+      backgroundoffset=.2em,
+      location={lohi,middle},
+      offset=none]{%
+      \tfb\headnumber[chapter]%
+    }
+  }
+}{}
+\stopsetups
+\setupbackgrounds[rightpage][setups=rightlayer,background=specificlayer]
+\setupbackgrounds[leftpage][setups=leftlayer,background=specificlayer]
+
+\resetpagenumber
+%\setupheader[state=none]
+\define\BodyTextLeftHeader{%
+\framedtext[frame=off,bottomframe=on,width=broad,offset=none,frameoffset=2pt,]{%
+\rlap{} \hfill
+  {第\;\getmarking[chapternumber][first]\;章\;\;\getmarking[chapter][first]}
+\hfill \llap{}%
+}%
+}
+% \note 不要使用 \getnumber，使用 \getmarking
+% \todo 不知如何判斷是處在 section 中，還是處在 subject 中
+\define\BodyTextRightHeader{%
+\framedtext[frame=off,bottomframe=on,width=broad,offset=none,frameoffset=2pt,]{%
+\rlap{} \hfill
+  %\doiftextelse{\getmarking[subject][current]}
+  %  {\getmarking[subject][current]}
+    {節\;\getmarking[sectionnumber][first]\;\;\getmarking[section][first]}
+\hfill \llap{}%
+}%
+}
+
+\setupheader[text][before={\vskip-4pt},]
+
+\setupheadertexts[text]
+[]
+[\BodyTextRightHeader]
+[]
+[\BodyTextLeftHeader]
+
+\define\BodyTextLeftFooter{%
+\framedtext[frame=off,topframe=on,width=broad,offset=none,frameoffset=2pt,]{%
+\rlap{共\;\lastpagenumber\;頁} \hfill  {第\;\pagenumber\;頁} \hfill \llap{}%
+}}%
+\define\BodyTextRightFooter{%
+\framedtext[frame=off,topframe=on,width=broad,offset=none,frameoffset=2pt,]{%
+\rlap{} \hfill  {第\;\pagenumber\;頁} \hfill \llap{共\;\lastpagenumber\;頁}%
+}}%
+
+\setupfootertexts[text]
+[]
+[\BodyTextRightFooter]
+[]
+[\BodyTextLeftFooter]
+
+\define\BodyEdgeLeftFooter{\rotate[%
+  rotation=-90,
+  width=fit,
+  height=fit,
+  frame=off,
+  offset=2pt,
+  background=color,
+  backgroundcolor=darkgray,
+  foregroundcolor=white,
+  corner=round,
+]{\prdname —— \from[authorEmail]}}
+\define\BodyEdgeRightFooter{\rotate[%
+  rotation=90,
+  width=fit,
+  height=fit,
+  frame=off,
+  offset=2pt,
+  background=color,
+  backgroundcolor=darkgray,
+  foregroundcolor=white,
+  corner=round,
+]{\prdname —— \from[authorBlog]}}
+
+\setupfootertexts[edge]
+[]
+[\BodyEdgeLeftFooter]
+[\BodyEdgeRightFooter]
+[]
+\stopsectionblockenvironment
+
+\startsectionblockenvironment[appendix]
+\setupfootertexts[text]
+[]
+[pagenumber]
+[pagenumber]
+[]
+
+% \todo just workaround, front/body/appendix/back, the part number will reset internally
+\setuphead[part][%
+  number=no,
+]
+\stopsectionblockenvironment
+
+\startsectionblockenvironment[backpart]
+\resetpagenumber
+\stopsectionblockenvironment
+

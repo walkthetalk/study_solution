@@ -1,0 +1,23 @@
+% 1. the textbackgournd will extends to the page boundary,
+% which include the footnote and not as expected
+% workaround is:
+\chardef\kindofpagetextareas\plusone
+
+% 2. the footnote can't process linebreak correctly
+% workaround is:
+%\let\stdfootnote\footnote
+%\def\footnote#1{%
+%\stdfootnote{\setscript[hanzi]#1}%
+%}
+
+% 3. 中文caption第一行字符中间有空格
+% workaround is:
+%\setupcaptions[align={broad,middle}]
+
+% 4. \underbar{\space} is invlaid
+% \underbar is fixed black
+\define\uerbarspace{\color[black]{\hl[.5]}}
+
+\define[1]\todo{}
+%\define[1]\todo{\error}
+\define[1]\problem{}

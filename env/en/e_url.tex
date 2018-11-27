@@ -1,0 +1,29 @@
+\setupurl[
+  style=bold,
+  color=blue,
+]
+
+\startluacode
+function commands.simpleurl(url)
+	local tmpstr = "\\goto{"
+	local idx = 0
+	for word in string.gmatch(url, "([^/_%.%-]+[/_%.%-]*)") do
+		if idx ~= 0 then
+			tmpstr = tmpstr .. "{\\allowbreak}"
+		end
+		tmpstr = tmpstr .. word
+		idx = idx + 1
+	end
+	tmpstr = tmpstr .. "}[url(" .. url .. ")]"
+	tex.sprint(tex.txtcatcodes, tmpstr)
+end
+\stopluacode
+\def\simpleurl
+     {\startasciimode\dosimpleurl}
+\def\dosimpleurl#1%
+     {\ctxlua{commands.simpleurl([[#1]])}\stopasciimode}
+
+% url
+\useurl[authorBlog][https://niqingliang2003.wordpress.com]
+\useurl[authorGithub][https://github.com/walkthetalk]
+\useurl[authorEmail][mailto:niqingliang2003@gmail.com][][niqingliang2003@gmail.com]

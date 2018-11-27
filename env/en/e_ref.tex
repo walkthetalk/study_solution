@@ -15,40 +15,29 @@
 ]
 \fi
 
-\definereferenceformat[refclglo][
-  left=,	%text
-  right=,	%text
-  %text=,	%text
-  %label=,	%name
-  command=\about,	%command % default is \in
-]
-\define[1]\refglo{%
-\refclglo[clglocn:#1]%
-}
-
 \define[1]\refchapter{%
-\in{第}{章}[chapter:#1]%
+\in{Chapter}{}[chapter:#1]%
 }
 
 \define[1]\refappendix{%
-\in{附錄}{}[appendix:#1]%
+\in{Appendix}{}[appendix:#1]%
 }
 
 \define[1]\refappendixsec{%
-\in{附錄}{}[sec:#1]%
+\in{Appendix}{}[sec:#1]%
 }
 
 \define[1]\refsection{%
-\in{節}{}[section:#1]%
+\in{Section}{}[section:#1]%
 }
 
 \define[1]\refitem{%
-\in{第}{項}[item:#1]%
+\in{Item}{}[item:#1]%
 }
 
 \define[1]\reffig{%
-\in{圖}{}[fig:#1]%
+\in{Figure}{}[fig:#1]%
 }
 \define[1]\reftab{%
-\in{表}{}[tab:#1]%
+\in{Table}{}[tab:#1]%
 }

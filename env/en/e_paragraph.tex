@@ -1,0 +1,123 @@
+% 首行缩进
+\setupindenting[first,always,0em]
+% 段落间距
+\setupwhitespace[medium] %none small medium big line fixed fix dimension
+% 行间距
+\setupinterlinespace[medium]
+%\setupinterlinespace[big, on][line=3ex]
+%\setuprelativeinterlinespace[1.2]
+% setupalign 必須位於setupbodyfont之前，因此修改了zhfonts模塊
+%\setupalign[flushleft,nothyphenated,broad]
+%width left right middle inner outer wide broad height bottom line reset hanging
+%nothanging hyphenated nothyphenated lesshyphenation morehyphenation new old normal yes
+%no flushleft flushright flushouter flushinner center hz nohz spacing nospacing tolerant
+%verytolerant stretch
+
+% code
+%\installprettytype[C][C]
+\setuplinenumbering[
+% conversion	numbers characters Characters romannumerals Romannumerals text
+% start	number
+% step	number
+%  width=1em,	%dimension
+%  location=text,	%text inmargin
+% style	normal bold slanted boldslanted type cap small... command
+% prefix	text
+% referencing	on off
+]
+\definetextbackground[verb][
+  frame=off,
+  location=paragraph,
+  leftoffset=0.5em,
+  rightoffset=0.5em,
+  topoffset=0.25em,bottomoffset=0.25em,
+  rulethickness=0.75pt,
+  strut=no,
+  backgroundcolor={gray:1},
+]
+
+\definetyping[codebox][%option=c,
+  bodyfont=9pt,
+  %space	on off
+  %page	yes no
+  %option	slanted normal commands color none
+  %text	yes no
+  %icommand	command
+  %vcommand	command
+  %ccommand	command
+  before={\vskip.5ex\starttextbackground[verb]},	%command
+  after={\stoptextbackground\vskip.5ex},	%command
+  margin=no,	%dimension standard yes no
+  %evenmargin	dimension
+  %oddmargin	dimension
+  %blank	dimension small medium big standard halfline line
+  escape=yes,	%character %{[[,]]}
+  %space	on off
+  tab=8,	%number yes no
+  %page	yes no
+  %indentnext	yes no
+  style=\tt\tf,		%normal bold slanted boldslanted type cap small... command
+  %color	name
+  %palet	name
+  %lines=yes,	%yes no hyphenated
+  %empty	yes all no
+  numbering=line,	%line file no
+]
+
+% c in table
+\definetyping[cintbl][
+  option=none,
+  before={\blank},
+  after={\blank},
+  tab=8,
+]
+
+% note
+\defineframedtext[notepar][
+  bodyfont=small,	%5pt ... 12pt small big
+  style=\REF, %normal bold slanted boldslanted type cap small... COMMAND
+  %left=,	%COMMAND
+  %right,	%COMMAND
+  %before=,	%COMMAND
+  %after,	%COMMAND
+  %inner,	%COMMAND
+  %linecorrection=,	%on off
+  %depthcorrection=,	%on off
+  %margin=,	%standard yes no
+  %location=,	%left right middle none
+  indenting={first,always,0em},	%never none not no yes always first next small medium big normal odd even DIMENSION
+  %inherits from \setupframed
+  background=screen,
+  frame=off,
+  rightframe=on,
+  leftframe=on,
+  framecolor=darkgreen,
+  rulethickness=3pt,
+  width=local,
+]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% chinese %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 在 definestartstop 中使用 setupindenting 等會修改全局設定，因此改用 \def
+\def\startEnglish{\dostartChinese}
+
+\long\def\dostartChinese#1\stopChinese{%
+{\setscript[hanzi]
+\mainlanguage[cn]
+\setupindenting[first,always,2em]%
+\setupwhitespace[line]%
+\setupinterlinespace[medium]%
+#1}
+}
+
+\def\startChineseWithoutWhiteSpace{\dostartChineseWithoutWhiteSpace}
+
+\long\def\dostartChineseWithoutWhiteSpace#1\stopChineseWithoutWhiteSpace{%
+{\setscript[hanzi]
+\mainlanguage[cn]
+\setupindenting[first,always,2em]%
+\setupwhitespace[small]%
+\setupinterlinespace[medium]%
+\blank[1ex]
+#1%
+\blank[1ex]}
+}

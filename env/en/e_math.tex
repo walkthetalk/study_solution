@@ -1,0 +1,25 @@
+
+\definemathcommand [lcm]     [limop] {\mfunction{lcm}}
+\definemathcommand [argmax]  [limop] {\mfunction{arg\,max}}
+\definemathcommand [argmin]  [limop] {\mfunction{arg\,min}}
+
+\definemathcommand [E]  [limop] {\mfunction{E}}
+\definemathcommand [Var]  [limop] {\mfunction{Var}}
+
+\definemathcommand [det]  [limop] {\mfunction{det}}
+\definemathcommand [rank]  [limop] {\mfunction{rank}}
+
+\setupmathematics[
+  functionstyle=\rm\bf,
+  %functioncolor=,
+  %textstyle=,
+  %textcolor=,
+]
+
+%% workaround for vdots
+\ifdefined\vdots
+\else
+ \define\vdots{%
+  \rotate[rotation=90]{\ldots}%
+ }
+\fi

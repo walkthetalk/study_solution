@@ -46,6 +46,18 @@
   }
 }
 
+\startMPinclusions
+% text label
+vardef tlabel@#(expr strname, pos) text p =
+	label@#(textext(strname), pos) p
+enddef;
+
+% math label
+vardef mlabel@#(expr strname, pos) text p =
+	label@#(textext("$" & strname & "$"), pos) p
+enddef;
+\stopMPinclusions
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for enum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % NOTE: if you want to use specific font:
 % \definefontsynonym [MartinVogel] [marvosym.ttf]
@@ -55,12 +67,12 @@
 
 
 \defineenumeration[Q][
-  text={問題},
-  %right={：},
+  text={Problem},
+  right={:\,},
   headstyle=\rm\bf,	%normal bold slanted boldslanted type cap small... command
-  headcolor=red,
+  %headcolor=red,
   %style=\rm\bf,		%normal bold slanted boldslanted type cap small... command
-  color=red,	%name
+  %color=red,	%name
   width=fit,	%fit broad dimension
   distance=0em,		%dimension
 %sample	text
@@ -77,9 +89,13 @@
   prefix=yes,
   prefixsegments=chapter, %chapter:section
   prefixconnector={.},
-  numberstopper={：},
+  numberstopper={},
   way=bychapter,
 ]
+
+\define[1]\refq{%
+\in{Problem}{}[Q:#1]%
+}
 
 \definestartstop[A][%
   before={\startcolor[black]},

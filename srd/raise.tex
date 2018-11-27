@@ -1,0 +1,43 @@
+\startcomponent raise
+\product prd-srd
+
+\chapter{RAISE PROBLEM}
+\placecontent
+When developing software, especially for hardware driver, the register operation
+got you into mess usually. Let's see following example:
+\startccode
+#define RX_STATUS (ioaddr + 0x06)
+#define RX_CMD    RX_STATUS
+#define TX_STATUS (ioaddr + 0x07)
+#define TX_CMD    TX_STATUS
+#define GP_LOW    (ioaddr + 0x08)
+#define GP_HIGH   (ioaddr + 0x09)
+
+#define TX_COLLISION 0x02
+#define TX_16COLLISIONS 0x04
+#define TX_READY 0x08
+\stopccode
+There is one MACRO for every register, whose value is the offset of its' address.
+and there is one MACRO for every field for every register, whose value is the
+mask of the field, used for getting/setting.
+
+In C (the hardware driver is usually developed using 'C' language, of course,
+asm sometime), we can use \code{structure} to represent the register, which
+looks very nice, making more sense than \code{#define}.
+\startccode
+struct TEST_CHIP {
+	TEST_REG1_FIELD1	: 2;
+	/* unused */		: 1;
+	TEST_REG1_FIELD2	: 2;
+	TEST_REG1_FIELD3	: 3;
+
+	
+	TEST_REG2_FIELD1	: 2;
+	TEST_REG2_FIELD2	: 1;
+	/* unused */		: 2;
+	TEST_REG2_FIELD3	: 3;
+};
+\stopccode
+
+\stopcomponent
+

@@ -1,0 +1,87 @@
+\startcomponent resolve
+\product prd-srd
+
+\chapter{RESOLVE PROBLEM}
+\placecontent
+So we got the direction: use \code{structure} in 'C' to represent the registers.
+
+\section{endian mode}
+PAUSE! For compiler, e.g. gcc, when compiling bit-field code, the order is depends
+on CPU's endian mode. For little endian, e.g. x86, it is from lsb to msb, and for
+big endian, it will be from msb to lsb. (Generally speaking, there is no need to
+consider the bit-order in one field, because it is masked by hardware.)
+
+In other words, if we write code like this:
+\startccode
+struct xxx {
+	u_int8_t bf1 : 4;
+	u_int8_t bf2 : 4;
+} var;
+
+var = 0x12;
+var.bf1 = ?;
+\stopccode
+we will get different value about \code{var.bf1}, 0x1 on BE CPU, and 0x2 on LE
+CPU.
+
+Now, we want the code section above result same result on BE and LE CPUs, how to
+do that?
+
+\subsection{native support by gcc}
+\useURL
+  [gcc-bf-order-ctrl]
+  [http://gcc.gnu.org/ml/gcc/2011-07/msg00142.html]
+  []
+  [gcc.gnu.org]
+At this moment, the gcc doesn't provide what we want, but it is prospective. We
+can find some information on \from[gcc-bf-order-ctrl]. And then we can assign
+an lsb/msb attribute to one structure type, after gcc implemented that feature.
+
+\section{access width}
+Another problem, access-width comes. Some compiler, e.g. gcc (still gcc, don't
+ask me why), will generate optimized machine code when accessing bit-field. Consider that:
+\startccode
+struct xxx {
+	u_int16_t bf1 : 8;
+	u_int16_t bf2 : 8;
+} var;
+
+var.bf1 = 0x1;
+\stopccode
+
+If you deassemle the binary generated from it, you may find that it equals to:
+\startccode
+struct xxx {
+	u_int16_t bf1 : 8;
+	u_int16_t bf2 : 8;
+} var;
+
+*(u_int8_t *)(&var) = 0x1;
+\stopccode
+In other words, gcc found \code{var.bf1} is one full byte, and direct assigns value
+to that byte without regard to the container type (\code{u_int16_t}). For memory,
+there is no problem, but think that you are accessing register! Generally speaking,
+it is always need to read/write the whole register, but not part of it. So the
+assignment in the example may not work (if the var is an register).
+
+\subsection{native support by gcc}
+\useURL
+  [gcc-strict-volatile-bf]
+  [http://gcc.gnu.org/gcc-4.6/changes.html]
+  []
+  [gcc.gnu.org]
+Indeed, when representing registers, we need to add \code{volatile} to the type.
+In gcc 4.6's new feature list(\from[gcc-strict-volatile-bf]), we can find that:
+\startframedtextsec
+A new switch \code{-fstrict-volatile-bitfields} has been added. Using it indicates
+that accesses to volatile bitfields should use a single access of the width of the
+field's type. This option can be useful for precisely defining and accessing
+memory-mapped peripheral registers from C or C++.
+\stopframedtextsec
+That's it! For different CPU architecture, it's default state is different. So
+maybe we need add it into \code{CFLAGS} manually. After turn on this switch, all
+bit-fields with qualifier \code{volatile} will be accessed according it's container
+type.
+
+\stopcomponent
+

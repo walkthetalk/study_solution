@@ -1,0 +1,352 @@
+\startcomponent implement
+\product prd-srd
+
+\chapter{IMPLEMENTATION}
+\placecontent
+The implementation must deal with the two problem mentioned in last chapter.
+
+\section{deal with "endian mode"}
+Without gcc's native support, we still has another weapon, \code{MACRO}. Think
+that, we defined a bit-field list in order of msb->lsb:
+\startccode
+SRD_REG_DEF(
+	bf1 : 2,
+	bf2 : 4,
+	bf3 : 3,
+	bf4 : 7);
+\stopccode
+in LE mode, we need lsb->msb, so
+the MACRO should reverse it to lsb->msb:
+\startccode
+bf4 : 7;
+bf3 : 3;
+bf2 : 4;
+bf1 : 2;
+\stopccode
+but for BE mode, just hold it:
+\startccode
+bf1 : 2;
+bf2 : 4;
+bf3 : 3;
+bf4 : 7;
+\stopccode
+
+for the example, we can implement \code{SRD_REG_DEF} as that:
+\startccode
+#if defined(__LITTLE_ENDIAN)
+#define SRD_REG_DEF(BF1, BF2, BF3, BF4) BF4;BF3;BF2;BF1
+#elif defined(__BIG_ENDIAN)
+#define SRD_REG_DEF(BF1, BF2, BF3, BF4) BF1;BF2;BF3;BF4
+#endif
+\stopccode
+
+\subsection{the number of bit-fields}
+Because for every register, the number of bit-fields is not fixed, we should
+use \code{Variadic Macro}, e.g. for BE mode:
+\startccode
+#define SRD_REG_DEF(BFX, ...) BFX, ##__VA_ARGS__
+\stopccode
+
+But what about LE mode? To reverse the macro arguments, we must know the number
+of arguments first. The maxmium register width supported is 64bit.
+\startccode
+#define PP_NARG(...) PP_NARG_(__VA_ARGS__)
+#define PP_NARG_(...) \
+	PP_NARG__(x, ##__VA_ARGS__, PP_RSEQ_N())
+#define PP_NARG__(...) \
+	PP_ARG_N(__VA_ARGS__)
+#define PP_ARG_N( \
+	 _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, \
+	_10,_11,_12,_13,_14,_15,_16,_17,_18,_19, \
+	_20,_21,_22,_23,_24,_25,_26,_27,_28,_29, \
+	_30,_31,_32,_33,_34,_35,_36,_37,_38,_39, \
+	_40,_41,_42,_43,_44,_45,_46,_47,_48,_49, \
+	_50,_51,_52,_53,_54,_55,_56,_57,_58,_59, \
+	_60,_61,_62,_63,_64,N,...) N
+#define PP_RSEQ_N() \
+	64,63,62,61,60,                   \
+	59,58,57,56,55,54,53,52,51,50, \
+	49,48,47,46,45,44,43,42,41,40, \
+	39,38,37,36,35,34,33,32,31,30, \
+	29,28,27,26,25,24,23,22,21,20, \
+	19,18,17,16,15,14,13,12,11,10, \
+	9,8,7,6,5,4,3,2,1,0
+\stopccode
+The first macro \code{PP_NARG} is used to get the argument number. E.g. \code{
+PP_NARG()} is \code{0} after extended. The second macro \code{PP_NARG_} will add
+one argument \code{x} into the arguments, and followed by a number list(64~0).
+\code{PP_ARG_N} will return the 66th argument. If original arguments is null, then
+the \code{PP_NARG__} will be extended to:
+\startccode
+x, 64, 63, ..., 2, 1, 0
+\stopccode
+The 66th argument is \code{0}, which is the final result. what about only one
+argument?
+\startccode
+x, arg1, 64, 63, ..., 2, 1, 0
+\stopccode
+The 66th argument - \code{1} is the final result.
+
+And so forth...
+
+\subsection{reverse}
+Let's reverse the arguments next. We can get it in mind easily:
+\startccode
+reverse(x, ...) PP_NARG(##__VA_ARGS__) == 0 ? : reverse(##__VA_ARGS__, x)
+\stopccode
+Unfortunately, it can't work, because the C's macro don't allow recurrence, even
+use two macro, reference each other.
+
+But - without C++'s meta program - we can do that like:
+\startccode
+#define REVERSE_16(x, y, ...) REVERSE_15(y, ##__VA_ARGS__), x
+#define REVERSE_15(x, y, ...) REVERSE_14(y, ##__VA_ARGS__), x
+#define REVERSE_14(x, y, ...) REVERSE_13(y, ##__VA_ARGS__), x
+...
+#define REVERSE_3(x, y, ...) REVERSE_2(y, ##__VA_ARGS__), x
+#define REVERSE_2(x, y) y, x
+
+#define REVERSE(x, ...) REVERSE_(PP_NARG(x, ##_VA_ARGS__), x, ##_VA_ARGS__)
+#define REVERSE_(n, x, ...) REVERSE_##n(x, ##_VA_ARGS__)
+\stopccode
+Of course, the maximum number of arguments it supports is 16, but you can extends
+it easily.
+
+\section{deal with "access width"}
+To avoid the compiler optimization, if using gcc<4.6, we can't access the bit-
+field directly, but we can:
+\startccode
+(typeof(reg)) tmp = reg;
+tmp.bfx = 123;
+reg = tmp;
+\stopccode
+
+\section{result}
+By now, we have conquered all the technique problems. We got that finally:
+\startccode
+/*
+ * you need define your own macro to distinguish the kernel space and user space.
+ * and in kernel space, we add __BYTE_ORDER to adapt to user space, maybe it is
+ * not the best manner, you can go with your own.
+ */
+#if defined(__KERNEL_SPACE__)
+#include <asm/byteorder.h>
+
+#if defined(__LITTLE_ENDIAN)
+#if defined(__BIG_ENDIAN)
+#error "both big and little endian are defined."
+#endif
+#endif
+
+#if defined(__LITTLE_ENDIAN)
+
+#define __BYTE_ORDER __LITTLE_ENDIAN
+#define __BIG_ENDIAN 4321
+
+#elif defined(__BIG_ENDIAN)
+
+#define __BYTE_ORDER __BIG_ENDIAN
+#define __LITTLE_ENDIAN 1234
+
+#else
+#error "I don't know big or little"
+#endif
+
+#else
+#include <endian.h>
+#endif
+
+// count the arguments
+#define PP_NARG(...) PP_NARG_(__VA_ARGS__)
+#define PP_NARG_(...) \
+	PP_NARG__(x, ##__VA_ARGS__, PP_RSEQ_N())
+#define PP_NARG__(...) \
+	PP_ARG_N(__VA_ARGS__)
+#define PP_ARG_N( \
+	 _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, \
+	_10,_11,_12,_13,_14,_15,_16,_17,_18,_19, \
+	_20,_21,_22,_23,_24,_25,_26,_27,_28,_29, \
+	_30,_31,_32,_33,_34,_35,_36,_37,_38,_39, \
+	_40,_41,_42,_43,_44,_45,_46,_47,_48,_49, \
+	_50,_51,_52,_53,_54,_55,_56,_57,_58,_59, \
+	_60,_61,_62,_63,_64,N,...) N
+#define PP_RSEQ_N() \
+	64,63,62,61,60,                   \
+	59,58,57,56,55,54,53,52,51,50, \
+	49,48,47,46,45,44,43,42,41,40, \
+	39,38,37,36,35,34,33,32,31,30, \
+	29,28,27,26,25,24,23,22,21,20, \
+	19,18,17,16,15,14,13,12,11,10, \
+	9,8,7,6,5,4,3,2,1,0
+
+// concatenate two str
+#define PP_CONCATENATE(arg1, arg2) PP_CONCATENATE_(arg1, arg2)
+#define PP_CONCATENATE_(arg1, arg2) PP_CONCATENATE__(arg1, arg2)
+#define PP_CONCATENATE__(arg1, arg2) arg1##arg2
+
+// forward / backward traverse
+#define SRD_FW(x, y, ...) x; y, ##__VA_ARGS__
+#define SRD_BW(x, y, ...) y, ##__VA_ARGS__; x
+
+// recurrence of bit-fields
+#define SRD_FOREACH_16(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_15(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_15(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_14(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_14(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_13(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_13(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_12(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_12(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_11(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_11(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_10(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_10(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_9(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_9(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_8(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_8(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_7(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_7(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_6(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_6(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_5(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_5(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_4(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_4(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_3(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_3(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_2(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_2(dir, type, x, ...) SRD_##dir( \
+		SRD_FOREACH_1(dir, type, x), \
+		SRD_FOREACH_1(dir, type, __VA_ARGS__))
+#define SRD_FOREACH_1(dir, type, x) type x
+
+// traverse bit-fields by specific direction (backward or forward)
+#define SRD_FOREACH(dir, type, x, ...) \
+	PP_CONCATENATE(SRD_FOREACH_, PP_NARG(x, ##__VA_ARGS__)) \
+		(dir, type, x, ##__VA_ARGS__)
+
+// used to define bit-fields, assume listed from msb to lsb
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+# define SRD_REG_BF(type, x, ...) SRD_FOREACH(BW, type, x, ##__VA_ARGS__)
+#elif __BYTE_ORDER == __BIG_ENDIAN
+# define SRD_REG_BF(type, x, ...) SRD_FOREACH(FW, type, x, ##__VA_ARGS__)
+#else
+#error "I don't know the endian mode"
+#endif
+\stopccode
+
+\subsection{usage}
+You can extends it to common use. Here is the usage:
+\startccode
+#define SRD_TEST_REG(name, bf, ...) \
+	union { \
+		volatile u_int16_t v; \
+		struct { \
+			SRD_REG_BF(volatile u_int16_t, bf, ##__VA_ARGS__); \
+		} _bf; \
+	} name
+
+/*
+ * the *SRD_RBF* and *SRD_WBF* is used to read/write bit-field.
+ * @param:
+ *     @reg	- the register
+ *     @bf	- the bit-field
+ *     @p	- the pointer pointed to the data store
+ */
+#define SRD_RBF(reg, bf, p) do { \
+		(typeof(reg)) tmp = { .v = (reg).v, };
+		*(p) = tmp._bf.bf;
+	} while(0)
+#define SRD_WBF(reg, bf, p) do { \
+		(typeof(reg)) tmp = { .v = (reg).v, };
+		tmp._bf.bf = *(p);
+		(reg).v = tmp.v;
+	} while(0)
+
+struct test_chip_t {
+	SRD_TEST_REG(test_reg1,
+		a : 3,
+		b : 4,
+		c : 5,
+		d : 4);
+	SRD_TEST_REG(test_reg2,
+		a : 3,
+		b : 4,
+		c : 5,
+		d : 4);
+} test_chip;
+
+u_int16_t data = 0;
+
+SRD_RBF(test_chip.test_reg1, b, &data);
+SRD_WBF(test_chip.test_reg2, d, &data);
+\stopccode
+
+\section{NOTE}
+In the example, we access the register directly, at least on powerpc's localbus.
+If you are using other CPUs or other bus, you need read the manual for further
+information. And, maybe the barrier is needed.
+
+And there are many further issues you need to consider, if you want to use it in
+your product. E.g. \code{RO/WO/RW}, of course, for \code{RO}, you can add
+\code{const} preceding the bit-field name, but what about \code{WO}? Maybe there
+are some address unused in the address space of one chip, and I'm sure you don't
+want code like:
+\startccode
+struct xx {
+	...
+	u_int16_t unused1[32];
+	...
+	u_int16_t unused2[16];
+	...
+};
+\stopccode
+For this problem, I can share my idea with you:
+\startccode
+/*
+ * for unused registers
+ * @param:
+ *     type	- register type, u_int{8|16|32}_t
+ *     start	- the first register offset in the gap region, closed
+ *     end	- the last register offset in the gap region, open
+ * the gap region is [start, end), the start and end can't be expression, only
+ * value be supported.
+ */
+#define SRD_GAP(type, start, end) type gap_##start_##end[(end) - (start)]
+\stopccode
+
+Finally, how to ensure we write the right bit-field definition? One aspect of it
+is the size. My trial:
+\startccode
+struct xxx {
+	...
+};
+
+typedef char xxx_size[sizeof(struct xxx) == N ? 1 : -1];
+\stopccode
+In which, the \code{N} is your expect.
+
+And ..., it's the show time of you. Good luck!!!
+
+\useURL[author-email][mailto:niqingliang@insigma.com.cn][][niqingliang@insigma.com.cn]
+\useURL[author-blog][http://niqingliang2003.wordpress.com][][http://niqingliang2003.wordpress.com]
+If any problem, please contact author \from[author-email], or visit \from[author-blog].
+
+\stopcomponent
+

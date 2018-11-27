@@ -1,0 +1,111 @@
+\section[section:funcQlf]{函式限定符}
+
+% __kernel (or kernel)
+\subsection{__kernel （或 kernel）}
+
+限定符 \cqlfemp{__kernel} （或 \cqlfemp{kernel}）可以將函式聲明為\cnglo{kernel}，
+使其可由\cnglo{app}在 OpenCL \cnglo{device}上執行。
+對於用此限定符聲明的函式有如下規定：
+\startigBase
+\item 僅可在\cnglo{device}上執行；
+\item 可由\cnglo{host}調用；
+\item 當被另一個\cnglo{kernel}函式調用時， \cqlf{__kernel} 函式僅僅是一個常規函式。
+\stopigBase
+
+\startnotepar
+如果\cnglo{kernel}函式中聲明的變量帶有限定符 \cqlf{__local} 或 \cqlf{local}，
+則\cnglo{host}可以使用恰當的 API
+ 像 \capi{clEnqueueNDRangeKernel} 和 \capi{clEnqueueTask} 來調用他。
+
+保留關鍵字 \cqlfemp{__kernel} 和 \cqlfemp{kernel} 只能用作函式的限定符，
+不能挪作他用。
+\stopnotepar
+
+% optional attribute qualifiers
+\subsection[section:optAttrQlf]{可選特性限定符}
+
+限定符 \cqlf{__kernel} 可以與關鍵字 \cqlf{__attribute__} 一起使用，
+從而為\cnglo{kernel}函式聲明額外的資訊，如下所述。
+
+% safe 一般指防止“無意的破壞”，
+% secure 一般指防止“有意的破壞”。
+% 單獨出現均可為“安全”，同時出現時可翻譯為“安全”與“保安”/“守密”
+可選特性 \ccmm{__attribute__((vec_type_hint(<type>)))}\footnote{
+自動矢量化（autovectorization）時會做隱式的假設：
+ \cqlf{__kernel} 中調用的所有庫都必須可在運行時重新編譯，
+只有這樣，編譯器才可以合併或分離作業項。
+這可能意味着，這樣的庫不能是編死的二元碼，
+如果是編死的二元碼，則必須帶有源碼或可重定向的中間表示。
+在某些情況下，這可能導致代碼安全問題。}
+ 可以給編譯器暗示 \cqlf{__kernel} 可計算的{\ftRef{寬度}}，
+編譯器在對代碼進行自動矢量化時，可以將其作為基準來計算處理器的可利用帶寬。
+其中 \ccmm{<type>} 是\reftab{builtInVectorDataTypes}中所列的內建矢量型別，
+或者是構成其元素的標量型別。
+如果沒有指定 \ccmm{vec_type_hint (<type>)}，
+則假定\cnglo{kernel}具有限定符 \ccmm{__attribute__((vec_type_hint(int)))}。
+
+例如，如果開發人員指定的寬度是 \ctype{float4}，
+則編譯器應當假定通常使用四路浮點矢量進行計算，
+並可以決定合併\cnglo{workitem}或者甚至可能將一個\cnglo{workitem}分成多個線程，
+以更好的匹配硬件的能力。
+對於合格的實作，不要求可以對代碼自動矢量化，但應當支持這個暗示。
+即使沒有這個暗示，編譯器也可能自動矢量化。
+如果實作將 N 個\cnglo{workitem}合併到一個線程中，
+則他要負責正確地處理這種情況：
+全局或局部\cnglo{workitem}的數目在任一維度上模 N 都不為零。
+
+例：
+\startclc
+// autovectorize assuming float4 as the
+// basic computation width
+__kernel __attribute__((vec_type_hint(float4)))
+void foo( __global float4 *p ) { .... }
+
+// autovectorize assuming double as the
+// basic computation width
+__kernel __attribute__((vec_type_hint(double)))
+void foo( __global float4 *p ) { .... }
+
+// autovectorize assuming int (default)
+// as the basic computation width
+__kernel
+void foo( __global float4 *p ) { .... }
+\stopclc
+
+舉個例子，如果聲明 \cqlf{__kernel} 函式時帶有
+ \ccmm{__attribute__((vec_type_hint (float4)))}
+ （即 \cqlf{__kernel} 函式中大部分運算都已使用 \ctype{float4} 顯式矢量化），
+並且此\cnglo{kernel}在使用
+ Intel® AVX（Intel® Advanced Vector Instructions，
+實現了 8 個 \ctype{float} 寬度的矢量單元），
+則自動矢量化時可能選擇將兩個\cnglo{workitem}合併成一個線程，
+第二個\cnglo{workitem}將在 256 位 AVX 寄存器的高 128 位中運行。
+
+% select重点在于强调选择的动作；
+% choose强调选择的结果
+另一個例子， Power4 機器具有兩個雙精度浮點單元，均為六級流水線結構（6-cycle deep pipe）。
+針對這種機器，自動矢量化時可能選擇將
+六個聲明時帶有限定符 \ccmm{__attribute__(( vec_type_hint (double2)))} 的\cnglo{kernel}
+間插到同一個硬件線程中，
+從而可以讓 FPU 可以一直 12 路全速並行。
+考慮到資源利用或者一些偏好，如 2 的指數，
+即僅將 4 個或 8 個（或者其他數目的）\cnglo{workitem}進行合併，
+只要自動矢量化時認定這種抉擇更好就行。
+
+可選特性 \ccmm{__attribute__((work_group_size_hint(X, Y, Z)))}
+ 可以給編譯器暗示\cnglo{workgrp}的大小，
+即最有可能傳給 \capi{clEnqueueNDRangeKernel} 的引數 \carg{local_work_size} 的值。
+例如， \ccmm{__attribute__((work_group_size_hint(1, 1, 1)))}
+ 就是暗示編譯器\cnglo{kernel}最有可能在大小為 1 的\cnglo{workgrp}中執行。
+
+可選特性 \ccmm{__attribute__((reqd_work_group_size(X, Y, Z)))}
+ 則是 \capi{clEnqueueNDRangeKernel} 的引數 \carg{local_work_size} 必須使用的值。
+這樣編譯器就可以針對此\cnglo{kernel}對生成的代碼進行適當的優化。
+如果\cnglo{kernel}是通過 \capi{clEnqueueTask} 執行的，
+則指定此特性時必須是 \ccmm{__attribute__((reqd_work_group_size(1, 1, 1)))}。
+
+如果 \ccmm{Z} 是一，
+則 \capi{clEnqueueNDRangeKernel} 的引數 \carg{work_dim} 可以是 2 或 3。
+如果 \ccmm{Y} 和 \ccmm{Z} 都是一，
+則 \capi{clEnqueueNDRangeKernel} 的引數 \carg{work_dim} 可以是 1、2 或 3。
+

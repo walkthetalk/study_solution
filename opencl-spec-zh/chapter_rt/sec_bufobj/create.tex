@@ -1,0 +1,142 @@
+\subsection{創建緩衝對象}
+
+\topclfunc{clCreateBuffer}
+
+\startCLFUNC
+cl_mem clCreateBuffer(
+		cl_context context,
+		cl_mem_flags flags,
+		size_t size,
+		void *host_ptr,
+		cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式可用來創建\cngloemp{bufobj}。
+
+\carg{context} 是 OpenCL \cnglo{context}，用來創建\cnglo{bufobj}。
+
+\carg{flags} 是位欄，
+用來表明如何分配（如使用哪個\cnglo{memregion}分配\cnglo{bufobj}）以及怎樣使用。
+\reftab{clmemflags}中列出了 \carg{flags} 可能的值。
+如果 \carg{flags} 的值是 0，則使用缺省值 \cenum{CL_MEM_READ_WRITE}。
+
+\placetable[here][tab:clmemflags]
+{\carg{cl_mem_flags}的值}
+{\input{chapter_rt/tbl/tbl_mem_flags.tex}}
+
+\carg{size} 即所要分配\cnglo{bufobj}的大小，單位：字節。
+
+\carg{host_ptr} 指向可能已經由\cnglo{app}分配好了的緩衝數據。其大小必須 >= \carg{size}。
+
+\carg{errcode_ret} 用來返回錯誤碼。如果是 \cmacro{NULL}，則不會返回錯誤碼。
+
+如果成功創建了\cnglo{bufobj}，\capi{clCreateBuffer} 會將其返回，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，如果 \carg{context} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{flags} 的值不是\reftab{clmemflags}中定義的。
+
+\item \cenum{CL_INVALID_BUFFER_SIZE}，如果 \carg{size} 是 0\footnote{%
+如果 \carg{size} 比 \carg{context} 中所有\cnglo{device}的
+\cenum{CL_DEVICE_MAX_MEM_ALLOC_SIZE}（参见\reftab{cldevquery}）都大，
+實作可能返回 \cenum{CL_INVALID_BUFFER_SIZE}。%
+}。
+
+\item \cenum{CL_INVLAID_HOST_PTR}，
+如果 \carg{host_ptr} 是 \cmacro{NULL}，
+但是 \carg{flags} 中设置了 \cenum{CL_MEM_USE_HOST_PTR} 或 \cenum{CL_MEM_COPY_HOST_PTR}；
+或者 \carg{host_ptr} 不是 \cmacro{NULL}，
+但是 \carg{flags} 中沒有設置 \cenum{CL_MEM_USE_HOST_PTR} 或 \cenum{CL_MEM_COPY_HOST_PTR}。
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，如果為\cnglo{bufobj}分配內存失敗。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+
+\stopigBase
+
+\topclfunc{clCreateSubBuffer}
+
+\startCLFUNC
+cl_mem clCreateSubBuffer(
+		cl_mem buffer,
+		cl_mem_flags flags,
+		cl_buffer_create_type buffer_create_type,
+		const void *buffer_create_info,
+		cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式可以由一個現有的\cnglo{bufobj}創建一個新的\cnglo{bufobj}
+（叫做子\cnglo{bufobj}， sub-buffer object）。
+
+\carg{buffer} 必須是一個有效的\cnglo{bufobj}，且不能是子\cnglo{bufobj}。
+
+\carg{flags} 是位欄，用來表明如何分配以及怎樣使用\cnglo{memobj}，參見\reftab{clmemflags}。
+如果 \carg{flags} 中沒有設置 \cenum{CL_MEM_READ_WRITE}、
+\cenum{CL_MEM_READ_ONLY} 或 \cenum{CL_MEM_WRITE_ONLY}，
+則會從 \carg{buffer} 中繼承這些屬性。
+而 \carg{flags} 中不能設置 \cenum{CL_MEM_USE_HOST_PTR}、
+\cenum{CL_MEM_ALLOC_HOST_PTR} 和 \cenum{CL_MEM_COPY_HOST_PTR}，
+這些也會由 \carg{buffer} 繼承。
+即使 \carg{buffer} 的內存存取限定符中有 \cenum{CL_MEM_COPY_HOST_PTR}，
+也並不意味着創建 sub-buffer 時會有額外的拷貝。
+如果 \carg{flags} 中沒有設置 \cenum{CL_MEM_HOST_WRITE_ONLY}、
+\cenum{CL_MEM_HOST_READ_ONLY} 或 \cenum{CL_MEM_HOST_NO_ACCESS}，
+則會從 \carg{buffer} 中繼承這些屬性。
+
+\carg{buffer_create_type} 和 \carg{buffer_create_info}
+表明了所要創建的\cnglo{bufobj}的類型。
+\reftab{clcreatesubbuffer}中列出了所支持的 \carg{buffer_create_type}
+以及 \carg{buffer_create_info} 中對應的內容。
+
+\placetable[here][tab:clcreatesubbuffer]
+{\capi{clCreateSubBuffer} 所支持的創建類型}
+{\input{chapter_rt/tbl/tbl_clcreatesubbuffer.tex}}
+
+如果執行成功，\capi{clCreateSubBuffer} 會返回 \cenum{CL_SUCCESS}。
+否則會將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_MEM_OBJECT}，
+如果 \carg{buffer} 無效或者是一個子\cnglo{bufobj}。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{buffer} 是用 \cenum{CL_MEM_WRITE_ONLY} 創建的，
+但 \carg{flags} 中設置了 \cenum{CL_MEM_READ_WRITE} 或 \cenum{CL_MEM_READ_ONLY}；
+或者 \carg{buffer} 是用 \cenum{CL_MEM_READ_ONLY} 創建的，
+但 \carg{flags} 中設置了 \cenum{CL_MEM_READ_WRITE} 或 \cenum{CL_MEM_WRITE_ONLY}；
+或者 \carg{flags} 中設置了 \cenum{CL_MEM_USE_HOST_PRT}、
+\cenum{CL_MEM_ALLOC_HOST_PTR} 或 \cenum{CL_MEM_COPY_HOST_PTR}。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{buffer} 是用 \cenum{CL_MEM_HOST_WRITE_ONLY} 創建的，
+但 \carg{flags} 中設置了 \cenum{CL_MEM_HOST_READ_ONLY}；
+或者 \carg{buffer} 是用 \cenum{CL_MEM_HOST_READ_ONLY} 創建的，
+但 \carg{flags} 中設置了 \cenum{CL_MEM_HOST_WRITE_ONLY}；
+或者 \carg{buffer} 是用 \cenum{CL_MEM_HOST_NO_ACCESS} 創建的，
+但 \carg{flags} 中設置了 \cenum{CL_MEM_HOST_READ_ONLY} 或 \cenum{CL_MEM_HOST_WRITE_ONLY}。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{buffer_create_type} 的值無效。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{buffer_create_info} 中的值無效（對 \carg{buffer_create_type} 而言），
+或者 \carg{buffer_create_info} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_BUFFER_SIZE}，如果 \carg{size} 是 0。
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，如果為子\cnglo{bufobj}分配內存失敗。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\startnotepar
+對一個\cnglo{bufobj}及其子\cnglo{bufobj}的並發讀、寫、拷貝是\cnglo{undef}的。
+對於由同一\cnglo{bufobj}創建的互相重疊的子\cnglo{bufobj}的並發讀、寫、拷貝也是\cnglo{undef}的。
+只有讀操作是定義了的。
+\stopnotepar
+

@@ -1,0 +1,52 @@
+\startETD[cl_device_partition_property][partition value]
+
+\clETD{CL_DEVICE_PARTITION_EQUALLY}{unsigned int}{
+將一個大的\cnglo{device}集合分割成許多小的\cnglo{device}集合，
+每個都含有 \math{n} 個\cnglo{computeunit}。
+\math{n} 伴隨此屬性一起傳遞。
+如果不能均勻平分 \cenum{CL_DEVICE_PARTITION_MAX_COMPUTE_UNITS}，
+則不會使用剩下的\cnglo{computeunit}。
+}
+
+\clETD{CL_DEVICE_PARTITION_BY_COUNTS}{unsigned int}{
+此屬性後面跟着的是\cnglo{computeunit}數目清單，
+以 \cenum{CL_DEVICE_PARTITION_BY_COUNTS_LIST_END} 終止。
+對於清單中每個非零的 \math{m}，
+都會創建一個具有 \math{m} 個\cnglo{computeunit}的\cnglo{subdev}。
+\cenum{CL_DEVICE_PARTITION_BY_COUNTS_LIST_END}的值是 0。
+清單中非零值的數目不能超過 \cenum{CL_DEVICE_PARTITION_MAX_SUB_DEVICES}。
+\cnglo{computeunit}的總數不能超過 \cenum{CL_DEVICE_PARTITION_MAX_COMPUTE_UNITS}。
+}
+
+\clETD{CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN}{cl_device_affinity_domain}{
+將\cnglo{device}分割成許多小的\cnglo{device}集合，每個集合中包含一個或多個\cnglo{computeunit}。
+他們共享部分緩存體系。
+跟隨此屬性的值從下列值中選取：
+\startigBase
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_NUMA}，
+\cnglo{subdev}中的\cnglo{computeunit}之間共享一個 NUMA 節點。
+
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_L4_CACHE}，
+\cnglo{subdev}中的\cnglo{computeunit}之間共享一個 4 級數據緩存。
+
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_L3_CACHE}，
+\cnglo{subdev}中的\cnglo{computeunit}之間共享一個 3 級數據緩存。
+
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE}，
+\cnglo{subdev}中的\cnglo{computeunit}之間共享一個 2 級數據緩存。
+
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE}，
+\cnglo{subdev}中的\cnglo{computeunit}之間共享一個 1 級數據緩存。
+
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE}，
+將\cnglo{device}按下一個可再分的相似域進行分割。
+實作會判定此\cnglo{device}或者\cnglo{subdev}可以怎樣進一步細分，
+按 NUMA、L4、L3、L2、L1 的順序，取最前面的那個。
+對於所劃分成的\cnglo{subdev}，其中的\cnglo{computeunit}間共享這一級的內存子系統。
+\stopigBase
+
+用戶可以通過對\cnglo{subdev}調用 \capi{clGetDeviceInfo}
+（\cenum{CL_DEVICE_PARTITION_TYPE}）來確定發生了什麼。
+}
+
+\stopETD

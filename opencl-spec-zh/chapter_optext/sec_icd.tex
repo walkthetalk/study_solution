@@ -1,0 +1,236 @@
+% OpenCL Installable Client Driver (ICD)
+\section{OpenCL 可安裝的客戶端驅動（ICD）}
+
+\subsection{簡介}
+
+這是一個\cnglo{platform}擴展，其中定義了一種比較簡單的機制，
+使得 Khronos OpenCL ICD 裝載器可以將多個獨立的 Vendor ICD 暴露給 OpenCL。
+針對 ICD 裝載器編寫的\cnglo{app}可以存取所有供應商實作暴露出來的所有 \cldt{cl_platform_ids}，
+其中 ICD 裝載器扮演譯碼器的角色。
+如果實作支持本擴展，
+則 \cenum{CL_PLATFORM_EXTENSIONS} 所對應的字串中應當包含 \clext{cl_khr_icd}，
+參見\reftab{cldevquery}。
+
+% Inferring Vendors from Function Calls from Arguments
+\subsection{如何調用供應商提供的函式}
+
+對於任一 OpenCL 函式調用，
+ ICD 裝載器都是用其引數調用供應商所實現的函式。
+當一個對象是如下結構體時，就說他是與 ICD 相兼容的：
+\startclc[indentnext=no]
+struct _cl_<object>
+{
+	struct _cl_icd_dispatch *dispatch;
+	// ... remainder of internal data
+};
+\stopclc
+其中 \ccmm{<object>} 是下列字串之一：
+\startigBase
+\item \ccmm{platform_id}、
+\item \ccmm{device_id}、
+\item \ccmm{context}、
+\item \ccmm{command_queue}、
+\item \ccmm{mem}、
+\item \ccmm{program}、
+\item \ccmm{kernel}、
+\item \ccmm{event}、或
+\item \ccmm{sampler}。
+\stopigBase
+
+結構體 \cldt{_cl_icd_dispatch} 是一個函式指位器分派表，
+用來直接調用特定供應商的實作。
+所有由 ICD 兼容對象所創建的對象都必須是 ICD 兼容的。
+
+\cldt{_cl_icd_dispatch} 中函式的次序由 ICD 裝載器的源碼確定。
+此結構體只能在後面追加新內容。
+
+不帶引數的函式會將引數部分忽略，但 \clapi{clGetExtensionFunctionAddress} 例外，後面有詳細介紹。
+
+% ICD Data
+\subsection{ICD 數據}
+
+Vendor ICD 由兩部分數據定義：
+\startigBase
+\item Vendor ICD 程式庫，包含 OpenCL 實作所實現的所有 OpenCL 入口點。
+此程式庫的檔案名應當包含供應商的名字或特定供應商的實作 ID。
+
+\item Vendor ICD 擴展後綴，一個短字串，
+此供應商所實現的所有擴展缺省都帶有此後綴。
+這個供應商後綴是可選的。
+\stopigBase
+
+% ICD Loader Vendor Enumeration on Windows
+\subsection{Windows 上 ICD 裝載器所用的供應商列表}
+
+在 Windows 上，為了列舉 Vendor ICD， ICD 裝載器會
+掃描註冊表中的鍵值 \ccmm{HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\OpenCL\Vendors}。
+對於此鍵值中的任一 DWORD 數據，
+只要其值為 0， ICD 裝載器就會用 \clapi{LoadLibraryA} 打開其名字對應的動態鏈接庫。
+
+例如，如果註冊表包含下列值：
+\startclc[indentnext=no]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\OpenCL\Vendors]
+"c:\\vendor a\\vndra_ocl.dll"=dword:00000000
+\stopclc
+那麼 ICD 就會打開程式庫“\ccmm{c:\vendor a\vndra_ocl.dll}”。
+
+
+% ICD Loader Vendor Enumeration on Linux
+\subsection{Linux 上 ICD 裝載器所用的供應商列表}
+
+在 Linux 上，為了列舉 Vendor ICD， ICD 裝載器會
+掃描路徑 \ccmm{/etc/OpenCL/vendors} 中的所有檔案。
+對於此路徑中的任一檔案， ICD 裝載器都會以純文本模式打開此檔案。
+此檔案的格式應該是一行文本，指定了 Vendor ICD 的程式庫。
+ ICD 裝載器會試圖用 \capi{dlopen()} 打開此程式庫。
+指定程式庫時可能是絕對路徑，或者僅僅是檔案名。
+
+例如，存在檔案 \ccmm{/etc/OpenCL/vendors/VendorA.icd}，
+其中包含文本 \ccmm{libVendorAOpenCL.so}，
+則 ICD 裝載器會裝載程式庫“\ccmm{libVendorAOpenCL.so}”。
+
+% Adding a Vendor Library
+\subsection{添加供應商程式庫}
+
+在成功裝載 Vendor ICD 的程式庫後，
+ ICD 裝載器會查詢如下函式：
+\startigBase[indentnext=no]
+\item \cenum{clIcdGetPlatformIDsKHR}，
+\item \cenum{clGetPlatformInfo}，和
+\item \cenum{clGetExtensionFunctionAddress}。
+\stopigBase
+如果其中任一函式不存在，則 ICD 裝載器會關閉此程式庫並將其忽略。
+
+接下來， ICD 裝載器會用 \clapi{clIcdGetPlatformIDsKHR} 來
+查詢程式庫中使能了 ICD 的可用\cnglo{platform}。
+對於每個這樣的\cnglo{platform}，
+ ICD 裝載器都會查詢其擴展字串來驗證他確實支持 \clext{cl_khr_icd}，
+然後以 \cenum{CL_PLATFORM_ICD_SUFFIX_KHR} 調用 \clapi{clGetPlatformInfo} 查詢
+其 Vendor ICD 擴展後綴，
+
+如果上面任一步驟失敗， ICD 裝載器就會忽略這個 Vendor ICD 並繼續裝載下一個。
+
+% New Procedures and Functions
+\subsection{新例程和新函式}
+
+\startCLFUNC
+cl_int clIcdGetPlatformIDsKHR (
+			cl_uint num_entries,
+			cl_platform_id *platforms,
+			cl_uint *num_platforms);
+\stopCLFUNC
+
+% New Tokens
+\subsection{新符記}
+
+函式 \clapi{clGetPlatformInfo} 的參數 \carg{param_name} 接受以下值：
+\startclc
+CL_PLATFORM_ICD_SUFFIX_KHR	0x0920
+\stopclc
+
+如果沒有找到可用\cnglo{platform}，則 \clapi{clGetPlatformIDs} 會返回：
+\startclc
+CL_PLATFORM_NOT_FOUND_KHR	-1001
+\stopclc
+
+% Additions to Chapter 4 of the OpenCL 1.2 Specification
+\subsection{對第四章的補充}
+
+以下列內容取代\refsection{queryPlf}中對 \clapi{clGetPlatformIDs} 的返回值的描述：
+\startreplacepar
+如果執行成功，並且找到了至少一個可用\cnglo{platform}，
+則 \clapi{clGetPlatformIDs} 會返回 \cenum{CL_SUCCESS}。
+如果沒有找到可用 \cnglo{platform}，則返回 \cenum{CL_PLATFORM_NOT_FOUND_KHR}。
+如果 \carg{num_entries} 是零，但 \carg{platforms} 不是 \cmacro{NULL}；
+或者 \carg{num_platforms} 和 \carg{platforms} 都是 \cmacro{NULL}，
+則返回 \cenum{CL_INVALID_VALUE}。
+\stopreplacepar
+
+\refsection{queryPlf}中，在 \clapi{clGetPlatformIDs} 的描述後添加以下內容：
+\startreplacepar
+\topclfunc{clIcdGetPlatformIDsKHR}
+
+\startCLFUNC
+cl_int clIcdGetPlatformIDsKHR (
+			cl_uint num_entries,
+			cl_platform_id *platforms,
+			cl_uint *num_platforms);
+\stopCLFUNC
+
+此函式用來獲取可以通過 Khronos ICD 裝載器來訪問的\cnglo{platform}列表。
+
+\carg{num_entries} 即 \carg{platforms} 中可以存放的 \cldt{cl_platform_id} 的數目。
+如果 \carg{platforms} 不是 \cmacro{NULL}，則 \carg{num_entries} 必須大於零。
+
+\carg{platforms} 用來返回可以通過 Khronos ICD 裝載器來訪問的\cnglo{platform}列表。
+其中的 \cldt{cl_platform_id} 是 ICD 兼容的，
+可用來識別特定 OpenCL \cnglo{platform}。
+如果引數 \carg{platforms} 是 \cmacro{NULL}，則將其忽略。
+所返回\cnglo{platform}的數目是 \carg{num_entries} 和
+實際可用\cnglo{platform}數目中較小的那個。
+
+\carg{num_platforms} 返回實際可用\cnglo{platform}的數目。
+如果 \carg{num_platforms} 是 \cmacro{NULL}，則將其忽略。
+
+如果執行成功，並且至少有一個可用\cnglo{platform}，
+則 \clapi{clIcdGetPlatformIDsKHR} 會返回 \cenum{CL_SUCCESS}。
+如果沒有找到可用 \cnglo{platform}，則返回 \cenum{CL_PLATFORM_NOT_FOUND_KHR}。
+如果 \carg{num_entries} 是零，但 \carg{platforms} 不是 \cmacro{NULL}；
+或者 \carg{num_platforms} 和 \carg{platforms} 都是 \cmacro{NULL}，
+則返回 \cenum{CL_INVALID_VALUE}。
+\stopreplacepar
+
+將\reftab{plf_query_icd}中的內容添加到\reftab{plfquery}中。
+
+\placetable[here][tab:plf_query_icd]
+{OpenCL 平台查询}
+{\input{chapter_optext/tbl/plf_query_icd.tex}}
+
+% Additions to Chapter 9 of the OpenCL 1.2 Extension Specification
+\subsection{對第九章的補充}
+
+在\refsection{getFuncPtr}的最後添加以下內容：
+\startreplacepar
+對於 ICD 裝載器所支持的那些函式，
+ \clapi{clGetExtensionFunctionAddress} 會返回 ICD 裝載器實作的函式指位器。
+而對於 ICD 裝載所不知道的那些函式，
+ \clapi{clGetExtensionFunctionAddress} 會根據傳入的字串來確定供應商實作。
+ \clapi{clGetExtensionFunctionAddress} 會在 ICD 裝載器所列舉的 Vendor ICD 中進行查詢，
+並且查詢時會在所查詢函式名後加上 ICD 後綴。
+如果不存在這樣的供應商，或者函式後綴是 \ccmm{KHR} 或 \ccmm{EXT}，
+則 \clapi{clGetExtensionFunctionAddress} 會返回 \cmacro{NULL}。
+\stopreplacepar
+
+% Issues
+\subsection{問題}
+
+\startQUESTION
+一些 OpenCL 函式沒有對象引數，無法據此識別其供應商程式庫（例如， \clapi{clUnloadCompiler}），
+這種情況如何處理？
+\stopQUESTION
+\startANSWER
+已解決：通過 ICD 調用這種函式時，全部為空操作。
+\stopANSWER
+
+\startQUESTION
+如何處理 OpenCL 擴展？
+\stopQUESTION
+\startANSWER
+已解決：只要有一個供應商實現了某個擴展函式，就應當立刻將其加入 ICD。
+對於那些還未加入 ICD 的供應商擴展，使用後綴機制來訪問。
+\stopANSWER
+
+\startQUESTION
+ICD 如何處理為 \cmacro{NULL} 的 \cldt{cl_platform_id}？
+\stopQUESTION
+\startANSWER
+已解決： ICD 不支持 \cmacro{NULL} \cnglo{platform}。
+\stopANSWER
+
+\startQUESTION
+無法卸載 ICD，是否應當提供一種機制來做此事？
+\stopQUESTION
+\startANSWER
+已解決：由於沒有一個標準機制來卸載供應商實作，所以也不為 ICD 添加這種機制。
+\stopANSWER
+

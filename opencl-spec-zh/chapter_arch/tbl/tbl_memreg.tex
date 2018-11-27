@@ -1,0 +1,27 @@
+\bTABLE
+\setupTABLE[c][each][align={middle,lohi}]
+
+\bTABLEhead
+\bTR
+\bTD \eTD
+\bTD\cnglo{glbmem}\eTD \bTD\cnglo{constmem}\eTD
+\bTD\cnglo{locmem}\eTD \bTD\cnglo{prvmem}\eTD
+\eTR
+\eTABLEhead
+
+\bTABLEbody
+\bTR
+\bTD\cnglo{host}\eTD
+\bTD 動態分配\par 可讀可寫\eTD \bTD 動態分配\par 可讀可寫\eTD
+\bTD 動態分配\par 不可存取\eTD \bTD 不可分配\par 不可存取\eTD
+\eTR
+
+\bTR
+\bTD\cnglo{kernel}\eTD
+\bTD 不可分配\par 可讀可寫\eTD \bTD 靜態分配\par 只讀\eTD
+\bTD 靜態分配\par 可讀可寫\eTD \bTD 靜態分配\par 可讀可寫\eTD
+\eTR
+\eTABLEbody
+
+\eTABLE
+

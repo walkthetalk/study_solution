@@ -1,0 +1,70 @@
+\startreusableMPgraphic{plfMode}
+u := 2mm;
+
+ahangle := 30;
+ahlength := u;
+
+def picPE =
+image(
+fill unitsquare shifted (-0.5, -0.5) xscaled u yscaled 4u withcolor (153,153,0);
+draw unitsquare shifted (-0.5, -0.5) xscaled u yscaled 4u;
+)
+enddef;
+
+def picCU =
+image(
+fill unitsquare shifted (-0.5, -0.5) xscaled 10u yscaled 5u withcolor white;
+draw unitsquare shifted (-0.5, -0.5) xscaled 10u yscaled 5u;
+for i=-4, -2, 0, 4:
+	draw picPE shifted (i*u, 0);
+endfor;
+for i=1, 2, 3:
+	fill fullcircle scaled .5u shifted (i*u,0) withcolor (0,0,0);
+endfor;
+)
+enddef;
+
+def picCD =
+image(
+fill unitsquare shifted (-0.5, -0.5) xscaled 16u yscaled 10u withcolor white;
+draw unitsquare shifted (-0.5, -0.5) xscaled 16u yscaled 10u;
+for i=1,0,-1:
+	draw picCU shifted (i*2u, i*2u);
+endfor;
+)
+enddef;
+
+def picHost =
+image(
+fill unitsquare shifted (-0.5, -0.5) scaled 5u withcolor white;
+draw unitsquare shifted (-0.5, -0.5) scaled 5u withpen pencircle scaled 2;
+label(btex \mplabel{\cnglo{host}} etex, (0,0));
+)
+enddef;
+
+def picPLF =
+image(
+for i=2,0,-1,-2:
+	draw picCD shifted (i*3u, i*2u);
+	draw ((8u,0)--(10u,0)) withpen pencircle scaled 2 shifted (i*3u, i*2u);
+endfor;
+
+draw ((16u,4u)--(4u,-4u)) withpen pencircle scaled 2;
+draw ((10u,0)--(15u,0)) withpen pencircle scaled 2;
+draw picHost shifted (17.5u,0);
+
+label(btex \mplabel{\cnglo{prcele}} etex, (0,0)) shifted (-19u,-3u);
+draw ((-18u,-4u)--(-12u,-6u));
+
+label(btex \mplabel{\cnglo{computeunit}} etex, (0,0)) shifted (-11u,-11u);
+draw ((-11u,-10u)--(-6u,-8u));
+
+label(btex \mplabel{計算設備} etex, (0,0)) shifted (7u,-10u);
+draw ((4u,-9u)--(0u,-8u));
+)
+enddef;
+
+draw picPLF;
+
+%draw unitsquare scaled u;
+\stopreusableMPgraphic

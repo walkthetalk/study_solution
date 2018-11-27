@@ -1,0 +1,95 @@
+現在我們來討論尋址模式為 \cenum{CLK_ADDRESS_MIRRORED_REPEAT} 的情況下，
+怎樣利用尋址模式和濾波模式來生成恰當的採樣位置以讀取圖像。
+這種情況下讀取圖像時，就如同圖像數據在整數處會翻轉平鋪一樣。
+例如， 2 和 3 之間的坐標 \math{(s, t, r)} 如同從 1 降到 0 的坐標一樣。
+如果 \math{(s, t, r)} 中的值有 INF 或 NaN，則內建圖像讀取函式的行為未定義。
+
+% nearest
+{\ftEmp{Filter Mode = CLK_FILTER_NEAREST}}
+
+如果濾波模式為 \cenum{CLK_FILTER_NEAREST}，
+則使用位置 \math{(i, j, k)} 處的元素，
+其中 \math{i}、 \math{j} 和 \math{k} 的計算方式如下：
+\startclc[indentnext=no]
+s’ = 2.0f * rint(0.5f * s)
+s’ = fabs(s – s’)
+u = s’ * w/BTEX\low{t}/ETEX
+i = (int)floor(u)
+i = min(i, w/BTEX\low{t}/ETEX – 1)
+
+t’ = 2.0f * rint(0.5f * t)
+t’ = fabs(t – t’)
+v = t’ * h/BTEX\low{t}/ETEX
+j = (int)floor(v)
+j = min(j, h/BTEX\low{t}/ETEX – 1)
+
+r’ = 2.0f * rint(0.5f * r)
+r’ = fabs(r – r’)
+w = r’ * d/BTEX\low{t}/ETEX
+k = (int)floor(w)
+k = min(k, d/BTEX\low{t}/ETEX – 1)
+\stopclc
+對於 3D 圖像， \math{(i,j,k)} 處的圖像元素即為所求。
+而對於 2D 圖像， \math{(i,j)} 處的圖像元素即為所求。
+
+% linear
+{\ftEmp{Filter Mode = CLK_FILTER_LINEAR}}
+
+如果濾波模式為 \cenum{CLK_FILTER_LINEAR}，
+則對於 2D 圖像會選擇一個 \math{2\times 2} 的方陣中的圖像元素，
+而對於 3D 圖像，則會選擇一個 \math{2\times 2\times 2} 的立方體中的圖像元素。
+得到的 \math{2\times 2} 方陣或 \math{2\times 2\times 2} 立方體如下所示。
+
+設
+\startclc[indentnext=no]
+s’ = 2.0f * rint(0.5f * s)
+s’ = fabs(s – s’)
+u = s’ * w/BTEX\low{t}/ETEX
+i0 = (int)floor(u – 0.5f)
+i1 = i0 + 1
+i0 = max(i0, 0)
+i1 = min(i1, w/BTEX\low{t}/ETEX – 1)
+
+t’ = 2.0f * rint(0.5f * t)
+t’ = fabs(t – t’)
+v = t’ * h/BTEX\low{t}/ETEX
+j0 = (int)floor(v – 0.5f)
+j1 = j0 + 1
+j0 = max(j0, 0)
+j1 = min(j1, h/BTEX\low{t}/ETEX – 1)
+
+r’ = 2.0f * rint(0.5f * r)
+r’ = fabs(r – r’)
+w = r’ * d/BTEX\low{t}/ETEX
+k0 = (int)floor(w – 0.5f)
+k1 = k0 + 1
+k0 = max(k0, 0)
+k1 = min(k1, d/BTEX\low{t}/ETEX – 1)
+
+a = frac(u – 0.5)
+b = frac(v – 0.5)
+c = frac(w – 0.5)
+\stopclc
+其中 \ccmm{frac(x)} 為 \ccmm{x} 的小數部分，相當於 \ccmm{x - floor(x)}。
+
+對於 3D 圖像，用如下方式得到圖像元素：
+\startclc[indentnext=no]
+T = (1 – a) * (1 – b) * (1 – c) * T/BTEX\low{i0j0k0}/ETEX
+    + a * (1 – b) * (1 – c) * T/BTEX\low{i1j0k0}/ETEX
+    + (1 – a) * b * (1 – c) * T/BTEX\low{i0j1k0}/ETEX
+    + a * b * (1 – c) * T/BTEX\low{i1j1k0}/ETEX
+    + (1 – a) * (1 – b) * c * T/BTEX\low{i0j0k1}/ETEX
+    + a * (1 – b) * c * T/BTEX\low{i1j0k1}/ETEX
+    + (1 – a) * b * c * T/BTEX\low{i0j1k1}/ETEX
+    + a * b * c * T/BTEX\low{i1j1k1}/ETEX
+\stopclc
+其中 \math{T_{ijk}} 就是此 3D 圖像中位置 \math{(i, j, k)} 處的元素。
+
+對於 2D 圖像，用如下方式得到圖像元素：
+\startclc[indentnext=no]
+T = (1 – a) * (1 – b) * T/BTEX\low{i0j0}/ETEX
+    + a * (1 – b) * T/BTEX\low{i1j0}/ETEX
+    + (1 – a) * b * T/BTEX\low{i0j1}/ETEX
+    + a * b * T/BTEX\low{i1j1}/ETEX
+\stopclc
+其中 \math{T_{ij}} 就是此 2D 圖像中位置 \math{(i, j)} 處的元素。

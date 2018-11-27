@@ -1,0 +1,63 @@
+\section{編程模型}
+OpenCL 執行模型支持\cnglo{dppm}和\cnglo{tppm}，同時也支持這兩種模型的混合體。
+對於 OpenCL 而言，驅動其設計的首要模型是數據並行。
+
+% Data Parallel Programming Model
+\subsection{數據並行編程模型}
+
+\cnglo{dppm}依據同時應用到\cnglo{memobj}的多個元素上的指令序列來定義計算（ computation ）。
+OpenCL 執行模型所關聯的索引空間定義了\cnglo{workitem}，
+以及數據怎樣映射到\cnglo{workitem}上。
+在嚴格的數據並行模型中，\cnglo{workitem}和\cnglo{memobj}的元素間的映射關係為一對一，
+\cnglo{kernel}可在這些元素上並行執行。
+對於\cnglo{dppm}，OpenCL 所實現的版本則比較寬鬆，不要求嚴格的一對一的映射。
+
+OpenCL 所提供的\cnglo{dppm}是分級的。
+有兩種方式來進行分級。
+一種是顯式方式，程式員定義可以並行執行的\cnglo{workitem}的總數、
+以及怎樣將這些\cnglo{workitem}劃分到\cnglo{workgrp}中。
+另一種是隱式方式，程式員僅指定前者，後者由 OpenCL 實作來管理。
+
+% Task Parallel Programming Model
+\subsection{任務並行編程模型}
+在 OpenCL 的\cnglo{tppm}中，\cnglo{kernel}的實體在執行時獨立於任何索引空間。
+這在邏輯上等同於：在\cnglo{computeunit}上執行\cnglo{kernel}時，
+相應\cnglo{workgrp}中只有一個\cnglo{workitem}。
+這種模型下，用戶以如下方式表示並行：
+\startigBase
+\item 使用\cnglo{device}所實現的矢量數據型別；
+\item 將多個任務入隊，和/或
+\item 將多個原生\cnglo{kernel}入隊（他們是使用一個與 OpenCL 正交的編程模型開發的）。
+\stopigBase
+
+% Synchronization
+\subsection{同步}
+在 OpenCL 中，有兩方面的同步：
+\startigBase
+\item 隸屬同一\cnglo{workgrp}的\cnglo{workitem}之間；
+\item 隸屬同一\cnglo{context}的\cnglo{cmdq}中的\cnglo{cmd}之間。
+\stopigBase
+
+前者是通過\cnglo{workgrpbarrier}實現的。
+對於同一\cnglo{workgrp}中的所有\cnglo{workitem}來說，
+任意一個要想越過\cnglo{barrier}繼續執行，
+所有\cnglo{workitem}都必須先執行這個\cnglo{barrier}。
+注意，在同一\cnglo{workgrp}中，
+所有正在執行\cnglo{kernel}的\cnglo{workitem}必須都能執行到這個\cnglo{workgrpbarrier}，
+或者都不會去執行。
+\cnglo{workgrp}之間沒有同步機制。
+
+\cnglo{cmdq}中\cnglo{cmd}間的同步點是:
+\startigBase
+\item \cnglo{cmdqbarrier}。
+他保證：所有之前排隊的\cnglo{cmd}都執行完畢，
+並且他們對\cnglo{memobj}的所有更新，在後續\cnglo{cmd}開始執行前都是可見的。
+他只能在隸屬同一\cnglo{cmdq}的\cnglo{cmd}間進行同步。
+
+\item 等在一個事件上。
+所有會將\cnglo{cmd}入隊的 OpenCL API 函式都會返回一個事件
+（用來識別這個\cnglo{cmd}以及他所更新的\cnglo{memobj}）。
+如果某個後續\cnglo{cmd}正在等待那個事件，可以保證在其開始執行前，
+可以見到對那些\cnglo{memobj}的所有更新。
+\stopigBase
+

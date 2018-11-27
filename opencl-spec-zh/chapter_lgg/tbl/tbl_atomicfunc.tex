@@ -1,0 +1,254 @@
+% atomic_add
+\startbuffer[funcproto:atomic_add]
+int atomic_add (
+	volatile __global int *p,
+	int val)
+unsigned int atomic_add (
+	volatile __global unsigned int *p,
+	unsigned int val)
+
+int atomic_add (
+	volatile __local int *p,
+	int val)
+unsigned int atomic_add (
+	volatile __local unsigned int *p,
+	unsigned int val)
+\stopbuffer
+\startbuffer[funcdesc:atomic_add]
+讀取 \carg{p} 所指向的 32 位值（記為 \math{old}）。
+計算 \math{(old + \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_sub
+\startbuffer[funcproto:atomic_sub]
+int atomic_sub (
+	volatile __global int *p,
+	int val)
+unsigned int atomic_sub (
+	volatile __global unsigned int *p,
+	unsigned int val)
+
+int atomic_sub (
+	volatile __local int *p,
+	int val)
+unsigned int atomic_sub (
+	volatile __local unsigned int *p,
+	unsigned int val)
+\stopbuffer
+\startbuffer[funcdesc:atomic_sub]
+讀取 \carg{p} 所指向的 32 位值（記為 \math{old}）。
+計算 \math{(old - \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_xchg
+\startbuffer[funcproto:atomic_xchg]
+int atomic_xchg (
+	volatile __global int *p,
+	int val)
+unsigned int atomic_xchg (
+	volatile __global unsigned int *p,
+	unsigned int val)
+float atomic_xchg (
+	volatile __global float *p,
+	float val)
+
+int atomic_xchg (
+	volatile __local int *p,
+	int val)
+unsigned int atomic_xchg (
+	volatile __local unsigned int *p,
+	unsigned int val)
+float atomic_xchg (
+	volatile __local float *p,
+	float val)
+\stopbuffer
+\startbuffer[funcdesc:atomic_xchg]
+將位置 \carg{p} 中所存儲的值 \math{old} 和 \carg{val} 中的新值相互交換。
+返回 \math{old}。
+\stopbuffer
+
+% atomic_inc
+\startbuffer[funcproto:atomic_inc]
+int atomic_inc (volatile __global int *p)
+unsigned int atomic_inc (
+	volatile __global unsigned int *p)
+
+int atomic_inc (volatile __local int *p)
+unsigned int atomic_inc (
+	volatile __local unsigned int *p)
+\stopbuffer
+\startbuffer[funcdesc:atomic_inc]
+讀取 \carg{p} 所指向的 32 位值（記為 \math{old}）。
+計算 \math{(old+1)} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_dec
+\startbuffer[funcproto:atomic_dec]
+int atomic_dec (volatile __global int *p)
+unsigned int atomic_dec (
+	volatile __global unsigned int *p)
+
+int atomic_dec (volatile __local int *p)
+unsigned int atomic_dec (
+	volatile __local unsigned int *p)
+\stopbuffer
+\startbuffer[funcdesc:atomic_dec]
+讀取 \carg{p} 所指向的 32 位值（記為 \math{old}）。
+計算 \math{(old-1)} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_cmpchg
+\startbuffer[funcproto:atomic_cmpxchg]
+int atomic_cmpxchg (
+	volatile __global int *p,
+	int cmp, int val)
+unsigned int atomic_cmpxchg (
+	volatile __global unsigned int *p,
+	unsigned int cmp,
+	unsigned int val)
+
+int atomic_cmpxchg (
+	volatile __local int *p,
+	int cmp,
+	int val)
+unsigned int atomic_cmpxchg (
+	volatile __local unsigned int *p,
+	unsigned int cmp,
+	unsigned int val)
+\stopbuffer
+\startbuffer[funcdesc:atomic_cmpxchg]
+讀取 \carg{p} 所指向的 32 位值（記為 \math{old}）。
+計算 \math{(old == cmp) ? val : old} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_min
+\startbuffer[funcproto:atomic_min]
+int atomic_min (
+	volatile __global int *p,
+	int val)
+unsigned int atomic_min (
+	volatile __global unsigned int *p,
+	unsigned int val)
+
+int atomic_min (
+	volatile __local int *p,
+	int val)
+unsigned int atomic_min (
+	volatile __local unsigned int *p,
+	unsigned int val)
+\stopbuffer
+\startbuffer[funcdesc:atomic_min]
+讀取 \carg{p} 所指向的 32 位值（記為 \math{old}）。
+計算 \math{\mapiemp{min}(old, \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_max
+\startbuffer[funcproto:atomic_max]
+int atomic_max (
+	volatile __global int *p,
+	int val)
+unsigned int atomic_max (
+	volatile __global unsigned int *p,
+	unsigned int val)
+
+int atomic_max (
+	volatile __local int *p,
+	int val)
+unsigned int atomic_max (
+	volatile __local unsigned int *p,
+	unsigned int val)
+\stopbuffer
+\startbuffer[funcdesc:atomic_max]
+讀取 \carg{p} 所指向的 32 位值（記為 \math{old}）。
+計算 \math{\mapiemp{max}(old, \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_and
+\startbuffer[funcproto:atomic_and]
+int atomic_and (
+	volatile __global int *p,
+	int val)
+unsigned int atomic_and (
+	volatile __global unsigned int *p,
+	unsigned int val)
+
+int atomic_and (
+	volatile __local int *p,
+	int val)
+unsigned int atomic_and (
+	volatile __local unsigned int *p,
+	unsigned int val)
+\stopbuffer
+\startbuffer[funcdesc:atomic_and]
+讀取 \carg{p} 所指向的 32 位值（記為 \math{old}）。
+計算 \math{(old \mcmm{&} \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_or
+\startbuffer[funcproto:atomic_or]
+int atomic_or (
+	volatile __global int *p,
+	int val)
+unsigned int atomic_or (
+	volatile __global unsigned int *p,
+	unsigned int val)
+
+int atomic_or (
+	volatile __local int *p,
+	int val)
+unsigned int atomic_or (
+	volatile __local unsigned int *p,
+	unsigned int val)
+\stopbuffer
+\startbuffer[funcdesc:atomic_or]
+讀取 \carg{p} 所指向的 32 位值（記為 \math{old}）。
+計算 \math{(old \mcmm{|} \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_xor
+\startbuffer[funcproto:atomic_xor]
+int atomic_xor (
+	volatile __global int *p,
+	int val)
+unsigned int atomic_xor (
+	volatile __global unsigned int *p,
+	unsigned int val)
+
+int atomic_xor (
+	volatile __local int *p,
+	int val)
+unsigned int atomic_xor (
+	volatile __local unsigned int *p,
+	unsigned int val)
+\stopbuffer
+\startbuffer[funcdesc:atomic_xor]
+讀取 \carg{p} 所指向的 32 位值（記為 \math{old}）。
+計算 \math{(old \mcmm{^} \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+
+% begin table
+\startCLFD
+\clFD{atomic_add}
+\clFD{atomic_sub}
+\clFD{atomic_xchg}
+\clFD{atomic_inc}
+\clFD{atomic_dec}
+\clFD{atomic_cmpxchg}
+\clFD{atomic_min}
+\clFD{atomic_max}
+\clFD{atomic_and}
+\clFD{atomic_or}
+\clFD{atomic_xor}
+\stopCLFD
+

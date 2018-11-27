@@ -1,0 +1,118 @@
+\capi{acospi} ( 1 ) = +0.\par
+\capi{acospi} ( x ) returns a NaN for | x | > 1.\par
+\blank
+\capi{asinpi} ( ±0 ) = ±0.\par
+\capi{asinpi} ( x ) returns a NaN for | x | > 1.\par
+\blank
+\capi{atanpi} ( ±0 ) = ±0.\par
+\capi{atanpi} ( ±∞ ) = ±0.5.\par
+\blank
+\capi{atan2pi} ( ±0, -0 ) = ±1.\par
+\capi{atan2pi} ( ±0, +0 ) = ± 0.\par
+\capi{atan2pi} ( ±0, x ) returns ± 1 for x < 0.\par
+\capi{atan2pi} ( ±0, x ) returns ± 0 for x > 0.\par
+\capi{atan2pi} ( y, ±0 ) returns -0.5 for y < 0.\par
+\capi{atan2pi} ( y, ±0 ) returns 0.5 for y > 0.\par
+\capi{atan2pi} ( ±y, -∞ ) returns ± 1 for finite y > 0.\par
+\capi{atan2pi} ( ±y, +∞ ) returns ± 0 for finite y > 0.\par
+\capi{atan2pi} ( ±∞, x ) returns ± 0.5 for finite x.\par
+\capi{atan2pi} ( ±∞, -∞ ) returns ±0.75.\par
+\capi{atan2pi} ( ±∞, +∞ ) returns ±0.25.\par
+\blank
+\capi{ceil} ( -1 < x < 0 ) returns -0.\par
+\blank
+\capi{cospi} ( ±0 ) returns 1\par
+\capi{cospi} ( n + 0.5 ) is +0 for any integer n where n + 0.5 is representable.\par
+\capi{cospi} ( ±∞ ) returns a NaN.\par
+\blank
+\capi{exp10} ( ±0 ) returns 1.\par
+\capi{exp10} ( -∞ ) returns +0.\par
+\capi{exp10} ( +∞ ) returns +∞.\par
+\blank
+\capi{distance} (x, y) calculates the distance from x to y without overflow or extraordinary
+precision loss due to underflow.\par
+\blank
+\capi{fdim} ( any, NaN ) returns NaN.\par
+\capi{fdim} ( NaN, any ) returns NaN.\par
+\blank
+\capi{fmod} ( ±0, NaN ) returns NaN.\par
+\blank
+\capi{frexp} ( ±∞, exp ) returns ±∞ and stores 0 in exp.\par
+\capi{frexp} ( NaN, exp ) returns the NaN and stores 0 in exp.\par
+\blank
+\capi{fract} ( x, iptr) shall not return a value greater than or equal to 1.0,
+and shall not return a value less than 0.\par
+\blank
+\capi{fract} ( +0, iptr ) returns +0 and +0 in iptr.\par
+\capi{fract} ( -0, iptr ) returns -0 and -0 in iptr.\par
+\capi{fract} ( +inf, iptr ) returns +0 and +inf in iptr.\par
+\capi{fract} ( -inf, iptr ) returns -0 and -inf in iptr.\par
+\capi{fract} ( NaN, iptr ) returns the NaN and NaN in iptr.\par
+\blank
+\capi{length} calculates the length of a vector without overflow or extraordinary precision loss
+due to underflow.\par
+\blank
+\capi{lgamma_r} (x, signp) returns 0 in signp if x is zero or a negative integer.\par
+\blank
+\capi{nextafter} ( -0, y > 0 ) returns smallest positive denormal value.\par
+\capi{nextafter} ( +0, y < 0 ) returns smallest negative denormal value.\par
+\blank
+\capi{normalize} shall reduce the vector to unit length, pointing in the same direction without
+overflow or extraordinary precision loss due to underflow.\par
+\capi{normalize} ( v ) returns v if all elements of v are zero.\par
+\capi{normalize} ( v ) returns a vector full of NaNs if any element is a NaN.\par
+\capi{normalize} ( v ) for which any element in v is infinite shall proceed as if the elements in v
+were replaced as follows:\par
+\startclc
+for( i = 0; i < sizeof(v) / sizeof(v[0] ); i++ )
+	v[i] = isinf(v[i] ) ? copysign(1.0, v[i]) : 0.0 * v [i];
+\stopclc
+\blank
+\capi{pow} ( ±0, -∞ ) returns +∞\par
+\blank
+\capi{pown} ( x, 0 ) is 1 for any x, even zero, NaN or infinity.\par
+\capi{pown} ( ±0, n ) is ±∞ for odd n < 0.\par
+\capi{pown} ( ±0, n ) is +∞ for even n < 0.\par
+\capi{pown} ( ±0, n ) is +0 for even n > 0.\par
+\capi{pown} ( ±0, n ) is ±0 for odd n > 0.\par
+\blank
+\capi{powr} ( x, ±0 ) is 1 for finite x > 0.\par
+\capi{powr} ( ±0, y ) is +∞ for finite y < 0.\par
+\capi{powr} ( ±0, -∞) is +∞.\par
+\capi{powr} ( ±0, y ) is +0 for y > 0.\par
+\capi{powr} ( +1, y ) is 1 for finite y.\par
+\capi{powr} ( x, y ) returns NaN for x < 0.\par
+\capi{powr} ( ±0, ±0 ) returns NaN.\par
+\capi{powr} ( +∞, ±0 ) returns NaN.\par
+\capi{powr} ( +1, ±∞ ) returns NaN.\par
+\capi{powr} ( x, NaN ) returns the NaN for x >= 0.\par
+\capi{powr} ( NaN, y ) returns the NaN.\par
+\blank
+\capi{rint} ( -0.5 <= x < 0 ) returns -0.\par
+\blank
+\capi{remquo} (x, y, &quo) returns a NaN and 0 in quo if x is ±∞,
+or if y is 0 and the other argument is non-NaN or if either argument is a NaN.\par
+\blank
+\capi{rootn} ( ±0, n ) is ±∞ for odd n < 0.\par
+\capi{rootn} ( ±0, n ) is +∞ for even n < 0.\par
+\capi{rootn} ( ±0, n ) is +0 for even n > 0.\par
+\capi{rootn} ( ±0, n ) is ±0 for odd n > 0.\par
+\capi{rootn} ( x, n ) returns a NaN for x < 0 and n is even.\par
+\capi{rootn} ( x, 0 ) returns a NaN.\par
+\blank
+\capi{round} ( -0.5 < x < 0 ) returns -0.\par
+\blank
+\capi{sinpi} ( ±0 ) returns ±0.\par
+\capi{sinpi} ( +n) returns +0 for positive integers n.\par
+\capi{sinpi} ( -n ) returns -0 for negative integers n.\par
+\capi{sinpi} ( ±∞ ) returns a NaN.\par
+\blank
+\capi{tanpi} ( ±0 ) returns ±0.\par
+\capi{tanpi} ( ±∞ ) returns a NaN.\par
+\capi{tanpi} ( n ) is copysign( 0.0, n) for even integers n.\par
+\capi{tanpi} ( n ) is copysign( 0.0, - n) for odd integers n.\par
+\capi{tanpi} ( n + 0.5 ) for even integer n is +∞ where n + 0.5 is representable.\par
+\capi{tanpi} ( n + 0.5 ) for odd integer n is -∞ where n + 0.5 is representable.\par
+\blank
+\capi{trunc} ( -1 < x < 0 ) returns -0.\par
+

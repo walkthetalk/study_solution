@@ -1,0 +1,188 @@
+\subsection{在 GL 和 CL 上下文間共享已映射到 GL 對象的內存對象}
+
+\topclfunc{clEnqueueAcquireGLObjects}
+
+\startCLFUNC
+cl_int clEnqueueAcquireGLObjects (
+			cl_command_queue command_queue,
+			cl_uint num_objects.
+			const cl_mem *mem_objects,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+此函式可用來獲取（acquire）由 OpenGL 對象創建的 OpenCL \cnglo{memobj}。
+\cnglo{cmdq}中的任一 OpenCL \cnglo{cmd}要想使用這些對象，都必須先獲取他們。
+\carg{command_queue} 所在 OpenCL \cnglo{context}獲取 OpenGL 對象後，
+此\cnglo{context}中的所有\cnglo{cmdq}都可以使用這些 OpenGL 對象。
+
+\carg{command_queue} 是一個有效的\cnglo{cmdq}。
+用來創建 \carg{command_queue} 所在 OpenCL \cnglo{context}的所有\cnglo{device}
+都必須支持獲取共享的 CL/GL 對象。
+在創建\cnglo{context}時就要如此。
+
+\carg{num_objects} 即 \carg{mem_objects} 中\cnglo{memobj}的數目。
+
+\carg{mem_objects} 指向 GL 對象所對應的一組 CL \cnglo{memobj}。
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list} 中
+列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}完成。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+則引數 \carg{event} 不能屬於 \carg{event_wait_list}。
+
+如果執行成功， \clapi{clEnqueueAcquireGLObjects} 會返回 \cenum{CL_SUCCESS}。
+如果 \carg{num_objects} 是 0，並且 \carg{mem_objects} 是 \cmacro{NULL}，
+則此函式什麼都不做，並直接返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{num_objects} 是零，而 \carg{mem_objects} 不是 \cmacro{NULL}；
+或者 \carg{num_objects} > 0 而 \carg{mem_objects} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，
+如果 \carg{mem_objects} 中的\cnglo{memobj}無效。
+
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，
+如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue} 所在\cnglo{context}不是由 OpenGL \cnglo{context}創建的。
+
+\item \cenum{CL_INVALID_GL_OBJECT}，
+如果 \carg{mem_objects} 中的\cnglo{memobj}不是由 GL 對象創建的。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clEnqueueReleaseGLObjects}
+
+\startCLFUNC
+cl_int clEnqueueReleaseGLObjects (
+			cl_command_queue command_queue,
+			cl_uint num_objects.
+			const cl_mem *mem_objects,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+此函式可用來釋放（release）由 OpenGL 對象創建的 OpenCL \cnglo{memobj}。
+要先將其釋放，然後 OpenGL 才能使用他們。
+OpenGL 對象由 \carg{command_queue} 所在 OpenCL \cnglo{context} 釋放。
+
+\carg{command_queue} 是一個有效的\cnglo{cmdq}。
+用來創建 \carg{command_queue} 所在 OpenCL \cnglo{context}的所有\cnglo{device}
+都必須支持獲取共享的 CL/GL 對象。
+在創建\cnglo{context}時就要如此。
+
+\carg{num_objects} 即 \carg{mem_objects} 中\cnglo{memobj}的數目。
+
+\carg{mem_objects} 指向 GL 對象所對應的一組 CL \cnglo{memobj}。
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list} 中
+列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}完成。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+則引數 \carg{event} 不能屬於 \carg{event_wait_list}。
+
+如果執行成功， \clapi{clEnqueueReleaseGLObjects} 會返回 \cenum{CL_SUCCESS}。
+如果 \carg{num_objects} 是 0，並且 \carg{mem_objects} 是 \cmacro{NULL}，
+則此函式什麼都不做，並直接返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{num_objects} 是零，而 \carg{mem_objects} 不是 \cmacro{NULL}；
+或者 \carg{num_objects} > 0 而 \carg{mem_objects} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，
+如果 \carg{mem_objects} 中的\cnglo{memobj}無效。
+
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，
+如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue} 所在\cnglo{context}不是由 OpenGL \cnglo{context}創建的。
+
+\item \cenum{CL_INVALID_GL_OBJECT}，
+如果 \carg{mem_objects} 中的\cnglo{memobj}不是由 GL 對象創建的。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+% Synchronizing OpenCL and OpenGL Access to Shared Objects
+\subsubsection[section:syncCLGL]{OpenCL 和 OpenGL 存取共享對象時的同步}
+
+為確保數據完整性，\cnglo{app}要負責通過各自的 API 對共享 CL/GL 對象的存取進行同步。
+如果沒有提供同步，則會導致竟態以及其他\cnglo{undef}的行為，包括不可在實作間進行移植。
+
+在調用 \clapi{clEnqueueAcquireGLObjects} 之前，
+\cnglo{app}必須確保所有會存取 \carg{mem_objects} 中對象的處於擱置狀態的 GL 操作都完成了。
+這可以通過在所有引用這些對象的 GL \cnglo{context}上發起 \clapi{glFinish} 並等待其完成來實現，
+同時這種方式也是可移植的。
+實作可能會提供其他更加有效的同步方法；
+例如，在一些\cnglo{platform}上，調用 \clapi{glFlush} 可能就已經足夠了，
+或者在線程中已經有隱式的同步，
+或者在特定供應商擴展中可以在 GL 命令流間放置隔柵（fence）以等待 CL \cnglo{cmdq}中的此隔柵完成。
+注意：目前只有 \clapi{glFinshi} 才是可移植的，其他方法都不是。
+
+同樣，在調用 \clapi{clEnqueueReleaseGLObjects} 之後，
+要想執行後續引用這些對象的 GL 命令，
+\cnglo{app}必須確保所有會存取 \carg{mem_objects} 中對象的處於擱置狀態的 CL 操作都完成了。
+這可以通過調用 \clapi{clWaitForEvents} 來等待 \clapi{clEnqueueReleaseGLObjects} 所返回的\cnglo{evtobj}，或者調用 \clapi{clFinish} 來實現，
+這兩種方式都是可移植的。
+跟上面一樣，一些實作可能會提供更加有效的方式。
+
+如果 CL 和 GL \cnglo{context} 處於不同的線程中，則\cnglo{app}需要負責維護操作間的正確次序。
+
+如果 GL \cnglo{context}所綁定的線程不是調用 \clapi{clEnqueueReleaseGLObjects} 的線程，
+在\cnglo{app}沒有執行其他附加步驟的情況下，
+任何 \carg{mem_objects} 中對象的改變對那個\cnglo{context}都是不可見的。
+對於 OpenGL 3.1 （或者更高版本）中的\cnglo{context}而言，
+OpenGL 3.1 規範中的{\ftRef{附錄 D}}（共享對象以及多個\cnglo{context}）描述了相關的要求。
+而對於 OpenGL 的早期版本，相關要求\cnglo{impdef}。
+
+在 OpenCL 獲取 OpenGL 對象後並將其釋放之前，
+如果 OpenGL 嘗試存取此對象的數據會導致\cnglo{undef}的行為。
+類似的，在 OpenCL 獲取共享的 CL/GL 對象前，或者將其釋放後，
+如果 OpenCL 嘗試存取此對象也會導致\cnglo{undef}的行為。
+

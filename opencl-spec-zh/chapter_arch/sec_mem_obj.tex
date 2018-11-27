@@ -1,0 +1,28 @@
+\section{內存對象}
+
+\cnglo{memobj}分成兩類：\refglo{bufobj}和\refglo{imgobj}。
+\refglo{bufobj}中所存儲的元素是一維的，
+而\refglo{imgobj}則用來存儲二維或三維的材質、幀緩衝（frame-buffer）或圖像。
+
+\refglo{bufobj}中的元素可以是標量數據型別（如 \ctype{int}、 \ctype{float}）、
+矢量數據型別或用戶自定義的結構體。
+\refglo{imgobj}用來表示材質、幀緩衝等緩衝。
+\cnglo{imgobj}中元素的格式必須從預定義格式中選取。
+\cnglo{memobj}中至少要有一個元素。
+
+\refglo{bufobj}和\refglo{imgobj}的根本區別是：
+\startigBase
+\item \refglo{bufobj}中的元素是順序存儲的，
+\cnglo{kernel}在\cnglo{device}上運行時可以用指位器存取這些元素。
+而\refglo{imgobj}中元素的存儲格式對用戶是透明的，不能通過指位器直接存取。
+可以使用 OpenCL C 編程語言提供的內建函式來讀寫\cnglo{imgobj}。
+
+\item 對於\refglo{bufobj}，\cnglo{kernel}按其存儲格式存取其中的數據。
+而對於\refglo{imgobj}，其元素的存儲格式可能與\cnglo{kernel}中使用的數據格式不一樣。
+\cnglo{kernel}中的圖像元素始終是四元矢量（每一元都可以是浮點型別或者帶符號/無符號整形）。
+內建函式在讀寫圖像元素時會進行相應的格式轉換。
+\stopigBase
+
+\cnglo{memobj}是用 \ctype{cl_mem} 來表示的。
+\cnglo{kernel}的輸入和輸出都是\cnglo{memobj}。
+

@@ -1,0 +1,48 @@
+\startETD[cl_kernel_work_group_info][返回型別]
+
+\clETD{CL_KERNEL_GLOBAL_WORK_SIZE}{size_t[3]}{
+利用此機制，
+\cnglo{app}可以查詢用來在 \carg{device} 上執行\cnglo{kernel}的全局索引空間的大小
+（即 \capi{clEnqueueNDRangeKernel} 的引數 \carg{global_work_size}）。
+
+這要求 \carg{device} 是\cnglo{customdev}或所執行的\cnglo{kernel}是內建的，
+否則 \capi{clGetKernelWorkGroupInfo} 會返回 \cenum{CL_INVALID_VALUE}。
+}
+
+\clETD{CL_KERNEL_WORK_GROUP_SIZE}{size_t}{
+利用此機制，
+\cnglo{app}可以查詢用來在 \carg{device} 上執行\cnglo{kernel}的\cnglo{workgrp}的大小。
+OpenCL 實作可以用\cnglo{kernel}的資源需求（寄存器的使用情況等）來確定\cnglo{workgrp}的大小。
+}
+
+\clETD{CL_KERNEL_COMPILE_WORK_GROUP_SIZE}{size_t[3]}{
+返回限定符 \ccmm{__attribute__((reqd_work_group_size(X, Y, Z)))} 所指定的
+\cnglo{workgrp}的大小。參見\refsection{optAttrQlf}。
+
+如果沒有用上述特性限定符指定\cnglo{workgrp}的大小，則返回\math{(0, 0, 0)}。
+}
+
+\clETD{CL_KERNEL_LOCAL_MEM_SIZE}{cl_ulong}{
+返回\cnglo{kernel}所使用的\cnglo{locmem}的大小。
+他包括實作執行\cnglo{kernel}所需的內存、
+\cnglo{kernel}中所聲明的帶有位址限定符 \cqlf{__local} 的變量、
+以及為帶有位址限定符 \cqlf{__local} 的指位器引數所分配的內存
+（其大小由 \capi{clSetKernelArg} 指定）。
+
+對於任一帶有位址限定符 \cqlf{__local} 的指位器引數，如果沒有為其指定內存大小，則假定為 0。
+}
+
+\clETD{CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE}{size_t}{
+返回所期望的\cnglo{workgrp}大小的粒度。僅為性能建議。
+在調用 \capi{clEnqueueNDRangeKernel} 時，
+如果給引數 \carg{local_work_size} 所指定的\cnglo{workgrp}大小不是此查詢結果的倍數，
+並不會導致函式執行失敗，除非此值超過了\cnglo{device}的數目。
+}
+
+\clETD{CL_KERNEL_PRIVATE_MEM_SIZE}{cl_ulong}{
+\cnglo{kernel}中每個\cnglo{workitem}至少要使用多少\cnglo{prvmem}。
+他包括實作執行\cnglo{kernel}所需的所有\cnglo{prvmem}；
+包括語言本身所需的\cnglo{prvmem}，以及\cnglo{kernel}中聲明的 \cqlf{__private} 變量。
+}
+
+\stopETD

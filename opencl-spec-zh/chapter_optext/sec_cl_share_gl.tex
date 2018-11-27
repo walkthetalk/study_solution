@@ -1,0 +1,33 @@
+\section[section:clShareGl]{與 OpenGL/OpenGL ES 緩衝、材質和渲染緩衝對象共享內存對象}
+
+本節中的 OpenCL 函式允許\cnglo{app}將 OpenGL 緩衝、材質和渲染緩衝對象用作 OpenCL \cnglo{memobj}。
+這樣可以在 OpenCL 和 OpenGL 間高效的共享數據。
+ OpenCL API 所執行的\cnglo{kernel}即可讀寫\cnglo{memobj}，也可讀寫 OpenGL 對象。
+
+OpenCL \cnglo{imgobj}可能是由 OpenGL 材質或渲染緩衝對象創建的。
+OopenCL \cnglo{bufobj}可能是由 OpenGL \cnglo{bufobj}創建的。
+
+當且僅當 OpenCL \cnglo{context}是由 OpenGL 共享組對象或\cnglo{context}創建的，
+才能由 OpenGL 對象創建 OpenCL \cnglo{memobj}。
+OpenGL 共享組和\cnglo{context}都是由特定平台 API 創建的，
+如 EGL、 CGL、 WGL 以及 GLX。
+在 MacOS X 上， OpenCL \cnglo{context}可能是
+用 OpenCL \cnglo{platform}擴展 \clext{cl_apple_gl_sharing} 由 OpenGL 共享組對象創建的。
+在其他\cnglo{platform}上，包括 Microsoft Windows、 Linux/Unix 等等，
+ OpenCL \cnglo{context}可能是
+用 Khronos \cnglo{platform}擴展 \clext{cl_khr_gl_sharing} 由 OpenGL \cnglo{context}創建的。
+請參考對應的 OpenCL 實作的\cnglo{platform}文檔，
+或者訪問 \from[khronosRegistryCL] 以獲取更多資訊。
+
+對於 GL 共享組對象、或 GL \cnglo{context}
+（由其創建的 CL \cnglo{context}）所關聯的共享組中
+所定義的任何 OpenGL 對象，只要支持，就可以被共享，
+但是有個例外，就是缺省的 OpenGL 對象（即命名為零的對象）不能被共享。
+
+\input{chapter_optext/sec_cl_share_gl/life_time.tex}
+\input{chapter_optext/sec_cl_share_gl/clBufObj_glBufObj.tex}
+\input{chapter_optext/sec_cl_share_gl/clImgObj_glTexture.tex}
+\input{chapter_optext/sec_cl_share_gl/clImgObj_glRenderbuffer.tex}
+\input{chapter_optext/sec_cl_share_gl/query_gl_obj.tex}
+\input{chapter_optext/sec_cl_share_gl/share_mem_obj.tex}
+

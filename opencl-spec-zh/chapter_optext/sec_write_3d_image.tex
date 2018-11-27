@@ -1,0 +1,19 @@
+\section{寫入 3D 圖像對象}
+
+OpenCL 支持\cnglo{kernel}讀寫 2D \cnglo{imgobj}。
+同一\cnglo{kernel}不能對同一 2D \cnglo{imgobj}既讀又寫。
+OpenCL 也支持\cnglo{kernel}讀取 3D \cnglo{imgobj}，
+但是不支持寫入 3D \cnglo{imgobj}，除非實現了擴展 \clext{cl_khr_3d_image_writes}。
+同一\cnglo{kernel}不能對同一 3D \cnglo{imgobj}既讀又寫。
+
+\cnglo{app}要想使用此擴展寫入 3D \cnglo{imgobj}，
+需要在 OpenCL \cnglo{program}源碼中包含下列編譯指示：
+\startclc
+#pragma OPENCL EXTENSION cl_khr_3d_image_writes : enable
+\stopclc
+
+\reftab{write_3d_image}中列出了擴展 \clext{cl_khr_3d_image_writes} 所實現的內建函式。
+
+\placetable[here][tab:write_3d_image]
+{擴展 \clext{cl_khr_3d_image_writes} 所實現的內建函式}
+{\input{chapter_optext/tbl/write_3d_image_bifunc.tex}}

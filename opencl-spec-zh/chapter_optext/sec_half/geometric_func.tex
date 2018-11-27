@@ -1,0 +1,15 @@
+\subsection[section:geomtricFunc]{幾何函式}
+
+對\reftab{svGeometricFunc}中所列的內建幾何函式作了擴充，
+函式引數和返回值也可以是 \cldt{half} 和 \cldt[n]{half}，
+參見\reftab{svGeometricFuncHalf}。
+現在， \cldt{gentype} 也包含 \cldt{half} 和 \cldt[n]{half}，
+其中 \ccmmsuffix{n} 可以是 2、 3、 4。
+
+\startnotepar
+可以使用化簡（如 \capi{mad} 或 \capi{fma}）來實現幾何函式。
+\stopnotepar
+
+\placetable[here][tab:svGeometricFuncHalf]
+{內建幾何函式}
+{\input{chapter_optext/tbl/geometric_func_half.tex}}

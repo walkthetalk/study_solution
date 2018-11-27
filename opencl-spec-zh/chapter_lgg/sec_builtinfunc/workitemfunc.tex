@@ -1,0 +1,12 @@
+% work-item functions
+\subsection{\cnglo{workitem}函式}
+
+\reftab{workItemFunction}列出了內建的\cnglo{workitem}函式，
+這些函式可用來查詢指定給 \capi{clEnqueueNDRangeKernel} 的維數、全局和局部的索引空間大小、
+以及在\cnglo{device}上執行此\cnglo{kernel}時
+每個\cnglo{workitem}的\cnglo{glbid}和\cnglo{locid}。
+如果使用的是 \capi{clEnqueueTask}，則維數、全局和局部索引空間的大小都是一。
+
+\placetable[here,split][tab:workItemFunction]
+{\cnglo{workitem}函式表}
+{\input{chapter_lgg/tbl/tbl_workitemfunc.tex}}

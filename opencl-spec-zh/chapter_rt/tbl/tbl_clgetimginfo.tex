@@ -1,0 +1,54 @@
+\startETD[cl_image_info][返回型別]
+
+\clETD{CL_IMAGE_FORMAT}{cl_image_format}{
+返回用 \capi{clCreateImage} 創建 \carg{image} 時所指定的圖像格式描述符。
+}
+
+\clETD{CL_IMAGE_ELEMENT_SIZE}{size_t}{
+返回 \carg{image} 中每個元素的大小。
+一個元素由 $n$ 個通道組成，其中 $n$ 由 \ctype{cl_image_format} 給出。
+}
+
+\clETD{CL_IMAGE_ROW_PITCH}{size_t}{
+返回 \carg{image} 中圖像元素的行間距。
+}
+
+\clETD{CL_IMAGE_SLICE_PITCH}{size_t}{
+對於 3D \cnglo{imgobj}，返回 2D 面間距；
+對於 1D 或 2D 圖像陣列，返回每個圖像的大小；
+對於 1D \cnglo{imgobj}、 1D 圖像緩衝對象以及 2D \cnglo{imgobj}，返回 0。
+}
+
+\clETD{CL_IMAGE_WIDTH}{size_t}{
+返回圖像寬度，單位像素。
+}
+
+\clETD{CL_IMAGE_HEIGHT}{size_t}{
+返回圖像高度，單位像素。
+對於 1D \cnglo{imgobj}、 1D 圖像緩衝對象以及 1D 圖像陣列對象，高度為 0。
+}
+
+\clETD{CL_IMAGE_DEPTH}{size_t}{
+返回圖像深度，單位像素。
+對於 1D \cnglo{imgobj}、 1D 圖像緩衝對象、 2D \cnglo{imgobj}，
+以及 1D 或 2D 圖像陣列對象，深度為 0。
+}
+
+\clETD{CL_IMAGE_ARRAY_SIZE}{size_t}{
+返回圖像陣列中圖像的個數。
+如果 \carg{image} 不是圖像陣列，則返回 0。
+}
+
+\clETD{CL_IMAGE_BUFFER}{cl_mem}{
+返回 \carg{image} 所關聯的\cnglo{bufobj}。
+}
+
+\clETD{CL_IMAGE_NUM_MIP_LEVELS}{cl_uint}{
+返回 \carg{image} 所關聯的 \carg{num_mip_levels}。
+}
+
+\clETD{CL_IMAGE_NUM_SAMPLES}{cl_uint}{
+返回 \carg{image} 所關聯的 \carg{num_samples}。
+}
+
+\stopETD

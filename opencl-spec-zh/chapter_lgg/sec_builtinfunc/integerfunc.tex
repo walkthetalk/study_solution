@@ -1,0 +1,73 @@
+%Integer Functions
+\subsection[section:integerFunc]{整數函式}
+
+\reftab{svIntegerFunc}中列出了內建的整數函式，其引數即可為標量，亦可為矢量。
+矢量版本的整數函式按組件逐一運算。其中的描述針對單個組件的。
+
+泛型 \ctype{gentype} 表示函式引數的型別可以是：
+\startigBase[indentnext=no]
+\item \ctype{char}、 \ctype{char{2|3|4|8|16}}、
+\item \ctype{uchar}、 \ctype{uchar{2|3|4|8|16}}、
+\item \ctype{short}、 \ctype{short{2|3|4|8|16}}、
+\item \ctype{ushort}、 \ctype{ushort{2|3|4|8|16}}、
+\item \ctype{int}、 \ctype{int{2|3|4|8|16}}、
+\item \ctype{uint}、 \ctype{uint{2|3|4|8|16}}、
+\item \ctype{long}、 \ctype{long{2|3|4|8|16}}、
+\item \ctype{ulong} 或 \ctype{ulong{2|3|4|8|16}}。
+\stopigBase
+而泛型 \ctype{ugentype} 則指代無符號版本的 \ctype{gentype}。
+例如，如果 \ctype{gentype} 為 \ctype{char4}，則 \ctype{ugentype} 為 \ctype{uchar4}。
+同時，泛型 \ctype{sgentype} 指明函式的引數可以是標量（即
+ \ctype{char}、 \ctype{uchar}、 \ctype{short}、 \ctype{ushort}、
+ \ctype{int}、 \ctype{uint}、 \ctype{long} 或 \ctype{ulong}）。
+對於既有 \ctype{gentype} 引數，又有 \ctype{sgentype} 引數的內建整數函式，
+ \ctype{gentype} 必須是標量或矢量版本的 \ctype{sgentype}。
+例如，如果 \ctype{sgentype} 是 \ctype{uchar}，
+則 \ctype{gentype} 必須是 \ctype{uchar} 或 \ctype{uchar{2|3|4|8|16}}。
+對於矢量版本， \ctype{sgentype} 只是簡單的拓寬成 \ctype{gentype}，
+參見\refsection{operator}中的\refitem{arithoperator}。
+
+對於任一函式的任一具體應用，所有引數以及返回值的型別均相同，除非明確指定了其型別。
+
+\placetable[here][tab:svIntegerFunc]
+{引數既可為標量整數，也可為矢量整數的內建函式}
+{\input{chapter_lgg/tbl/tbl_svintegerfunc.tex}}
+
+\reftab{fastIntegerFunc}中列出了優化\cnglo{kernel}性能時可用的快速整數函式。
+泛型 \ctype{gentype} 表明函式引數的型別可以是
+ \ctype{int}、 \ctype{int2}、 \ctype{int3}、
+ \ctype{int4}、 \ctype{int8}、 \ctype{int16}、
+ \ctype{uint}、 \ctype{uint2}、 \ctype{uint3}、
+ \ctype{uint4}、 \ctype{uint8} 或 \ctype{uint16}。
+
+\placetable[here][tab:fastIntegerFunc]
+{內建的快速整數函式}
+{\input{chapter_lgg/tbl/tbl_fastintegerfunc.tex}}
+
+OpenCL C 編程語言定義了如下巨集，他們必須使用指定的值。
+可以在預處理指示 \ccmm{#if} 中使用這些常量算式。
+
+\startclc
+#define CHAR_BIT	8
+#define CHAR_MAX	SCHAR_MAX
+#define CHAR_MIN	SCHAR_MIN
+#define INT_MAX		2147483647
+#define INT_MIN		(-2147483647 - 1)
+#define LONG_MAX	0x7fffffffffffffffL
+#define LONG_MIN	(-0x7fffffffffffffffL - 1)
+#define SCHAR_MAX	127
+#define SCHAR_MIN	(-127 - 1)
+#define SHRT_MAX	32767
+#define SHRT_MIN	(-32767 - 1)
+#define UCHAR_MAX	255
+#define USHRT_MAX	65535
+#define UINT_MAX	0xffffffff
+#define ULONG_MAX	0xffffffffffffffffUL
+\stopclc
+
+\reftab{integerMacroAndApp}中給出了上面所列巨集與\cnglo{app}所用的巨集名字之間的對應關係。
+
+\placetable[here][tab:integerMacroAndApp]
+{整形巨集與應用程式所用巨集之間的對應關係}
+{\input{chapter_lgg/tbl/tbl_mminteger.tex}}
+

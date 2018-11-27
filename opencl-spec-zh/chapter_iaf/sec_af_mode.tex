@@ -1,0 +1,28 @@
+% Addressing and Filter Modes
+\section[section:addressFilterMode]{尋址模式和濾波模式}
+
+\input{chapter_iaf/sec_af_mode/not_repeat.tex}
+
+\input{chapter_iaf/sec_af_mode/repeat.tex}
+
+\input{chapter_iaf/sec_af_mode/mirror_repeat.tex}
+
+\startnotepar
+如果在\cnglo{sampler}中指明使用的是非歸一化坐標（浮點數或整數坐標），
+濾波模式為 \cenum{CLK_FILTER_NEAREST}，
+尋址模式為 \cenum{CLK_ADDRESS_NONE}、 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}
+或 \cenum{CLK_ADDRESS_CLAMP}，
+則本節中計算圖像元素的位置 \math{(i,j,k)} 時不會損失精度。
+\stopnotepar
+
+如果\cnglo{sampler}採用的是其他組合方式（歸一化或非歸一化坐標、濾波模式、尋址模式），
+則對於尋址模式的計算以及圖像濾波的運算而言，
+在 OpenCL 規範的這個修訂版中沒有定義其相對誤差或精度。
+為了確保任何 OpenCL \cnglo{device}在進行圖像尋址和濾波計算時都至少具有一個最小精度，
+對於\cnglo{sampler}的這些組合方式，
+開發人員應當在\cnglo{kernel}中將坐標去歸一化，
+並使用由非歸一化坐標、濾波模式為 \cenum{CLK_FILTER_NEAREST}、
+尋址模式為 \cenum{CLK_ADDRESS_NONE}、 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}
+或 \cenum{CLK_ADDRESS_CLAMP} 組合而成的
+\cnglo{sampler}調用 \capi{read_image{f|i|ui}}，
+最後對從圖像中讀到的顏色進行插值來生成濾波後的顏色值。

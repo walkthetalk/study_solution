@@ -1,0 +1,106 @@
+\subsection{內存對象的遷移}
+
+本節所描述的機制可用來將\cnglo{memobj}指派給某個\cnglo{device}。
+在創建\cnglo{memobj}時，用戶可能希望顯式的控制其位置。
+此機制可用來：
+\startigBase
+\item 在使用前，保證在某個特定\cnglo{device}上分配對象。
+
+\item 將\cnglo{memobj}從一個\cnglo{device}遷移到另一個上面。
+\stopigBase
+
+\topclfunc{clEnqueueMigrateMemObjects}
+
+\startCLFUNC
+cl_int clEnqueueMigrateMemObjects(
+			cl_command_queue command_queue,
+			cl_uint num_mem_objects,
+			const cl_mem *mem_objects,
+			cl_mem_migration_flags flags,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+此函式所入隊的\cnglo{cmd}可以將一組\cnglo{memobj}強制關聯到某個\cnglo{device}上。
+典型的，在\cnglo{device}上執行\cnglo{cmd}時，
+會將所使用的\cnglo{memobj}隱式的遷移到此\cnglo{device}上。
+\capi{clEnqueueMigrateMemObjects} 使得可以在相應\cnglo{cmd}執行前實施顯式的遷移。
+這使得用戶可以通過\cnglo{cmdq}的正規調度，提前改變\cnglo{memobj}的關聯，為後續命令做準備，
+同時可以避免隱式遷移所帶來的延遲。
+一旦 \capi{clEnqueueMigrateMemObjects} 所返回的事件被標註為 \cenum{CL_COMPLETE}，
+\carg{mem_objects} 中的所有\cnglo{memobj}
+就都成功遷移到了 \carg{command_queue} 所在\cnglo{device}上。
+這些對象會一直在這個\cnglo{device}上，直到另一\cnglo{cmd}顯式或隱式地將其再次遷移。
+
+\capi{clEnqueueMigrateMemObjects} 也可以用來控制\cnglo{memobj}在創建後的初始位置，
+這樣可以避免第一條\cnglo{cmd}將其實體化時可能的開銷。
+
+為了避免對\cnglo{memobj}的存取相互衝突，
+與此\cnglo{cmd}相關的所有事件間的依賴關係由用戶負責。
+如果依賴關係有問題，則 \capi{clEnqueueMigrateMemObjects} 會導致\cnglo{undef}的結果。
+
+\carg{command_queue} 是一個\cnglo{cmdq}。
+\carg{mem_objects} 中的\cnglo{memobj}會被遷移到 \carg{command_queue} 所在的\cnglo{device}上。
+如果設置了 \cenum{CL_MIGRATE_MEM_OBJECT_HOST}，則會遷移到\cnglo{host}上。
+
+\carg{num_mem_objects} 即 \carg{mem_objects} 中\cnglo{memobj}的數目。
+
+\carg{mem_objects} 指向一組\cnglo{memobj}。
+
+\carg{flags} 是位欄，用來指定遷移選項。\reftab{clMemMigration}中列出了可能的值。
+
+\placetable[here][tab:clMemMigration]
+{\ctype{cl_mem_migration} 的值}
+{\input{chapter_rt/tbl/tbl_mem_migration_flags.tex}}
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list} 中
+列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點，
+並且必須與 \carg{command_queue} 位於同一個\cnglo{context}中。
+此函式返回後，即可回收並重用 \carg{event_wait_list} 所關聯的內存。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}完成。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+不過可以用 \capi{clEnqueueBarrierWithWaitList} 來代替。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+\carg{event} 不能屬於 \carg{event_wait_list}。
+
+如果執行成功， \capi{clEnqueueMigrateMemObjects} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue} 和 \carg{mem_objects} 位於不同的\cnglo{context}中，
+或者 \carg{command_queue} 和 \carg{event_wait_list} 中的事件位於不同的\cnglo{context}中。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，
+如果 \carg{mem_objects} 中的任一\cnglo{memobj}無效。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{num_mem_objects} 是零或者 \carg{mem_objects} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{flags} 的值無效。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，
+如果為 \carg{mem_objects} 中的\cnglo{memobj}分配內存失敗。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

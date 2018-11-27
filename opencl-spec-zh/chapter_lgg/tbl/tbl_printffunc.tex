@@ -1,0 +1,17 @@
+% printf
+\startbuffer[funcproto:printf]
+int printf(constant char * restrict format, ...) 
+\stopbuffer
+\startbuffer[funcdesc:printf]
+在 \carg{format} 所指字串（指定後續引數如何轉換）的控制下，
+將輸出寫入實作所定義的數據流，如 stdout。
+如果引數不足（對格式字串而言），則其行為未定義。
+而如果引數有剩餘，則會對剩餘的引數求值（一直這樣）但將其忽略。
+此函式解析完格式字串就會返回。
+
+如果執行成功，此函式返回 0，否則返回 -1。
+\stopbuffer
+
+\startCLFD
+\clFD{printf}
+\stopCLFD

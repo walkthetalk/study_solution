@@ -1,0 +1,123 @@
+% query device
+\section{查詢設備}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%clGetDeviceIDs
+\topclfunc{clGetDeviceIDs}
+
+\startCLFUNC
+cl_int clGetDeviceIDs(
+		cl_platform_id platform,
+		cl_device_type device_type,
+		cl_uint num_entries,
+		cl_device_id *devices,
+		cl_uint *num_devices)
+\stopCLFUNC
+
+函式 \capi{clGetDeviceIDs}\footnote{%
+\capi{clGetDeviceIDs} 可能返回 \carg{platform} 中
+所有與 \carg{device_type} 匹配的真正的物理設備，也可能只是其中一個子集。}
+可用來獲取一個\cnglo{platform}上所有可用\cnglo{device}的清單。
+
+\carg{platform} 即 \capi{clGetPlatformIDs} 所返回的\cnglo{platform} ID，
+也可能是 \cmacro{NULL}。
+如果是 \cmacro{NULL}，則其行為\cnglo{impdef}。
+
+\carg{device_type} 是位欄（ bitfield )，用來識別 OpenCL \cnglo{device}的類型。
+可以用來查詢某種 OpenCL \cnglo{device}，也可以查詢所有的。
+請參考\reftab{cldevctgr}。
+
+\placetable[here][tab:cldevctgr]
+{OpenCL 設備種類清單}
+{\input{chapter_plf/tbl/tbl_dev_ctgr.tex}}
+
+\carg{num_entries} 是 \carg{devices}中所能容納 \ctype{cl_device} 表項的數目。
+如果 \carg{devices} 不是 \cmacro{NULL}，則 \carg{num_entries} 必須大於零。
+
+\carg{devices} 用來返回所找到的 OpenCL \cnglo{device}。
+\carg{devices} 中返回的 \ctype{cl_device_id} 用來識別一個 OpenCL \cnglo{device}。
+如果參數 \carg{devices} 是 \cmacro{NULL}，則忽略。
+所返回的 OpenCL \cnglo{device}數目
+為 \carg{num_entries} 或符合 \ctype{device_type} 的\cnglo{device}数目，
+取二者中較小的那個。
+
+\carg{num_devices} 返回符合 \ctype{device_type} 的所有 OpenCL \cnglo{device}的數目。
+如果 \carg{num_devices} 是 \cmacro{NULL}，則忽略。
+
+如果執行成功，則 \capi{clGetDeviceIDs} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_PLATFORM}，如果 \carg{platform} 無效。
+\item \cenum{CL_INVALID_DEVICE_TYPE}，如果 \carg{device_type} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{num_entries} 等於零且 \carg{devices} 不是 \cmacro{NULL}，
+或者 \carg{num_devices} 和 \carg{devices} 都是 \cmacro{NULL}。
+
+\item \cenum{CL_DEVICE_NOT_FOUND}，
+如果沒有找到任何符合 \carg{device_type} 的 OpenCL \cnglo{device}。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+對於 \capi{clGetDeviceIDs} 所返回的 OpenCL \cnglo{device}，
+\cnglo{app}可以查詢其能力，從而決定使用哪些\cnglo{device}。
+
+\topclfunc{clGetDeviceInfo}
+
+\startCLFUNC
+cl_int clGetDeviceInfo(
+		cl_device_id device,
+		cl_device_info param_name,
+		size_t param_value_size,
+		void *param_value,
+		size_t *param_value_size_ret)
+\stopCLFUNC
+
+函数 \capi{clGetDeviceInfo} 可用來獲取 OpenCL \cnglo{device}的特定資訊，
+如\reftab{cldevquery}所示。
+
+\carg{device} 是 \capi{clGetDeviceIDs} 所返回的\cnglo{device}，
+或者由 \capi{clCreateSubDevices} 創建的\cnglo{subdev}。
+如果是\cnglo{subdev}，則返回\cnglo{subdev}的資訊。
+
+\carg{param_name} 是枚舉常量，用來指明要查詢什麼資訊，參見\reftab{cldevquery}。
+
+\carg{param_value} 是指位器，所指內存用來存儲 \carg{param_name} 所對應的值
+（參見\reftab{cldevquery}）。
+如果 \carg{param_value} 是 \cmacro{NULL}，則忽略。
+
+\carg{param_value_size} 就是 \carg{param_value} 所指內存塊的字節數。
+其值必須 >= \reftab{cldevquery}中所列返回型別的大小。
+
+\carg{param_value_size_ret} 返回 \carg{param_value} 所對應數據的實際大小。
+如果 \carg{param_value_size_ret} 是 \cmacro{NULL}，則忽略。
+
+\placetable[here,split][tab:cldevquery]
+{OpenCL 設備查詢}
+{\input{chapter_plf/tbl/tbl_dev_query.tex}}
+
+無論對於\cnglo{rootdev}（即 \capi{clGetDeviceIDs} 所返回的\cnglo{device}）
+還是由他創建的\cnglo{subdev}，
+\reftab{cldevquery}中所列查詢都會返回相同的資訊，不過下列查詢例外：
+\startigBase
+\item \cenum{CL_DEVICE_GLOBAL_MEM_CACHE_SIZE}
+\item \cenum{CL_DEVICE_BUILT_IN_KERNELS}
+\item \cenum{CL_DEVICE_PARENT_DEVICE}
+\item \cenum{CL_DEVICE_PARTITION_TYPE}
+\item \cenum{CL_DEVICE_REFERENCE_COUNT}
+\stopigBase
+
+如果執行成功，\capi{clGetDeviceInfo} 會返回 \cenum{CL_SUCCESS}；
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_DEVICE}——如果 \carg{device} 無效。
+
+\item \cenum{CL_INVALID_VALUE}——如果不支持 \carg{param_name}；
+或者 \carg{param_value_size} 的值 < \reftab{cldevquery}中所列返回型別的大小，
+並且 \carg{param_value} 不是 \cmacro{NULL}；
+或者 \carg{param_name} 指的是某個擴展，但是此\cnglo{device}不支持此擴展。
+
+\item \cenum{CL_OUT_OF_RESOURCES}——如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}——如果\schostfailres。
+\stopigBase
+

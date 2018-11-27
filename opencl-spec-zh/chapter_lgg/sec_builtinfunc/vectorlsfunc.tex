@@ -1,0 +1,34 @@
+\subsection[section:vectorLsFunc]{矢量數據裝載和存儲函式}
+
+\startbuffer
+僅在擴展 \clext{cl_khr_fp16} 中才定義有 \cldt[n]{half}%
+（參見《OpenCL 1.2 擴展規範》的{\ftRef{節 9.5}}）。
+\stopbuffer
+\reftab{vectorLsFunc}中列出了用來讀寫矢量型別數據的內建函式。
+泛型 \cldt{gentype} 表示內建數據型別
+ \cldt{char}、 \cldt{uchar}、 \cldt{short}、 \cldt{ushort}、
+ \cldt{int}、 \cldt{uint}、 \cldt{long}、 \cldt{ulong}、
+ \cldt{float} 或 \cldt{double}。
+泛型 \cldt[n]{gentype} 表示具有 n 個 \cldt{gentype} 元素的矢量。
+我們用 \cldt[n]{half} 表示具有 n 個 \cldt{half} 元素的矢量\footnote{\getbuffer}。
+函式名中也有後綴 \ccmmsuffix{n} （即 \clapi[n]{vload}、 \clapi[n]{vstore} 等），
+其中 \ccmmsuffix{n} 為 2、 3、 4、 8 或 16。
+
+\startnotepar
+\capi{vload3}、 \capi{vload_half3}、 \capi{vstore3} 和 \capi{vstore_half3}
+所用位址為 \math{(\marg{p} + (\marg{offset}\times 3))}；
+而 \capi{vloada_half3} 和 \capi{vstorea_half3}
+所用位址為 \math{(\marg{p} + (\marg{offset}\times 4))}。
+\stopnotepar
+
+\placetable[here,split][tab:vectorLsFunc]
+{矢量數據裝載、存儲函式表}
+{\input{chapter_lgg/tbl/tbl_vectorlsfunc.tex}}
+
+使用這些函式裝載、存儲矢量數據時，
+如果所讀寫的位址沒有按\reftab{vectorLsFunc}中所描述的方式對齊，
+則結果未定義。
+\reftab{vectorLsFunc}中存儲函式的指位器引數 \carg{p} 可以指向
+ \cqlf{__global}、 \cqlf{__local} 或 \cqlf{__private} 內存。
+\reftab{vectorLsFunc}中裝載函式的指位器引數 \carg{p} 可以指向
+ \cqlf{__global}、 \cqlf{__local}、 \cqlf{__constant} 或 \cqlf{__private} 內存。

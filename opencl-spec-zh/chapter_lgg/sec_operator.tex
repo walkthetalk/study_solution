@@ -1,0 +1,327 @@
+\section[section:operator]{算子}
+
+\startigBig
+% arithmetic operator
+\startitem[item:arithoperator]
+算術算子加（\ccmm{+}）、減（\ccmm{-}）、乘（\ccmm{*}）、除（\ccmm{/}）
+都可以在內建的整數、浮點數標量和矢量數據型別上進行運算。
+而模除（\ccmm{%}）則只能在內建的整數標量和整數矢量數據型別上進行運算。
+在算元的型別轉換後，所有算術算子所返回的結果都與算元具有相同的型別，
+且都是某種內建型別（整數或浮點數）。
+轉換後，有如下情況：
+\startigBig
+\item 兩個算元都是標量。這種情況下，運算結果也是標量。
+
+\item 一個算元是標量，另一個是矢量。
+這種情況下，會對標量算元進行算術轉換，使其型別與矢量算元的元素型別相同。
+然後將標量算元拓寬成矢量，其組件數目與矢量算元相同。
+最後按組件逐一進行運算，結果是同樣大小的矢量。
+
+\item 兩個算元都是矢量，且型別相同。
+這種情況下，會按組件逐一進行運算，結果是同樣大小的矢量。
+\stopigBig
+
+任何其他情況下的隱式轉換都是\cnglo{illegal}的。
+對於整數型別的除法，如果結果無法用此型別表示，即發生了溢出（上溢或下溢），
+並不會引起異常，但結果的值未定。
+這跟整數除以零的效果一樣。
+而浮點數除以零則會導致 \math{\pm\infty} 或 NaN，
+就像 IEEE-754 標準中所規定的那樣。
+內建函式 \capi{dot} 和 \capi{cross} 分別為矢量點乘和矢量叉乘。
+\stopitem
+
+% unary operator
+\item 算術單元算子（\ccmm{+} 和 \ccmm{-}）可在內建標量和矢量類型上進行運算。
+
+% pre/post-increment/decrement operator
+\item 算術算子中的後置式或前置式遞增和遞減算子可以在內建的標量和矢量型別上進行運算，
+但內建的標量和矢量浮點型別除外\footnote{
+在浮點數上使用前置式和後置式遞增算子時可能會導致意料之外的行為，
+因此 OpenCL 中不支持對浮點標量和矢量型別運用此算子。
+例如，如果一個變量為浮點型別，其值為 \ccmm{0x1.0p25f}，
+ \ccmm{a++} 返回的還是 \ccmm{0x1.0p25f}。
+同時，如果 \cvar{a} 中含有小數，不保證 \ccmm{(a++)-}\ccmm{-} 會返回 \ccmm{a}。
+如果不是缺省的捨入模式，
+則 \ccmm{(a++)-}\ccmm{-} 的結果可能跟 \ccmm{a++} 或 \ccmm{a-}\ccmm{-} 的結果相同。}。
+所有單元算子都會在算元的所有組件上進行運算。結果的型別與算元的型別相同。
+對於後置式或前置式遞增和遞減算子，算式必須是可賦值的（即左值）。
+前置式遞增或前置式遞減算子會對所操作算式的內容加 1 或減 1，整個算式的值就是修改後的值。
+而後置式遞增或後置式遞減算子也會對所操作算式的內容加 1 或減 1，但整個算式的值是修改前的值。
+
+% relational operator
+\startitem[item:relationalOperator]
+關係算子\footnote{
+對於矢量關係運算，結果也是矢量，
+要想知道其中的元素是否有 \ccmm{true} 或者是否所有元素都是 \ccmm{true}，
+例如，在 \ccmm{if ()} 語句的上下文中使用，
+請查閱\refsection{relationFunc}中的內建函式 \capi{any} 和 \capi{all}。}
+大於（\ccmm{>}）、小於（\ccmm{<}）、大於等於（\ccmm{>=}）、
+小於等於（\ccmm{<=}）可在標量或矢量型別上進行運算。
+所有關係算子的結果都是整數型別。在對算元進行型別轉換後，有如下情況：
+\startigBig
+\item 兩個算元都是標量。這種情況下，運算結果是 \ctype{int} 標量。
+
+\item 一個算元是標量，另一個是矢量。
+這種情況下，會對標量算元進行算術轉換，使其型別與矢量算元的元素型別相同。
+然後將標量算元拓寬成矢量，其組件數目與矢量算元相同。
+最後按組件逐一進行運算，結果是同樣大小的矢量。
+
+\item 兩個算元都是矢量，且型別相同。
+這種情況下，會按組件逐一進行運算，結果是同樣大小的矢量。
+\stopigBig
+
+任何其他情況下的隱式轉換都是\cnglo{illegal}的。
+如果算元都是標量，則結果是標量帶符號整數型別 \ctype{int}。
+而如果算元都是矢量型別，則結果是矢量帶符號整數型別，其元素數目與算元相同。
+如果矢量算元的元素型別為 \cldt[n]{char} 和 \cldt[n]{uchar}，則結果為 \cldt[n]{char}。
+如果矢量算元的元素型別為 \cldt[n]{short} 和 \cldt[n]{ushort}，則結果為 \cldt[n]{short}。
+如果矢量算元的元素型別為 \cldt[n]{int}、 \cldt[n]{uint} 和 \cldt[n]{float}，則結果為 \cldt[n]{int}。
+如果矢量算元的元素型別為 \cldt[n]{long}、 \cldt[n]{ulong} 和 \cldt[n]{double}，則結果為 \cldt[n]{long}。
+對於標量型別的關係運算，如果所指定的關係為 \ccmm{false} 則結果為 \ccmm{0}，否則結果為 \ccmm{1}。
+對於矢量型別的關係運算，如果所指定的關係為 \ccmm{false} 則結果為 \ccmm{0}，否則結果為 \ccmm{-1} （即設置了所有位）。
+如果任一引數的值為 NaN，則關係算子的結果就為 \ccmm{0}。
+\stopitem
+
+% equality operator
+\startitem
+等號算子\footnote{
+對於矢量關係運算，結果也是矢量，
+要想知道其中的元素是否有 \ccmm{true} 或者是否所有元素都是 \ccmm{true}，
+例如，在 \ccmm{if ()} 語句的上下文中使用，
+請查閱\refsection{relationFunc}中的內建函式 \capi{any} 和 \capi{all}。}
+相等（\ccmm{==}）、不等（\ccmm{!=}）可對所有內建標量和矢量型別進行運算。
+所有等號算子的結果均為整數型別。
+在對算元進行型別轉換後，有如下情況：
+\startigBig
+\item 兩個算元都是標量。這種情況下，運算結果也是標量。
+
+\item 一個算元是標量，另一個是矢量。
+這種情況下，會對標量算元進行算術轉換，使其型別與矢量算元的元素型別相同。
+然後將標量算元拓寬成矢量，其組件數目與矢量算元相同。
+最後按組件逐一進行運算，結果是同樣大小的矢量。
+
+\item 兩個算元都是矢量，且型別相同。
+這種情況下，會按組件逐一進行運算，結果是同樣大小的矢量。
+\stopigBig
+
+任何其他情況下的隱式轉換都是\cnglo{illegal}的。
+如果算元都是標量，則結果是標量帶符號整數型別 \ctype{int}。
+而如果算元都是矢量型別，則結果是矢量帶符號整數型別，其元素數目與算元相同。
+如果矢量算元的元素型別為 \cldt[n]{char} 和 \cldt[n]{uchar}，則結果為 \cldt[n]{char}。
+如果矢量算元的元素型別為 \cldt[n]{short} 和 \cldt[n]{ushort}，則結果為 \cldt[n]{short}。
+如果矢量算元的元素型別為 \cldt[n]{int}、 \cldt[n]{uint} 和 \cldt[n]{float}，則結果為 \cldt[n]{int}。
+如果矢量算元的元素型別為 \cldt[n]{long}、 \cldt[n]{ulong} 和 \cldt[n]{double}，則結果為 \cldt[n]{long}。
+對於標量型別的等號運算，如果所指定的關係為 \ccmm{false} 則結果為 \ccmm{0}，否則結果為 \ccmm{1}。
+對於矢量型別的等號運算，如果所指定的關係為 \ccmm{false} 則結果為 \ccmm{0}，否則結果為 \ccmm{-1} （即設置了所有位）。
+如果任一引數的值為 NaN，則相等算子（\ccmm{==}）的結果就為 \ccmm{0}。
+如果任一引數的值為 NaN，
+則不等算子（\ccmm{!=}）的結果就為 \ccmm{1} （對於標量算元）
+或 \ccmm{-1} （對於矢量算元）。
+\stopitem
+
+% bitwise operator
+\startitem
+位元算子與（\ccmm{&}）、或（\ccmm{|}）、異或（\ccmm{^}）、非（\ccmm{~}）
+可以對所有內建的標量或矢量型別進行運算，但是浮點型別除外（無論標量還是矢量）。
+對於矢量內建型別，這些算子會按組件逐一運算。
+如果一個算元為標量，而另一個是矢量，
+則會對標量算元進行算術轉換，使其型別與矢量算元的元素型別相同。
+然後將標量算元拓寬成矢量，其組件數目與矢量算元相同。
+最後按組件逐一進行運算，結果是同樣大小的矢量。
+\stopitem
+
+% logical operator
+\startitem
+邏輯算子與（\ccmm{&&}）、或（\ccmm{||}）可對所有內建標量或矢量型別進行運算。
+對於內建的標量型別，
+如果左手的算元不等於 0，則邏輯與算子（\ccmm{&&}）只對右手的算元進行求值。
+對於內建的標量型別，
+如果左手的算元不等於 0，則邏輯或算子（\ccmm{||}）只對右手的算元進行求值。
+對於內建的矢量型別，
+會對兩個算元都求值，並按組件逐一進行運算。
+如果一個算元是標量，另一個是矢量，
+則會對標量算元進行算術轉換，使其型別與矢量算元的元素型別相同。
+然後將標量算元拓寬成矢量，其組件數目與矢量算元相同。
+最後按組件逐一進行運算，結果是同樣大小的矢量。
+
+邏輯異或算子（\ccmm{^^}）是保留關鍵字。
+
+如果算元都是標量，則結果是標量帶符號整數型別 \ctype{int}。
+而如果算元都是矢量型別，則結果是矢量帶符號整數型別，其元素數目與算元相同。
+如果矢量算元的元素型別為 \cldt[n]{char} 和 \cldt[n]{uchar}，則結果為 \cldt[n]{char}。
+如果矢量算元的元素型別為 \cldt[n]{short} 和 \cldt[n]{ushort}，則結果為 \cldt[n]{short}。
+如果矢量算元的元素型別為 \cldt[n]{int}、 \cldt[n]{uint} 和 \cldt[n]{float}，則結果為 \cldt[n]{int}。
+如果矢量算元的元素型別為 \cldt[n]{long}、 \cldt[n]{ulong} 和 \cldt[n]{double}，則結果為 \cldt[n]{long}。
+
+對於標量型別的邏輯運算，如果所指定的關係為 \ccmm{false} 則結果為 \ccmm{0}，否則結果為 \ccmm{1}。
+對於矢量型別的邏輯運算，如果所指定的關係為 \ccmm{false} 則結果為 \ccmm{0}，否則結果為 \ccmm{-1} （即設置了所有位）。
+\stopitem
+
+% logical unary operator
+\startitem
+邏輯單元算子非（\ccmm{!}）可對所有內建標量或矢量型別進行運算。
+對於內建矢量型別，會按組件逐一運算。
+
+如果算元是標量，則結果是標量帶符號整數型別 \ctype{int}。
+而如果算元是矢量型別，則結果是矢量帶符號整數型別，其元素數目與算元相同。
+如果矢量算元的元素型別為 \cldt[n]{char} 和 \cldt[n]{uchar}，則結果為 \cldt[n]{char}。
+如果矢量算元的元素型別為 \cldt[n]{short} 和 \cldt[n]{ushort}，則結果為 \cldt[n]{short}。
+如果矢量算元的元素型別為 \cldt[n]{int}、 \cldt[n]{uint} 和 \cldt[n]{float}，則結果為 \cldt[n]{int}。
+如果矢量算元的元素型別為 \cldt[n]{long}、 \cldt[n]{ulong} 和 \cldt[n]{double}，則結果為 \cldt[n]{long}。
+
+對於標量型別的邏輯非運算，如果算元不等於 0 則結果為 \ccmm{0}，否則結果為 \ccmm{1}。
+對於矢量型別的邏輯非運算，如果算元不等於 0 則結果為 \ccmm{0}，否則結果為 \ccmm{-1} （即設置了所有位）。
+\stopitem
+
+% ternary selection operator
+\startitem
+三元選擇算子（\ccmm{?:}）會在三個算式上進行運算（\ccmm{exp1 ? exp2 : exp3}）。
+此算子會先對 \ccmm{exp1} 進行求值，結果可能是標量或矢量，但不會是浮點數。
+如果結果是標量，且不等於 0，那麼接着對第二個算式進行求值，否則對第三個算式求值。
+如果結果是矢量，則等同於調用 \capi{select}\ccmm{(exp3, exp2, exp1)}。
+函式 \capi{select} 在\reftab{svRelationalFunc}中有所描述。
+第二個和第三個算式的結果可以是任意型別，只要型別匹配即可；
+如果不匹配，則會進行隱式轉換（參見\refsection{implicityConversion}）使其匹配；
+而如果一個是矢量，另一個是標量，則會對標量進行算術轉換，使其型別與矢量算元的元素型別相同，
+然後將其拓寬成型別與矢量算元相同的矢量。
+其結果的型別就是整個算式的型別。
+\stopitem
+
+% right-shift and left-shift
+\startitem
+算子右移（\ccmm{>>}）和左移（\ccmm{<<}）可對所有內建的標量或矢量型別進行運算，
+但浮點型別除外。
+對於內建的矢量型別，會按組件逐一進行運算。
+對於右移算子（\ccmm{>>}）和左移算子（\ccmm{<<}），
+如果第一個算元是標量，則最右邊的算元也必須是標量；
+如果第一個算元是矢量，則最右邊的算元即可以是矢量，也可以是標量。
+
+\ccmm{E1 << E2} 的結果就是將 \ccmm{E1} 左移 \ccmm{x} 位，
+ \ccmm{x} 等於將 \ccmm{E2} 視為無符號整數時其低 \math{log_{2}N} 位的值；
+如果 \ccmm{E1} 是標量，則 \ccmm{N} 就是在型別晉陞\footnote{
+整數的型別晉陞在 ISO/IEC 9899: 1999 的節 6.3.1.1 中有所描述。}
+後，表示 \ccmm{E1} 的數據型別所用的位數，
+如果 \ccmm{E1} 是矢量，則 \ccmm{N} 為表示 \ccmm{E1} 的元素所用的位數。
+騰出的位元會填零。
+
+\ccmm{E1 >> E2} 的結果就是將 \ccmm{E1} 右移 \ccmm{x} 位，
+ \ccmm{x} 等於將 \ccmm{E2} 視為無符號整數時其低 \math{log_{2}N} 位的值；
+如果 \ccmm{E1} 是標量，則 \ccmm{N} 就是在型別晉陞後，表示 \ccmm{E1} 的數據型別所用的位數，
+如果 \ccmm{E1} 是矢量，則 \ccmm{N} 為表示 \ccmm{E1} 的元素所用的位數。
+如果 \ccmm{E1} 是無符號型別，或者是帶符號型別但其值非負，則騰出的位元會填零。
+如果 \ccmm{E1} 是帶符號型別，且是負值，則騰出的位元會填一。
+\stopitem
+
+% sizeof
+\startitem
+算子 \ccmm{sizeof} 的結果就是算元的大小（單位字節），
+其中包括對齊時所需的填補字節（參見\refsection{alignmentOfTypes}）。
+算元可能是算式，也可能是帶小括號的型別。
+這個大小是由算元的型別所決定的。
+結果的型別為 \ctype{size_t}。
+如果算元的型別為變長陣列\footnote{OpenCL 1.1 不支持變長陣列，參見\refsection{restrictions}中的\refitem{vaFaStructure}。}，
+則會對算元進行求值；
+否則，不求值，並且結果是整形常數。
+
+使用此算子時，如果算元的型別為 \ctype{char}、 \ctype{uchar}，結果為 \ccmm{1}；
+如果算元的型別為 \ctype{short}、 \ctype{ushort} 或 \ctype{half}，則結果為 \ccmm{2}；
+如果算元的型別為 \ctype{int}、 \ctype{uint} 或 \ctype{float}，則結果為 \ccmm{4}；
+如果算元的型別為 \ctype{long}、 \ctype{ulong} 或 \ctype{double}，則結果為 \ccmm{8}；
+如果算元是矢量，則結果為組件數目與每個標量組件大小的乘積
+\footnote{三元矢量是個例外，其大小定義為 4 與 每個標量組件大小的乘積。}；
+如果算元是陣列，則結果為整個陣列的大小；
+如果算元的型別為結構體或聯合體，結果就是這樣一個物件的大小，包括內部或尾部的填補字節。
+算元不能是函式型別或不完整的型別的算式，也不能是帶小括號的這種型別的名字，
+位欄結構體成員也不行\footnote{OpenCL 1.1 不支持位欄結構體成員，參見\refsection{restrictions}中的\refitem{bfMemInStructure}。}。
+
+如果算元的型別為 \ctype{bool}、 \ctype{image2d_t}、 \ctype{image3d_t}、
+ \ctype{image2d_array_t}、 \ctype{image1d_t}、 \ctype{image1d_buffer_t}、
+ \ctype{image1d_array_t}、 \ctype{sampler_t} 或 \ctype{event_t}，
+則結果\cnglo{impdef}。
+\stopitem
+
+% comma
+\startitem
+算子逗號（\ccmm{,}）在運算時，會返回以逗號分隔的算式列中最右邊那個的型別和值。
+會按從左到右的順序對所有算式進行求值。
+\stopitem
+
+% unary *
+\startitem
+單元算子（\ccmm{*}）是一種間接指示。
+如果算元指向一個對象，則結果為左值，指代此對象。
+如果此對象的型別為“type”，則結果的型別也是“type”。
+如果賦給指位器的值無效，則單元算子（\ccmm{*}）的行為未定義\footnote{
+無效值指的是算元為 null 指位器、位址沒有根據對象的型別正確對齊、所指對象的生命週期已經結束。
+如果 \ccmm{*P} 是左值，而 \ccmm{T} 是某種對象指位器型別的名字，
+則 \ccmm{*(T)P} 是左值，且其型別與 \ccmm{T} 所指對象的型別相兼容。
+}。
+\stopitem
+
+% unary &
+\startitem
+單元算子（\ccmm{&}）會返回算元的位址。
+如果算元的型別為“type”，則結果的型別也是“type”。
+如果算元是單元算子 \ccmm{*} 的結果，
+則不會對算子 \ccmm{*} 和 \ccmm{&} 進行求值，如同將兩者都省略，
+但算子的相關限制還是有效，並且結果依然不是左值。
+類似的，如果算元是算子 \ccmm{[]} 的結果，
+則不會對算子 \ccmm{&} 和算子 \ccmm{[]} 所隱含的 \ccmm{*} 進行求值，
+如同移除了算子 \ccmm{&}，並將算子 \ccmm{[]} 改成了算子 \ccmm{+}。
+否則，結果將是指位器，指向算元所指代的對象\footnote{
+因此， \ccmm{&*E} 等同於 \ccmm{E} （即使 \ccmm{E} 是 null 指位器），
+而 \ccmm{&(E1[E2])} 等同於 \ccmm{((E1)+(E2))}。
+如果 \ccmm{E} 是左值，並且作為算子 \ccmm{&} 的算元是有效的，
+那麼 \ccmm{*&E} 也是左值，並且等同於 \ccmm{E}，這永遠成立。}。
+\stopitem
+
+% assignement
+\startitem
+賦值算子（\ccmm{=}）可以給變量賦值，如
+\startclc
+lvalue = expression
+\stopclc
+賦值算子會將 \ccmm{expression} 的值存入 \ccmm{lvalue}。
+ \ccmm{expression} 和 \ccmm{lvalue} 的型別必須相同，
+如果不同，則 \ccmm{expression} 的型別必須列於\reftab{builtInScalarDataTypes}中，
+這種情況下，賦值前會先進行隱式轉換。
+
+如果 \ccmm{expression} 是標量，則 \ccmm{lvalue} 是矢量，
+則會將標量轉換成矢量元素的型別，
+然後將標量算元拓寬成矢量，其組件數目與矢量算元相同。
+最後按組件逐一賦值。
+
+要想進行其他轉換，必須顯式指定。
+左值必須是可寫的。
+如果變量是內建型別、整個結構體或陣列、結構體欄位、
+用欄位選擇器（\ccmm{.}）對組件進行選擇或重排（欄位互不重複）所形成的左值、
+括號中的左值、或者用陣列下標算子（\ccmm{[]}）提領出的左值，
+那麼這個變量就是左值。
+其他單元或二元算式、函式名、帶有重複欄位的重排以及常量都不可為左值。
+三元算子（\ccmm{?:}）也不能是左值。
+
+沒有規定對算元求值的順序。
+如果嘗試修改賦值算子的結果，或者在下個時序點（sequence point）後面存取他，
+其行為未定義。
+其他賦值算子有
+ \ccmm{+=}、 \ccmm{-=}、 \ccmm{*=}、 \ccmm{/=}、 \ccmm{%=}、
+ \ccmm{<<=}、 \ccmm{>>=}、 \ccmm{&=}、 \ccmm{|=}、 \ccmm{^=}。
+
+算式
+\startclc
+lvalue op= expression
+\stopclc
+等同於
+\startclc
+lvalue = lvalue op expression
+\stopclc
+其中 \ccmm{lvalue} 和 \ccmm{expression} 必須
+同時滿足算子 \ccmm{op} 和 \ccmm{=} 的要求。
+\stopitem
+
+\stopigBig
+
+\startnotepar
+除了算子 \ccmm{sizeof}，本節所列的任一算子都不能用於數據型別 \ctype{half}。
+\stopnotepar
+

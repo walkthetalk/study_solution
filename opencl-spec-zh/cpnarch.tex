@@ -1,0 +1,40 @@
+%
+% author:	Ni Qingliang
+% date:		2011-02-11
+%
+\startcomponent cpnarch
+\product opencl-spec-zh
+%\starttext
+
+\chapter{OpenCL 架構}
+
+{\ftEmp{OpenCL}}是一個開放的工業標準，可以為 CPU、 GPU 以及其他分散的計算設備
+（這些設備被組織到同一\cnglo{platform}中）所組成的異構群進行編程。
+他不只是一種語言。
+OpenCL 是一個並行編程\cnglo{framework}，
+包括一種語言、 API、庫以及一個運行時系統來支持軟件開發。
+例如，使用 OpenCL，程式員可以寫出一個能在 GPU 上執行的通用程式，
+而不必將其算法映射到 3D 圖形 API （如 OpenGL 或 DirectX）上。
+
+OpenCL 的目標是讓程式員可以寫出可移植並且高效的代碼。
+這包括庫作者、中間件供應商，以及以性能為導向的應用程式員。
+因此 OpenCL 提供了底層的硬件抽象和一個\cnglo{framework}來支持編程，
+同時也暴露了底層硬件的許多細節。
+
+我們將使用如下的模型體系來描述 OpenCL 背後的核心理念：
+\startigBase
+\item 平台模型
+\item 內存模型
+\item 執行模型
+\item 編程模型
+\stopigBase
+
+\input{chapter_arch/sec_plat_model.tex}
+\input{chapter_arch/sec_exe_model.tex}
+\input{chapter_arch/sec_mem_model.tex}
+\input{chapter_arch/sec_prg_model.tex}
+\input{chapter_arch/sec_mem_obj.tex}
+\input{chapter_arch/sec_cl_fw.tex}
+
+\stopcomponent
+

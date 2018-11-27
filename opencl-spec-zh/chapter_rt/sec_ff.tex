@@ -1,0 +1,62 @@
+\section{刷新和完結}
+
+\topclfunc{clFlush}
+
+\startCLFUNC
+cl_int clFlush (cl_command_queue command_queue)
+\stopCLFUNC
+
+此函式會將 \carg{command_queue} 中所有之前入隊的 OpenCL \cnglo{cmd}
+都提交給 \carg{command_queue} 所在\cnglo{device}去執行。
+\capi{clFlush} 返回時僅保證\cnglo{cmd}已經提交，不保證執行完畢。
+
+如果執行成功， \capi{clFlush} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\cnglo{cmdq}中所有阻塞的\cnglo{cmd}
+以及 \capi{clReleaseCommandQueue} 都會對\cnglo{cmdq}實施隱式的刷新（flush）。
+這些阻塞的\cnglo{cmd}包括：
+\startigBase
+\item \capi{clEnqueueReadBuffer}、 \capi{clEnqueueReadBufferRect}、
+ \capi{clEnqueueReadImage}，其中參數 \carg{blocking_read} 設置成 \cenum{CL_TRUE}。
+
+\item \capi{clEnqueueWriteBuffer}、 \capi{clEnqueueWriteBufferRect}、
+ \capi{clEnqueueWriteImage}，其中參數 \carg{blocking_write} 設置成 \cenum{CL_TRUE}。
+
+\item \capi{clEnqueueMapBuffer}、 \capi{clEnqueueMapImage}，
+其中參數 \carg{blocking_map} 設置成 \cenum{CL_TRUE}。
+
+\item \capi{clWaitForEvents}。
+\stopigBase
+
+如果\cnglo{cmdq}中有一個\cnglo{cmd} A，
+而另一個\cnglo{cmdq}中有\cnglo{cmd} B 在等待用來指代\cnglo{cmd} A 的\cnglo{evtobj}，
+那麼\cnglo{app}必須對\cnglo{cmd} A 所在的\cnglo{cmdq}調用 \capi{clFlush}，
+或者任何會實施隱式刷新的的阻塞\cnglo{cmd}。
+
+\topclfunc{clFinish}
+
+\startCLFUNC
+cl_int clFinish (cl_command_queue command_queue)
+\stopCLFUNC
+
+此函式是阻塞的，等到 \carg{command_queue} 中所有之前入隊的\cnglo{cmd}
+都被提交給相應的\cnglo{device}並執行完畢後才會返回。
+\capi{clFinish} 也是一個同步點。
+
+如果執行成功， \capi{clFinish} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

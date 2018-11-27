@@ -1,0 +1,62 @@
+\subsection[section:relationFunc]{關係函式}
+
+可以使用關係算子和相等算子（<、 <=、 >、 >=、 !=、 ==）對內建標量和矢量型別進行關係運算，
+所產生的結果分別為標量或矢量帶符號整形，參見\refsection{operator}。
+
+\reftab{svRelationalFunc}中所列函式\footnote{
+如果實作對規範進行了擴充，從而支持 IEEE-754 标志和異常，
+則當有一個或多個算數是 NaN 時，
+\reftab{svRelationalFunc}中所定義的內建函式不會引發{\ftRef{無效（invalid）}}浮點異常。}
+可以內建標量或矢量型別為引數，返回的結果為標量或矢量整形。
+泛型 \ctype{gentype} 指代下列內建型別：
+\startigBase[indentnext=no]
+\item \cldt{char}、 \cldt[n]{char}、 \cldt{uchar}、 \cldt[n]{uchar}、
+\item \cldt{short}、 \cldt[n]{short}、 \cldt{ushort}、 \cldt[n]{ushort}、
+\item \cldt{int}、 \cldt[n]{int}、 \cldt{uint}、 \cldt[n]{uint}、
+\item \cldt{long}、 \cldt[n]{long}、 \cldt{ulong}、 \cldt[n]{ulong}、
+\item \cldt{float}、 \cldt[n]{float}、 \cldt{double} 和 \cldt[n]{double}。
+\stopigBase
+泛型 \ctype{igentype} 指代內建帶符號整形，即：
+\startigBase[indentnext=no]
+\item \cldt{char}、 \cldt[n]{char}、
+\item \cldt{short}、 \cldt[n]{short}、
+\item \cldt{int}、 \cldt[n]{int}、
+\item \cldt{long} 和 \cldt[n]{long}。
+\stopigBase
+泛型 \ctype{ugentype} 指代內建無符號整形，即：
+\startigBase[indentnext=no]
+\item \cldt{uchar}、 \cldt[n]{uchar}、
+\item \cldt{ushort}、 \cldt[n]{ushort}、
+\item \cldt{uint}、 \cldt[n]{uint}、
+\item \cldt{ulong} 和 \cldt[n]{ulong}。
+\stopigBase
+其中 \ccmmsuffix{n} 為 2、 3、 4、 8 或 16。
+
+對於標量型別的引數，如果所指定的關係為 {\ftRef{false}}，則下列函式（參見\reftab{svRelationalFunc}）會返回 0，否則返回 1：
+\startigBase[indentnext=no]
+\item \capi{isequal}、 \capi{isnotequal}、
+\item \capi{isgreater}、 \capi{isgreaterequal}、
+\item \capi{isless}、 \capi{islessequal}、
+\item \capi{islessgreater}、
+\item \capi{isfinite}、 \capi{isinf}、
+\item \capi{isnan}、 \capi{isnormal}、
+\item \capi{isordered}、 \capi{isunordered} 和
+\item \capi{signbit}。
+\stopigBase
+而對於矢量型別的引數，如果所指定的關係為 {\ftRef{false}}，則返回 0，
+否則返回 -1 （即所有位都是 1）。
+
+如果任一引數為 NaN，則下列關係函式返回 0：
+\startigBase[indentnext=no]
+\item \capi{isequal}、
+\item \capi{isgreater}、 \capi{isgreaterequal}、
+\item \capi{isless}、 \capi{islessequal} 和
+\item \capi{islessgreater}。
+\stopigBase
+如果引數為標量，則當任一引數為 NaN 時， \capi{isnotequal} 返回 1；
+而如果引數為矢量，則當任一引數為 NaN 時， \capi{isnotequal} 返回 -1。
+
+\placetable[here,split][tab:svRelationalFunc]
+{標量和矢量關係函式}
+{\input{chapter_lgg/tbl/tbl_svrelationalfunc.tex}}
+

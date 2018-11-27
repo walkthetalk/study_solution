@@ -1,0 +1,383 @@
+% Conversions and Type Casting
+\section[section:conversionCast]{轉換以及轉型}
+
+% Implicit Conversions
+\subsection[section:implicityConversion]{隱式轉換}
+
+OpenCL 支持內建標量型別（參見\reftab{builtInScalarDataTypes}）間的隱式轉換（conversion）
+（\ctype{void} 和 \ctype{half}\footnote{除非支持擴展 \clext{cl_khr_fp16}。} 除外）。
+隱式轉換不僅是對算式值的重釋（reinterpret），同時會將其轉換成另一種型別，但其值不變。
+例如，可以將整數 \ccmm{5} 轉換成浮點數 \ccmm{5.0}。
+
+對於內建矢量數據型別，不允許進行隱式轉換。
+
+對於指位器型別的隱式轉換遵循 C99 規範中所描述的規則。
+
+% Explicit Casts
+\subsection[section:explicitCast]{顯式轉型}
+
+對於\reftab{builtInScalarDataTypes}中所定義的內建標量型別，
+標準的轉型（type-casting）動作會進行恰當的轉換
+（\ctype{void} 和 \ctype{half}\footnote{除非支持擴展 \clext{cl_khr_fp16}。} 除外）。
+
+\startclc[indentnext=no]
+float	f = 1.0f;
+int	i = (int)f;
+\stopclc
+此例中，
+\cvar{f} 存儲的是 \ccmm{0x3F800000}，而 \cvar{i} 存儲的是 \ccmm{0x1}，
+即將 \cvar{f} 中的浮點數 \ccmm{1.0f} 轉換成了整數值。
+
+對於矢量型別的顯式轉型是非法的。
+下面的例子會導致編譯錯誤：
+\startclc
+int4	i;
+uint4	u = (uint4) i;	<- not allowed
+
+float4	f;
+int4	i = (int4) f;	<- not allowed
+
+float4	f;
+int8	i = (int8) f;	<- not allowed
+\stopclc
+
+標量到矢量的轉換可以通過轉型來實施。
+轉型同時會進行恰當的算術轉換。
+轉換成內建整形矢量時會向零捨入。
+轉換成浮點矢量時會使用缺省的捨入模式。
+將 \ctype{bool} 轉型成整形矢量時，
+如果 \ctype{bool} 值是 \cenum{true}，會將矢量組件置為 \math{-1} （即設置了所有位），
+否則將矢量組件置為 \math{0}。
+
+下面是顯式轉型的一些正確示例。
+\startclc
+loat	f = 1.0f;
+float4	va = (float4)f;
+// va is a float4 vector with elements (f, f, f, f).
+
+uchar	u = 0xFF;
+float4	vb = (float4)u;
+// vb is a float4 vector with elements((float)u, (float)u,
+//                                     (float)u, (float)u).
+
+float	f = 2.0f;
+int2	vc = (int2)f;
+// vc is an int2 vector with elements ((int)f, (int)f).
+
+uchar4	vtrue = (uchar4)true;
+// vtrue is a uchar4 vector with elements (0xff, 0xff,
+//                                         0xff, 0xff).
+\stopclc
+
+% Explicit Conversions
+\subsection[section:explicitConversion]{顯式轉換}
+
+下面一組函式可用來實施顯式轉換
+\startclc
+convert_destType(sourceType)
+\stopclc
+這組函式可以支持所有所支持型別（參加\refsection{bisdt}、\refsection{bivdt}和\refsection{obidt}）
+間的型別轉換，這些型別除外：
+ \ctype{bool}、 \ctype{half}、 \ctype{size_t}、 \ctype{ptrdiff_t}、
+ \ctype{intptr_t}、 \ctype{uintptr_t} 和 \ctype{void}。
+
+源矢量和目的矢量的元素數目必須一樣。
+
+下面例子中：
+\startclc
+uchar4	u;
+int4	c = convert_int4(u);
+\stopclc
+\capi{convert_int4}
+ 將 \ctype{uchar4} 矢量 \cvar{u} 轉換成了 \ctype{int4} 矢量 \cvar{c}。
+
+\startclc
+float	f;
+int	i = convert_int(f);
+\stopclc
+\capi{convert_int}
+ 將 \ctype{float} 標量 \cvar{f} 轉換成了 \ctype{int} 標量 \cvar{i}。
+
+可以通過兩個可選的修飾符（modifier）來改變轉換的行為，
+其中一個修飾符可以對溢出的輸入使用飽和算法（saturation），另一個可以指定捨入模式。
+
+完整的標量轉換函式形如：
+\startclc
+destType convert_destType<_sat><_roundingMode> (sourceType)
+\stopclc
+
+完整的矢量轉換函式形如：
+\startclc
+destTypen convert_destTypen<_sat><_roundingMode> (sourceTypen)
+\stopclc
+
+% Data Types
+\subsubsection{數據型別}
+
+對於標量型別 \ctype{char}、 \ctype{uchar}、 \ctype{short}、 \ctype{ushort}、
+ \ctype{int}、 \ctype{uint}、 \ctype{long}、 \ctype{ulong}、 \ctype{float}
+ 以及由此所衍生的內建矢量型別，都可以進行轉換。
+算元和結果的型別中所含元素的數目必須相同。
+算元和結果的型別可能相同，這種情況下不會進行轉換，算式的型別和值都不變。
+
+整數之間的轉換遵循 C99 規範的{\ftRef{節 6.3.1.1}} 和{\ftRef{節 6.3.1.3}} 中的轉換規則，
+不過\refsection{oorbasc}中所描述的溢出行為和飽和轉換例外。
+
+% Rounding Modes
+\subsubsection{捨入模式}
+
+與浮點型別有關的轉換會按照 IEEE-754 中的捨入規則進行捨入。
+可以使用\reftab{roundingModes}中的修飾符指定轉換所用的捨入模式。
+
+\placetable[here][tab:roundingModes]
+{捨入模式}
+{\input{chapter_lgg/tbl/tbl_roundingmodes.tex}}
+
+缺省情況下，轉換成整形時使用捨入模式 \ccmm{_rtz}，而轉換成浮點型別
+\footnote{轉換成浮點格式時，如果源的值超過了目標型別所能表示的最大有限浮點值，
+捨入模式會影響轉換結果，根據 IEEE-754 的捨入規則來確定結果是最大有限浮點值，
+還是和源有相同正負號的無窮值。}
+時使用缺省的捨入模式。
+所支持的唯一一個缺省的浮點捨入模式是捨入為最近偶數，
+即浮點型別的缺省捨入模式是 \ccmm{_rte}。
+
+% Out-of-Range Behavior and Saturated Conversions
+\subsubsection[section:oorbasc]{溢出行為和飽和轉換}
+
+轉換時，如果算元大於目標型別所能表示的最大值，或者小於目標型別所能表示的最小值，就認為是溢出。
+其結果由 C99 規範的{\ftRef{節 6.3}} 中的轉換規則來確定。
+如果要將浮點型別轉換成整形，則其行為\cnglo{impdef}。
+
+轉換成整形時可以使用飽和模式（在轉換函式的名字後面加上修飾符 \ccmm{_sat}）。
+此模式下，如果發生溢出，結果將是目標格式所能表示的值中與源算元最近的那個
+（會將 NaN 轉換成 0）。
+
+轉換成浮點型別時將遵循 IEEE-754 中的捨入規則。
+轉換成浮點格式時不能使用修飾符 \ccmm{_sta}。
+
+% Explicit Conversion Examples
+\subsubsection{顯式轉換的例子}
+
+\startexample
+\startclc
+short4	s;
+
+// negative values clamped to 0
+ushort4	u = convert_ushort4_sat( s );
+
+// values > CHAR_MAX converted to CHAR_MAX
+// values < CHAR_MIN converted to CHAR_MIN
+char4 c = convert_char4_sat( s );
+\stopclc
+\stopexample
+
+\startexample
+\startclc
+float4 f;
+
+// values implementation defined for
+// f > INT_MAX, f < INT_MIN or NaN
+int4	i = convert_int4( f );
+
+// values > INT_MAX clamp to INT_MAX, values < INT_MIN clamp
+// to INT_MIN. NaN should produce 0.
+// The _rtz rounding mode is used to produce the integer values.
+int4	i2 = convert_int4_sat( f );
+
+// similar to convert_int4, except that floating-point values
+// are rounded to the nearest integer instead of truncated
+int4	i3 = convert_int4_rte( f );
+
+// similar to convert_int4_sat, except that floating-point values
+// are rounded to the nearest integer instead of truncated
+int4	i4 = convert_int4_sat_rte( f );
+\stopclc
+\stopexample
+
+\startexample
+\startclc
+int4	i;
+
+// convert ints to floats using the default rounding mode.
+float4 f = convert_float4( i );
+
+// convert ints to floats. integer values that cannot
+// be exactly represented as floats should round up to the
+// next representable float.
+float4 f = convert_float4_rtp( i );
+\stopclc
+\stopexample
+
+% Reinterpreting Data As Another Type
+\subsection[section:reinterpret]{將數據重釋為其他型別}
+
+在 OpenCL 中，經常有需要將某一種數據型別重釋為另一種數據型別。
+在需要直接存取浮點型別中的位元時就需要這樣做，
+例如，屏蔽掉（mask off）浮點數據的符號位，
+或者使用浮點矢量關係算子的結果（參加\refsection{operator}中的\refitem{relationalOperator}）
+\footnote{另外，對於一些設計用來支持特定矢量 ISA
+（如 AltiVec\high{TM}、 CELL Broadband Engine\high{TM} 架構）的 C 語言擴展，
+會將這樣的轉換與重排算子（swizzle oprator）一起使用對型別進行還原（unconversion）。
+為支持這種遺留代碼， \clapi[n]{as_type}() 允許在大小相同但元素數目不同的矢量間進行轉換，
+即使這種轉換的行為不能移植到其他硬件架構的 OpenCL 實作上。
+ AltiVec\high{TM} 是 Motorola Inc. 的商標。
+ Cell Broadband Engine 是 Sony Computer Entertainment Inc. 的商標。}。
+對於這種（反）轉換， C 語言中經常使用方法為：
+指位器別名（pointer aliasing）、聯合體（union）和 內存拷貝（memcpy）。
+對於 C99，這些方法中只有內存拷貝是嚴格正確的。
+由於 OpenCL 沒有提供 \capi{memcpy}，所以需要其他手段。
+
+% Reinterpreting Types Using Unions
+\subsubsection{使用聯合體重釋型別}
+
+OpenCL 語言對聯合體（union）進行了擴充，
+允許\cnglo{program}使用其中某個成員存取另一個型別不同的成員。
+對象中的相關字節會被視為存取時所用型別的對象。
+如果存取時所用型別大於對象的實際型別，則額外字節的值是未定義的。
+
+\startexample
+\startclc
+union{ float f; uint u; double d/BTEX\footnote{僅當支持雙精度時有效。}/ETEX;} u;
+
+u.u = 1;	// u.f contains 2**-149. u.d is undefined --
+		// depending on endianness the low or high half
+		// of d is unknown
+
+u.f = 1.0f;	// u.u contains 0x3f800000, u.d contains an
+		// undefined value -- depending on endianness
+		// the low or high half of d is unknown
+u.d = 1.0;	// u.u contains 0x3ff00000 (big endian) or 0
+		// (little endian). u.f contains either 0x1.ep0f
+		// (big endian) or 0.0f (little endian)
+\stopclc
+\stopexample
+
+% Reinterpreting Types Using as_type() and as_typen()
+\subsubsection[section:as_typen]{使用 \clapi{as_type}() 和 \clapi[n]{as_type}() 重釋型別}
+
+\reftab{builtInScalarDataTypes}、\reftab{builtInVectorDataTypes}中所描述的所有型別
+（\ctype{bool}、 \ctype{half}
+\footnote{除非支持擴展 \clext{cl_khr_fp16}。} 和 \ctype{void} 除外）
+都可以重釋為另一種大小相同的數據型別，如果是標量型別則使用 \clapi{as_type}，
+如果是矢量型別則使用 \clapi[n]{as_type}\footnote{
+聯合體用來反映數據在內存中是怎麼組織的，
+而 \clapi{as_type} 和 \clapi[n]{as_type} 則是用來反應數據在寄存器中是怎麼組織的。
+如果在設備上算元和結果共享同一個寄存器檔（register file），
+則 \clapi{as_type} 和 \clapi[n]{as_type} 在編譯後應該不會產生任何指令。
+注意，內存中數據組織方式的不同大部分都是由於端序（endianness）的不同所導致，
+因此基於寄存器的表示方式也可能會由於寄存器中元素大小的原因而不同。
+（例如，在某種架構上，可能將 \ccmm{char} 裝載進 32 位寄存器中，
+或者將 \ccmm{char} 矢量裝載進元素大小固定為 32 位的 SIMD 矢量寄存器。）
+如果元素數目不同，則實作可以根據直觀感受選擇恰當的數據表示方式，
+如同在包含源型別數據的寄存器上應用相應的型別算子一樣。
+如果元素數目一樣，則 \clapi[n]{as_type} 的行為必須與用內存拷貝或聯合體重釋類似的數據型別相一致。
+所以，例如，如果某種實作中所有單精度數據在寄存器中都是以雙精度存儲的，
+那麼他所實現的 as_int(float) 就應該先將雙精度數據轉換成單精度，
+然後（如果有必要）再將單精度數據的位元轉移到合適的寄存器中以參與整形數據運算。
+如果不同位址空間中所存儲的數據具有不同的端序，
+則按設備的主端序（dominant endianness）進行處理。
+}。
+如果算元和結果的型別所含元素數目相同，則會直接返回算元中的位元，而不會將其修正為新型別。
+通常對函式參數都會實施型別晉陞（type promotion），而這裡不會。
+
+例如， \ccmm{as_float(0x3f800000)} 返回 \ccmm{1.0f}，
+而 \ccmm{1.0f} 正是將 \ccmm{0x3f800000} 看作 IEEE-754 單精度浮點數時的值。
+
+如果算元和結果型別所包含元素的數目不同，則結果\cnglo{impdef}，
+但將四元矢量轉換為三元矢量則例外。
+這種情況下，會直接返回算元中的位元，不會將其修正為新型別。
+也就是說，如果算元和結果型別所包含元素的數目不同，
+符合 OpenCL 的實作需要將其行為顯式的定義清楚，但兩種實作的行為不必相同。
+實作所定義的結果中可能包含所有或部分原始位元，也可能完全沒有原始位元，
+而且位元的順序也可由實作自由選擇。
+不能使用算子 \clapi{as_type} 和 \clapi[n]{as_type} 將數據重釋為另一種字節數不同的型別。
+
+\startexample
+\startclc
+float f = 1.0f;
+uint u = /BTEX\ftEmp{as_uint}/ETEX(f);	// Legal. Contains:	0x3f800000
+
+float4 f = (float4)(1.0f, 2.0f, 3.0f, 4.0f);
+// Legal. Contains:
+// (int4)(0x3f800000, 0x40000000, 0x40400000, 0x40800000)
+int4 i = /BTEX\ftEmp{as_int4}/ETEX(f);
+
+float4 f, g;
+int4 is_less = f < g;
+
+// Legal. f[i] = f[i] < g[i] ? f[i] : 0.0f
+f = /BTEX\ftEmp{as_float4}/ETEX(/BTEX\ftEmp{as_int4}/ETEX(f) & is_less);
+
+int i;
+// Legal. Result is implementation-defined.
+short2 j = /BTEX\ftEmp{as_short2}/ETEX(i);
+
+int4 i;
+// Legal. Result is implementation-defined.
+short8 j = /BTEX\ftEmp{as_short8}/ETEX(i);
+
+float4 f;
+// Error. Result and operand have different sizes
+double4 g = /BTEX\ftEmp{as_double4}\footnote{僅當支持雙精度時才有效。}/ETEX(f);
+
+float4 f;
+// Legal. g.xyz will have same values as f.xyz.
+float3 g = /BTEX\ftEmp{as_float3}/ETEX(f);
+\stopclc
+\stopexample
+
+% Pointer Casting
+\subsection{指位器轉型}
+
+分別指向新舊型別的指位器可以相互轉換。
+將指位器轉型成新的型別時會假定位址已經正確對齊，雖然實際並沒有做檢查。
+開發人員還是需要知道 OpenCL \cnglo{device}的端序和數據的端序，
+從而可以確定標量和矢量數據元素在內存中的存儲方式。
+
+% Usual Arithmetic Conversions
+\subsection[section:usualArithConv]{常規算術轉換}
+
+許多期望算元為算術類型的算子所引起轉換並得到結果的方式都類似。
+其目的是為算元和結果確定一種兩者通用的實型（real type，即實數）。
+在不改變型域（type domain）的情況下，所有算元都會進行轉換，
+其目標型別所對應的實型即為上面所說的通用實型。
+出於這個目的，所有的矢量型別都比標量具有更高的轉換級別（conversion rank）。
+除非顯式規定，否則上面所說的通用實型也是結果所對應的實型，
+如果與算元的實型相同，則其型域也相同，否則為複數。
+這種模式稱作常規算術轉換（usual arithmetic conversion）。
+如果型別為矢量的算元多於一個，則會發生錯誤。
+按照\refsection{implicityConversion}，不允許在矢量型別間進行隱式轉換。
+
+否則，如果算元中只有一個是矢量型別，其他都是標量型別，
+則會先將標量型別轉換成矢量元素的型別，然後將其拓寬成一個新的矢量，
+其元素數目與矢量算元相同，且所有元素的值都與標量值相同。
+如果任一標量算元的轉換級別比矢量算元元素的級別高，那麼就會發生錯誤。
+出於此目的，轉換級別的次序定義如下：
+\startigNum
+\item 對於兩個浮點型別，如果第一個可以精確的表示另一個型別的所有數值，則第一個的級別比另一個高。
+（出於此目的，使用的是浮點值的完整編碼方案，而\cnglo{device}所用的可能是其子集。）
+
+\item 任一浮點型別的級別都比任一整數型別的高。
+
+\item 對於兩個整數型別，精度較高的那個的級別比另一個要高。
+
+\item 對於精度相同的兩個整數型別，無符號的級別比有符號的要高
+\footnote{這與 C99 TC2 的{\ftRef{節 6.3.1.1}} 中所描述的標準的整數轉換級別不同。}。
+
+\item \ctype{bool} 的級別比其他所有型別都低。
+
+\item 枚舉型別的級別和與其兼容的整數型別的級別相同。
+
+\item 對於所有型別， T1、 T2 和 T3，如果 T1 的級別比 T2 高，並且 T2 的級別比 T3 高，
+那麼 T1 的級別也比 T3 高。
+\stopigNum
+
+而如果所有算元都是標量，則按照 C99 標準的{\ftRef{節 6.3.1.8}} 應用算術轉換。
+
+\startnotepar
+經過審查， C99 的{\ftRef{節 6.3.1.8}} 和{\ftRef{節 6.3.1.1}} 中的標準次序都被駁回了。
+如果使用這裡所定義的整形轉換級別， \ccmm{int4 + 0U} 是合法的且所返回的型別為 \ctype{int4}。
+如果對於標量使用 C99 中標準的算術轉換規則，則會對整形矢量的元素實施標準的整數型別晉陞，
+ \ccmm{short8 + char} 所返回的型別為 \ctype{int8}，或者\cnglo{illegal}。
+\stopnotepar
+

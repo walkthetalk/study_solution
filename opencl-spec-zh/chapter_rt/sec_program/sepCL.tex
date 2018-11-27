@@ -1,0 +1,19 @@
+\subsection{編譯和鏈接的分離}
+
+OpenCL 1.2 對如何編譯和鏈接\cnglo{program}做了擴展，從而支持：
+\startigBase
+\item 編譯階段、鏈接階段的分離。
+編譯階段可以將\cnglo{program}源碼編譯成二進制目標碼，
+而鏈接階段可以將其與其他目標碼鏈接成\cnglo{program}執行體。
+
+\item 內嵌頭檔。
+在 OpenCL 1.0 和 1.1 中，對於\cnglo{program}源碼所包含的頭檔而言，
+構建選項 \ccmm{-I} 可以用來指定其搜索路徑。
+而 OpenCL 1.2 對其進行了擴展，允許目標碼中內嵌頭檔的源碼。
+
+\item 庫。
+可以使用鏈接器將目標碼和庫鏈接成\cnglo{program}執行體，或者創建一個新庫。
+\stopigBase
+
+\input{chapter_rt/sec_program/subsec_sepCL/compile.tex}
+\input{chapter_rt/sec_program/subsec_sepCL/link.tex}

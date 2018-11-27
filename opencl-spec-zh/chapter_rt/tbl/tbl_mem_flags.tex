@@ -1,0 +1,71 @@
+\startED[\ctype{cl_mem_flags}]
+
+\clED{CL_MEM_READ_WRITE}{
+表明此\cnglo{memobj}可讀可寫。這是缺省值。
+}
+
+\clED{CL_MEM_WRITE_ONLY}{
+只能寫不能讀，對這種\cnglo{memobj}的讀操作是\cnglo{undef}的。
+\cenum{CL_MEM_READ_WRITE} 和 \cenum{CL_MEM_WRITE_ONLY} 是互斥的。
+}
+
+\clED{CL_MEM_READ_ONLY}{
+只能讀不能寫，對這種\cnglo{memobj}的寫操作是\cnglo{undef}的。
+\cenum{CL_MEM_READ_WRITE} 或者 \cenum{CL_MEM_WRITE_ONLY}
+都與 \cenum{CL_MEM_READ_ONLY} 互斥。
+}
+
+\clED{CL_MEM_USE_HOST_PTR}{
+僅當 \carg{host_ptr} 不是 \cmacro{NULL} 時才有效。
+他表明\cnglo{app}想讓 OpenCL 實作
+使用 \carg{host_ptr} 所引用的內存來存儲\cnglo{memobj}的內容。
+
+OpenCL 實作可以在\cnglo{device}內存中保存一份 \carg{host_ptr} 所引用的內容用作緩存。
+\cnglo{kernel}在\cnglo{device}上執行時可以使用這份拷貝。
+
+如果多個\cnglo{bufobj}由同一 \carg{host_ptr} 創建，或者有重疊區域，
+那麼 OpenCL \cnglo{cmd}操作這些\cnglo{bufobj}時，其結果\cnglo{undef}。
+
+用 \cenum{CL_MEM_USE_HOST_PTR} 創建\cnglo{memobj}時，
+\carg{host_ptr} 的對齊規則請參考\refappendix{appDataTypeAlignment}。
+}
+
+\clED{CL_MEM_ALLOC_HOST_PTR}{
+表明\cnglo{app}想讓 OpenCL 實作在\cnglo{host}可以存取的內存中分配內存。
+
+他與 \cenum{CL_MEM_USE_HOST_PTR} 互斥。
+}
+
+\clED{CL_MEM_COPY_HOST_PTR}{
+僅當 \carg{host_ptr} 不是 \cmacro{NULL} 時才有效。
+他表明\cnglo{app}想讓 OpenCL 實作
+使用 \carg{host_ptr} 所引用的內存來為\cnglo{memobj}分配內存並拷貝數據。
+
+他與 \cenum{CL_MEM_USE_HOST_PTR} 互斥。
+
+他與 \cenum{CL_MEM_ALLOC_HOST_PTR} 一起使用時，
+可以對由\cnglo{host}可存取內存（如 PCIe ）分配的 \ctype{cl_mem} 對象進行初始化。
+}
+
+\clED{CL_MEM_HOST_WRITE_ONLY}{
+表明\cnglo{host}只會對此\cnglo{memobj}進行寫入。
+可用來對\cnglo{host}的寫操作進行優化
+（如對於通過系統總線如 PCIe 與\cnglo{host}進行通信的\cnglo{device}，
+分配\cnglo{memobj}時使能 Write-combining）。
+}
+
+\clED{CL_MEM_HOST_READ_ONLY}{
+表明\cnglo{host}只會對此\cnglo{memobj}進行讀取。
+
+他與 \cenum{CL_MEM_HOST_WRITE_ONLY} 互斥。
+}
+
+\clED{CL_MEM_HOST_NO_ACCESS}{
+表明\cnglo{host}不會對此\cnglo{memobj}進行讀寫。
+
+\cenum{CL_MEM_HOST_WRITE_ONLY} 或者 \cenum{CL_MEM_HOST_READ_ONLY}
+都與 \cenum{CL_MEM_HOST_NO_ACCESS} 互斥。
+}
+
+\stopED
+

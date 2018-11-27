@@ -1,0 +1,385 @@
+\section{由 GL 上下文或共享組創建 CL 上下文}
+
+% Overview
+\subsection{概覽}
+
+\refsection{clShareGl}中定義了如何與 OpenGL 實作中的材質和緩衝對象共享數據，
+但對於如何在 OpenCL \cnglo{context}和 OpenGL \cnglo{context}或共享組間建立聯繫，
+則沒有定義。
+此擴展為創建 OpenCL \cnglo{context}的例程定義了一個可選特性，
+可以將 GL \cnglo{context}或共享組對象與新建的 OpenCL \cnglo{context}關聯起來。
+如果實作支持此擴展，則\reftab{cldevquery}中所描述的 \cenum{CL_PLATFORM_EXTENSIONS} 或
+\cenum{CL_DEVICE_EXTENSIONS} 中將包含字串 \clext{cl_khr_gl_sharing}。
+
+此擴展要求 OpenGL 實作支持\cnglo{bufobj}，以及與 OpenCL 共享材質和\cnglo{bufobj}圖像。
+
+% New Procedures and Functions
+\subsection{新例程和新函式}
+
+\startclc
+cl_intclGetGLContextInfoKHR (
+		const cl_context_properties *properties,
+		cl_gl_context_info param_name,
+		size_t param_value_size,
+		void *param_value,
+		size_t *param_value_size_ret);
+\stopclc
+
+% New Tokens
+\subsection{新的符記}
+
+如果 \carg{properties} 中所指定的 OpenGL \cnglo{context}或共享組對象句柄無效，
+則 \clapi{clCreateContext}、 \clapi{clCreateContextFromType} 和 \clapi{clGetGLContextInfoKHR} 會返回：
+\startclc
+CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR		-1000
+\stopclc
+
+\clapi{clGetGLContextInfoKHR} 的引數 \carg{param_name} 接受下列值：
+\startclc
+CL_CURRENT_DEVICE_FOR_GL_CONTEXT_KHR		0x2006
+CL_DEVICES_FOR_GL_CONTEXT_KHR			0x2007
+\stopclc
+
+\clapi{clCreateContext} 和 \clapi{clCreateContextFromType} 的引數 \carg{properties} 接受下列特性名：
+\startclc
+CL_GL_CONTEXT_KHR	0x2008
+CL_EGL_DISPLAY_KHR	0x2009
+CL_GLX_DISPLAY_KHR	0x200A
+CL_WGL_HDC_KHR		0x200B
+CL_CGL_SHAREGROUP_KHR	0x200C
+\stopclc
+
+%  Additions to Chapter 4 of the OpenCL 1.2 Specification
+\subsection{對第 4 章的補充}
+
+\refsection{contexts}中，用下列內容取代 \clapi{clCreateContext} 後面對 \carg{properties} 的描述：
+
+\carg{properties} 指向一個特性列，即 \ccmm{<特性名, 值>} 的陣列，此陣列已排好序，以零終止。
+如果此陣列中沒有某個特性，則使用其缺省值，參見\reftab{prptForclCreateContext}。
+如果 \carg{properties} 是 \cmacro{NULL} 或者是空的（第一個值就是零），所有特性都使用缺省值。
+
+\refsection{clShareGl}中定義了一些特性，
+用來控制如何與 OpenGL 緩衝、材質和渲染緩衝對象共享 OpenCL \cnglo{memobj}。
+
+可以設置下列特性來識別 OpenGL \cnglo{context}，當然，
+這取決於一些特定\cnglo{platform}的 API （用來將 OpenGL \cnglo{context}綁定到視窗系統上）：
+\startigBase
+\item 如果支持 CGL\footnote{CGL 是 Mac OS X 的 OpenGL 接口。} 綁定 API，
+應當將特性 \cenum{CL_CGL_SHAREGROUP_KHR} 設置為一個 CGLShareGroup 句柄，
+指向一個 CGL 共享組對象。
+
+\item 如果支持 EGL\footnote{%
+EGL 是 Khronos 渲染 API （如 OpenGL ES 或 OpenVG）和底層原生平台視窗系統之間的接口。%
+} 綁定 API，
+應當將特性 \cenum{CL_GL_CONTEXT_KHR} 設置為一個 EGLContext 句柄，
+指向一個 OpenGL ES 或 OpenGL \cnglo{context}，
+而將特性 \cenum{CL_EGL_DISPLAY_KHR} 設置為一個 EGLDisplay 句柄，
+指向用於創建這個 OpenGL ES 或 OpenGL \cnglo{context}的顯示屏。
+
+\item 如果支持 GLX\footnote{GLX 是 X11 的 OpenGL 接口。} 綁定 API，
+應當將特性 \cenum{CL_GL_CONTEXT_KHR} 設置為一個 GLXContext 句柄，
+指向一個 OpenGL \cnglo{context}，
+而將特性 \cenum{CL_GLX_DISPLAY_KHR} 設置為一個 Display 句柄，
+指向用於創建這個 OpenGL \cnglo{context}的 X 視窗系統顯示屏。
+
+\item 如果支持 WGL\footnote{WGL 是 Microsoft Windows 的 OpenGL 接口。} 綁定 API，
+應當將特性 \cenum{CL_GL_CONTEXT_KHR} 設置為一個 HGLRC 句柄，
+指向一個 OpenGL \cnglo{context}，
+而將特性 \cenum{CL_WGL_HDC_KHR} 設置為一個 HDC 句柄，
+指向用於創建這個 OpenGL \cnglo{context}的顯示屏。
+\stopigBase
+
+如果是在這樣的\cnglo{context}中創建的\cnglo{memobj}，
+那麼他可以被指定的 OpenGL 或 OpenGL ES \cnglo{context}
+（也包括此\cnglo{context}的共享列中其他 OpenGL \cnglo{context}，參見 GLX 1.4 和 EGL 1.4 規範，以及 Microsoft Windows 上 OpenGL 實作 WGL 的文檔）、
+或者 CGL 共享組所共享。
+
+如果特性列中沒有指定 OpenGL 或 OpenGL ES \cnglo{context}或者共享組，
+那麼就不能共享\cnglo{memobj}，
+並且調用\refsection{clShareGl}中的\cnglo{cmd}時
+會導致錯誤 \cenum{CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR}。
+
+OpenCL / OpenGL 間的共享不支持屬性 \cenum{CL_CONTEXT_INTEROP_USER_SYNC}
+ （參見\reftab{prptForclCreateContext}）。
+如果創建帶有 OpenCL / OpenGL 共享的\cnglo{context}時指定了此屬性，則會返回錯誤。
+
+\reftab{prptForclCreateContextPF}是對\reftab{prptForclCreateContext}的補充。
+
+\placetable[here][tab:prptForclCreateContextPF]
+{創建上下文時所用特性}
+{\input{chapter_optext/tbl/prpt_clCreateContext_postfix.tex}}
+
+下列內容取代 \clapi{clCreateContext} 所返回的錯誤列中的第一個：
+\startreplacepar
+如果\cnglo{context}由下列任一方式指定：
+\startigBase[indentnext=no]
+\item 通過設置特性 \cenum{CL_GL_CONTEXT_KHR} 和 \cenum{CL_EGL_DISPLAY_KHR} 為
+基於 EGL 的 OpenGL ES 或 OpenGL 實作指定了一個\cnglo{context}。
+
+\item 通過設置特性 \cenum{CL_GL_CONTEXT_KHR} 和 \cenum{CL_GLX_DISPLAY_KHR} 為
+基於 GLX 的 OpenGL 實作指定了一個\cnglo{context}。
+
+\item 通過設置特性 \cenum{CL_GL_CONTEXT_KHR} 和 \cenum{CL_WGL_HDC_KHR} 為
+基於 WGL 的 OpenGL 實作指定了一個\cnglo{context}。
+\stopigBase
+並且滿足下列任一條件：
+\startigBase[indentnext=no]
+\item 所指定的 display 和\cnglo{context}特性不能標識一個有效的 OpenGL 或 OpenGL ES \cnglo{context}。
+
+\item 所指定的\cnglo{context}不支持\cnglo{bufobj}和渲染緩衝對象。
+
+\item 所指定的\cnglo{context}與所創建的 OpenCL \cnglo{context}不兼容。
+例如，位於物理上不同的位址空間內，如另一個硬件設備上；或者由於實作的局限不支持與 OpenCL 共享數據。
+\stopigBase
+則 \carg{errcode_ret} 會返回 \cenum{CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR}。
+
+如果通過設置特性 \cenum{CL_CGL_SHAREGROUP_KHR} 為基於 CGL 的 OpenGL 實作指定了一個共享組，
+但是所指定的共享組不能標識一個有效的 CGL 共享組對象，
+那麼 \carg{errcode_ret} 會返回 \cenum{CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR}。
+
+如果按上面所描述的那樣指定了一個\cnglo{context}，並且滿足下列任一條件：
+\startigBase[indentnext=no]
+\item 為 CGL、 EGL、 GLX 或 WGL 其中之一指定了一個\cnglo{context}或共享組對象，
+但是 OpenGL 實作不支持視窗系統綁定 API。
+
+\item 為 \cenum{CL_CGL_SHAREGROUP_KHR}、 \cenum{CL_EGL_DISPLAY_KHR}、
+ \cenum{CL_GLX_DISPLAY_KHR} 以及 \cenum{CL_WGL_HDC_KHR} 中一個以上的特性設置了非缺省值。
+
+\item 為特性 \cenum{CL_CGL_SHAREGROUP_KHR} 和 \cenum{CL_GL_CONTEXT_KHR} 都設置了非缺省值。
+
+\item 引數 \carg{devices} 中任一\cnglo{device}不支持 OpenCL 對象與 OpenGL 對象共享數據存儲，
+參見\refsection{clShareGl}。
+\stopigBase
+則 \carg{errcode_ret} 會返回 \cenum{CL_INVALID_OPERATION}。
+
+如果 \carg{properties} 中任一特性名無效
+或者 \carg{properties} 中有特性 \cenum{CL_CONTEXT_INTEROP_USER_SYNC}，
+則 \carg{errcode_ret} 會返回 \cenum{CL_INVALID_PROPERTY}。
+\stopreplacepar
+
+下列內容取代 \clapi{clCreateContextFromType} 中對 \carg{properties} 的描述：
+\startreplacepar
+\carg{properties} 指向一個特性列，
+其格式以及有效內容與 \clapi{clCreateContext} 的引數 \carg{properties} 相同。
+\stopreplacepar
+
+用上面所描述的兩個新錯誤取代 \clapi{clCreateContextFromType} 的錯誤列中的第一個。
+
+% Additions to section 9.7 of the OpenCL 1.2 Extension Specification
+\subsection{對節 9.7 的補充}
+
+下列內容作為{\ftRef{節 9.7.7}}：
+\startreplacepar
+可以查詢 OpenGL \cnglo{context}對應的 OpenCL \cnglo{device}。
+不一定有這樣的\cnglo{device}
+（例如， OpenGL \cnglo{context}所在 GPU 可能不支持 OpenCL \cnglo{cmdq}，
+但卻支持共享的 CL / GL 對象），即使有，也可能隨時間發生變化。
+如果存在這樣的\cnglo{device}，
+在此\cnglo{device}所對應的\cnglo{cmdq}上兼并和釋放共享的 CL / GL 對象
+可能會比在 OpenCL \cnglo{context}可用的其他\cnglo{device}所對應的\cnglo{cmdq}上要快一些。
+用以下函式查詢當前所對應的\cnglo{device}：
+
+\topclfunc{clGetGLContextInfoKHR}
+
+\startCLFUNC
+cl_int clGetGLContextInfoKHR (
+		const cl_context_properties *properties,
+		cl_gl_context_info param_name,
+		size_t param_value_size,
+		void *param_value,
+		size_t *param_value_size_ret)
+\stopCLFUNC
+
+\carg{properties} 指向一個特性列，
+其格式和有效內容與 \clapi{clCreateContext} 的引數 \carg{properties} 相同。
+\carg{properties} 必須能夠識別唯一一個有效的 GL \cnglo{context}或 \cnglo{glsharegrp}對象。
+
+\carg{param_name} 是一個常量，指定所要查詢的 GL \cnglo{context}資訊，
+有效值參見\reftab{ctxprop}。
+
+\placetable[here][tab:ctxprop]
+{可以用 \clapi{clGetGLContextInfoKHR} 查詢的 GL 上下文資訊}
+{\input{chapter_optext/tbl/ctxprop.tex}}
+
+\carg{param_value} 所指內存用來存儲查詢結果，參見\reftab{ctxprop}。
+如果其值為 \cmacro{NULL}，則忽略。
+
+\carg{param_value_size} 為 \carg{param_value} 所指內存的字節數。
+其值必須大於等於\reftab{ctxprop}中返回型別的大小。
+
+\carg{param_value_size_ret} 返回查詢結果的實際字節數。
+如果其值為 \cmacro{NULL}，則忽略。
+
+如果執行成功， \clapi{clGetGLContextInfoKHR} 會返回 \cenum{CL_SUCCESS}。
+如果 \carg{param_name} 沒有對應的\cnglo{device}，
+調用不會失敗，但是 \carg{param_value_size_ret} 的值將會是零。
+
+如果\cnglo{context}由下列任一方式指定：
+\startigBase[indentnext=no]
+\item 通過設置特性 \cenum{CL_GL_CONTEXT_KHR} 和 \cenum{CL_EGL_DISPLAY_KHR} 為
+基於 EGL 的 OpenGL ES 或 OpenGL 實作指定了一個\cnglo{context}。
+
+\item 通過設置特性 \cenum{CL_GL_CONTEXT_KHR} 和 \cenum{CL_GLX_DISPLAY_KHR} 為
+基於 GLX 的 OpenGL 實作指定了一個\cnglo{context}。
+
+\item 通過設置特性 \cenum{CL_GL_CONTEXT_KHR} 和 \cenum{CL_WGL_HDC_KHR} 為
+基於 WGL 的 OpenGL 實作指定了一個\cnglo{context}。
+\stopigBase
+並且滿足下列任一條件：
+\startigBase[indentnext=no]
+\item 所指定的 display 和\cnglo{context}特性不能標識一個有效的 OpenGL 或 OpenGL ES \cnglo{context}。
+
+\item 所指定的\cnglo{context}不支持\cnglo{bufobj}和渲染緩衝對象。
+
+\item 所指定的\cnglo{context}與所創建的 OpenCL \cnglo{context}不兼容。
+例如，位於物理上不同的位址空間內，如另一個硬件設備上；或者由於實作的局限不支持與 OpenCL 共享數據。
+\stopigBase
+則 \clapi{clGetGLContextInfoKHR} 會返回 \cenum{CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR}。
+
+如果通過設置特性 \cenum{CL_CGL_SHAREGROUP_KHR} 為基於 CGL 的 OpenGL 實作指定了一個共享組，
+但是所指定的共享組不能標識一個有效的 CGL 共享組對象，
+那麼 \clapi{clGetGLContextInfoKHR} 會返回 \cenum{CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR}。
+
+如果按上面所描述的那樣指定了一個\cnglo{context}，並且滿足下列任一條件：
+\startigBase[indentnext=no]
+\item 為 CGL、 EGL、 GLX 或 WGL 其中之一指定了一個\cnglo{context}或共享組對象，
+但是 OpenGL 實作不支持視窗系統綁定 API。
+
+\item 為 \cenum{CL_CGL_SHAREGROUP_KHR}、 \cenum{CL_EGL_DISPLAY_KHR}、
+ \cenum{CL_GLX_DISPLAY_KHR} 以及 \cenum{CL_WGL_HDC_KHR} 中一個以上的特性設置了非缺省值。
+
+\item 為特性 \cenum{CL_CGL_SHAREGROUP_KHR} 和 \cenum{CL_GL_CONTEXT_KHR} 都設置了非缺省值。
+
+\item 引數 \carg{devices} 中任一\cnglo{device}不支持 OpenCL 對象與 OpenGL 對象共享數據存儲，
+參見\refsection{clShareGl}。
+\stopigBase
+則 \clapi{clGetGLContextInfoKHR} 會返回 \cenum{CL_INVALID_OPERATION}。
+
+如果 \carg{properties} 中任一特性名無效，
+則 \carg{errcode_ret} 會返回 \cenum{CL_INVALID_VALUE}。
+\problem{maybe should CL_INVALID_PROPERTIES}
+
+另外，如果 \carg{param_name} 無效（參見\reftab{ctxprop}），
+或者 \carg{param_value_size} 的值小於\reftab{ctxprop}中返回型別的大小，
+並且 \carg{param_value} 不是 \cmacro{NULL}，
+則 \clapi{clGetGLContextInfoKHR} 會返回 \cenum{CL_INVALID_VALUE}。
+如果\schostfailres，則返回 \cenum{CL_OUT_OF_RESOURCES}。
+如果\scdevfailres，則返回 \cenum{CL_OUT_OF_HOST_MEMORY}。
+
+\stopreplacepar
+
+% Issues
+\subsection{問題}
+
+\startQUESTION
+創建所關聯的 OpenCL \cnglo{context}時，如何識別 OpenGL \cnglo{context}？
+\stopQUESTION
+\startANSWER
+已解決：使用特性對 \ccmm{(display, context handle)} 來
+識別任一 OpenGL 或 OpenGL ES \cnglo{context}
+（此\cnglo{context}與某一視窗系統綁定層，即 EGL、 GLX 或 WGL 相關）；
+用共享組句柄來識別 CGL 共享組。
+如果指定了一個\cnglo{context}，對於調用 \clapi{clCreateContext} 的線程而言，
+\cnglo{context}不必是最近的。
+
+以前所建議的另一種途徑是：
+使用布爾特性 \cenum{CL_USE_GL_CONTEXT_KHR} 創建的\cnglo{context}
+可以與當前所綁定的 OpenGL \cnglo{context}相關聯。
+這種方式仍然可以實現為一個單獨的擴展，
+在一些特定情況下，如與所綁定的 GL \cnglo{context}在同一線程中執行時，
+保留 / 釋放的行為可能更加高效。
+\stopANSWER
+
+\startQUESTION
+特性列的格式應當是什麼樣的？
+\stopQUESTION
+\startANSWER
+經過大量討論後，我們認為特性列格式可以是一組{\ftRef{<特性名、值>}}元組，以零終止。
+此特性列作為 \ccmm{cl_context_properties *properties} 傳遞，
+其中 \cldt{cl_context_properties} 在 \ccmm{cl.h} 中 typedef 為 \cldt{intptr_t}。
+
+這樣可以將\cnglo{host} API 中的所有標量整數、指針、以及句柄值都編碼進引數列中，
+與 EGL 特性列的結構體、型別類似。
+同時也允許特性列為 \cmacro{NULL}。
+同樣與 EGL 一樣，特性列中所沒有的特性都使用缺省值。
+
+就 EGL、 GLX 和 WGL 的經驗而言，特性列是一種足夠靈活、通用的機制，
+完全可以滿足一些調用（像創建\cnglo{context}）的管理需求。
+當然，他還不完全通用，如對浮點、非標量特性值還不能直接編碼，
+對於這些情況建議使用其他途徑，
+如不透明的特性列，使用 getter / setter 方法、或者帶有變長數組的結構體。
+\stopANSWER
+
+\startQUESTION
+對於所關聯的 OpenGL 或 OpenCL \cnglo{context}而言，
+如果他正在使用所關聯的另一個\cnglo{context}的資源，可是那個\cnglo{context}卻被銷毀了，
+這時其行為如何？
+\stopQUESTION
+\startANSWER
+已解決：如\refsection{clShareGl}所言，
+創建 OpenCL 對象時，會在對應的 GL 對象的數據存儲中放置一個址參器。
+對應的 GL 名可能會被刪除，但只要有 CL 對象引用他，數據存儲本身會一直存在。
+然而，如果銷毀了與 CL \cnglo{context}對應的共享組中的所有 GL \cnglo{context}，
+則使用對應的 CL 對象時所導致的行為\cnglo{impdef}，直至並且包括\cnglo{program}終止。
+\stopANSWER
+
+\startQUESTION
+怎樣與 D3D 共享？
+\stopQUESTION
+\startANSWER
+在 D3D 和 OpenCL 間共享時，應當使用同樣的特性列機制，
+儘管參數明顯不同，並將其作為一個相似的並行 OpenCL 擴展使用。
+由於還不清楚是否可以創建一個 CL \cnglo{context}同時共享 GL 和 D3D 對象，
+因此在那個擴展和本擴展中間可能需要進行交互。
+\stopANSWER
+
+\startQUESTION
+什麼情況下，創建\cnglo{context}時會由於共享而失敗？
+\stopQUESTION
+\startANSWER
+已解決：前面已經列出了幾個跨平台的失敗條件
+（GL \cnglo{context}或 CGL 共享組不存在，
+ GL \cnglo{context}不支持\refsection{clShareGl}中接口所要求類型的 GL 對象，
+ GL \cnglo{context}的實作不允許共享），
+但由於具體實作的原因可能還會導致其他問題，
+這些情況也要加入此擴展。
+ OpenCL 和 OpenGL 間的共享要求在驅動內部構件的級別進行整合。
+\stopANSWER
+
+\startQUESTION
+應當將 \clapi{clEnqueueAcquire/ReleaseGLObjects} 放置到什麼樣的\cnglo{cmdq}中？
+\stopQUESTION
+\startANSWER
+已解決：所有\cnglo{cmdq}。
+創建\cnglo{context}時就會實施此局限。
+如果創建\cnglo{context}時所傳遞的\cnglo{device}中任何一個不支持共享的 CL/GL 對象，
+那麼創建\cnglo{context}就會失敗，並返回錯誤 \cenum{CL_INVALID_OPERATION}。
+\stopANSWER
+
+\startQUESTION
+\cnglo{app}如何確定 Acquire/Release 放置到了哪個\cnglo{cmdq}中？
+\stopQUESTION
+\startANSWER
+已解決： \clapi{clGetGLContextInfoKHR} 會返回
+當前與特定 GL \cnglo{context}所對應的 CL \cnglo{device}
+（典型的就是 GL \cnglo{context}正運行其上的顯示屏），
+或者特定\cnglo{context}可能運行其上的所有 CL \cnglo{device}
+（在多線程 / “虛擬屏幕”環境中可能有用）。
+並沒有只是簡單地將此\cnglo{cmd}放到\refsection{clShareGl}中，
+因為他依賴於本擴展中所介紹的用於指定 GL \cnglo{context}的特性列。
+\stopANSWER
+
+\startQUESTION
+查詢 \cenum{CL_DEVICES_FOR_GL_CONTEXT_KHR} 是什麼意思？
+\stopQUESTION
+\startANSWER
+已解決：就是曾經與特定 GL \cnglo{context}相關聯的所有 CL \cnglo{device}。
+在一些\cnglo{platform}上，如 MacOS X，
+“虛擬屏幕”的概念允許多個 GPU 跑在同一個虛擬顯示屏上。
+其他視窗系統上也可能會實現類似的概念，
+如透明異構多線程 X 伺服器。
+因此此查詢的確切意義需要根據所使用的綁定層 API 來解釋。
+\stopANSWER
+
+\todo{與 1.0 相比的變動}
+

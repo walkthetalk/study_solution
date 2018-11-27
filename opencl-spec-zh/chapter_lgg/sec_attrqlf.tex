@@ -1,0 +1,265 @@
+\section{特性限定符}
+
+本節描述 \cqlf{__attribute__} 的相關語法以及他所綁定的構件。
+
+特性限定符的形式為 \ccmm{__attribute__ ((attribute-list))}。
+
+特性列定義如下：
+\startclc
+attribute-list:
+	attribute/BTEX\low{opt}/ETEX
+	attribute-list , attribute/BTEX\low{opt}/ETEX
+
+attribute:
+	attribute-token attribute-argument-clause/BTEX\low{opt}/ETEX
+
+attribute-token:
+	identifier
+
+attribute-argument-clause:
+	( attribute-argument-list )
+
+attribute-argument-list:
+	attribute-argument
+	attribute-argument-list, attribute-argument
+
+attribute-argument:
+	assignment-expression
+\stopclc
+
+此語法直接取自 GCC，但跟 GCC 又有不同。
+在 GCC 中，特性只能用在函式、型別和變量上，而 OpenCL 特性可與下列項相關聯：
+\startigBase
+\item 型別
+\item 函式
+\item 變量
+\item 區塊
+\item 控制流語句
+\stopigBase
+
+通常，對於在給定的上下文中如何綁定特性，其規則有很多值得仔細研究的地方，
+關於細節讀者可以參考 GCC 的文檔\cite[GccAttrSyntax]以及 Maurer 和 Wong 的論文\cite[attrForCpp]。
+
+% specifying attributes of types
+\subsection{用於型別的特性}
+
+定義 \ckey{enum}、 \ckey{struct} 和 \ckey{union} 型別時，
+可以用關鍵字 \cqlf{__atrribute__} 為其指定某些特性。
+此關鍵字後緊跟用雙層括號括起來的特性規格。
+目前型別有兩種特性： \ccmm{aligned} 和 \ccmm{packed}。
+
+在聲明或定義 \ckey{enum}、 \ckey{struct} 或 \ckey{union} 時，
+或者 \ckey{typedef} 其他型別時都可以指定型別特性。
+
+對於 \ckey{enum}、 \ckey{struct} 和 \ckey{union} 型別，
+特性限定符可以位於標籤 \ckey{enum}、 \ckey{struct} 或 \ckey{union} 和型別名字中間，
+也可以跟在右大括號之後。優選前者。
+
+% aligned
+\startclOption{\ccmm{aligned (}\carg{alignment}\ccmm{)}}
+此特性用來指定某種型別變量的最小齊位字節數。
+\startclc
+struct S { short f[3]; } __attribute__ ((aligned (8)));
+typedef int more_aligned_int __attribute__ ((aligned (8)));
+\stopclc
+
+迫使編譯器保證（盡其所能）
+在分配型別為 \ccmm{struct S} 或 \ccmm{more_aligned_int} 的變量時
+{\ftEmp{至少}}按 8 字節邊界進行對齊。
+
+需要注意的是， ISO C 標準要求任一給定的 \ckey{struct} 或 \ckey{union} 型別的齊位
+都至少要是其所有成員齊位（alignment）的最小公倍數的整數倍\inmargin{%
+譯者注：是已經作此要求，還是正在考慮作此要求？}，同時必須是二的冪。
+這意味着對於 \ckey{struct} 或 \ckey{union} 型別，
+你{\ftEmp{可以}}通過給其任一成員附加特性 \ccmm{aligned}
+ 來有效的調整整個 \ckey{struct} 或 \ckey{union} 的齊位。
+不過如果要想調整整個 \ckey{struct} 或 \ckey{union} 型別的齊位，
+上面示例所演示的方式無疑更明顯、更直觀、可讀性更好。
+
+如同前例所示，
+你可以為某個 \ckey{struct} 或 \ckey{union} 型別顯式指定你期望編譯器使用的齊位字節數。
+另外，你也可以不指定齊位因子，讓編譯器按目標機器上所用過的最大齊位進行對齊。
+例如，你可以這樣寫：
+\startclc
+struct S { short f[3]; } __attribute__ ((aligned));
+\stopclc
+無論何時，只要你在特性 \cqlf{aligned} 的規格描述中沒有指定齊位因子，
+則編譯器自行選擇在目標機器上曾經使用過的齊位中最大的那個。
+上例中，每個 \ctype{short} 大小為 2 字節，整個 \ccmm{struct S} 為 6 字節。
+ 2 的冪中，大於等於 6 的最小的那個是 8，
+因此編譯器將 \ccmm{struct S} 的齊位設置為 8。
+
+注意，特性 \cqlf{aligned} 的有效性可能受限於 OpenCL \cnglo{device}和編譯器的固有限制。
+編譯器所支持的齊位可能有一個上限。
+如果編譯器支持最大為 8 字節的齊位，
+即使在 \cqlf{__attribute__} 中指定了 \ccmm{aligned(16)}，
+也只能按 8 字節進行對齊。
+請查閱您所用\cnglo{platform}的文檔以獲取進一步的信息。
+
+特性 \cqlf{aligned} 只能增大齊位；
+但你可以用 \cqlf{packed} 來減小齊位。
+看下面。
+\stopclOption
+
+\startclOption{\ccmm{packed}}
+此特性可在定義 \ckey{struct} 或 \ckey{union} 時使用，
+以指定結構體或聯合體的每個成員如何放置，從而使佔用的內存最少。
+當用在 \ckey{enum} 定義上時，則表明應當使用的最小的整數型別。
+
+為某個 \ckey{struct} 或 \ckey{union} 指定此特性，
+等同於為其所有成員都指定此特性。
+
+下面例子中， \ccmm{struct my_packed_struct} 的成員都壓縮到了一起，
+但其成員 \ccmm{s} 的內部布局沒有壓縮。
+要想壓縮 \ccmm{s}，則 \ccmm{struct my_unpacked_struct} 也要使用特性 \cqlf{packed}。
+\startclc
+struct my_unpacked_struct
+{
+	char c;
+	int i;
+};
+
+struct __attribute__ ((packed)) my_packed_struct
+{
+	char c;
+	int i;
+	struct my_unpacked_struct s;
+};
+\stopclc
+
+你只需在定義 \ckey{enum}、 \ckey{struct} 或 \ckey{union} 時使用 \cqlf{packed}，
+而在 \ckey{typedef} 時則無需使用，
+因為 \ckey{typedef} 並沒有定義新的枚舉、結構體或聯合體。
+\stopclOption
+
+% Specifying Attributes of Functions
+\subsection[section:funcAttr]{用於函式的特性}
+
+當前所支持的函式特性限定符請參見\refsection{funcQlf}。
+
+% Specifying Attributes of Variables
+\subsection{用於變量的特性}
+
+關鍵字 \cqlf{__attribute__} 也可用來為變量或結構體的欄位指定特性。
+此關鍵字後緊跟用雙層括號括起來的特性規格。
+目前定義了下列特性限定符：
+
+% aligned
+\startclOption{\ccmm{aligned (}\carg{alignment}\ccmm{)}}
+此特性用來指定變量或結構體欄位的最小齊位，單位：字節。
+例如，下列聲明：
+\startclc
+int x __attribute__ ((aligned (16))) = 0;
+\stopclc
+使編譯器將全局變量 \cvar{x} 分配在 16 字節邊界上。
+所指定的齊位值必須是二的冪。
+
+你也可以為結構體的欄位指定齊位。
+例如，要想創建按雙字對齊的 \ctype{int} 對組，你可以這樣寫：
+\startclc
+struct foo { int x[2] __attribute__ ((aligned (8))); };
+\stopclc
+
+除了這種方式，
+你也可以創建具有 \ctype{double} 成員的聯合體，從而迫使聯合體按雙字對齊。
+
+如同前例所示，
+你可以為某個變量或結構體欄位顯式指定你期望編譯器使用的齊位字節數。
+另外，你也可以不指定齊位因子，讓編譯器按目標機器上所用過的最大齊位進行對齊。
+例如，你可以這樣寫：
+\startclc
+short array[3] __attribute__ ((aligned));
+\stopclc
+無論何時，只要你在特性 \cqlf{aligned} 的規格描述中沒有指定齊位因子，
+則編譯器自行選擇在目標機器上曾經使用過的齊位中最大的那個。
+
+當用在 \ckey{struct} 或結構體成員上時，
+特性 \cqlf{aligned} 只能增大齊位；
+要想減小齊位，只能使用 \cqlf{packed}。
+而用在 \ckey{typedef} 上時，
+特性 \cqlf{aligned} 既能增大齊位，也能減小齊位，
+如果使用特性 \cqlf{packed} 則會產生警告。
+
+注意，特性 \cqlf{aligned} 的有效性可能受限於 OpenCL \cnglo{device}和編譯器的固有限制。
+編譯器所支持的齊位可能有一個上限。
+如果編譯器支持最大為 8 字節的齊位，
+即使在 \cqlf{__attribute__} 中指定了 \ccmm{aligned(16)}，
+也只能按 8 字節進行對齊。
+請查閱您所用\cnglo{platform}的文檔以獲取進一步的信息。
+\stopclOption
+
+% packed
+\startclOption{\ccmm{packed}}
+此特性用在變量或結構體欄位上時，會使其按最小齊位——單字節進行對齊，
+除非你用特性 \cqlf{aligned} 指定了更大的值。
+
+這裡有一個結構體，其欄位 \ccmm{x} 上用了 \cqlf{packed}，
+因此它會緊跟在 \ccmm{a} 後面：
+\startclc
+struct foo
+{
+	char a;
+	int x[2] __attribute__ ((packed));
+};
+\stopclc
+\stopclOption
+
+對於用戶自定義的型別，如果特性列位於他的開始，則會作用於此型別的變量上，而不會作用於此型別上；
+而如果特性列位於型別本體之後，則會作用於此型別上。
+例如：
+\startclc
+/* a has alignment of 128 */
+__attribute__((aligned(128))) struct A {int i;} a;
+
+/* b has alignment of 16 */
+__attribute__((aligned(16))) struct B {double d;}
+			__attribute__((aligned(32))) b ;
+
+struct A a1;	/* a1 has alignment of 4 */
+struct B b1;	/* b1 has alignment of 32 */
+\stopclc
+
+%endian
+\startclOption{\ccmm{endian (}\carg{endiantype}\ccmm{)}}
+特性 \cqlf{endian} 決定了變量的字節順序。
+可將 \carg{endiantype} 設置為 \ccmm{host}，表明使用\cnglo{host}處理器的端序；
+也可將其設置為 \ccmm{device}，表明使用用以執行\cnglo{kernel}的\cnglo{device}的端序。
+缺省值為 \ccmm{device}。
+
+例如：
+\startclc
+global float4 *p __attribute__ ((endian(host)));
+\stopclc
+指明 p 所指內存中存儲的數據格式為\cnglo{host}端序。
+
+此特性只能用于 \cqlf{global} 或 \cqlf{constant} 位址空间中的指标型别。
+不能用于非指标型别的变量。
+两个指标型别互相赋值时，他们的 \cqlf{endian} 特性必须一致。
+\stopclOption
+
+% Specifying Attributes of Blocks and Control-Flow-Statements
+\subsection{用於區塊和控制流語句的特性}
+
+正在考慮在基本區塊和控制流語句的前面放置特性，例如：
+\startclc
+__attribute__((attr1)) {...}
+
+for __attribute__((attr2)) (...) __attribute__((attr3)) {...}
+\stopclc
+這裡， \ccmm{attr1} 作用於大括號中的區塊上，
+而 \ccmm{attr2} 和 \ccmm{attr3} 則分別作用於迴圈的控制構件以及本體上。
+
+對於區塊和控制流語句，目前還沒有定義任何特性限定符。
+
+% Extending Attribute Qualifiers
+\subsection{對特性限定符的擴展}
+
+可以為標準語言擴展和特定供應商的擴展對特性語法做一些擴充。
+任何擴展都要遵守《OpenCL 1.2 擴展規範》的{\ftRef{第九章}}所列的命名約定。
+
+對於編譯器而言，特性提供了非常有用的暗示。
+我們認為， OpenCL 的實作可以無視所有特性，但所生成的可執行二元碼必須能產生同樣的結果。
+這並不妨礙實作使用特性所提供的附加資訊以實施優化或者其他轉化，只要他認為合適就行。
+這種情況下，程式員就有責任保證所提供的資訊在某種意義上是正確的。
+
+

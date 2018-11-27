@@ -1,0 +1,427 @@
+\section{所支持的數據型別}
+
+所支持的數據型別如下所示。
+
+% Built-in Scalar Data Types
+\subsection[section:bisdt]{內建標量數據型別}
+
+\reftab{builtInScalarDataTypes}中列出了內建的標量數據型別。
+
+\placetable[here][tab:builtInScalarDataTypes]
+{內建標量數據型別}
+{\input{chapter_lgg/tbl/tbl_bisdt.tex}}
+
+在 OpenCL API（以及頭檔）中，大多數內建標量型別都被聲明為其他型別，
+以更好的為\cnglo{app}所用。
+\reftab{BisdtAndApp}中
+列出了 OpenCL C 編程語言中的內建標量數據型別與\cnglo{app}所用型別間的對應關係。
+
+\placetable[here][tab:BisdtAndApp]
+{內建標量數據型別與應用程式所用型別的對應關係}
+{\input{chapter_lgg/tbl/tbl_bisdt2appdt.tex}}
+
+\subsubsection[section:dataTypeHalf]{數據型別 \cldt{half}}
+
+數據型別 \cldt{half} 必須符合 IEEE 754-2008。
+型別為 \cldt{half} 的數含有 1 個符號位， 5 個指數位以及 10 個尾數位。
+符號、指數、尾數的含義與 IEEE 754 浮點數類似。
+指數偏置值為 15。
+數據型別 \cldt{half} 必須能夠表示有限規格化數，去規格化數，無窮以及 NaN。
+不能將 \cldt{half} 型別的去規格化數
+（可能是用 \clapi{vstore_half} 將 \cldt{float} 轉換成 \cldt{half} 時生成的，
+也可能是用 \clapi{vload_half} 將 \cldt{half} 轉換成 \cldt{float} 時生成的）刷成 0。
+從 \cldt{float} 到 \cldt{half} 的轉換會將尾數捨入成 11 位精度。
+從  \cldt{half} 到 \cldt{float} 的轉換是無損的；
+所有 \cldt{half} 數都可精確地表示成 \cldt{float} 值。
+
+數據型別 \cldt{half} 只能用於聲明指位器，指向含有 \cldt{half} 值的緩衝區。
+下面是幾個例子。
+\startclc
+void bar (__global half *p)
+{
+	....
+}
+__kernel void foo (__global half *pg, __local half *pl)
+{
+	__global half *ptr;
+	int offset;
+
+	ptr = pg + offset;
+	bar(ptr);
+}
+\stopclc
+
+下面的例子是對型別 \cldt{half} 的不當應用：
+\startclc
+half a;
+half b[100];
+
+half *p;
+a = *p;		<- not allowed. must use vload_half function
+\stopclc
+
+函式 \clapi{vload_half}、 \clapi[n]{vload_half}、 \clapi[n]{vloada_half}
+和 \clapi{vstore_half}、 \clapi[n]{vstore_half}、 \clapi[n]{vstorea_half}
+可分別裝載和存儲 \cldt{half} 指位器，參見\refsection{vectorLsFunc}。
+裝載函式可從內存中讀取標量或矢量 \cldt{half} 值 並將其轉換成 \cldt{float} 值。
+而存儲函式則將標量或矢量 \cldt{float} 值作為輸入，並（以恰當的捨入模式）
+將其轉換成標量或矢量 \cldt{half} 值後寫入內存中。
+
+
+% Built-in Vector Data Types
+\subsection[section:bivdt]{內建矢量數據型別}
+
+所支持的矢量數據型別有：
+\cldt{char}、 \cldt{unsigned char}、
+\cldt{short}、 \cldt{unsigned short}、
+\cldt{integer}、 \cldt{unsigned integer}、
+\cldt{long}、 \cldt{unsigned long}、
+\cldt{float}。
+矢量數據型別是通過在型別名（即
+\cldt{char}、 \cldt{uchar}、
+\cldt{short}、 \cldt{ushort}、
+\cldt{int}、 \cldt{uint}、
+\cldt{long}、 \cldt{ulong}、
+\cldt{float}）
+後面跟一個常值 \ccmmsuffix{n} 來定義的（其中 \ccmmsuffix{n} 表示矢量元素的數目）。
+對於所有矢量數據型別而言，這個 \ccmmsuffix{n} 可以是 2、 3、 4、 8 和 16。
+
+\startnotepar
+對於這些內建的矢量數據型別，即使下層的計算設備不支持， OpenCL 實作也要支持。
+設備編譯器需要將這些型別翻譯成恰當的指令，用計算設備原生支持的內建型別來取代他。
+\refappendix{port}中描述了矢量型別所含組件在內存中的順序。
+\stopnotepar
+
+\reftab{builtInVectorDataTypes}中列出了內建的矢量數據型別。
+
+\placetable[here][tab:builtInVectorDataTypes]
+{內建矢量數據型別}
+{\input{chapter_lgg/tbl/tbl_bivdt.tex}}
+
+在 OpenCL API（以及頭檔）中，大多數內建矢量型別都被聲明為其他型別，
+以更好的為\cnglo{app}所用。
+\reftab{bivdt2appdt}中
+列出了 OpenCL C 編程語言中的內建矢量數據型別與\cnglo{app}所用型別間的對應關係。
+
+\placetable[here][tab:bivdt2appdt]
+{內建矢量數據型別與應用程式所用型別的對應關係}
+{\input{chapter_lgg/tbl/tbl_bivdt2appdt.tex}}
+
+% Other Built-in Data Types
+\subsection[section:obidt]{其他內建數據型別}
+
+\reftab{otherBuiltInDataTypes}中列出了 OpenCL 所支持的其他內建數據型別。
+
+\placetable[here][tab:otherBuiltInDataTypes]
+{其他內建數據型別}
+{\input{chapter_lgg/tbl/tbl_obidt.tex}}
+
+\startnotepar
+只有當\cnglo{device}支持圖像時
+（即 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，參見\reftab{cldevquery}），
+才會定義型別 \cldt{image2d_t}、 \cldt{image3d_t}、 \cldt{image2d_array_t}、
+ \cldt{image1d_t}、 \cldt{image1d_buffer_t}、 \cldt{image1d_array_t}、
+ \cldt{sampler_t}。
+\stopnotepar
+
+C99 的衍生型別（陣列、結構體、聯合體、函式以及指位器）也在支持之列，
+不過必須是由\refsection{bisdt}、\refsection{bivdt}
+和\refsection{obidt}中所描述的內建數據型別所構造的，
+同時有\refsection{restrictions}中所描述的限制。
+
+% Reserved Data Types
+\subsection{保留的數據型別}
+
+\reftab{reservedDataTypes} 中所列的數據型別名都是保留的，
+\cnglo{app}不能將其作為型別名使用。
+對於\reftab{builtInVectorDataTypes} 中所列的矢量數據型別名而言，
+當 \ccmmsuffix{n} 是除 2、 3、 4、 8 和 16 之外的其他值時，也是保留的。
+
+\placetable[here][tab:reservedDataTypes]
+{保留的數據型別}
+{\input{chapter_lgg/tbl/tbl_reserveddatatypes.tex}}
+
+% Alignment of Types
+\subsection[section:alignmentOfTypes]{型別齊位}
+
+內存中所聲明的數據項會按其型別的字節數進行對齊。
+例如，型別為 \cldt{float4} 的變量會對齊到 16 字節邊界；
+而 \cldt{char2} 則會對齊到 2 字節邊界。
+
+對於具備 3 個組件的矢量數據型別，其大小為 \math{4 \times sizeof(component)}。
+這意味着此型別會按 \math{4 \times sizeof(component)} 進行對齊。
+內建函式 \clapi{vload3} 和 \clapi{vstore3} 可用來讀寫這種數據。
+
+如果內建數據型別的大小不是二的冪，則按相鄰較大的二的冪進行對齊。
+此規則僅對內建型別有效，不會作用於結構體或聯合體上。
+
+OpenCL 編譯器負責數據項的對齊。
+如果 \cqlf{__kernel} 函式的參數聲明為某種數據型別的指位器，
+那麼 OpenCL 編譯器就可以假定這個指位器已經按照相應數據型別的要求進行了對齊。
+如果裝載或存儲時沒有對齊，則其行為是未定義的，
+\refsection{vectorLsFunc}中定義的函式 \clapi[n]{vload}、 \clapi[n]{vload_half}、
+ \clapi[n]{vstore} 和 \clapi[n]{vstore_half} 例外。
+矢量裝載函式可以從已經按矢量元素型別對齊的位址中讀取矢量數據。
+矢量存儲函式可以將矢量數據寫入已經按矢量元素型別對齊的位址中。
+
+% Vector Literals
+\subsection{常值矢量}
+
+可使用常值矢量由一組標量、矢量或其混合體來創建矢量。
+常值矢量可用來對矢量進行初始化，也可以用作主算式。
+常值矢量不能用作左值（L-value）。
+
+常值矢量的書寫形式：一個帶括號的矢量型別，緊跟一組帶括號參數，參數以逗號分隔。
+常值矢量像重載的函式一樣參與運算。
+這個函式的參數型別就是最終矢量中的元素型別，參數個數就是最終矢量中的元素個數。
+另外，還有一種形式只帶有一個標量，其型別與最終矢量中的元素型別一樣。
+例如， \ctype{float4} 有下列形式：
+\startclc
+(float4)( float, float, float, float )
+(float4)( float2, float, float )
+(float4)( float, float2, float )
+(float4)( float, float, float2 )
+(float4)( float2, float2 )
+(float4)( float3, float )
+(float4)( float, float3 )
+
+(float4)( float )
+\stopclc
+
+除了按照函式求值的標準規則對算元進行求值，還會對標量型別進行隱式拓寬。
+算元的求值順序是未定義的。
+會按照內存中的順序將算元賦值給最終矢量的相應元素。
+即，將第一個算元的第一個元素賦值給 \ccmm{result.x}，
+將第一個算元的第二個元素（如果第一個算元是標量，則此處為第二個算元的第一個元素）
+賦值給 \ccmm{result.y}，等等。
+如果只有一個算元，且是標量，則會將其複製並賦值給最終矢量的所有元素。
+例如：
+\startclc
+float4	f = (float4)(1.0f, 2.0f, 3.0f, 4.0f);
+
+uint4	u = (uint4)(1);		<- u will be (1, 1, 1, 1).
+
+float4	f = (float4)((float2)(1.0f, 2.0f),
+		     (float2)(3.0f, 4.0f));
+
+float4	f = (float4)(1.0f, (float2)(2.0f, 3.0f), 4.0f);
+
+float4	f = (float4)(1.0f, 2.0f);	<- error
+\stopclc
+
+% Vector Components
+\subsection{矢量組件}
+
+對於具有 1 到 4 個組件的矢量數據型別，其組件可以用 \ccmm{<vector_data_type>.xyzw} 來尋址。
+矢量數據型別 \ctype{char2}、 \ctype{uchar2}、 \ctype{short2}、 \ctype{ushort2}、
+ \ctype{int2}、 \ctype{uint2}、 \ctype{long2}、 \ctype{ulong2} 和 \ctype{float2}
+ 可以存取元素 \ccmm{.xy}。
+矢量數據型別 \ctype{char3}、 \ctype{uchar3}、 \ctype{short3}、 \ctype{ushort3}、
+ \ctype{int3}、 \ctype{uint3}、 \ctype{long3}、 \ctype{ulong3} 和 \ctype{float3}
+ 可以存取元素 \ccmm{.xyz}。
+矢量數據型別 \ctype{char4}、 \ctype{uchar4}、 \ctype{short4}、 \ctype{ushort4}、
+ \ctype{int4}、 \ctype{uint4}、 \ctype{long4}、 \ctype{ulong4} 和 \ctype{float4}
+ 可以存取元素 \ccmm{.xyzw}。
+
+如果矢量型別中並不具備所要存取的組件，則視為錯誤，例如：
+\startclc
+float2 pos;	// is legal
+pos.x = 1.0f;	// is illegal
+pos.z = 1.0f;
+float3 pos;	// is legal
+pos.z = 1.0f;
+pos.w = 1.0f;	// is illegal
+\stopclc
+
+在組件選擇文法中，可以將多個組件的名字附到句點（.）後面以選擇多個組件：
+\startclc
+float4 c;
+
+c.xyzw = (float4)(1.0f, 2.0f, 3.0f, 4.0f);
+c.z = 1.0f;
+c.xy = (float2)(3.0f, 4.0f);
+c.xyz = (float3)(3.0f, 4.0f, 5.0f);
+\stopclc
+
+在組件選擇文法中，也可以將組件的順序打亂或重複選擇某個組件：
+\startclc
+float4 pos = (float4)(1.0f, 2.0f, 3.0f, 4.0f);
+float4 swiz= pos.wzyx; // swiz = (4.0f, 3.0f, 2.0f, 1.0f)
+float4 dup = pos.xxyy; // dup = (1.0f, 1.0f, 2.0f, 2.0f)
+\stopclc
+
+組件組符號可以出現在算式的左手邊。
+要想當左值用，必須對矢量組件進行重排（swizzling），並且不能重複，
+最終形成的左值是標量還是矢量取決於組件的數目。
+每個組件都必須是 OpenCL 所支持的標量或矢量型別。
+\startclc
+float4 pos = (float4)(1.0f, 2.0f, 3.0f, 4.0f);
+pos.xw = (float2)(5.0f, 6.0f);// pos = (5.0f, 2.0f, 3.0f, 6.0f)
+pos.wx = (float2)(7.0f, 8.0f);// pos = (8.0f, 2.0f, 3.0f, 7.0f)
+pos.xyz = (float3)(3.0f, 5.0f, 9.0f); // pos = (3.0f, 5.0f, 9.0f, 4.0f)
+pos.xx = (float2)(3.0f, 4.0f);// illegal - 'x' used twice
+
+// illegal - mismatch between float2 and float4
+pos.xy = (float4)(1.0f, 2.0f, 3.0f, 4.0f);
+
+float4 a, b, c, d;
+float16 x;
+x = (float16)(a, b, c, d);
+x = (float16)(a.xxxx, b.xyz, c.xyz, d.xyz, a.yzw);
+
+// illegal – component a.xxxxxxx is not a valid vector type
+x = (float16)(a.xxxxxxx, b.xyz, c.xyz, d.xyz);
+\stopclc
+
+也可以用數值索引來存取矢量數據型別的元素。
+\reftab{ni4bivdt}給出了可以使用的數值索引：
+
+\placetable[here][tab:ni4bivdt]
+{內建矢量數據型別的數值索引}
+{\input{chapter_lgg/tbl/tbl_ni4bivdt.tex}}
+
+數值索引前面必須加上字符 \ccmm{s} 或 \ccmm{S}。
+
+下面來看幾個例子：
+\startclc[indentnext=no]
+float8	f;
+\stopclc
+此例中，
+\ccmm{f.s0} 指代 \ctype{float8} 變量 \cvar{f} 的第一個元素，
+而 \ccmm{f.s7} 則指代 \ctype{float8} 變量 \cvar{f} 的第八個元素。
+
+\startclc[indentnext=no]
+float16	x;
+\stopclc
+此例中，
+\ccmm{x.sa} （或 \ccmm{x.sA}）指代 \ctype{float16} 變量 \cvar{f} 的第十一個元素，
+而 \ccmm{x.sf} （或 \ccmm{x.sF}）指代 \ctype{float16} 變量 \cvar{f} 的第十六個元素。
+
+數值索引不能與 \ccmm{.xyzw} 混合使用。例如：
+\startclc
+float4 f, a;
+a = f.x12w;	// illegal use of numeric indices with .xyzw
+a.xyzw = f.s0123;	// valid
+\stopclc
+
+矢量數據型別可以使用後綴 \ccmm{.lo} （或 \ccmm{.even}）和 \ccmm{.hi} （或 \ccmm{.odd}）
+得到小號的矢量型別或者將小號的數據型別組合成大號的矢量型別。
+可以使用多級後綴 \ccmm{.lo} （或 \ccmm{.even}）和 \ccmm{.hi} （或 \ccmm{.odd}）
+直到變成標量。
+
+後綴 \ccmm{.lo} 指代的是矢量中索引值較小的那一半。
+而後綴 \ccmm{.hi} 指代的是矢量中索引值較大的那一半。
+
+後綴 \ccmm{.even} 指代的是矢量中索引值為偶數的元素。
+而後綴 \ccmm{.odd} 指代的是矢量中索引值為奇數的元素。
+
+下面的例子有助於我們理解他：
+\startclc
+float4 vf;
+
+float2 low = vf.lo;	// returns vf.xy
+float2 high = vf.hi;	// returns vf.zw
+
+float2 even = vf.even;	// returns vf.xz
+float2 odd = vf.odd;	// returns vf.yw
+\stopclc
+
+對於 3 組件的矢量型別應用後綴 \ccmm{.lo} （或 \ccmm{.even}）
+和 \ccmm{.hi} （或 \ccmm{.odd}）時，
+會將 3 組件矢量型別當成 4 組件矢量型別使用，且組件 \ccmm{w} 未定義。
+下面給出了一些例子：
+\startclc
+float8	vf;
+float4	odd = vf.odd;
+float4	even = vf.even;
+float2	high = vf.even.hi;
+float2	low = vf.odd.lo;
+
+// interleave L+R stereo stream
+float4	left, right;
+float8	interleaved;
+interleaved.even = left;
+interleaved.odd = right;
+
+// deinterleave
+left = interleaved.even;
+right = interleaved.odd;
+
+// transpose a 4x4 matrix
+void transpose( float4 m[4] )
+{
+	// read matrix into a float16 vector
+	float16 x = (float16)( m[0], m[1], m[2], m[3] );
+	float16 t;
+
+	//transpose
+	t.even = x.lo;
+	t.odd = x.hi;
+	x.even = t.lo;
+	x.odd = t.hi;
+	//write back
+	m[0] = x.lo.lo;	// { m[0][0], m[1][0], m[2][0], m[3][0] }
+	m[1] = x.lo.hi;	// { m[0][1], m[1][1], m[2][1], m[3][1] }
+	m[2] = x.hi.lo;	// { m[0][2], m[1][2], m[2][2], m[3][2] }
+	m[3] = x.hi.hi;	// { m[0][3], m[1][3], m[2][3], m[3][3] }
+}
+
+float3	vf = (float3)(1.0f, 2.0f, 3.0f);
+float2	low = vf.lo; // (1.0f, 2.0f);
+float2	high = vf.hi; // (3.0f, undefined);
+\stopclc
+
+不能對矢量元素取址，否則會導致編譯錯誤。例如：
+\startclc
+float8	vf;
+
+float	*f = &vf.x;		// is illegal
+float2	*f2 = &vf.s07;		// is illegal
+
+float4	*odd = &vf.odd;		// is illegal
+float4	*even = &vf.even;	// is illegal
+float2	*high = &vf.even.hi;	// is illegal
+float2	*low = &vf.odd.lo;	// is illegal
+\stopclc
+
+% Aliasing Rules
+\subsection{別名規則}
+
+OpenCL C \cnglo{program} 符合 C99 中基於型別的別名規則
+（在 C99 規範的{\ftRef{節 6.5}} 的{\ftRef{第 7 項}}中定義）。
+為了應用這些別名規則， OpenCL C 內建矢量數據型別會被當成聚合（aggregate）型別
+\footnote{也就是說，出於使用基於型別的別名規則的目的，
+認為內建矢量數據型別等同於對應的陣列型別。}。
+
+% Keywords
+\subsection{關鍵字}
+
+下列名字將作為 OpenCL C 中的關鍵字而保留，不能挪作他用。
+\startigBase
+\item C99 中作為關鍵字所保留的名字。
+
+\item \reftab{builtInVectorDataTypes}、\reftab{otherBuiltInDataTypes}
+和\reftab{reservedDataTypes}中定義的 OpenCL C 數據型別。
+
+\startitem
+下列位址空間限定符：
+\startigBase
+\item \cqlf{__global}、 \cqlf{global}、
+\item \cqlf{__local}、 \cqlf{local}、
+\item \cqlf{__constant}、 \cqlf{constant}、
+\item \cqlf{__private}、 \cqlf{private}。
+\stopigBase
+\stopitem
+
+\item 函式限定符： \cqlf{__kernel} 和 \cqlf{kernel}。
+
+\startitem
+下列存取限定符：
+\startigBase
+\item \cqlf{__read_only}、 \cqlf{read_only}、
+\item \cqlf{__write_only}、 \cqlf{write_only}、
+\item \cqlf{__read_write}、 \cqlf{read_write}。
+\stopigBase
+\stopitem
+\stopigBase
+

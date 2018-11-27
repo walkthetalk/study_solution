@@ -1,0 +1,86 @@
+% vec_step
+\startbuffer[funcproto:vec_step]
+int vec_step (gentypen a) 
+
+int vec_step (char3 a)
+int vec_step (uchar3 a)
+int vec_step (short3 a)
+int vec_step (ushort3 a)
+int vec_step (half3 a)
+int vec_step (int3 a)
+int vec_step (uint3 a)
+int vec_step (long3 a)
+int vec_step (ulong3 a)
+int vec_step (float3 a)
+int vec_step(double3 a)
+
+int vec_step(type)
+\stopbuffer
+\startbuffer[funcdesc:vec_step]
+此函式的引數為標量或矢量，返回值為引數中的元素數目。
+
+對於所有標量型別，返回值為 1。
+
+對於 3 組件矢量，返回值為 4。
+
+引數也可以是純型別，如 \math{\mapiemp{vec_step}(\mtype{float2})}。
+\stopbuffer
+
+% shuffle
+\startbuffer[funcproto:shuffle]
+gentypen shuffle (
+	gentypem x,
+	ugentypen mask)
+gentypen shuffle2 (
+	gentypem x,
+	gentypem y,
+	ugentypen mask)
+\stopbuffer
+\startbuffer[funcdesc:shuffle]
+輸入為一個或兩個型別相同的矢量，由其中的元素構造一個排列並返回，
+所返回的矢量元素型別與輸入相同，矢量長度與掩碼相同。
+掩碼中每個元素的大小必須與結果中元素大小相同。
+
+對於 \capi{shuffle}，
+只考慮 \carg{mask} 中每個元素的 \math{\mapiemp{ilogb}(2m-1)} 個最低有效位。
+而對於 \capi{shuffle2}，
+則會考慮 \carg{mask} 中每個元素的 \math{\mapiemp{ilogb}(2m-1)+1} 個最低有效位。
+忽略 \carg{mask} 中的其他位。
+
+因為要對輸入矢量中的元素從左到右進行編號（第二個輸入矢量的編號續接第一個的），
+因此需要用 \math{\mapiemp{vec_step}(\text{\cldt[m]{gentype}})} 得到矢量元素數目。
+引數 \carg{mask} 用來確定結果中的相應元素選自輸入矢量中的哪個元素。
+
+例：
+\startcintbl
+uint4 mask = (uint4)(3, 2, 1, 0);
+float4 a;
+float4 r = shuffle(a, mask);
+// r.s0123 = a.wzyx
+
+uint8 mask = (uint8)(0, 1, 2, 3, 4, 5, 6, 7);
+float4 a, b;
+float8 r = shuffle2(a, b, mask);
+// r.s0123 = a.xyzw
+// r.s4567 = b.xyzw
+
+uint4 mask;
+float8 a;
+float4 b;
+b = shuffle(a, mask);
+\stopcintbl
+
+而無效的例子有：
+\startcintbl
+uint8 mask;
+short16 a;
+short8 b;
+b = shuffle(a, mask); <- not valid
+\stopcintbl
+\stopbuffer
+
+% begin table
+\startCLFD
+\clFD{vec_step}
+\clFD{shuffle}
+\stopCLFD

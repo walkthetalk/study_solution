@@ -1,0 +1,31 @@
+\startETD[cl_profiling_info][返回型別]
+
+\clETD{CL_PROFILING_COMMAND_QUEUED}{cl_ulong}{
+64 位值，
+描述的是當 \carg{event} 所標識的\cnglo{cmd}入隊時，
+\cnglo{device}上時間計數器的值。
+單位：納秒。
+}
+
+\clETD{CL_PROFILING_COMMAND_SUBMIT}{cl_ulong}{
+64 位值，
+描述的是當 \carg{event} 所標識的\cnglo{cmd}提交給\cnglo{cmdq}所在\cnglo{device}時，
+\cnglo{device}上時間計數器的值。
+單位：納秒。
+}
+
+\clETD{CL_PROFILING_COMMAND_START}{cl_ulong}{
+64 位值，
+描述的是當 \carg{event} 所標識的\cnglo{cmd}在\cnglo{device}上開始執行時，
+\cnglo{device}上時間計數器的值。
+單位：納秒。
+}
+
+\clETD{CL_PROFILING_COMMAND_QUEUED}{cl_ulong}{
+64 位值，
+描述的是當 \carg{event} 所標識的\cnglo{cmd}在\cnglo{device}上執行完畢時，
+\cnglo{device}上時間計數器的值。
+單位：納秒。
+}
+
+\stopETD

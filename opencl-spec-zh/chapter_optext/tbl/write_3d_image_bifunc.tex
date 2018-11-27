@@ -1,0 +1,51 @@
+% atomic_add
+\startbuffer[funcproto:write_image_3d]
+void write_imagef (image3d_t image,
+		int4 coord,
+		float4 color)
+
+void write_imagei (image3d_t image,
+		int4 coord,
+		int4 color)
+
+void write_imageui (image3d_t image,
+		int4 coord,
+		uint4 color)
+\stopbuffer
+\startbuffer[funcdesc:write_image_3d]
+將 \carg{color} 的值寫入 3D \cnglo{imgobj} \carg{image}中坐標 \math{(x,y,z)} 處。
+寫入前會對顏色值進行恰當的數據格式轉換。
+會將 \carg{coord.x}、 \carg{coord.y} 和 \carg{coord.z} 視為非歸一化坐標，
+且其值必須分別位於區間 \math{0\cdots\mvar{圖像寬度}-1}、 \math{0\cdots\mvar{圖像高度}-1} 和 \math{0\cdots\mvar{圖像深度}-1} 內。
+
+對於 \capi{write_imagef}，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是預定義壓縮過的格式
+或者 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT16}、
+ \cenum{CL_UNORM_INT16}、 \cenum{CL_HALF_FLOAT} 或 \cenum{CL_FLOAT}。
+會將通道數據由浮點值轉換成存儲數據所用的實際數據格式。
+
+對於 \capi{write_imagei} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase
+\item \cenum{CL_SIGNED_INT8}
+\item \cenum{CL_SIGNED_INT16}
+\item \cenum{CL_SIGNED_INT32}
+\stopigBase
+
+對於 \capi{write_imageui} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase
+\item \cenum{CL_UNSIGNED_INT8}
+\item \cenum{CL_UNSIGNED_INT16}
+\item \cenum{CL_UNSIGNED_INT32}
+\stopigBase
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上述所列範圍內，
+或者坐標 \math{(x, y, z)} 不在 \math{(0 \cdots \mvar{圖像寬度}-1, 0 \cdots \mvar{圖像高度}-1, 0 \cdots \mvar{圖像深度}-1)} 範圍內，
+則 \capi{write_imagef}、 \capi{write_imagei} 和 \capi{write_imageui} 的行為\cnglo{undef}。
+\stopbuffer
+
+% begin table
+\startCLFD
+\clFD{write_image_3d}
+\stopCLFD

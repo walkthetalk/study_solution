@@ -1,0 +1,79 @@
+\subsubsection[section:imgDsc]{圖像描述符}
+
+圖像描述符描述了圖像或圖像陣列的類型和維數，其定義如下：
+\startclc
+typedef struct _cl_image_desc {
+	cl_mem_object_type	image_type,
+	size_t			image_width;
+	size_t			image_height;
+	size_t			image_depth;
+	size_t			image_array_size;
+	size_t			image_row_pitch;
+	size_t			image_slice_pitch;
+	cl_uint			num_mip_levels;
+	cl_uint			num_samples;
+	cl_mem			buffer;
+} cl_image_desc;
+\stopclc
+
+\cvar{image_type} 即圖像類型，其值必須是 \cenum{CL_MEM_OBJECT_IMAGE1D}、
+\cenum{CL_MEM_OBJECT_IMAGE1D_BUFFER}、 \cenum{CL_MEM_OBJECT_IMAGE1D_ARRAY}、
+\cenum{CL_MEM_OBJECT_IMAGE2D}、 \cenum{CL_MEM_OBJECT_IMAGE2D_ARRAY}
+或 \cenum{CL_MEM_OBJECT_IMAGE3D}。
+
+\cvar{image_width} 即圖像寬度，單位：像素。
+對於 2D 圖像或圖像陣列，其寬度必須 <= \cenum{CL_DEVICE_IMAGE2D_MAX_WIDTH}。
+對於 3D 圖像，其寬度必須 <= \cenum{CL_DEVICE_IMAGE3D_MAX_WIDTH}。
+對於 1D 圖像緩衝，其寬度必須 <= \cenum{CL_DEVICE_IMAGE_MAX_BUFFER_SIZE}。
+對於 1D 圖像和 1D 圖像陣列，其寬度必須 <= \cenum{CL_DEVICE_IMAGE2D_MAX_WIDTH}。
+
+\cvar{image_height} 即圖像高度，單位：像素。
+只有圖像為 2D、 3D 或 2D 圖像陣列時才有效。
+對於 2D 圖像或圖像陣列，其寬度必須 <= \cenum{CL_DEVICE_IMAGE2D_MAX_HEIGHT}。
+對於 3D 圖像，其寬度必須 <= \cenum{CL_DEVICE_IMAGE3D_MAX_HEIGHT}。
+
+\cvar{image_depth} 即圖像深度，單位：像素。
+只有圖像為 3D 圖像時才有效，其值必須 >= 1 且 <= \cenum{CL_DEVICE_IMAGE3D_MAX_DEPTH}。
+
+\cvar{image_array_size}\footnote{%
+對於\cnglo{kernel}而言，以 \math{\marg{image_array_size} = 1} 讀寫 2D 圖像陣列時，
+其性能可能會比直接讀寫 2D 圖像要低。%
+} 即圖像陣列中圖像個數。
+只有圖像為 1D 或 2D 圖像陣列時才有效。
+如果設置了 \cvar{image_array_size}，
+其值必須 >= 1 且 <= \cenum{CL_DEVICE_IMAGE_MAX_ARRAY_SIZE}。
+
+\cvar{image_row_pitch} 即掃描列間隔，單位字節。
+如果 \carg{host_ptr} 是 \cmacro{NULL}，其值必須是 0；
+如果 \carg{host_ptr} 不是 \cmacro{NULL}，
+則可以是 0 或者 >= \cvar{image_width} * 元素大小。
+如果 \carg{host_ptr} 不是 \cmacro{NULL}，並且 \cvar{image_row_pitch} = 0，
+則用 \cvar{image_width} * 元素大小 取代 \cvar{image_row_pitch}。
+如果 \cvar{imag_row_pitch} 不是 0，則必須是圖像元素大小的整數倍。
+
+\cvar{image_slice_pitch} 即 3D 圖像中每個 2D 平面的大小，
+或者 1D、 2D 圖像陣列中每個圖像的大小。單位字節。
+如果 \carg{host_ptr} 是 \cmacro{NULL}，其值必須是 0；
+如果 \carg{host_ptr} 不是 \cmacro{NULL}，
+對於 2D 圖像陣列或 3D 圖像，可以是 0 或者 >= \cvar{image_row_pitch} * \cvar{image_height}；
+對於 1D 圖像陣列，可以是 0 或者 >= \cvar{image_row_pitch}。
+如果 \carg{host_ptr} 不是 \cmacro{NULL}，並且 \cvar{image_slice_pitch} = 0，
+對於 2D 圖像陣列或 3D 圖像，
+則用 \cvar{image_row_pitch} * \cvar{image_height} 取代 \cvar{image_slice_pitch}；
+對於 1D 圖像陣列，則用 \cvar{image_row_pitch}。
+如果 \cvar{imag_slice_pitch} 不是 0，則必須是 \cvar{image_row_pitch} 的整數倍。
+
+\cvar{num_mip_levels} 和 \cvar{num_samples} 必須是 0。
+
+如果 \cvar{image_type} 是 \cenum{CL_MEM_OBJECT_IMAGE1D_BUFFER}，
+則 \cvar{buffer} 引用一個\cnglo{bufobj}，否則 \cvar{buffer} 必須是 \cmacro{NULL}。
+對於 1D 圖像\cnglo{bufobj}，圖像的所有像素均取自\cnglo{bufobj}的數據。
+在相應的同步點上，
+對\cnglo{bufobj}中數據的改動也會反映到 1D 圖像\cnglo{bufobj}的內容上，反之亦然。
+\cvar{image_width} * 元素大小 必須 <= \cnglo{bufobj}中的數據大小。
+
+\startnotepar
+對一個\cnglo{bufobj}以及與其關聯的 1D 圖像\cnglo{bufobj}
+的並發讀、寫以及拷貝是\cnglo{undef}的。
+只有讀是定義了的。
+\stopnotepar

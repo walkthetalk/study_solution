@@ -1,0 +1,39 @@
+
+
+\startbuffer[enumdesc:CL_BUFFER_CREATE_TYPE_REGION]
+用 \carg{buffer} 中的特定區域創建\cnglo{bufobj}。
+
+\carg{buffer_create_info} 指向如下數據結構：
+
+\startcintbl
+struct _cl_buffer_region {
+	size_t origin;
+	size_t size;
+} cl_buffer_region;
+\stopcintbl
+
+\math{(\marg{origin}, \marg{size})} 就是在 \carg{buffer} 中的偏移量和字節數。
+
+如果 \carg{buffer} 是用 \cenum{CL_MEM_USE_HOST_PTR} 創建的，
+所返回\cnglo{bufobj}的 \carg{host_ptr} 就是 \math{\marg{host_ptr} + \marg{origin}}。
+
+所返回的\cnglo{bufobj}引用了為 \carg{buffer} 分配的數據存儲空間，
+並指向其中的特定區域 \math{(\marg{origin}, \marg{size})}。
+
+如果在 \carg{buffer} 中，區域 \math{(\marg{origin}, \marg{size})} 越界了，
+則會在 \carg{errcode_ret} 中返回 \cenum{CL_INVALID_VALUE}。
+
+如果 \carg{size} 是 0，則返回 \cenum{CL_INVALID_BUFFER_SIZE}。
+
+如果與 \carg{buffer} 相關聯的\cnglo{context}中
+沒有一個設備的 \cenum{CL_DEVICE_MEM_BASE_ADDR_ALIGN} 與 \carg{origin} 對齊，
+則會在 \carg{errcode_ret} 中返回 \cenum{CL_MISALIGNED_SUB_BUFFER_OFFSET}。
+\stopbuffer
+
+\startED[\ctype{cl_buffer_create_type}]
+
+\clED{CL_BUFFER_CREATE_TYPE_REGION}{%
+\getbuffer[enumdesc:CL_BUFFER_CREATE_TYPE_REGION]}
+
+\stopED
+

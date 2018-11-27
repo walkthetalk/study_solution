@@ -1,0 +1,81 @@
+\section[section:pp_macro]{預處理指示和巨集}
+
+支持 C99 規範中定義的預處理指示。
+
+其中是這樣描述 \cdrtemp{# pragma} 指示的：
+\startclc
+/BTEX\ftEmp{\# pragma}/ETEX /BTEX{\ftRef{pp-tokens\low{opt} new-line}}/ETEX
+\stopclc
+
+在進行巨集代換（macro replacement）之前，如果在指令 \cdrtemp{# pragma} 中，
+ \cdrtemp{pragma} 後面緊跟的不是預處理符記（token） {\ftEmp{OpenCL}}
+（用來取代 {\ftEmp{STDC}}），
+則其行為\cnglo{impdef}。
+此行為可能會導致翻譯失敗，也可能導致翻譯器或最終\cnglo{program}的行為不符合規範。
+如果實作不能識別這樣的 \cdrtemp{pragma}，則將其忽略。
+在進行巨集代換之前，如果 \cdrtemp{pragma} 後面緊跟的是預處理符記 {\ftEmp{OpenCL}}，
+則不會在此指示之上實施任何巨集代換，並且此指示只能是下列形式之一（其意義在別處有描述）：
+\startclc
+/BTEX\ftEmp{\#pragma OPENCL FP_CONTRACT}/ETEX /BTEX\ftRef{on-off-switch}/ETEX
+	/BTEX\ftRef{on-off-switch}/ETEX: one of /BTEX\ftEmp{ON OFF DEFAULT}/ETEX
+
+/BTEX\ftEmp{\#pragma OPENCL EXTENSION}/ETEX extensionname : behavior
+/BTEX\ftEmp{\#pragma OPENCL EXTENSION}/ETEX all : behavior
+\stopclc
+
+可用的預定義巨集的名字如下所示：
+
+\cmacro{__FILE__}
+當前源檔的名字（常值字串）。
+
+\cmacro{__LINE__}
+當前源檔中當前源碼行的行號（整形常數）。
+
+\cmacro{__OPENCL_VERSION__}
+一個整數，用來反映 OpenCL \cnglo{device} 所支持的 OpenCL 規範的版本號。
+如果是本文所述的 OpenCL，則 \cmacro{__OPENCL_VERSION__} 所對應的整數是 120。
+
+\cmacro{CL_VERSION_1_0}
+整數 100，反映的是 OpenCL 1.0 規範。
+
+\cmacro{CL_VERSION_1_1}
+整數 110，反映的是 OpenCL 1.1 規範。
+
+\cmacro{CL_VERSION_1_2}
+整數 120，反映的是 OpenCL 1.2 規範。
+
+\cmacro{__OPENCL_C_VERSION__}
+一個整數，用來反映 OpenCL C 的版本，
+此版本號由 \capi{clBuildProgram} 或 \capi{clCompileProgram}
+ 所用構建選項 \ccmm{-cl-std} 來指定。
+如果沒有指定此構建選項，
+則使用這個 OpenCL \cnglo{device} 所用編譯器所支持的 OpenCL C 的版本。
+如果是本文所述的 OpenCL C，則 \cmacro{__OPENCL_C_VERSION__} 所對應的整數是 120。
+
+\cmacro{__ENDIAN_LITTLE__}
+用來確定 OpenCL \cnglo{device} 的架構是大端的還是小端的（
+如果是小端的，則為 1，否則未定義）。
+參見\reftab{cldevquery}中的 \cenum{CL_DEVICE_ENDIAN_LITTLE}。
+
+\ccmm{__kernel_exec(X, }\cldt[n]{type}\ccmm{)}
+（和 \ccmm{kernel_exec(X, }\cldt[n]{type}\ccmm{)}）
+定義為：
+\startclc
+__kernel __attribute__((work_group_size_hint(X, 1, 1))) \
+	 __attribute__((vec_type_hint(type/BTEX\ftRef{n}/ETEX)))
+\stopclc
+
+\cmacro{__IMAGE_SUPPORT__}
+用來確定 OpenCL \cnglo{device}是否支持圖像。
+如果支持圖像則為整形常數 1，否則未定義。
+參見\reftab{cldevquery}中的 \cenum{CL_DEVICE_IMAGE_SUPPORT}。
+
+\cmacro{__FAST_RELAXED_MATH__}
+用來確定給 \capi{clBuildProgram} 或 \capi{clCompileProgram}
+ 所指定的構建選項中是否有優化選項 \ccmm{-cl-fast-relaxed-math}。
+如果有則為整形常數 1，否則未定義。
+
+對於那些 C99 規範中有定義，但目前 OpenCL 還不支持的巨集名字，全部保留，以備將來使用。
+
+預定義的標識符 \cmacro{__func__} 可用。
+

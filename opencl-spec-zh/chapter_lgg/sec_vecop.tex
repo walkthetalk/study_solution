@@ -1,0 +1,34 @@
+\section{矢量運算}
+
+矢量運算是按組件逐一進行的。
+通常，當算子在矢量上運算時，矢量的每個組件都是獨立進行運算的。
+
+例如：
+\startclc[indentnext=no]
+float4	v, u;
+float	f;
+
+v = u + f;
+\stopclc
+等同於
+\startclc[indentnext=no]
+v.x = u.x + f;
+v.y = u.y + f;
+v.z = u.z + f;
+v.w = u.w + f;
+\stopclc
+而
+\startclc[indentnext=no]
+float4	v, u, w;
+
+w = v + u;
+\stopclc
+等同於
+\startclc[indentnext=no]
+w.x = v.x + u.x;
+w.y = v.y + u.y;
+w.z = v.z + u.z;
+w.w = v.w + u.w;
+\stopclc
+對於大多數算子以及所有整數、浮點數矢量型別都是這樣的。
+

@@ -1,0 +1,56 @@
+\subsection{由 GL 緩衝對象創建 CL 緩衝對象}
+
+\topclfunc{clCreateFromGLBuffer}
+
+\startCLFUNC
+cl_mem clCreateFromGLBuffer (
+			cl_context context,
+			cl_mem_flags flags,
+			GLuint bufobj,
+			cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式可以由 OpenGL 緩衝對象創建 OpenCL 緩衝對象。
+
+\carg{context} 是一個由 OpenGL \cnglo{context}創建的 OpenCL \cnglo{context}。
+
+\carg{flags} 是位欄，用於指定用法資訊。參見\reftab{clmemflags}。
+此處只能使用 \cenum{CL_MEM_READ_ONLY}、 \cenum{CL_MEM_WRITE_ONLY} 和 \cenum{CL_MEM_READ_WRITE}。
+
+\carg{bufobj} 是 GL \cnglo{bufobj}的名字。
+其數據存儲必須在之前已經通過調用 \capi{glBufferData} 創建好了，
+但其內容可以不必初始化。
+數據存儲的大小將用來確定 CL \cnglo{bufobj}的大小。
+
+\carg{errcode_ret} 會返回相應的錯誤碼，見下文。
+如果他是 \cmacro{NULL}，則不會返回錯誤碼。
+
+如果成功創建了\cnglo{bufobj}，則 \clapi{clCreateFromGLBuffer} 會將其返回，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{context} 無效，或者不是由 GL \cnglo{context}創建的。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{flags} 的值無效。
+
+\item \cenum{CL_INVALID_GL_OBJECT}，
+如果 \carg{bufobj} 不是 GL \cnglo{bufobj}，
+或者是 GL \cnglo{bufobj}，但沒有數據存儲，或者其大小是 0。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+調用 \clapi{clCreateFromGLBuffer} 時，
+會將 GL \cnglo{bufobj}數據存儲的大小用作所返回\cnglo{bufobj}的大小。
+如果存在對應的 CL \cnglo{bufobj}，
+但是通過 GL API （如 \capi{glBufferData}）修改了 GL \cnglo{bufobj}的狀態，
+則後續使用 CL \cnglo{bufobj}時會導致\cnglo{undef}的行為。
+
+可使用函式 \clapi{clRetainMemObject} 和 \clapi{clReleaseMemObject} 來
+\cnglo{retain}和\cnglo{release}此\cnglo{bufobj}。
+
+用 \clapi{clCreateFromGLBuffer} 創建的 CL \cnglo{bufobj}可用來創建 CL 1D \cnglo{imgobj}。
+

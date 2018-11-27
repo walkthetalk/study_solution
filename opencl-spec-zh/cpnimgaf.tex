@@ -1,0 +1,19 @@
+\startcomponent cpnimgaf
+\product opencl-spec-zh
+
+\chapter{圖像尋址和濾波}
+
+分別用 \math{w_t}、 \math{h_t} 和 \math{d_t} 表示圖像的寬度、
+高度（或者 1D 圖像陣列的陣列大小）和深度（或 2D 圖像陣列的陣列大小），單位均為像素。
+用 \math{coord.xy} （或者 \math{(s, t)}）
+或 \math{coord.xyz}（或者 \math{(s, t, r)}）
+表示 \capi{read_image{f|i|ui}} 所用坐標。
+\capi{read_image{f|i|ui}} 中的\cnglo{sampler} 用來確定如何對圖像採樣並返回恰當的顏色。
+
+\input{chapter_iaf/sec_img_coord.tex}
+\input{chapter_iaf/sec_af_mode.tex}
+\input{chapter_iaf/sec_conversion_rule.tex}
+\input{chapter_iaf/sec_sel_array.tex}
+
+\stopcomponent
+

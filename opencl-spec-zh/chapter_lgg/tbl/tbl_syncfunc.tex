@@ -1,0 +1,41 @@
+% barrier
+\startbuffer[funcproto:barrier]
+void barrier (cl_mem_fence_flags flags) 
+\stopbuffer
+\startbuffer[funcdesc:barrier]
+同一\cnglo{workgrp}中的\cnglo{workitem}在處理器上執行此\cnglo{kernel}時，
+其中任一\cnglo{workitem}要想越過 \capi{barrier} 繼續執行，
+所有\cnglo{workitem}都得先執行此函式。
+所有\cnglo{workitem}必須都能執行到此函式。
+
+如果 \capi{barrier} 在條件語句內，
+只要有一個\cnglo{workitem}會進入此條件語句具有並執行 \capi{barrier}，
+那麼所有\cnglo{workitem}都必須進入此條件語句。
+
+如果 \capi{barrier} 在迴圈語句內，
+那麼在每一次迭代過程中，
+任一\cnglo{workitem}要想越過 \capi{barrier} 繼續執行，
+所有\cnglo{workitem}都得先執行此函式。
+
+\capi{barrier} 函式還會用內存隔柵（讀、寫都包括）來確保局部、全局內存操作的正確順序。
+
+引數 \carg{flags} 指定內存位址空間，可以是下列常值的組合：
+\startigBase
+\item \cenum{CLK_LOCAL_MEM_FENCE}，
+函式 \capi{barrier} 會通過刷新存儲在局部內存中的所有變量，
+或者用內存隔柵確保局部內存操作的正確順序。
+
+\item \cenum{CLK_GLOBAL_MEM_FENCE}，
+函式 \capi{barrier} 會用內存隔柵確保全局內存操作的正確順序。
+例如，\cnglo{workitem}寫入\cnglo{bufobj}或\cnglo{imgobj}後又想讀取更新過的數據，
+這時此功能就派上用場了。
+\stopigBase
+\stopbuffer
+
+% begin table
+\startCLFD
+
+\clFD{barrier}
+
+\stopCLFD
+

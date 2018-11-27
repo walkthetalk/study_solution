@@ -1,0 +1,139 @@
+\startreusableMPgraphic{NDRange}
+u := 2.5mm;
+
+ahangle := 30;
+ahlength := u;
+
+def drawSingleWrokGrp(expr xOff, yOff) =
+begingroup
+for i=0 upto 3:
+	for j=0 upto 3:
+		draw unitsquare scaled u shifted (i*u,j*u) shifted (xOff*u,yOff*u);
+	endfor;
+endfor;
+endgroup
+enddef;
+
+% yOff < 0 is Bottom, or is Top
+def drawEdgeDescTB(expr xOff, yOff, lblText) =
+begingroup
+path edge;
+pair lblCenter;
+drawdblarrow (xOff,yOff)..(-xOff,yOff);
+edge := (xOff,yOff+0.5u)..(xOff,yOff-0.5u);
+draw edge;
+draw edge shifted (-xOff*2, 0);
+
+if yOff > 0:
+lblCenter := (0, yOff+1u);
+else:
+lblCenter := (0, yOff-1u);
+fi
+label(lblText, (0,0)) shifted lblCenter;
+endgroup
+enddef;
+
+% xOff < 0 is Left, or is Right
+def drawEdgeDescLR(expr xOff, yOff, lblText) =
+begingroup
+path edge;
+pair lblCenter;
+drawdblarrow (xOff,yOff)..(xOff,-yOff);
+edge := (xOff+0.5u, yOff)..(xOff-0.5u, yOff);
+draw edge;
+draw edge shifted (0, -yOff*2);
+
+if xOff > 0:
+lblCenter := (xOff+1u, 0);
+else:
+lblCenter := (xOff-1u, 0);
+fi
+label(lblText, (0,0)) rotated 90 shifted lblCenter;
+endgroup
+enddef;
+
+% draw group group
+def drawWorkGrpOverview =
+begingroup
+for i=0 upto 2:
+	for j=0 upto 2:
+		drawSingleWrokGrp(-7+i*5,-7+j*5);
+	endfor;
+endfor;
+draw unitsquare scaled 16u shifted(-8u,-8u);
+% bottom arrow
+drawEdgeDescTB(8u,-10u,btex \mplabel{\bf NDRange size \math{G_x}} etex);
+% left arrow
+drawEdgeDescLR(-10u, 8u, btex \mplabel{\bf NDRange size \math{G_y}} etex);
+endgroup
+enddef;
+
+def drawWrokItem(expr xS, yS, lblContent) =
+begingroup
+draw unitsquare scaled 12u shifted (-6u, -6u) shifted (xS*7u,yS*7u);
+label(lblContent, (0,0)) xscaled 0.5 shifted (xS*7u,yS*7u);
+endgroup
+enddef;
+
+% draw workgrp detail
+def drawWorkGrpDetail =
+begingroup
+drawWrokItem(-1, 1, btex \mplabel{%
+{\bfa work-item}\\
+\math{(w_x\cdot S_x + s_x + F_x, w_y\cdot S_y + s_y + F_y)}\\
+\math{(S_x, S_y) = (0, 0)}} etex);
+
+drawWrokItem(-1, -1, btex \mplabel{%
+{\bfa work-item}\\
+\math{(w_x\cdot S_x + s_x + F_x, w_y\cdot S_y + s_y + F_y)}\\
+\math{(S_x, S_y) = (0, S_y-1)}} etex);
+
+drawWrokItem(1, -1, btex \mplabel{%
+{\bfa work-item}\\
+\math{(w_x\cdot S_x + s_x + F_x, w_y\cdot S_y + s_y + F_y)}\\
+\math{(S_x, S_y) = (S_x-1, S_y-1)}} etex);
+
+drawWrokItem(1, 1, btex \mplabel{%
+{\bfa work-item}\\
+\math{(w_x\cdot S_x + s_x + F_x, w_y\cdot S_y + s_y + F_y)}\\
+\math{(S_x, S_y) = (S_x-1, 0)}} etex);
+
+label(btex \mplabel{\math{\cdots}} etex, (0,0)) scaled 2.5 rotated -45;
+label(btex \mplabel{\math{\cdots}} etex, (0,0)) scaled 2.5 shifted (0,7u);
+label(btex \mplabel{\math{\cdots}} etex, (0,0)) scaled 2.5 shifted (0,-7u);
+label(btex \mplabel{\math{\cdots}} etex, (0,0)) scaled 2.5 rotated 90 shifted (-7u,0);
+label(btex \mplabel{\math{\cdots}} etex, (0,0)) scaled 2.5 rotated 90 shifted (7u,0);
+
+draw unitsquare scaled 30u shifted (-15u,-15u);
+
+label(btex \mplabel{\bf work-group \math{(w_x, w_y)}} etex, (0,0)) shifted (0,14u);
+
+drawEdgeDescTB(15u,16u,btex \mplabel{\bf work-group size \math{S_x}} etex);
+drawEdgeDescLR(16u, 15u, btex \mplabel{\bf work-group size \math{S_y}} etex);
+endgroup
+enddef;
+
+%%%%%%%%%%%%%%%%%%%%%%%%% start drawing
+pair ovShift;
+picture pOverview;
+picture pDetail;
+
+ovShift := (-25u,-3u);
+
+drawWorkGrpOverview;
+pOverview := currentpicture shifted ovShift;
+currentpicture := nullpicture;
+
+drawWorkGrpDetail;
+pDetail := currentpicture;
+currentpicture := nullpicture;
+
+draw pOverview;
+draw pDetail;
+
+draw (ovShift-(2u,2u))..-(15u,15u) dashed evenly scaled 2 withcolor .3[white,black];
+draw (ovShift+(2u,2u))..(15u,15u) dashed evenly scaled 2 withcolor .3[white,black];
+
+draw (ovShift+(-2u,2u))..(-15u,15u) dashed evenly scaled 2 withcolor .3[white,black];
+draw (ovShift-(-2u,2u))..-(-15u,15u) dashed evenly scaled 2 withcolor .3[white,black];
+\stopreusableMPgraphic

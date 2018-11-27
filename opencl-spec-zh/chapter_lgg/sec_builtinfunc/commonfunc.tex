@@ -1,0 +1,31 @@
+\subsection[section:commonFunc]{公共函式}
+
+\reftab{svCommonFunc}中列出了內建的公共函式。
+這些函式都是按組件逐一運算的，其中的描述也是針對單個組件的。
+泛型 \ctype{gentype} 表明函式的引數可以是：
+\startigBase[indentnext=no]
+\item \ctype{float}、
+\item \ctype{float{2|3|4|8|16}}、
+\item \ctype{double}、
+\item \ctype{double{2|3|4|8|16}}。
+\stopigBase
+泛型 \ctype{gentypef} 表明函式的引數可以是：
+\startigBase[indentnext=no]
+\item \ctype{float}、
+\item \ctype{float{2|3|4|8|16}}。
+\stopigBase
+泛型 \ctype{gentyped} 表明函式的引數可以是：
+\startigBase[indentnext=no]
+\item \ctype{double}、
+\item \ctype{double{2|3|4|8|16}}。
+\stopigBase
+
+內建的公共函式實現時用的捨入模式是捨入為最近偶數。
+
+\startnotepar
+可以使用化簡（如 \capi{mad} 或 \capi{fma}）來實現 \capi{mix} 和 \capi{smoothstep}。
+\stopnotepar
+
+\placetable[here][tab:svCommonFunc]
+{引數既可為標量整數，也可為矢量整數的內建公共函式}
+{\input{chapter_lgg/tbl/tbl_svcommonfunc.tex}}

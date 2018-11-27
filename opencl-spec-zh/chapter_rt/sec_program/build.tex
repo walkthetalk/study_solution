@@ -1,0 +1,98 @@
+\subsection{構建程式執行體}
+
+\topclfunc{clBuildProgram}
+
+\startCLFUNC
+cl_int clBuildProgram (
+		cl_program program,
+		cl_uint num_devices,
+		const cl_device_id *device_list,
+		const char *options,
+		void (CL_CALLBACK *pfn_notify)(cl_program program,
+					void *user_data),
+		void *user_data)
+\stopCLFUNC
+
+此函式會由\cnglo{program}源碼或二元碼構建（編譯 & 鏈接）\cnglo{program}執行體，
+他可以在 \carg{program} 所在\cnglo{context}中的所有或部分\cnglo{device}上執行。
+對於用 \capi{clCreateProgramWithSource} 或 \capi{clCreateProgramWithBinary}
+創建的 \carg{program}，
+必須調用 \capi{clBuildProgram} 來構建程式執行體。
+如果是用 \capi{clCreateProgramWithBinary} 創建的 \carg{program}，
+\cnglo{program}二元碼必須是可執行的（而不是編譯後的二元碼或庫）。
+
+對於可執行的二元碼而言，
+可以用 \capi{clGetProgramInfo}(\carg{program}, \cenum{CL_PROGRAM_BINARIES}, ...) 進行查詢，
+也可以由 \capi{clCreateProgramWithBinary} 用來創建新的\cnglo{programobj}。
+
+\carg{program} 就是\cnglo{programobj}。
+
+\carg{device_list} 指向 \carg{program} 所關聯的\cnglo{device}。
+如果 \carg{device_list} 是 \cmacro{NULL}，
+則會為 \carg{program} 所關聯的所有\cnglo{device}構建\cnglo{program}執行體。
+否則，僅為此清單中的\cnglo{device}構建\cnglo{program}執行體。
+
+\carg{num_devices} 即 \carg{device_list} 中\cnglo{device}的數目。
+
+\carg{options} 指向一個以 null 終止的字串，用來描述構建選項。
+所支持的選項請參閱\refsection{compilerOption}。
+
+\carg{pfn_notify} 是\cnglo{app}所註冊的一個回調函式。
+在構建完\cnglo{program}執行體後（無論成功還是失敗）會被調用。
+如果 \carg{pfn_notify} 不是 \cmacro{NULL}，一旦可以開始構建，
+\capi{clBuildProgram} 就會立刻返回，而不必等待構建完成。
+如果\cnglo{context}、所要編譯鏈接的\cnglo{program}、
+\cnglo{device}清單以及構建選項都是有效的，
+以及實施構建所需的\cnglo{host}和\cnglo{device}資源都可用，
+那麼就可以開始構建了。
+如果 \carg{pfn_notify} 是 \cmacro{NULL}，
+直到構建完畢， \capi{clBuildProgram} 才會返回。
+對此函式的調用可能是異步的。
+\cnglo{app}需要保證此函式是線程安全的。
+
+\carg{user_data} 在調用 \carg{pfn_notify} 時作為引數傳入，可以是 \cmacro{NULL}。
+
+如果執行成功，則 \capi{clBuildProgram} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_PROGRAM}，如果 \carg{program} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{device_list} 是 \cmacro{NULL} 而 \carg{num_devices} 大於零，
+或者 \carg{device_list} 不是 \cmacro{NULL} 而 \carg{num_devices} 等於零。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{pfn_notify} 是 \cmacro{NULL}，而 \carg{user_data} 不是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_DEVICE}，
+如果 \carg{device_list} 中的 OpenCL \cnglo{device}不是 \carg{program} 所關聯\cnglo{device}。
+
+\item \cenum{CL_INVALID_BINARY}，
+如果 \carg{program} 是用 \capi{clCreateProgramWithBinary} 創建的，
+但沒有為 \carg{device_list} 中的\cnglo{device}裝載相應的\cnglo{program}二元碼。
+
+\item \cenum{CL_INVALID_BUILD_OPTIONS}，如果 \carg{options} 所指定的構建選項無效。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果對於 \carg{device_list} 中任一\cnglo{device}而言，
+之前調用 \capi{clBuildProgram} 為 \carg{program} 構建
+他所對應的\cnglo{program}執行體的動作還未完成。
+
+\item \cenum{CL_COMPILER_NOT_AVAILABLE}，
+如果是用 \capi{clCreateProgramWithSource} 創建的 \carg{program}，
+但是沒有可用的編譯器，
+即 \cenum{CL_DEVICE_COMPILER_AVAILABLE} 是 \cenum{CL_FALSE}，參見\reftab{cldevquery}。
+
+\item \cenum{CL_BUILD_PROGRAM_FAILURE}，如果構建\cnglo{program}執行體失敗。
+如果 \capi{clBuildProgram} 沒有將此錯誤返回，則在構建完成時會將其返回。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果有附着到 \carg{program} 上的\cnglo{kernelobj}。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果 \carg{program} 不是由 \capi{clCreateProgramWith{Source | Binary}} 創建的。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

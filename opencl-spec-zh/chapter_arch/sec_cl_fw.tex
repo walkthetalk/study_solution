@@ -1,0 +1,18 @@
+\section{OpenCL 框架}
+OpenCL 框架中，
+一個\cnglo{host}、加上不少於一個的 OpenCL \cnglo{device}
+就可以構成一個異構並行計算機系統，並由\cnglo{app}來使用。
+這個框架包含以下組件：
+\startigBase
+\item {\ftEmp{OpenCL 平台層}}：
+\cnglo{host}\cnglo{program}可以發現 OpenCL \cnglo{device}及其能力，
+也可以創建\cnglo{context}。
+
+\item {\ftEmp{OpenCL 運行時}}：
+一旦創建了\cnglo{context}，\cnglo{host}\cnglo{program}就可以操控他。
+
+\item {\ftEmp{OpenCL 編譯器}}：
+OpenCL 編譯器可以創建含有 OpenCL \cnglo{kernel}的\cnglo{program}執行體。
+他所實現的 OpenCL C 編程語言支持 ISO C99 的一個子集，並帶有並行擴展。
+\stopigBase
+

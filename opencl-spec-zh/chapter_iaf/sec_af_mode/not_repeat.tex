@@ -1,0 +1,86 @@
+我們先來描述尋址模式既不是 \cenum{CLK_ADDRESS_REPEAT}
+也不是 \cenum{CLK_ADDRESS_MIRRORED_REPEAT} 的情況下，
+怎樣利用尋址模式和濾波模式來生成恰當的採樣位置以讀取圖像。
+
+生成圖像坐標 \math{(u, v, w)} 後，
+我們會使用恰當的尋址模式和濾波模式來生成恰當的採樣區以讀取圖像。
+
+如果 \math{(u, v, w)} 中的值有 INF 或 NaN，
+則 \capi{read_image{f|i|ui}} 的行為未定義。
+
+% nearest
+{\ftEmp{Filter Mode = CLK_FILTER_NEAREST}}
+
+如果濾波模式為 \cenum{CLK_FILTER_NEAREST}，
+則會得到離 \math{(u, v, w)} 最近（Manhattan 距離）的圖像元素。
+即返回坐標為 \math{(i, j, k)} 的元素，其中
+\startclc[indentnext=no]
+i = address_mode((int)floor(u))
+j = address_mode((int)floor(v))
+k = address_mode((int)floor(w))
+\stopclc
+對於 3D 圖像， \math{(i,j,k)} 處的圖像元素即為所求。
+而對於 2D 圖像， \math{(i,j)} 處的圖像元素即為所求。
+
+\reftab{address_mode}中描述了函式 \capi{address_mode}。
+
+\placetable[here][tab:address_mode]
+{用來生成紋理位置的尋址模式}
+{\input{chapter_iaf/tbl/tbl_address_mode.tex}}
+
+對於 \math{u}、 \math{v} 和 \math{w} 而言，
+\reftab{address_mode}中的 \ccmm{size} 分別為 \math{w_t}、 \math{h_t} 和 \math{d_t}。
+
+\reftab{address_mode}中的 \ccmm{clamp} 定義為：
+\startclc
+clamp(a, b, c) = return (a < b) ? b : ((a > c) ? c : a)
+\stopclc
+
+如果紋理位置 \math{(i, j, k)} 落到了圖像的外面，則用顏色極值作為此紋理的顏色。
+
+% linear
+{\ftEmp{Filter Mode = CLK_FILTER_LINEAR}}
+
+如果濾波模式為 \cenum{CLK_FILTER_LINEAR}，
+則對於 2D 圖像會選擇一個 \math{2\times 2} 的方陣中的圖像元素，
+而對於 3D 圖像，則會選擇一個 \math{2\times 2\times 2} 的立方體中的圖像元素。
+得到的 \math{2\times 2} 方陣或 \math{2\times 2\times 2} 立方體如下所示。
+
+設
+\startclc[indentnext=no]
+i0 = address_mode((int)floor(u - 0.5))
+j0 = address_mode((int)floor(v - 0.5))
+k0 = address_mode((int)floor(w - 0.5))
+i1 = address_mode((int)floor(u - 0.5) + 1)
+j1 = address_mode((int)floor(v - 0.5) + 1)
+k1 = address_mode((int)floor(w - 0.5) + 1)
+a  = frac(u – 0.5)
+b  = frac(v – 0.5)
+c  = frac(w – 0.5)
+\stopclc
+其中 \ccmm{frac(x)} 為 \ccmm{x} 的小數部分，相當於 \ccmm{x - floor(x)}。
+
+對於 3D 圖像，用如下方式得到圖像元素：
+\startclc[indentnext=no]
+T = (1 – a) * (1 – b) * (1 – c) * T/BTEX\low{i0j0k0}/ETEX
+    + a * (1 – b) * (1 – c) * T/BTEX\low{i1j0k0}/ETEX
+    + (1 – a) * b * (1 – c) * T/BTEX\low{i0j1k0}/ETEX
+    + a * b * (1 – c) * T/BTEX\low{i1j1k0}/ETEX
+    + (1 – a) * (1 – b) * c * T/BTEX\low{i0j0k1}/ETEX
+    + a * (1 – b) * c * T/BTEX\low{i1j0k1}/ETEX
+    + (1 – a) * b * c * T/BTEX\low{i0j1k1}/ETEX
+    + a * b * c * T/BTEX\low{i1j1k1}/ETEX
+\stopclc
+其中 \math{T_{ijk}} 就是此 3D 圖像中位置 \math{(i, j, k)} 處的元素。
+
+對於 2D 圖像，用如下方式得到圖像元素：
+\startclc[indentnext=no]
+T = (1 – a) * (1 – b) * T/BTEX\low{i0j0}/ETEX
+    + a * (1 – b) * T/BTEX\low{i1j0}/ETEX
+    + (1 – a) * b * T/BTEX\low{i0j1}/ETEX
+    + a * b * T/BTEX\low{i1j1}/ETEX
+\stopclc
+其中 \math{T_{ij}} 就是此 2D 圖像中位置 \math{(i, j)} 處的元素。
+
+上面方程中，如果 \math{T_{ijk}} 或 \math{T_{ij}} 中任意一個所指代的位置落到了圖像外面，
+則用顏色極值作為 \math{T_{ijk}} 或 \math{T_{ij}} 處的顏色。

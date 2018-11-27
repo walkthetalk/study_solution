@@ -1,0 +1,15 @@
+\section[section:roundingMode]{捨入模式}
+
+\cnglo{device}內部可能以更高的精度執行讀點運算，然後捨入成目標型別。
+IEEE 754 中定義了四種捨入模式：
+\startigBase
+\item 捨入為最近偶數
+\item 向 \math{+\infty} 捨入
+\item 向 \math{-\infty} 捨入
+\item 向零捨入
+\stopigBase
+
+目前， OpenCL 規範對單、雙精度浮點數只要求支持{\ftRef{捨入為最近偶數}}，
+因此他也是缺省的捨入模式。
+
+另外，僅支持靜態選擇捨入模式。不支持 IEEE 754 中對捨入模式的重新配置。

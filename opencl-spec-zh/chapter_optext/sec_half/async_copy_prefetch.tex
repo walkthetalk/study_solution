@@ -1,0 +1,14 @@
+\subsection[section:asyncCopyPrefetch]{在全局內存和局部內存間的異步拷貝以及預取}
+
+OpenCL C 編程語言實現了\reftab{asyncCopyPrefetch}中所列函式，
+可在\cnglo{glbmem}和\cnglo{locmem}間進行異步拷貝，
+以及從\cnglo{glbmem}中預取（prefetch）。
+
+對泛型 \ctype{gentype} 作了擴充，
+包含 \cldt{half} 和 \cldt[n]{half}，
+其中 \ccmmsuffix{n} 可以是 2、 3、 4、 8、 16。
+
+\placetable[here,split][tab:asyncCopyPrefetch]
+{內建異步拷貝和預取函式}
+{\input{chapter_optext/tbl/async_copy_prefetch_func_half.tex}}\
+

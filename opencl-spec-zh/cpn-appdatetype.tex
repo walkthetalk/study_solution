@@ -1,0 +1,186 @@
+\startcomponent cpn-appdatetype
+\product opencl-spec-zh
+
+\chapter{應用程式數據型別}
+
+本節中會列出為\cnglo{host}\cnglo{app}提供的數據結構、型別和常量定義。
+這些定義是所有\cnglo{platform}和架構所共有的。
+這些額外細節可以證實我們要維護一個可移植編程環境的承諾，
+潛在地也會阻止對所供應頭檔的修改。
+
+\section{共享的應用程式標量數據型別}
+
+為了讓\cnglo{app}用起來更加方便，提供了下列\cnglo{app}標量型別：
+\startclc
+/BTEX\cldt{cl_char}/ETEX
+/BTEX\cldt{cl_uchar}/ETEX
+/BTEX\cldt{cl_short}/ETEX
+/BTEX\cldt{cl_ushort}/ETEX
+/BTEX\cldt{cl_int}/ETEX
+/BTEX\cldt{cl_uint}/ETEX
+/BTEX\cldt{cl_long}/ETEX
+/BTEX\cldt{cl_ulong}/ETEX
+/BTEX\cldt{cl_half}/ETEX
+/BTEX\cldt{cl_float}/ETEX
+/BTEX\cldt{cl_double}/ETEX
+\stopclc
+
+\section{所支持的應用程式矢量數據型別}
+
+\cnglo{app}矢量型別是聯合體，用來創建上一節中標量型別的矢量。
+為了讓\cnglo{app}用起來更加方便，提供了下列\cnglo{app}矢量型別：
+\startclc[indentnext=no]
+/BTEX\cldt[n]{cl_char}/ETEX
+/BTEX\cldt[n]{cl_uchar}/ETEX
+/BTEX\cldt[n]{cl_short}/ETEX
+/BTEX\cldt[n]{cl_ushort}/ETEX
+/BTEX\cldt[n]{cl_int}/ETEX
+/BTEX\cldt[n]{cl_uint}/ETEX
+/BTEX\cldt[n]{cl_long}/ETEX
+/BTEX\cldt[n]{cl_ulong}/ETEX
+/BTEX\cldt[n]{cl_half}/ETEX
+/BTEX\cldt[n]{cl_float}/ETEX
+/BTEX\cldt[n]{cl_double}/ETEX
+\stopclc
+其中 \ccmmsuffix{n} 可以是 2、 3、 4、 8 或 16。
+
+\cnglo{app}標量和矢量數據型別的定義在頭檔 \cemp{cl_platform.h} 中。
+
+\section[appendix:appDataTypeAlignment]{應用程式數據型別的齊位}
+
+用戶要負責確保傳入和傳出 OpenCL 緩衝的數據相對於緩衝的起始位址原生對齊，
+遵守\refsection{alignmentOfTypes}中的要求。
+其中隱含着，
+用 \cenum{CL_MEM_USE_HOST_PTR} 創建 OpenCL 緩衝時所提供的\cnglo{host}內存指位器
+必須按\cnglo{kernel}中存取這些緩衝時所用的數據型別進行對齊。
+此外，用戶也要負責傳入和傳出 OpenCL 圖像的數據按用來表示單個像素的數據粒度進行對齊
+（如：\ccmm{image_num_channels * sizeof(image_channel_data_type)}，
+不過對於 \cenum{CL_RGB} 和 \cenum{CL_RGBx} 圖像，只需按像素的單個通道的粒度進行對齊即可
+（即 \ccmm{sizeof(image_channel_data_type)}）。
+
+對於那些由\cnglo{app}所定義的、既不是緩衝也不是圖像的數據型別， OpenCL 不對其齊位作任何要求，
+但是如果包含矢量（如 \ccmm{__cl_float4}），
+必須要能用 \ccmm{cl_type} 聯合體中欄位的名字直接存取才行（\refappendixsec{appendixVecCom}）。
+儘管如此，還是建議頭檔 \cemp{cl_platform.h} 將 OpenCL 所定義的\cnglo{app}數據型別
+（如 \ccmm{cl_float4}）按其型別自然地對齊。
+
+\section{常值矢量}
+
+\cnglo{app}常值矢量可用來對矢量進行組件級賦值。
+使用常值矢量時編譯器可能會對其進行轉換。
+\startclc
+cl_float2 foo = { .s[1] = 2.0f };
+cl_int8 bar = {{ 2, 4, 6, 8, 10, 12, 14, 16 }};
+\stopclc
+
+\section[section:appendixVecCom]{矢量組件}
+
+可以使用符號 \ccmm{<vector_name>.s[<index>]} 對\cnglo{app}矢量型別的組件進行尋址。
+
+例如：
+\startclc
+foo.s[0] = 1.0f; // Sets the 1st vector component of foo
+pos.s[6] = 2; // Sets the 7th vector component of bar
+\stopclc
+
+一些情況下，也可以使用下列符號存取矢量組件。
+不保證所有實作都會支持這些符號，
+所以使用他們時要檢查一下相應的預處理器記號。
+
+\subsection{命名矢量組件符號}
+
+可以使用 \ccmm{.sN}、 \ccmm{.sn} 或 \ccmm{.xyzw} 來存取矢量數據型別的組件，
+跟 OpenCL 語言中所用類似。
+\ccmm{.xyzw} 僅可存取前四個組件。
+可以通過預處理器記號 \cmacro{CL_HAS_NAMED_VECTOR_FIELDS} 來識別是否支持這些符號。
+例如：
+\startclc
+#ifdef CL_HAS_NAMED_VECTOR_FIELDS
+	cl_float4 foo;
+	cl_int16 bar;
+	foo.x = 1.0f;	// Set first component
+	foo.s0 = 1.0f;	// Same as above
+	bar.z = 3;	// Set third component
+	bar.se = 11;	// Same as bar.s[0xe]
+	bar.sD = 12;	// Same as bar.s[0xd]
+#endif
+\stopclc
+
+與 OpenCL 語言不同的是，一次只能存取一個組件。
+這個局限使得不能像 OpenCL 語言型別那樣對組件進行重排或複製。
+如果存取時組件編號越界會導致失敗。
+
+\startclc
+foo.xy		// illegal - illegal field name combination
+bar.s1234	// illegal - illegal field name combination
+foo.s7		// illegal - no component s7
+\stopclc
+
+\subsection{High/Low 矢量組件符號}
+
+可以使用 \ccmm{.hi} 和 \ccmm{.lo} 來存取矢量數據型別的組件，
+跟所支持的語言型別類似。
+可以通過預處理器記號 \cmacro{CL_HAS_HI_LO_VECTOR_FIELDS} 來識別是否支持這些符號。
+例如：
+\startclc
+#ifdef CL_HAS_HI_LO_VECTOR_FIELDS
+	cl_float4 foo;
+	cl_float2 new_hi = 2.0f, new_lo = 4.0f;
+	foo.hi = new_hi;
+	foo.lo = new_lo;
+#endif
+\stopclc
+
+\subsection{原生矢量型別符號}
+
+為了將矢量型別映射到內建矢量型別上，還定義了原生矢量型別。
+不同於上述的\cnglo{app}矢量型別，
+這些原生型別僅僅是在有限的基礎上才支持，取決於所支持的架構和編譯器。
+
+這些型別不是聯合體，但可以更方便地映射到底層架構中的內建矢量型別上。
+原生型別的名字與對應的\cnglo{app}型別一樣，只不過帶有前綴雙下劃線“\ccmm{__}”。
+
+例如， \ccmm{__cl_float4} 就是一個原生矢量型別，
+對應於\cnglo{app}矢量型別 \ccmm{cl_float4}。
+用 \ccmm{__cl_float4} 可能可以直接存取內建的 \ccmm{__m128} 或矢量浮點型別，
+而 \ccmm{cl_float4} 則會被視為聯合體。
+
+另外，為方便存取，上述\cnglo{app}數據型別可能含有原生矢量數據型別的成員。
+用子矢量符號 \ccmm{.vN} 存取原生組件，其中 \ccmm{N} 為子矢量中的元素編號。
+如果原生型別是一個更大型別（具有更多組件）的子集，
+則此符號就成為子矢量型別的一個基於索引的陣列。
+
+通過與原生型別名相匹配的預處理器記號 \ccmm{__CL_TYPEN__} 來識別是否支持原生矢量型別。
+例如：
+\startclc
+#ifdef __CL_FLOAT4__	// Check for native cl_float4 type
+	cl_float8 foo;
+	__cl_float4 bar; // Use of native type
+	bar = foo.v4[1]; // Access the second native float4 vector
+#endif
+\stopclc
+
+\section{隱式轉換}
+
+不支持\cnglo{app}矢量型別間的隱式轉換。
+
+\section{顯式轉型}
+
+不支持對\cnglo{app}矢量型別 \cldt[n]{cl_type} 的顯式轉型。
+對原生矢量型別 \cldt[n]{__cl_type} 的顯式轉型則由外部編譯器定義。
+
+\section{其他算子和函式}
+
+對於\cnglo{app}矢量型別 \cldt[n]{cl_type} 和原生矢量型別 \cldt[n]{__cl_type} 而言，
+標準算子和函式的行為由外部編譯器定義。
+
+\section{應用程式常量的定義}
+
+除了以上\cnglo{app}型別的定義，還有下列常值定義。
+
+\input{appendix/tbl/tbl_const.tex}
+
+這些常值定義位於頭檔 \cemp{cl_platform.h} 中。
+
+\stopcomponent
+

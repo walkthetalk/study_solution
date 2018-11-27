@@ -1,0 +1,127 @@
+\subsection{保留以及釋放內存對象}
+
+\topclfunc{clRetainMemObject}
+
+\startCLFUNC
+cl_int clRetainMemObject (cl_mem memobj)
+\stopCLFUNC
+
+此函式會使 \carg{memobj} 的\cnglo{refcnt}增一。
+執行成功後會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤的一種：
+\startigBase
+\item \cenum{CL_INVALID_MEM_OBJECT}，如果 \carg{memobj} 無效。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\capi{clCreateBuffer}、 \capi{clCreateSubBuffer} 以及 \capi{clCreateImage}
+會實施隱式的\cnglo{retain}。
+
+\topclfunc{clReleaseMemObject}
+
+\startCLFUNC
+cl_int clReleaseMemObject (cl_mem memobj)
+\stopCLFUNC
+
+此函式會使 \carg{memobj} 的\cnglo{refcnt}減一。
+執行成功後會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤的一種：
+\startigBase
+\item \cenum{CL_INVALID_MEM_OBJECT}，如果 \carg{memobj} 無效。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+一旦 \carg{memobj} 的\cnglo{refcnt}變成零，
+並且所有使用他的\cnglo{cmd}都執行完畢，此\cnglo{memobj}就會被刪除。
+如果 \carg{memobj} 是一個\cnglo{bufobj}，
+只有等到其所有子\cnglo{bufobj}都被刪除後，才能將其刪除。
+
+\topclfunc{clSetMemObjectDestructorCallback}
+
+\startCLFUNC
+cl_int clSetMemObjectDestructorCallback (cl_mem memobj,
+		void (CL_CALLBACK *pfn_notify)(cl_mem memobj,
+			void *user_data),
+		void *user_data)
+\stopCLFUNC
+
+此函式會向 \carg{memobj} 註冊一個回調函式。
+每次調用 \capi{clSetMemObjectDestructorCallback} 都會
+將回調函式註冊到 \carg{memobj} 的回調棧上。
+回調函式的調用順序與其註冊順序相反。
+對於一個\cnglo{memobj}而言，這些回調函式是在其資源被釋放以及將其刪除之前調用的。
+這樣就提供了一種機制，
+當 \carg{host_ptr} (創建 \carg{memobj} 時指定）所引用的內存
+（用來存儲\cnglo{memobj}的內容）可以重用或是被釋放時，
+正在使用 \carg{memobj} 的\cnglo{app}（以及庫）可以收到通知。
+
+\carg{memobj} 是一個\cnglo{memobj}。
+
+\carg{pfn_notify} 即\cnglo{app}所註冊的回調函式。此函式可能會被 OpenCL 實作異步調用。
+\cnglo{app}需要保證此函式是線程安全的。
+此函式的參數有：
+\startigBase
+\item \carg{memobj} 就是要被刪除的\cnglo{memobj}。
+當此函式被調用時，這個\cnglo{memobj}就已經無效了。此處提供他只是出於參考的目的。
+
+\item \carg{user_data} 指向用戶提供的數據。
+\stopigBase
+
+\carg{user_data} 將在調用 \carg{pfn_notify} 時作為引數 \carg{user_data} 傳入。
+\carg{user_data} 可以是 \cmacro{NULL}。
+
+如果執行成功， \capi{clSetMemObjectDestructorCallback} 會返回 \cenum{CL_SUCCESS}。
+否則返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_MEM_OBJECT}，如果 \carg{memobj} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{pfn_notify} 是 \cmacro{NULL}。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\startnotepar
+當 OpenCL 實作調用回調函式時，
+\carg{host_ptr} （如果是用 \cenum{CL_MEM_USE_HOST_PTR} 創建的\cnglo{memobj}）
+所指向的內容是\cnglo{undef}的。
+此回調函式的一種典型應用就是用來釋放或重用 \carg{host_ptr} 所指向的內存。
+
+如果在回調函式中調用了下列 OpenCL API，其行為是\cnglo{undef}的：
+\startigBase
+\item \capi{clFinish}
+\item \capi{clWaitForEvents}
+\stopigBase
+
+如果在回調函式中有對下列 OpenCL API 的阻塞式調用，其行為也是\cnglo{undef}的：
+\startigBase
+\item \capi{clEnqueueReadBuffer}
+\item \capi{clEnqueueReadBufferRect}
+\item \capi{clEnqueueWriteBuffer}
+\item \capi{clEnqueueWriteBufferRect}
+\item \capi{clEnqueueReadImage}
+\item \capi{clEnqueueWriteImage}
+\item \capi{clEnqueueMapBuffer}
+\item \capi{clEnqueueMapImage}
+\item \capi{clBuildProgram}
+\item \capi{clCompileProgram}
+\item \capi{clLinkProgram}
+\stopigBase
+
+如果\cnglo{app}需要在回調函式中等待上面某一例程執行完畢，
+請使用相應例程的非阻塞方式，並設置回調來完成剩下的工作。
+需要注意的是，如果回調（或其他代碼）在\cnglo{cmdq}中插入了\cnglo{cmd}，
+在隊列刷新（flush）前不要求這些\cnglo{cmd}已經開始執行。
+在標準用法中，阻塞式的入隊調用通過顯式的刷新隊列來達到目的。
+由於回調中不允許阻塞式的調用，對於那些會在隊列中插入\cnglo{cmd}的回調而言，
+需要在返回前調用 \capi{clFlush} 或者將其安排在其他線程中隨後調用。
+
+回調函式不能再用引數 \carg{memobj} 調用其他 OpenCL API，否則其行為\cnglo{undef}。
+\stopnotepar

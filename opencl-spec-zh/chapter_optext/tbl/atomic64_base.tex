@@ -1,0 +1,132 @@
+% atomic_add
+\startbuffer[funcproto:atomic64_add]
+long atomic_add (
+	volatile __global long *p,
+	long val)
+long atomic_add (
+	volatile __local long *p,
+	long val)
+
+ulong atomic_add (
+	volatile __global ulong *p,
+	ulong val)
+ulong atomic_add (
+	volatile __local ulong *p,
+	ulong val)
+\stopbuffer
+\startbuffer[funcdesc:atomic64_add]
+讀取 \carg{p} 所指向的 64 位值（記為 \math{old}）。
+計算 \math{(old + \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_sub
+\startbuffer[funcproto:atomic64_sub]
+long atomic_sub (
+	volatile __global long *p,
+	long val)
+long atomic_sub (
+	volatile __local long *p,
+	long val)
+
+ulong atomic_sub (
+	volatile __global ulong *p,
+	ulong val)
+ulong atomic_sub (
+	volatile __local ulong *p,
+	ulong val)
+\stopbuffer
+\startbuffer[funcdesc:atomic64_sub]
+讀取 \carg{p} 所指向的 64 位值（記為 \math{old}）。
+計算 \math{(old - \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_xchg
+\startbuffer[funcproto:atomic64_xchg]
+long atomic_xchg (
+	volatile __global long *p,
+	long val)
+long atomic_xchg (
+	volatile __local long *p,
+	long val)
+
+ulong atomic_xchg (
+	volatile __global ulong *p,
+	ulong val)
+ulong atomic_xchg (
+	volatile __local ulong *p,
+	ulong val)
+\stopbuffer
+\startbuffer[funcdesc:atomic64_xchg]
+將位置 \carg{p} 中所存儲的值 \math{old} 和 \carg{val} 中的新值相互交換。
+返回 \math{old}。
+\stopbuffer
+
+% atomic_inc
+\startbuffer[funcproto:atomic64_inc]
+long atomic_inc (volatile __global long *p)
+long atomic_inc (volatile __local long *p)
+
+ulong atomic_inc (
+	volatile __global ulong *p)
+ulong atomic_inc (
+	volatile __local ulong *p)
+\stopbuffer
+\startbuffer[funcdesc:atomic64_inc]
+讀取 \carg{p} 所指向的 64 位值（記為 \math{old}）。
+計算 \math{(old+1)} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_dec
+\startbuffer[funcproto:atomic64_dec]
+long atomic_dec (volatile __global long *p)
+long atomic_dec (volatile __local long *p)
+
+ulong atomic_dec (
+	volatile __global ulong *p)
+ulong atomic_dec (
+	volatile __local ulong *p)
+\stopbuffer
+\startbuffer[funcdesc:atomic64_dec]
+讀取 \carg{p} 所指向的 64 位值（記為 \math{old}）。
+計算 \math{(old-1)} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_cmpchg
+\startbuffer[funcproto:atomic64_cmpxchg]
+long atomic_cmpxchg (
+	volatile __global long *p,
+	long cmp, long val)
+long atomic_cmpxchg (
+	volatile __local long *p,
+	long cmp,
+	long val)
+
+ulong atomic_cmpxchg (
+	volatile __global ulong *p,
+	ulong cmp,
+	ulong val)
+ulong atomic_cmpxchg (
+	volatile __local ulong *p,
+	ulong cmp,
+	ulong val)
+\stopbuffer
+\startbuffer[funcdesc:atomic64_cmpxchg]
+讀取 \carg{p} 所指向的 64 位值（記為 \math{old}）。
+計算 \math{(old == cmp) ? val : old} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+
+% begin table
+\startCLFD
+\clFD{atomic64_add}
+\clFD{atomic64_sub}
+\clFD{atomic64_xchg}
+\clFD{atomic64_inc}
+\clFD{atomic64_dec}
+\clFD{atomic64_cmpxchg}
+\stopCLFD

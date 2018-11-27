@@ -1,0 +1,48 @@
+\section{可選擴展的編譯指示}
+
+編譯指示 \cdrtemp{#pragma OPENCL EXTENSION} 控制着 OpenCL 編譯器關於擴展的行為。
+此指示定義如下：
+\startclc[indentnext=no]
+#pragma OPENCL EXTENSION /BTEX\cref{extension_name}/ETEX : /BTEX\cref{behavior}/ETEX
+#pragma OPENCL EXTENSION all : /BTEX\cref{behavior}/ETEX
+\stopclc
+其中 \cref{extension_name} 就是擴展的名字，
+形如 \clext{cl_khr_<名字>}（OpenCL 工作組所批准的擴展）或者 \clext{cl_<供應商的名字>_<名字>}（供應商的擴展）。
+而符記 \cemp{all} 則意味着在編譯器所支持的所有擴展上應用此行為。
+可以將 \cref{behavior} 設置為\reftab{behaviorDsc}中的值。
+
+\placetable[here][tab:behaviorDsc]
+{可選擴展的行為}
+{\input{chapter_optext/tbl/ext_behavior.tex}}
+
+就設定每個擴展的行為而言，
+編譯指示 \cdrtemp{#pragma OPENCL EXTENSION} 是一種簡單、底層的機制。
+但是他並沒有定義任何策略，比如哪種組合比較恰當；
+這些必須在其他地方定義。
+在設定每個擴展的行為時，指示的順序非常重要。
+後出現的指示會覆蓋早出現的。
+而變體 \cemp{all} 會設定所有擴展的行為，將覆蓋前面出現的所有擴展指示，
+但 \cref{behavior} 只能設置為 \cemp{disable}。
+
+編譯器的初始狀態相當於如下指示：
+\startclc[indentnext=no]
+#pragma OPENCL EXTENSION all : disable
+\stopclc
+告訴編譯器必須按照此規格來報告所有錯誤和警告，忽略所有擴展。
+
+每個擴展，只要會影響 OpenCL 語言的語義、文法或者為語言增加了內建函式，
+都必須創建一個預處理 \ccmm{#define} 來匹配擴展名。
+當且僅當實作支持此擴展時，這個 \ckey{#define} 才可用。
+
+例：
+
+如果一個擴展增加了擴展字串“\clext{cl_khr_3d_image_writes}”，
+那麼同時應當增加相應的預處理 \cemp{#define}。
+現在\cnglo{kernel}就可以像這樣來使用這個預處理 \ccmm{#define}：
+\startclc
+#ifdef cl_khr_3d_image_writes
+	// do something using the extension
+#else
+	// do something else or #error!
+#endif
+\stopclc

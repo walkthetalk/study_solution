@@ -1,0 +1,37 @@
+\section{64 位原子函式}
+
+下列兩個可選擴展實現了 \cqlf{__global} 和 \cqlf{__local} 內存中的 64 位
+帶符號和無符號整數上的原子運算：
+\startigBase
+\item \clext{cl_khr_int64_base_atomics}
+\item \clext{cl_khr_int64_extended_atomics}
+\stopigBase
+
+\cnglo{app}中要想使用這些擴展，
+必須在 OpenCL \cnglo{program}源碼中包含下列編譯指示之一：
+\startclc
+#pragma OPENCL EXTENSION cl_khr_int64_base_atomics : enable
+#pragma OPENCL EXTENSION cl_khr_int64_extended_atomics : enable
+\stopclc
+
+\reftab{atomic64_base}中列出了擴展 \clext{cl_khr_int64_base_atomics} 所支持的原子函式，
+其中所有函式都在一個原子事務內實施。
+
+\placetable[here,split][tab:atomic64_base]
+{擴展 \clext{cl_khr_int64_base_atomics} 的內建原子函式}
+{\input{chapter_optext/tbl/atomic64_base.tex}}
+
+\reftab{atomic64_ext}中列出了擴展 \clext{cl_khr_int64_extended_atomics} 所支持的原子函式，
+其中所有函式都在一個原子事務內實施。
+
+\placetable[here,split][tab:atomic64_ext]
+{擴展 \clext{cl_khr_int64_extended_atomics} 的內建原子函式}
+{\input{chapter_optext/tbl/atomic64_ext.tex}}
+
+對於執行這些原子函式的\cnglo{device}而言，這些事務都是原子的。
+而對於在多個\cnglo{device}上執行的\cnglo{kernel}而言，
+如果這些原子運算是在同一內存位置上實施的，則不保證其原子性。
+
+\startnotepar
+64 位整數和 32 位整數（包括 \ctype{float}）上的原子運算相互之間也是原子的。
+\stopnotepar

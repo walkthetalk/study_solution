@@ -1,0 +1,35 @@
+% Relative Error as ULPs
+\subsection[section:relativeErrorHalf]{相對誤差即 ULP}
+
+本節中，我們將討論相對誤差（定義為 \ccmm{ulp}，即 units in the last place，
+浮點數間的最小間隔）的最大值。
+對於半精度浮點數，
+如果支持 \cenum{CL_FP_ROUND_TO_NEAREST}，則缺省捨入模式為捨入為最近偶數；
+否則缺省捨入模式為向零捨入。
+而對於半精度浮點運算，如加、減、乘、積和熔加，則要求用缺省捨入模式正確捨入。
+
+轉換為半精度浮點格式時，
+如果指定了捨入模式 \ccmm{convert_}，則用此模式進行捨入；
+否則用缺省捨入模式進行捨入，或者 C 風格的轉型。
+
+而將 \cldt{half} 轉換為整數格式時，
+如果指定了捨入模式 \ccmm{convert_}，則用此模式進行捨入；
+否則向零捨入，或者使用 C 風格的轉型。
+
+由 \cldt{half} 轉換為浮點格式時都是無損的。
+
+\reftab{hpMathUlp}描述的是半精度浮點算術運算的最小精度，以 ULP 為單位。
+計算 ULP 值時所參考的是無限精確的結果。
+其中 0 ulp 表示相應函式無需捨入。
+
+\placetable[here,split][tab:hpMathUlp]
+{半精度內建數學函式的 ULP 值}
+{\input{chapter_optext/tbl/hp_math_ulp.tex}}
+
+\startnotepar
+在 \cldt{half} 標量或矢量數據型別上實施運算時，
+實作可能將 \cldt{half} 值轉換為 \cldt{float} 值，
+並在 \cldt{float} 值上實施運算。
+這種情況下，實作僅將 \cldt{half} 標量或矢量數據型別作為存儲格式。
+\stopnotepar
+

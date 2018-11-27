@@ -1,0 +1,82 @@
+\subsubsection[section:imgFmtDsc]{圖像格式描述符}
+
+圖像格式描述符的結構定義如下：
+\startclc
+typedef struct _cl_image_format {
+	cl_channel_order	image_channel_order;
+	cl_channel_type		image_channel_data_type;
+} cl_image_format;
+\stopclc
+
+\cvar{image_channel_order} 指定了通道（channel）數目以及通道布局，
+即圖像中通道存儲的內存布局。其有效值參見\reftab{imgChannelOrder}。
+
+\cvar{image_channel_data_type} 即通道的數據類型。
+其有效值參見\reftab{imgChannelDataType}。
+
+由以上兩者所確定的圖像元素的位數必須是 2 的指數。
+
+\placetable[here][tab:imgChannelOrder]{圖像通道順序}
+{\input{chapter_rt/tbl/tbl_img_channel_order.tex}}
+
+\placetable[here][tab:imgChannelDataType]{圖像通道數據類型}
+{\input{chapter_rt/tbl/tbl_img_channel_data_type.tex}}
+
+例如，如果 \cvar{image_channel_order} = \cenum{CL_RGBA}，
+\cvar{image_channel_data_type} = \cenum{CL_UNORM_INT8}，
+則其內存布局為：
+
+% 如果沒有 split=off，則會導致混亂
+\midaligned{
+\bTABLE[frame=off,split=off]
+\bTR[align={middle,lohi}]
+\bTD \eTD
+\bTD[frame=on,width=.1\textwidth] R \eTD
+\bTD[frame=on,width=.1\textwidth] G \eTD
+\bTD[frame=on,width=.1\textwidth] B \eTD
+\bTD[frame=on,width=.1\textwidth] A \eTD
+\bTD[frame=on,width=.3\textwidth] …………………… \eTD
+\eTR
+\bTR
+\bTD 偏移字節數 \math{\rightarrow} \eTD \bTD 0 \eTD \bTD 1 \eTD \bTD 2 \eTD \bTD 3 \eTD \bTD \eTD
+\eTR
+\eTABLE
+}
+
+類似，如果 \cvar{image_channel_order} = \cenum{CL_RGBA}，
+\cvar{image_channel_data_type} = \cenum{CL_SIGNED_INT16}，
+則其內存布局為：
+
+\midaligned{
+\bTABLE[frame=off,split=off]
+\bTR[frame=on,align={middle,lohi}]
+\bTD[frame=off] \eTD
+\bTD[width=.1\textwidth] R \eTD
+\bTD[width=.1\textwidth] G \eTD
+\bTD[width=.1\textwidth] B \eTD
+\bTD[width=.1\textwidth] A \eTD
+\bTD[width=.3\textwidth] …………………… \eTD
+\eTR
+\bTR
+\bTD 偏移字節數 \math{\rightarrow} \eTD \bTD 0 \eTD \bTD 2 \eTD \bTD 4 \eTD \bTD 6 \eTD \bTD \eTD
+\eTR
+\eTABLE
+}
+
+\cenum{CL_UNORM_SHORT_565}、 \cenum{CL_UNORM_SHORT_555}
+和 \cenum{CL_UNORM_INT_101010} 這三種通道數據類型比較特殊，
+他們都是壓縮過的圖像格式，每個元素的所有通道數據被壓縮到一個無符號短整形或無符號整形中。
+在壓縮時，一般第一個通道佔據最高位（most significant bit)，後續通道相繼佔據次高位。
+對於 \cenum{CL_UNORM_SHORT_565}， \ccmm{R} 佔據比特 \ccmm{15:11}；
+\ccmm{G} 佔據比特 \ccmm{10:5}； \ccmm{B} 佔據比特 \ccmm{4:0}。
+對於 \cenum{CL_UNORM_SHORT_555}，比特 \ccmm{15} \cnglo{undef}；
+\ccmm{R} 佔據比特 \ccmm{14:10}； \ccmm{G} 佔據比特 \ccmm{9:5}；
+\ccmm{B} 佔據比特 \ccmm{4:0}。
+對於 \cenum{CL_UNORM_INT_101010}， 比特 \ccmm{31:30} \cnglo{undef}；
+\ccmm{R} 佔據比特 \ccmm{29:20}； \ccmm{G} 佔據比特 \ccmm{19:10}；
+\ccmm{B} 佔據比特 \ccmm{9:0}。
+
+OpenCL 實作必須能夠保持 \cvar{image_channel_data_type} 的位數所指定的最小精度。
+如果 OpenCL 實作不支持由 \cvar{image_channel_order}
+和 \cvar{image_channel_data_type} 所定義的圖像格式，
+則 \capi{clCreateImage} 會返回 \cmacro{NULL}。

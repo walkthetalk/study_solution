@@ -1,0 +1,15 @@
+\subsection{公共函式}
+
+對\reftab{svCommonFunc}中所列的內建公共函式作了擴充，
+函式引數和返回值也可以是 \cldt{half} 和 \cldt[n]{half}，
+參見\reftab{svCommonFuncHalf}。
+現在， \cldt{gentype} 也包含 \cldt{half} 和 \cldt[n]{half}，
+其中 \ccmmsuffix{n} 可以是 2、 3、 4、 8、 16。
+
+\startnotepar
+可以使用化簡（如 \capi{mad} 或 \capi{fma}）來實現 \capi{mix} 和 \capi{smoothstep}。
+\stopnotepar
+
+\placetable[here][tab:svCommonFuncHalf]
+{內建公共函式}
+{\input{chapter_optext/tbl/common_func_half.tex}}

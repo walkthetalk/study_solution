@@ -1,0 +1,224 @@
+\startcomponent cpn-port
+\product opencl-spec-zh
+
+\chapter[appendix:port]{可移植性}
+
+OpenCL 的設計目標之一就是要能移植到其他架構和硬件上。
+OpenCL 的核心是基於 C99 的編程語言。
+浮點算術基於 {\ftEmp{IEEE-754}} 和 {\ftEmp{IEEE-754-2008}} 標準。
+設計\cnglo{memobj}、指位器限定符以及弱序內存（weakly ordered memory）的目的就是
+要為 OpenCL \cnglo{device}所實現的分離式內存架構提供最大的兼容性。
+\cnglo{cmdq}和\cnglo{barrier}允許在\cnglo{host}和 OpenCL \cnglo{device}間進行同步。
+OpenCL 的設計、能力以及限制很好的反映了下層硬件的能力。
+
+不幸的是，有很多事情某種硬件能夠做到，而對於其他硬件來說則無能為力。
+拜常駐 CPU 的操作系統所賜，在一些實作中，
+\cnglo{kernel}在 CPU 上執行時可以調出系統服務，
+而在 GPU 上同樣的調用則可能會失敗，至少目前如此。（參見\refchapter{optExt}）。
+出於調試的目的，這些服務還是非常有用的，實作可以用 OpenCL 的擴展機制來實現這些服務。
+
+同樣，計算架構的不同可能意味着，一個迴圈結構在 CPU 上的執行速度還可以接受，
+但在 GPU 上執行時性能可能會很差。
+CPU 一般都是為單線程任務、時延敏感的算法設計的，因此這種任務執行的很好，
+而 GPU 則可能遭遇相當長的時延，甚至是指數級的惡化。
+志於編寫可移植代碼的開發人員可能會發現，
+要想確保關鍵算法在多種設備上都工作的很好，在每種設備上都要進行測試。
+我們建議增加\cnglo{workitem}的數目。
+希望在未來的歲月中逐漸積累經驗，能夠產生一些統一的最佳實踐，
+讓我們能夠在多種計算設備上都能夠使用。
+
+我們更關心的可能是端序。
+鑒於最開始 OpenCL 的一些實作都是針對小端設備的，
+開發人員需要確保其\cnglo{kernel}在大端、小端設備上都做過測試，
+從而保證源碼對現在以及將來的 OpenCL 設備的兼容性。
+OpenCL 編程語言還支持端序特性限定符，
+允許開發人員指定數據使用\cnglo{host}的端序還是 OpenCL \cnglo{device}的端序。
+這樣使得 OpenCL 編譯器在裝載、存儲數據時可以進行適當的端序轉換。
+
+下面我們來描述端序是怎樣導致意料之外的結果的：
+
+當大端矢量機器（如 AltiVec， CELL SPE）裝載矢量時，數據的次序保持不變，
+即每個矢量元素內部的字節序以及元素間的次序都與內存中的一樣。
+當小端矢量機器（如 SSE）裝載矢量時，會將寄存器中的數據反序（所有工作都是在寄存器中完成的），
+每個矢量元素內部的字節序以及元素間的次序{\ftEmp{都}}會反序。
+\define[5]\endianExample{%
+\bTABLE[frame=on,style={\tt\tf},color=blue,]
+\bTR[align={middle,middle}]
+\bTD[frame=off,width=.2\textwidth]#1 \eTD
+\bTD[width=.2\textwidth]#2\eTD
+\bTD[width=.2\textwidth]#3\eTD
+\bTD[width=.2\textwidth]#4\eTD
+\bTD[width=.2\textwidth]#5\eTD
+\eTR
+\eTABLE
+}
+
+內存：
+
+\endianExample{uint4 a = }{\ftEmp 0x00010203}{0x04050607}{0x08090A0B}{0x0C0D0E0F}
+
+寄存器（大端）：
+
+\endianExample{uint4 a = }{\ftEmp 0x00010203}{0x04050607}{0x08090A0B}{0x0C0D0E0F}
+
+寄存器（小端）：
+
+\endianExample{uint4 a = }{0x0F0E0D0C}{0x0B0A0908}{0x07060504}{\ftEmp 0x03020100}
+
+無論矢量中每塊數據有多大，小端機器一次就能將其全部裝載。
+也就是說，矢量為 \ctype{uchar16} 還是 \ctype{ulong2}，所進行的變換都一樣。
+當然，眾所周知，對於陣列元素，小端機器\inmargin{%
+注意，此處我們談論的是編程模型。
+事實上，小端系統可能採用其他方式，如只是簡單地從“右側”尋址或將字節中的位反序。
+這兩種方式都意味着硬件上無需大的交換空間。
+}實際上按反向字節序存儲數據，以作為小端存儲格式的補償：
+
+內存（大端）：
+
+\endianExample{uint4 a = }{\ftEmp 0x00010203}{0x04050607}{0x08090A0B}{0x0C0D0E0F}
+
+內存（小端）：
+
+\endianExample{uint4 a = }{\ftEmp 0x03020100}{0x07060504}{0x0B0A0908}{0x0F0E0D0C}
+
+一旦數據裝載到矢量中，以此結束：
+
+寄存器（大端）：
+
+\endianExample{uint4 a = }{\ftEmp 0x00010203}{0x04050607}{0x08090A0B}{0x0C0D0E0F}
+
+寄存器（小端）：
+
+\endianExample{uint4 a = }{0x0C0D0E0F}{0x08090A0B}{0x04050607}{\ftEmp 0x00010203}
+
+在糾正每個元素內的字節序過程中，同時也會反轉元素間的次序。
+\ccmm{0x00010203} 位於大端矢量的左側，但位於小端矢量的右側。
+
+如果\cnglo{host}和\cnglo{device}具有不同的端序，
+則開發人員需要保證\cnglo{kernel}引數的值得到了正確處理。
+實作不一定會自動轉換\cnglo{kernel}引數的端序。
+至於這些情況下要如何處置\cnglo{kernel}引數，開發人員需要查閱供應商的文檔。
+
+通過按元素在內存中的次序進行編號， OpenCL 為不同架構提供了一致的編程模型。
+\ccmm{even/odd} 和 \ccmm{high/low} 的概念也是這樣的。
+一旦將數據裝載到寄存器中，我們會發現元素 \ccmm{0} 是大端矢量的最左側元素，
+卻是小端矢量的最右側元素。
+
+\startclc
+float x[4];
+float4 v = vload4( 0, x );
+\stopclc
+
+大端：
+\startclc
+v contains { x[0], x[1], x[2], x[3] }
+\stopclc
+
+小端：
+\startclc
+v contains { x[3], x[2], x[1], x[0] }
+\stopclc
+
+編譯器知道所發生的交換並據此引用元素。
+只要我們是通過數值索引（像 \ccmm{.s0123456789abcdef}）或
+描述符（像 \ccmm{.xyzw}、 \ccmm{.hi}、 \ccmm{.lo}、 \ccmm{.even} 和 \ccmm{.odd}）
+來存取這些元素，那麼這種交換就是透明的。
+當將數據存儲回內存中時，所有次序反轉都會被撤銷。
+對於大多數問題而言，開發人員都應當按大端編程模型工作，並忽略矢量元素的次序問題。
+此機制依賴於以下事實：我們可以信賴始終如一的元素編號。
+一旦我們改變了編號系統，例如通過無需轉換的轉型（使用 \cldt[n]{as_type}）
+將一個矢量轉型成另外一個大小相同但元素個數不同的矢量，
+則在不同的實作中可能得到不同的結果，這取決於系統是大端的、小端的，還是根本沒有矢量單元。
+（因此，對於元素數目不同的矢量間的直轉（bitcast），
+其行為\cnglo{impdef}，參見\refsection{reinterpret}。）
+
+看下面這個例子：
+\startclc[indentnext=no]
+float x[4] = { 0.0f, 1.0f, 2.0f, 3.0f };
+float4 v = vload4( 0, x );
+uint4 y = (uint4) v;		// legal, portable
+ushort8 z = (ushort8) v;	// legal, not portable
+				// element size changed
+
+Big-endian:
+	v contains { 0.0f, 1.0f, 2.0f, 3.0f }
+	y contains { 0x00000000, 0x3f800000,
+			0x40000000, 0x40400000 }
+	z contains { 0x0000, 0x0000, /BTEX\ftEmp{0x3f80}/ETEX, 0x0000,
+			0x4000, 0x0000, 0x4040, 0x0000 }
+	z.z is 0x3f80
+
+Little-endian:
+	v contains { 3.0f, 2.0f, 1.0f, 0.0f }
+	y contains { 0x40400000, 0x40000000,
+			0x3f800000, 0x00000000 }
+	z contains { 0x4040, 0x0000, 0x4000,
+			0x0000, 0x3f80, /BTEX\ftEmp{0x0000}/ETEX, 0x0000, 0x0000 }
+	z.z is 0
+\stopclc
+其中 \ccmm{z.z} 中的值在大端機器和小端機器上是不同的。
+
+OpenCL 以移植性的名義規定，如果無需轉換的轉型改變了元素的數目，則\cnglo{illegal}。
+然而，雖然 OpenCL 提供了一組公共的矢量算子（取自矢量機器），
+還是不能以一種始終如一、統一且可移植的方式來存取每個 ISA 都會提供的所有東西。
+許多矢量 ISA 提供了一些特定目的的指令，可以極大地加速一些特定運算，
+像 DCT、 SAD、或 3D 幾何。
+我們不打算讓 OpenCL 如此笨重以致難以上手，
+如果那樣的話，在編寫對時間有嚴格要求、性能敏感的算法時，
+即使是經驗豐富的開發人員也難以使其接近頂峰性能。
+開發人員更傾向於拋開移植性，在代碼中使用特定平台的指令。
+有鑒於此， OpenCL 允許傳統的矢量 C 語言編程擴展作為 OpenCL 的擴展直接使用 OpenCL 數據型別，
+像 AltiVec C 編程接口，或 Intel C 編程接口（在 \ccmm{emmintrin.h} 中可以找到）。
+由於這些接口要想正常運作，依賴於無需轉換、但會改變矢量元素數目的轉型，
+所以 OpenCL 也允許這種轉型。
+
+作為通用規則，任何矢量型別的運算，只要元素數目與實際矢量型別的元素數目不同，
+那麼他在其他不同端序或不同矢量架構的硬件上運行時都可能終止。
+
+這樣的例子有：
+\startigBase
+\item 使用算子 \ccmm{.even} 和 \ccmm{.odd} 將兩個 \ccmm{uchar8} 分別
+作為 \ccmm{ushort} 的高字節和低字節組合成一個 \ccmm{ushort8}
+（請使用 \capi{upsample}，參見\refsection{integerFunc}）。
+
+\item 任何會改變矢量元素數目的直轉。（新型別上的運算是不可移植的。）
+
+\item 所用塊大小與元素大小不同，且會改變數據次序的重排運算。
+\stopigBase
+
+下列運算則則是可移植的：
+\startigBase
+\item 使用算子 \ccmm{.even} 和 \ccmm{.odd} 將兩個 \ccmm{uint8} 組合成一個 \ccmm{uchar16}。
+例如將左右兩個聲道的音頻流間插到一起。
+
+\item 任何不會改變矢量元素數目的直轉（如 \ccmm{(float4)uint4}，為浮點型別定義存儲格式）。
+
+\item 單位為矢量元素的重排運算。
+\stopigBase
+
+OpenCL 為 C 增加了一些東西，使\cnglo{app}的行為更可靠。
+最主要的就是 OpenCL 中定義了下列運算的行為，而這些在 C99 中並沒有定義：
+\startigBase
+\item OpenCL 為所有型別間的轉換都提供了 \ccmm{convert_} 算子。
+在將浮點型別轉換成整數型別時，在捨入後浮點值可能仍然超出了整數可表示的範圍，
+這時會發生什麼在 C99 中沒有定義。
+如果使用了 \ccmm{_sat} 轉換，則浮點值會被轉換成最近的可表示的整數。
+類似地，對於 NaN 會發生什麼， OpenCL 也給出了建議。
+對於提供有硬件實現的飽和轉換的硬件製造商，
+OpenCL \ccmm{convert_} 算子的飽和版本和非飽和版本可能都會使用此硬件。
+而對於非飽和版本，如果浮點算元在捨入後仍然超出了整數可表示的範圍，
+這時會發生什麼 OpenCL 則沒有定義。
+
+\item 在 IEEE-754 標準草案中，型別 \ctype{half}、 \ctype{float} 和 \ctype{double}
+的格式定義為 binary16、 binary32 和 binary64。
+（後兩個在現有的 IEEE-754 標準中是相同的。）
+你可能要依賴於此定義中各個位的位置和意義。
+
+\item OpenCL 中定義了移位越界時的行為。
+如果移位運算的移位數大於或等於第一個算子的位數，則會對其取模。
+例如，如果要將 \ccmm{int4} 左移 \ccmm{33} 位，則 OpenCL 將按左移 \ccmm{33%32 = 1} 對待。
+
+\item 對於數學庫函式中的大量邊界條件，比 C99 定義的更加嚴格。參見\refsection{edgeCaseBehavior}。
+\stopigBase
+
+\stopcomponent

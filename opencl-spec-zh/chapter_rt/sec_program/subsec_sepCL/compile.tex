@@ -1,0 +1,144 @@
+\topclfunc{clCompileProgram}
+
+\startCLFUNC
+cl_int clCompileProgram(
+		cl_program program,
+		cl_uint num_devices,
+		const cl_device_id *device_list,
+		const char *options,
+		cl_uint num_input_headers,
+		const cl_program *input_headers,
+		const char **header_include_names,
+		void (CL_CALLBACK *pfn_notify)(
+				cl_program program,
+				void *user_data),
+		void *user_data)
+\stopCLFUNC
+
+此函式可以編譯\cnglo{program}源碼。
+編譯前會先運行預處理器。
+編譯工作的目標\cnglo{device}是
+\carg{program} 關聯的所有\cnglo{device}或指定的那些\cnglo{device}。
+對於編譯後的二進制目標碼，
+可以使用 \capi{clGetProgramInfo}(\carg{program}, \cenum{CL_PROGRAM_BINARIES}, ...) 對其進行查詢，
+也可以由 \capi{clCreateProgramWithBinary} 用來創建新的\cnglo{programobj}。
+
+\carg{program} 是一個\cnglo{programobj}，即編譯的目標。
+
+\carg{device_list} 指向 \carg{program} 所關聯的\cnglo{device}。
+如果 \carg{device_list} 是 \cmacro{NULL}，
+則編譯動作的目標\cnglo{device}為 \carg{program} 關聯的所有\cnglo{device}。
+否則，僅為此清單中的\cnglo{device}實施編譯。
+
+\carg{num_devices} 即 \carg{device_list} 中\cnglo{device}的數目。
+
+\carg{options} 指向一個以 null 終止的字串，用來描述編譯選項。
+所支持的選項請參閱\refsection{compilerOption}。
+
+\carg{num_input_headers} 即陣列 \carg{input_headers} 中\cnglo{program}的數目。
+
+\carg{input_headers} 是一個陣列，元素為內嵌頭檔的\cnglo{program}，
+這些\cnglo{program}由 \capi{clCreateProgramWithSource} 創建。
+
+\carg{header_include_names} 也是一個陣列，並與 \carg{input_headers} 一一對應。
+每一項就是 \carg{program} 源碼中一個內嵌頭檔的名字。
+\carg{input_headers} 中對應項即為包含此頭檔源碼的\cnglo{programobj}。
+搜索頭檔時，
+內嵌頭檔比編譯選項 \ccmm{-I} 所列目錄（\refsection{preprocessorOption}）有更高優先級。
+如果 \carg{header_include_names} 中有多項名字相同的頭檔，則使用最先搜索到的。
+
+例如，假設有如下\cnglo{program}源碼：
+\startclc[indentnext=no]
+#include <foo.h>
+#include <mydir/myinc.h>
+
+__kernel void image_filter (int n, int m,
+			__constant float *filter_weights,
+			__read_only image2d_t src_image,
+			__write_only image2d_t dst_image)
+{
+	...
+}
+\stopclc
+這個\cnglo{kernel}包含了兩個頭檔 foo.h 和 mydir/myinc.h。
+下面來看怎樣將其傳遞並內嵌到\cnglo{programobj}中：
+\startclc
+cl_program foo_pg = clCreateProgramWithSource(context,
+				1, &foo_header_src, NULL, &err);
+cl_program myinc_pg = clCreateProgramWithSource(context,
+				1, &myinc_header_src, NULL, &err);
+
+// let’s assume the program source described above is given
+// by program_A and is loaded via clCreateProgramWithSource
+
+cl_program input_headers[2] = { foo_pg, myinc_pg };
+char * input_header_names[2] = { “foo.h”, “mydir/myinc.h” };
+clCompileProgram(program_A,
+		0, NULL,	// num_devices & device_list
+		NULL,		// compile_options
+		2,		// num_input_headers
+		input_headers,
+		input_header_names,
+		NULL, NULL);	// pfn_notify & user_data
+\stopclc
+
+\carg{pfn_notify} 是\cnglo{app}所註冊的一個回調函式。
+在編譯完成後（無論成功還是失敗）會被調用。
+如果 \carg{pfn_notify} 不是 \cmacro{NULL}，一旦可以開始編譯，
+\capi{clCompileProgram} 就會立刻返回，而不必等待編譯完成。
+如果\cnglo{context}、所要編譯的\cnglo{program}源碼、\cnglo{device}清單、
+所輸入的頭檔以及相應的\cnglo{program}，還有構建選項都是有效的，
+並且實施編譯所需的\cnglo{host}和\cnglo{device}資源都可用，那麼就可以開始進行編譯了。
+如果 \carg{pfn_notify} 是 \cmacro{NULL}，
+直到編譯完畢， \capi{clCompileProgram} 才會返回。
+對此函式的調用可能是異步的。
+\cnglo{app}需要保證此函式是線程安全的。
+
+\carg{user_data} 在調用 \carg{pfn_notify} 時作為引數傳入，可以是 \cmacro{NULL}。
+
+如果執行成功，則 \capi{clCompileProgram} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_PROGRAM}，如果 \carg{program} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{device_list} 是 \cmacro{NULL} 而 \carg{num_devices} 大於零，
+或者 \carg{device_list} 不是 \cmacro{NULL} 而 \carg{num_devices} 等於零。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{num_input_headers} 是零，
+而 \carg{header_include_names} 或 \carg{input_headers} 不是 \cmacro{NULL}；
+或者 \carg{num_input_headers} 不是零，
+而 \carg{header_include_names} 或 \carg{input_headers} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{pfn_notify} 是 \cmacro{NULL}，而 \carg{user_data} 不是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_DEVICE}，
+如果 \carg{device_list} 中的 OpenCL \cnglo{device}不是 \carg{program} 所關聯\cnglo{device}。
+
+\item \cenum{CL_INVALID_COMPILER_OPTIONS}，
+如果 \carg{options} 所指定的編譯選項無效。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果對於 \carg{device_list} 中任一\cnglo{device}而言，
+之前調用 \capi{clCompileProgram} 或 \capi{clBuildProgram} 為 \carg{program} 編譯或構建
+他所對應的\cnglo{program}執行體的動作還未完成。
+
+\item \cenum{CL_COMPILER_NOT_AVAILABLE}，
+如果沒有可用的編譯器，即 \cenum{CL_DEVICE_COMPILER_AVAILABLE} 是 \cenum{CL_FALSE}，
+參見\reftab{cldevquery}。
+
+\item \cenum{CL_COMPILE_PROGRAM_FAILURE}，如果編譯\cnglo{program}源碼失敗。
+如果 \capi{clCompileProgram} 沒有將此錯誤返回，則在編譯結束後會將其返回。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果有附着到 \carg{program} 上的\cnglo{kernelobj}。
+
+\item \cenum{CL_INVALID_OPERATION}，如果沒有 \carg{program} 的源碼，
+即 \carg{program} 不是由 \capi{clCreateProgramWithSource} 創建的。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

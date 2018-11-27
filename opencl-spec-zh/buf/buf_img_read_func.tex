@@ -1,0 +1,658 @@
+% read_imagef_2d
+\startbuffer[funcproto:read_imagef_2d]
+float4 read_imagef (
+	image2d_t image,
+	sampler_t sampler,
+	int2 coord)
+float4 read_imagef (
+	image2d_t image,
+	sampler_t sampler,
+	float2 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imagef_2d]
+用坐標 \math{(coord.x, coord.y)} 查找 2D \cnglo{imgobj} \carg{image} 中的元素。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+預定義的壓縮過的格式或 \cenum{CL_UNORM_INT8} 或 \cenum{CL_UNORM_INT16}，
+則返回的浮點值在區間 \math{[0.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_SNORM_INT8} 或 \cenum{CL_SNORM_INT16}，
+則返回的浮點值在區間 \math{[-1.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_HALF_FLOAT} 或 \cenum{CL_FLOAT}，
+則返回原始浮點值。
+
+對於使用整數坐標的 \capi{read_imagef} 所用\cnglo{sampler}而言，
+其濾波模式必須是 \cenum{CLK_FILTER_NEAREST}，
+歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+如果是其他值，結果未定義。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上面所列範圍內，
+則結果未定義。
+\stopbuffer
+
+% read_imageh_2d
+\startbuffer[funcproto:read_imageh_2d]
+half4 read_imageh (
+	image2d_t image,
+	sampler_t sampler,
+	int2 coord)
+half4 read_imageh (
+	image2d_t image,
+	sampler_t sampler,
+	float2 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imageh_2d]
+用坐標 \math{(coord.x, coord.y)} 查找 2D \cnglo{imgobj} \carg{image} 中的元素。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+預定義的壓縮過的格式或 \cenum{CL_UNORM_INT8} 或 \cenum{CL_UNORM_INT16}，
+則返回的半精度浮點值在區間 \math{[0.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_SNORM_INT8} 或 \cenum{CL_SNORM_INT16}，
+則返回的半精度浮點值在區間 \math{[-1.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是 \cenum{CL_HALF_FLOAT}，
+則返回原始半精度浮點值。
+
+對於使用整數坐標的 \capi{read_imageh} 所用\cnglo{sampler}而言，
+其濾波模式必須是 \cenum{CLK_FILTER_NEAREST}，
+歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+如果是其他值，結果未定義。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上面所列範圍內，
+則結果未定義。
+\stopbuffer
+
+% read_imagei_2d
+\startbuffer[funcproto:read_imagei_2d]
+int4 read_imagei (
+	image2d_t image,
+	sampler_t sampler,
+	int2 coord)
+int4 read_imagei (
+	image2d_t image,
+	sampler_t sampler,
+	float2 coord)
+
+uint4 read_imageui (
+	image2d_t image,
+	sampler_t sampler,
+	int2 coord)
+uint4 read_imageui (
+	image2d_t image,
+	sampler_t sampler,
+	float2 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imagei_2d]
+用坐標 \math{(coord.x, coord.y)} 查找 2D \cnglo{imgobj} \carg{image} 中的元素。
+
+\capi{read_imagei} 和 \capi{read_imageui} 所返回的值分別為
+非歸一化帶符號整數和非歸一化無符號整數。
+
+對於 \capi{read_imagei} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase[indentnext=no]
+\item \cenum{CL_SIGNED_INT8}
+\item \cenum{CL_SIGNED_INT16}
+\item \cenum{CL_SIGNED_INT32}
+\stopigBase
+如果 \carg{image_channel_data_type} 不在上述值之列，則結果未定義。
+
+對於 \capi{read_imageui} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase[indentnext=no]
+\item \cenum{CL_UNSIGNED_INT8}
+\item \cenum{CL_UNSIGNED_INT16}
+\item \cenum{CL_UNSIGNED_INT32}
+\stopigBase
+如果 \carg{image_channel_data_type} 不在上述值之列，則結果未定義。
+
+\capi{read_image{i|ui}} 僅支持最近濾波。
+即 \carg{sampler} 中的濾波模式必須是 \cenum{CLK_FILTER_NEAREST}；
+否則結果未定義。
+
+對於使用整數坐標的 \capi{read_image{i|ui}} 所用\cnglo{sampler}而言，
+其歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+否則結果未定義。
+\stopbuffer
+
+% read_imagef_3d
+\startbuffer[funcproto:read_imagef_3d]
+float4 read_imagef (
+	image3d_t image,
+	sampler_t sampler,
+	int4 coord )
+float4 read_imagef (
+	image3d_t image,
+	sampler_t sampler,
+	float4 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imagef_3d]
+用坐標 \math{(coord.x, coord.y, coord.z)}
+ 查找 3D \cnglo{imgobj} \carg{image} 中的元素。
+其中 \math{coord.w} 被忽略。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+預定義的壓縮過的格式或 \cenum{CL_UNORM_INT8} 或 \cenum{CL_UNORM_INT16}，
+則返回的浮點值在區間 \math{[0.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_SNORM_INT8} 或 \cenum{CL_SNORM_INT16}，
+則返回的浮點值在區間 \math{[-1.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_HALF_FLOAT} 或 \cenum{CL_FLOAT}，
+則返回原始浮點值。
+
+對於使用整數坐標的 \capi{read_imagef} 所用\cnglo{sampler}而言，
+其濾波模式必須是 \cenum{CLK_FILTER_NEAREST}，
+歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+如果是其他值，結果未定義。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上面所列範圍內，
+則結果未定義。
+\stopbuffer
+
+% read_imageh_3d
+\startbuffer[funcproto:read_imageh_3d]
+half4 read_imageh (
+	image3d_t image,
+	sampler_t sampler,
+	int4 coord )
+half4 read_imageh (
+	image3d_t image,
+	sampler_t sampler,
+	float4 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imageh_3d]
+用坐標 \math{(coord.x, coord.y, coord.z)}
+ 查找 3D \cnglo{imgobj} \carg{image} 中的元素。
+其中 \math{coord.w} 被忽略。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+預定義的壓縮過的格式或 \cenum{CL_UNORM_INT8} 或 \cenum{CL_UNORM_INT16}，
+則返回的半精度浮點值在區間 \math{[0.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_SNORM_INT8} 或 \cenum{CL_SNORM_INT16}，
+則返回的半精度浮點值在區間 \math{[-1.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是 \cenum{CL_HALF_FLOAT}，
+則返回原始半精度浮點值。
+
+對於使用整數坐標的 \capi{read_imageh} 所用\cnglo{sampler}而言，
+其濾波模式必須是 \cenum{CLK_FILTER_NEAREST}，
+歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+如果是其他值，結果未定義。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上面所列範圍內，
+則結果未定義。
+\stopbuffer
+
+% read_imagei_3d
+\startbuffer[funcproto:read_imagei_3d]
+int4 read_imagei (
+	image3d_t image,
+	sampler_t sampler,
+	int4 coord)
+int4 read_imagei (
+	image3d_t image,
+	sampler_t sampler,
+	float4 coord)
+uint4 read_imageui (
+	image3d_t image,
+	sampler_t sampler,
+	int4 coord)
+uint4 read_imageui (
+	image3d_t image,
+	sampler_t sampler,
+	float4 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imagei_3d]
+用坐標 \math{(coord.x, coord.y, coord.z)} 查找
+ 3D \cnglo{imgobj} \carg{image} 中的元素。
+其中 \math{coord.w} 被忽略。
+
+\capi{read_imagei} 和 \capi{read_imageui} 所返回的值分別為
+非歸一化帶符號整數和非歸一化無符號整數。
+每個通道的值都是 32 位整數。
+
+對於 \capi{read_imagei} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase[indentnext=no]
+\item \cenum{CL_SIGNED_INT8}
+\item \cenum{CL_SIGNED_INT16}
+\item \cenum{CL_SIGNED_INT32}
+\stopigBase
+如果 \carg{image_channel_data_type} 不在上述值之列，則結果未定義。
+
+對於 \capi{read_imageui} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase[indentnext=no]
+\item \cenum{CL_UNSIGNED_INT8}
+\item \cenum{CL_UNSIGNED_INT16}
+\item \cenum{CL_UNSIGNED_INT32}
+\stopigBase
+如果 \carg{image_channel_data_type} 不在上述值之列，則結果未定義。
+
+\capi{read_image{i|ui}} 僅支持最近濾波。
+即 \carg{sampler} 中的濾波模式必須是 \cenum{CLK_FILTER_NEAREST}；
+否則結果未定義。
+
+對於使用整數坐標的 \capi{read_image{i|ui}} 所用\cnglo{sampler}而言，
+其歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+否則結果未定義。
+\stopbuffer
+
+% read_imagef_2da
+\startbuffer[funcproto:read_imagef_2da]
+float4 read_imagef (
+	image2d_array_t image,
+	sampler_t sampler,
+	int4 coord )
+float4 read_imagef (
+	image2d_array_t image,
+	sampler_t sampler,
+	float4 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imagef_2da]
+用坐標 \math{coord.z} 確定 2D 圖像陣列 \carg{image} 中的某一個 2D 圖像；
+用坐標 \math{(corrd.x, coord.y)} 來查找此 2D 圖像中的元素。
+其中 \math{coord.w} 被忽略。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+預定義的壓縮過的格式或 \cenum{CL_UNORM_INT8} 或 \cenum{CL_UNORM_INT16}，
+則返回的浮點值在區間 \math{[0.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_SNORM_INT8} 或 \cenum{CL_SNORM_INT16}，
+則返回的浮點值在區間 \math{[-1.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_HALF_FLOAT} 或 \cenum{CL_FLOAT}，
+則返回原始浮點值。
+
+對於使用整數坐標的 \capi{read_imagef} 所用\cnglo{sampler}而言，
+其濾波模式必須是 \cenum{CLK_FILTER_NEAREST}，
+歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+如果是其他值，結果未定義。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上面所列範圍內，
+則結果未定義。
+\stopbuffer
+
+% read_imageh_2da
+\startbuffer[funcproto:read_imageh_2da]
+half4 read_imageh (
+	image2d_array_t image,
+	sampler_t sampler,
+	int4 coord )
+half4 read_imageh (
+	image2d_array_t image,
+	sampler_t sampler,
+	float4 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imageh_2da]
+用坐標 \math{coord.z} 確定 2D 圖像陣列 \carg{image} 中的某一個 2D 圖像；
+用坐標 \math{(corrd.x, coord.y)} 來查找此 2D 圖像中的元素。
+其中 \math{coord.w} 被忽略。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+預定義的壓縮過的格式或 \cenum{CL_UNORM_INT8} 或 \cenum{CL_UNORM_INT16}，
+則返回的半精度浮點值在區間 \math{[0.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_SNORM_INT8} 或 \cenum{CL_SNORM_INT16}，
+則返回的半精度浮點值在區間 \math{[-1.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是 \cenum{CL_HALF_FLOAT}，
+則返回原始半精度浮點值。
+
+對於使用整數坐標的 \capi{read_imageh} 所用\cnglo{sampler}而言，
+其濾波模式必須是 \cenum{CLK_FILTER_NEAREST}，
+歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+如果是其他值，結果未定義。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上面所列範圍內，
+則結果未定義。
+\stopbuffer
+
+% read_imagei_2da
+\startbuffer[funcproto:read_imagei_2da]
+int4 read_imagei (
+	image2d_array_t image,
+	sampler_t sampler,
+	int4 coord)
+int4 read_imagei (
+	image2d_array_t image,
+	sampler_t sampler,
+	float4 coord)
+uint4 read_imageui (
+	image2d_array_t image,
+	sampler_t sampler,
+	int4 coord)
+uint4 read_imageui (
+	image2d_array_t image,
+	sampler_t sampler,
+	float4 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imagei_2da]
+用坐標 \math{coord.z} 確定 2D 圖像陣列 \carg{image} 中的某一個 2D 圖像；
+用坐標 \math{(corrd.x, coord.y)} 來查找此 2D 圖像中的元素。
+其中 \math{coord.w} 被忽略。
+
+\capi{read_imagei} 和 \capi{read_imageui} 所返回的值分別為
+非歸一化帶符號整數和非歸一化無符號整數。
+每個通道的值都是 32 位整數。
+
+對於 \capi{read_imagei} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase[indentnext=no]
+\item \cenum{CL_SIGNED_INT8}
+\item \cenum{CL_SIGNED_INT16}
+\item \cenum{CL_SIGNED_INT32}
+\stopigBase
+如果 \carg{image_channel_data_type} 不在上述值之列，則結果未定義。
+
+對於 \capi{read_imageui} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase[indentnext=no]
+\item \cenum{CL_UNSIGNED_INT8}
+\item \cenum{CL_UNSIGNED_INT16}
+\item \cenum{CL_UNSIGNED_INT32}
+\stopigBase
+如果 \carg{image_channel_data_type} 不在上述值之列，則結果未定義。
+
+\capi{read_image{i|ui}} 僅支持最近濾波。
+即 \carg{sampler} 中的濾波模式必須是 \cenum{CLK_FILTER_NEAREST}；
+否則結果未定義。
+
+對於使用整數坐標的 \capi{read_image{i|ui}} 所用\cnglo{sampler}而言，
+其歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+否則結果未定義。
+\stopbuffer
+
+% read_imagef_1d
+\startbuffer[funcproto:read_imagef_1d]
+float4 read_imagef (
+	image1d_t image,
+	sampler_t sampler,
+	int coord)
+float4 read_imagef (
+	image1d_t image,
+	sampler_t sampler,
+	float coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imagef_1d]
+用坐標 \math{coord} 查找 1D \cnglo{imgobj} \carg{image} 中的元素。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+預定義的壓縮過的格式或 \cenum{CL_UNORM_INT8} 或 \cenum{CL_UNORM_INT16}，
+則返回的浮點值在區間 \math{[0.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_SNORM_INT8} 或 \cenum{CL_SNORM_INT16}，
+則返回的浮點值在區間 \math{[-1.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_HALF_FLOAT} 或 \cenum{CL_FLOAT}，
+則返回原始浮點值。
+
+對於使用整數坐標的 \capi{read_imagef} 所用\cnglo{sampler}而言，
+其濾波模式必須是 \cenum{CLK_FILTER_NEAREST}，
+歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+如果是其他值，結果未定義。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上面所列範圍內，
+則結果未定義。
+\stopbuffer
+
+% read_imageh_1d
+\startbuffer[funcproto:read_imageh_1d]
+half4 read_imageh (
+	image1d_t image,
+	sampler_t sampler,
+	int coord)
+half4 read_imageh (
+	image1d_t image,
+	sampler_t sampler,
+	float coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imageh_1d]
+用坐標 \math{coord} 查找 1D \cnglo{imgobj} \carg{image} 中的元素。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+預定義的壓縮過的格式或 \cenum{CL_UNORM_INT8} 或 \cenum{CL_UNORM_INT16}，
+則返回的浮點值在區間 \math{[0.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_SNORM_INT8} 或 \cenum{CL_SNORM_INT16}，
+則返回的浮點值在區間 \math{[-1.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是 \cenum{CL_HALF_FLOAT}，
+則返回原始浮點值。
+
+對於使用整數坐標的 \capi{read_imageh} 所用\cnglo{sampler}而言，
+其濾波模式必須是 \cenum{CLK_FILTER_NEAREST}，
+歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+如果是其他值，結果未定義。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上面所列範圍內，
+則結果未定義。
+\stopbuffer
+
+% read_imagei_1d
+\startbuffer[funcproto:read_imagei_1d]
+int4 read_imagei (
+	image1d_t image,
+	sampler_t sampler,
+	int coord)
+int4 read_imagei (
+	image1d_t image,
+	sampler_t sampler,
+	float coord)
+
+uint4 read_imageui (
+	image1d_t image,
+	sampler_t sampler,
+	int coord)
+uint4 read_imageui (
+	image1d_t image,
+	sampler_t sampler,
+	float coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imagei_1d]
+用坐標 \math{coord} 查找 1D \cnglo{imgobj} \carg{image} 中的元素。
+
+\capi{read_imagei} 和 \capi{read_imageui} 所返回的值分別為
+非歸一化帶符號整數和非歸一化無符號整數。
+每個通道的值都是 32 位整數。
+
+對於 \capi{read_imagei} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase[indentnext=no]
+\item \cenum{CL_SIGNED_INT8}
+\item \cenum{CL_SIGNED_INT16}
+\item \cenum{CL_SIGNED_INT32}
+\stopigBase
+如果 \carg{image_channel_data_type} 不在上述值之列，則結果未定義。
+
+對於 \capi{read_imageui} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase[indentnext=no]
+\item \cenum{CL_UNSIGNED_INT8}
+\item \cenum{CL_UNSIGNED_INT16}
+\item \cenum{CL_UNSIGNED_INT32}
+\stopigBase
+如果 \carg{image_channel_data_type} 不在上述值之列，則結果未定義。
+
+\capi{read_image{i|ui}} 僅支持最近濾波。
+即 \carg{sampler} 中的濾波模式必須是 \cenum{CLK_FILTER_NEAREST}；
+否則結果未定義。
+
+對於使用整數坐標的 \capi{read_image{i|ui}} 所用\cnglo{sampler}而言，
+其歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+否則結果未定義。
+\stopbuffer
+
+% read_imagef_1da
+\startbuffer[funcproto:read_imagef_1da]
+float4 read_imagef (
+	image1d_array_t image,
+	sampler_t sampler,
+	int2 coord)
+float4 read_imagef (
+	image1d_array_t image,
+	sampler_t sampler,
+	float2 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imagef_1da]
+\problem{float4???}
+用坐標 \math{coord.y} 確定 1D 圖像陣列 \carg{image} 中的某一個 1D 圖像；
+用坐標 \math{corrd.x} 來查找此 1D 圖像中的元素。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+預定義的壓縮過的格式或 \cenum{CL_UNORM_INT8} 或 \cenum{CL_UNORM_INT16}，
+則返回的浮點值在區間 \math{[0.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_SNORM_INT8} 或 \cenum{CL_SNORM_INT16}，
+則返回的浮點值在區間 \math{[-1.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_HALF_FLOAT} 或 \cenum{CL_FLOAT}，
+則返回原始浮點值。
+
+對於使用整數坐標的 \capi{read_imagef} 所用\cnglo{sampler}而言，
+其濾波模式必須是 \cenum{CLK_FILTER_NEAREST}，
+歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+如果是其他值，結果未定義。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上面所列範圍內，
+則結果未定義。
+\stopbuffer
+
+% read_imageh_1da
+\startbuffer[funcproto:read_imageh_1da]
+half4 read_imageh (
+	image1d_array_t image,
+	sampler_t sampler,
+	int2 coord)
+half4 read_imageh (
+	image1d_array_t image,
+	sampler_t sampler,
+	float2 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imageh_1da]
+\problem{float4???}
+用坐標 \math{coord.y} 確定 1D 圖像陣列 \carg{image} 中的某一個 1D 圖像；
+用坐標 \math{corrd.x} 來查找此 1D 圖像中的元素。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+預定義的壓縮過的格式或 \cenum{CL_UNORM_INT8} 或 \cenum{CL_UNORM_INT16}，
+則返回的半精度浮點值在區間 \math{[0.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是
+ \cenum{CL_SNORM_INT8} 或 \cenum{CL_SNORM_INT16}，
+則返回的半精度浮點值在區間 \math{[-1.0 \cdots 1.0]} 內。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 是 \cenum{CL_HALF_FLOAT}，
+則返回原始半精度浮點值。
+
+對於使用整數坐標的 \capi{read_imageh} 所用\cnglo{sampler}而言，
+其濾波模式必須是 \cenum{CLK_FILTER_NEAREST}，
+歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+如果是其他值，結果未定義。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上面所列範圍內，
+則結果未定義。
+\stopbuffer
+
+% read_imagei_1da
+\startbuffer[funcproto:read_imagei_1da]
+int4 read_imagef (
+	image1d_array_t image,
+	sampler_t sampler,
+	int2 coord)
+int4 read_imagef (
+	image1d_array_t image,
+	sampler_t sampler,
+	float2 coord)
+uint4 read_imagef (
+	image1d_array_t image,
+	sampler_t sampler,
+	int2 coord)
+uint4 read_imagef (
+	image1d_array_t image,
+	sampler_t sampler,
+	float2 coord)
+\stopbuffer
+\startbuffer[funcdesc:read_imagei_1da]
+用坐標 \math{coord.y} 確定 1D 圖像陣列 \carg{image} 中的某一個 1D 圖像；
+用坐標 \math{corrd.x} 來查找此 1D 圖像中的元素。
+
+\capi{read_imagei} 和 \capi{read_imageui} 所返回的值分別為
+非歸一化帶符號整數和非歸一化無符號整數。
+每個通道的值都是 32 位整數。
+
+對於 \capi{read_imagei} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase[indentnext=no]
+\item \cenum{CL_SIGNED_INT8}
+\item \cenum{CL_SIGNED_INT16}
+\item \cenum{CL_SIGNED_INT32}
+\stopigBase
+如果 \carg{image_channel_data_type} 不在上述值之列，則結果未定義。
+
+對於 \capi{read_imageui} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase[indentnext=no]
+\item \cenum{CL_UNSIGNED_INT8}
+\item \cenum{CL_UNSIGNED_INT16}
+\item \cenum{CL_UNSIGNED_INT32}
+\stopigBase
+如果 \carg{image_channel_data_type} 不在上述值之列，則結果未定義。
+
+\capi{read_image{i|ui}} 僅支持最近濾波。
+即 \carg{sampler} 中的濾波模式必須是 \cenum{CLK_FILTER_NEAREST}；
+否則結果未定義。
+
+對於使用整數坐標的 \capi{read_image{i|ui}} 所用\cnglo{sampler}而言，
+其歸一化坐標必須是 \cenum{CLK_NORMALIZED_COORDS_FALSE}，
+尋址模式必須是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CLK_ADDRESS_CLAMP}
+ 或 \cenum{CLK_ADDRESS_NONE}；
+否則結果未定義。
+\stopbuffer
+

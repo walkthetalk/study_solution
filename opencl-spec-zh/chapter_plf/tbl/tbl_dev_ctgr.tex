@@ -1,0 +1,31 @@
+\startED[\ctype{cl_device_type}]
+
+\clED{CL_DEVICE_TYPE_CPU}{
+  \cnglo{host}處理器。OpenCL 實作運行其上，是單核或多核 CPU。
+}
+
+\clED{CL_DEVICE_TYPE_GPU}{
+  GPU。這意味着此\cnglo{device}也可以用來加速 3D API （如 OpenGL 或 DirectX）。
+}
+
+\clED{CL_DEVICE_TYPE_ACCELERATOR}{
+  OpenCL 專用加速器（如 IBM CELL Blade)。
+  這些設備通過外圍設備互聯總線（如 PCIe）與\cnglo{host}處理器通信。
+}
+
+\clED{CL_DEVICE_TYPE_CUSTOM}{
+  一種專用加速器，但是不支持用 OpenCL C 編寫的\cnglo{program}。
+}
+
+\clED{CL_DEVICE_TYPE_DEFAULT}{
+  系統中默認的 OpenCL \cnglo{device}。
+  不能是 \cenum{CL_DEVICE_TYPE_CUSTOM} 類型的設備。
+}
+
+\clED{CL_DEVICE_TYPE_ALL}{
+  系統中所有可用的 OpenCL \cnglo{device}。
+  不包括 \cenum{CL_DEVICE_TYPE_CUSTOM} 類型的設備。
+}
+
+\stopED
+

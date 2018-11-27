@@ -1,0 +1,65 @@
+\startETD[cl_mem_info][返回类型]
+
+\clETD{CL_MEM_TYPE}{cl_mem_object_type}{
+返回下列值中的一個：
+\startigBase
+\item \cenum{CL_MEM_OBJECT_BUFFER}，
+如果 \carg{memobj} 是用 \capi{clCreate{Buffer | SubBuffer}} 創建的。
+
+\item \cvar{cl_image_desc.image_type}，
+如果 \carg{memobj} 是用 \capi{clCreateImage} 創建的。
+\stopigBase
+}
+
+\clETD{CL_MEM_FLAGS}{cl_mem_flags}{
+返回用 \capi{clCreate{Buffer | SubBuffer | Image}} 創建 \carg{memobj} 時
+所指定的引數 \carg{flags}。
+
+如果 \carg{memobj} 是子\cnglo{bufobj}，則同時會返回由父對象所繼承的內存存取限定符。
+}
+
+\clETD{CL_MEM_SIZE}{size_t}{
+返回 \carg{memobj} 中用於數據存儲的內存的實際大小。單位：字節。
+}
+
+\clETD{CL_MEM_HOST_PTR}{void *}{
+如果 \carg{memobj} 是由 \capi{clCreate{Buffer | Image}} 創建，
+且 \carg{mem_flags} 中設置了 \cenum{CL_MEM_USE_HOST_PTR}，
+則返回引數 \carg{host_ptr} 的值。否則返回 \cmacro{NULL}。
+
+如果 \carg{memobj} 是由 \capi{clCreateSubBuffer} 創建，則返回 $host\_ptr + origin$。
+\carg{host_ptr} 即用 \capi{clCreateBuffer} 創建 \carg{memobj} 的父對象時
+（\carg{mem_flags} 中設置了 \cenum{CL_MEM_USE_HOST_PTR}）引數的值。
+否則返回 \cmacro{NULL}。
+}
+
+\clETD{CL_MEM_MAP_COUNT}{cl_uint}{
+映射計數。\footnote{%
+在返回的那一刻，此映射計數就已過時。\cnglo{app}中一般不太適用。提供此特性主要是為了調試。}
+}
+
+\clETD{CL_MEM_REFERENCE_COUNT}{cl_uint}{
+返回 \carg{memobj} 的\cnglo{refcnt}。\footnote{%
+在返回的那一刻，此\cnglo{refcnt}就已過時。\cnglo{app}中一般不太適用。提供此特性主要是為了檢測內存泄漏。}
+}
+
+\clETD{CL_MEM_CONTEXT}{cl_context}{
+返回創建\cnglo{memobj}時所指定的\cnglo{context}。
+如果 \carg{memobj} 是用 \capi{clCreateSubBuffer} 創建的，
+則返回引數 \carg{buffer} 所在的\cnglo{context}。
+}
+
+\clETD{CL_MEM_ASSOCIATED_MEMOBJECT}{cl_mem}{
+返回 \carg{memobj} 的父對象。即 \capi{clCreateSubBuffer} 的引數 \carg{buffer}。
+
+否則返回 \cmacro{NULL}。
+}
+
+\clETD{CL_MEM_OFFSET}{size_t}{
+如果 \carg{memobj} 是由 \capi{clCreateSubBuffer} 創建的子\cnglo{bufobj}，
+則返回其偏移量。
+否則返回 0。
+}
+
+\stopETD
+

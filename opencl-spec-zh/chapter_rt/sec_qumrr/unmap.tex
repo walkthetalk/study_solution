@@ -1,0 +1,76 @@
+\subsection[section:unmap]{內存對象的解映射}
+
+\topclfunc{clEnqueueUnmapMemObject}
+
+\startCLFUNC
+cl_int clEnqueueUnmapMemObject (cl_command_queue command_queue,
+			cl_mem memobj,
+			void *mapped_ptr,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+此函式所入隊的\cnglo{cmd}可以將\cnglo{memobj}之前映射的區域解映射。
+假定使用 \capi{clEnqueueMapBuffer} 或 \capi{clEnqueueMapImage} 所返回的指位器
+對 \carg{memobj} 所進行的讀寫已經完畢。
+
+\carg{command_queue} 就是解映射\cnglo{cmd}要進入的隊列。
+
+\carg{memobj} 是一個\cnglo{memobj}，
+他必須與 \carg{command_queue} 位於同一 OpenCL \cnglo{context}中。
+
+\carg{mapped_ptr} 即之前調用 \capi{clEnqueueMapBuffer}
+或 \capi{clEnqueueMapImage} 所返回的\cnglo{host}位址。
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list} 中
+列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點，
+並且必須與 \carg{command_queue} 位於同一個\cnglo{context}中。
+此函式返回後，即可回收並重用 \carg{event_wait_list} 所關聯的內存。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}完成。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+不過可以用 \capi{clEnqueueBarrierWithWaitList} 來代替。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+\carg{event} 不能屬於 \carg{event_wait_list}。
+
+如果執行成功， \capi{clEnqueueUnmapMemObject} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+\item \cenum{CL_INVALID_MEM_OBJECT}，如果 \carg{memobj} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{mapped_ptr} 無效。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue} 和 \carg{memobj} 位於不同的\cnglo{context}中，
+或者 \carg{command_queue} 和 \carg{event_wait_list} 中的事件位於不同的\cnglo{context}中。
+\stopigBase
+
+\capi{clEnqueueMapBuffer} 和 \capi{clEnqueueMapImage} 會使\cnglo{memobj}的映射計數增一。
+映射計數的初始值是零。
+對同一\cnglo{memobj}多次調用 \capi{clEnqueueMapBuffer} 或 \capi{clEnqueueMapImage}，
+會使其映射計數增加相應的數目。
+\capi{clEnqueueUnmapMemObject} 會使\cnglo{memobj}的映射計數減一。
+
+對於\cnglo{bufobj}中被映射的那部分而言，
+\capi{clEnqueueMapBuffer} 和 \capi{clEnqueueMapImage} 充當同步點。

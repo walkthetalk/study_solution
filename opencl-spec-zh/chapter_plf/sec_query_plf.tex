@@ -1,0 +1,75 @@
+\section[section:queryPlf]{查詢平台資訊}
+
+\topclfunc{clGetPlatformIDs}
+
+\startCLFUNC
+cl_int clGetPlatformIDs(cl_uint num_entries,
+			cl_platform_id *platforms,
+			cl_uint *num_platforms)
+\stopCLFUNC
+
+可以使用此函式獲取可用\cnglo{platform}的清單。
+
+\carg{num_entries} 是 \carg{platforms} 中可以容納 \ctype{cl_platform_id} 表項的數目。
+如果 \carg{platforms} 不是 \cmacro{NULL}， \carg{num_entries} 必須大於零。
+
+\carg{platforms} 會返回所找到的 OpenCL \cnglo{platform} 清單。
+\carg{platforms} 中的每個 \ctype{cl_platform_id}
+都用來識別某個特定的 OpenCL \cnglo{platform}。
+如果 \carg{platforms} 是 \cmacro{NULL}，則被忽略。
+所返回 OpenCL \cnglo{platform} 的數目 是 \carg{num_entries} 和實際數目中較小的那個。
+
+\carg{num_platforms} 返回實際可用的 OpenCL \cnglo{platform} 的數目。
+如果 \carg{num_platforms} 是 \cmacro{NULL}，則被忽略。
+
+如果執行成功，\capi{clGetPlatformIDs} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤之一：
+\startigBase
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{num_entries} 等於零，
+且 \carg{platforms} 不是 \cmacro{NULL}；
+或者 \carg{num_platforms} 和 \carg{platforms} 都是 \cmacro{NULL}。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clGetPlatformInfo}
+
+\startCLFUNC
+cl_int clGetPlatformInfo(
+		cl_platform_id platform,
+		cl_platform_info param_name,
+		size_t param_value_size,
+		void *param_value,
+		size_t *param_value_size_ret)
+\stopCLFUNC
+
+此函式可用來獲取 OpenCL \cnglo{platform}的特定資訊。這些資訊如\reftab{plfquery}所示。
+
+\carg{platform} 即 \capi{clGetPlatformIDs} 所返回的\cnglo{platform} ID，
+指明要查詢哪個\cnglo{platform}，也可以是 \cmacro{NULL}。
+而如果是 \cmacro{NULL}，其行為\cnglo{impdef}。
+
+\carg{param_name} 是一個枚舉常量，指明要查詢什麼資訊。其值如\reftab{plfquery}所示。
+
+\carg{param_value} 是一個指位器，所指內存用來存儲 \carg{param_name} 所對應的資訊。
+如果是 \cmacro{NULL}，則忽略。
+
+\carg{param_value_size} 即 \carg{param_value} 所指內存塊的大小（單位：字節）。
+其值必須 >= \reftab{plfquery}中返回型別的大小。
+
+\carg{param_value_size_ret} 返回所查詢資訊的實際大小。如果是 \cmacro{NULL}，則忽略。
+
+\placetable[here][tab:plfquery]{OpenCL 平台查询}
+{\input{chapter_plf/tbl/tbl_plf_query.tex}}
+
+如果執行成功，\capi{clGetPlatformInfo} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤之一\footnote{OpenCL 規範沒有規定 API 調用返回錯誤碼時的優先順序。}：
+\startigBase
+\item \cenum{CL_INVALID_PLATFORM}，如果 \carg{platform} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果不支持 \carg{param_name}，
+或 \carg{param_value_size} < \reftab{plfquery}中返回值的大小
+且 \carg{param_value} 不是 \cmacro{NULL}。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

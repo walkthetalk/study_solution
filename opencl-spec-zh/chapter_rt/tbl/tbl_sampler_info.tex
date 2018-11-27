@@ -1,0 +1,26 @@
+\startETD[cl_sampler_info][返回类型]
+
+\clETD{CL_SAMPLER_REFERENCE_COUNT}{cl_uint}{
+返回 \carg{sampler} 的\cnglo{refcnt}。\footnote{%
+在返回的那一刻，此\cnglo{refcnt}就已過時。
+\cnglo{app}中一般不太適用。提供此特性主要是為了檢測內存泄漏。}
+}
+
+\clETD{CL_SAMPLER_CONTEXT}{cl_context}{
+返回創建\cnglo{sampler}時所指定的\cnglo{context}。
+}
+
+\clETD{CL_SAMPLER_NORMALIZED_COORDS}{cl_bool}{
+\carg{sampler} 的坐標是否歸一化。
+}
+
+\clETD{CL_SAMPLER_ADDRESSING_MODE}{cl_addressing_mode}{
+返回 \carg{sampler} 的尋址模式。
+}
+
+\clETD{CL_SAMPLER_FILTER_MODE}{cl_filter_mode}{
+返回 \carg{sampler} 的濾波模式。
+}
+
+\stopETD
+

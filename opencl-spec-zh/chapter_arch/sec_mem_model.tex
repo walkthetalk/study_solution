@@ -1,0 +1,78 @@
+
+\section{內存模型}
+\cnglo{workitem}在執行\cnglo{kernel}時可以存取四塊不同的\cnglo{memregion}：
+
+\startigBase
+\item \cngloemp{glbmem}：
+所有\cnglo{workgrp}中的所有\cnglo{workitem}都可以對其進行讀寫。
+\cnglo{workitem}可以讀寫此中\cnglo{memobj}的任意元素。
+對\cnglo{glbmem}的讀寫可能會被緩存起來，這取決於\cnglo{device}的能力。
+
+\item \cngloemp{constmem}：
+\cnglo{glbmem}中的一塊區域，在\cnglo{kernel}的執行過程中保持不變。
+\cnglo{host}負責對此中\cnglo{memobj}的分配和初始化。
+
+\item \cngloemp{locmem}：
+隸屬於某個\cnglo{workgrp}。
+可以用來分配一些變量，這些變量由此\cnglo{workgrp}中的所有\cnglo{workitem}共享。
+在 OpenCL \cnglo{device}上，可能會將其實現成一塊專用的\cnglo{memregion}，
+也可能將其映射到\cnglo{glbmem}中。
+
+\item \cngloemp{prvmem}：
+隸屬於某個\cnglo{workitem}。
+一個\cnglo{workitem}的\cnglo{prvmem}中所定義的變量
+對另外一個\cnglo{workitem}而言是不可見的。
+\stopigBase
+
+\reftab{memregion}列出了這些資訊：
+\cnglo{kernel}或\cnglo{host}是否可以從某個\cnglo{memregion}中分配內存、
+怎樣分配（靜態編譯時 vs. 動態運行時）
+以及允許如何存取（即\cnglo{kernel}或\cnglo{host}是否可以對其進行讀寫）。
+
+\placetable[here][tab:memregion]{內存區域——分配以及存取}{
+\input{chapter_arch/tbl/tbl_memreg.tex}
+}
+
+\reffig{openclarch}描述了\cnglo{memregion}以及與\cnglo{platform}模型的關係。
+圖中含有\cnglo{prcele}（ PE ）、\cnglo{computeunit}和\cnglo{device}，
+但是沒有畫出\cnglo{host}。
+
+\input{fig/MemArch.tex}
+\placefigure[here][fig:openclarch]
+{OpenCL 設備架構的概念模型}
+{\reuseMPgraphic{memArch}}
+
+\cnglo{app}在\cnglo{host}上運行時，
+使用 OpenCL API 在\cnglo{glbmem}中創建\cnglo{memobj}，
+並將內存命令(\refsection{exemodel:contextandcmdq}中有所描述)入隊以操作他們。
+
+多數情況下，\cnglo{host}和 OpenCL \cnglo{device}的內存模型是相互獨立的。
+其必然性主要在於 OpenCL 沒有囊括\cnglo{host}的定義。
+然而，有時他們確實需要交互。
+有兩種交互方式：顯式拷貝數據、將\cnglo{memobj}的部分区域映射和解映射。
+
+為了顯式拷貝數據，\cnglo{host}會將一些\cnglo{cmd}插入隊列，
+用來在\cnglo{memobj}和\cnglo{host}內存之間傳輸數據。
+這些用於傳輸內存的命令可以是阻塞式的，也可以是非阻塞式的。
+對於前者，一旦\cnglo{host}上相關內存資源可以被安全的重用，OpenCL 函式調用就會立刻返回。
+而對於後者，一旦命令入隊，OpenCL 函式調用就會返回，而不管\cnglo{host}內存是否可以安全使用。
+
+用映射、解映射的方法處理\cnglo{host}和 OpenCL \cnglo{memobj}的交互時，
+\cnglo{host}可以將\cnglo{memobj}的某個區域映射到自己的位址空間中。
+內存映射命令可能是阻塞的，也可能是非阻塞的。
+一旦映射了\cnglo{memobj}的某個區域，\cnglo{host}就可以讀寫這塊區域。
+當\cnglo{host}對這塊區域的存取（讀和/或寫）結束後，就會將其解映射。
+
+% Memory Consistency
+\subsection{內存一致性}
+OpenCL 所使用的一致性內存模型比較寬鬆；
+即，不保證不同\cnglo{workitem}所看到的內存狀態始終一致。
+
+在\cnglo{workitem}內部，內存具有裝載、存儲的一致性。
+在隸屬於同一\cnglo{workgrp}的\cnglo{workitem}之間，
+\cnglo{locmem}在\cnglo{workgrpbarrier}上是一致的。
+\cnglo{glbmem}亦是如此，
+但對於執行同一\cnglo{kernel}的不同\cnglo{workgrp}，則不保證其內存一致性。
+
+對於已經入隊的\cnglo{cmd}所共享的\cnglo{memobj}，其內存一致性由同步點來強制實施。
+

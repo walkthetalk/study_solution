@@ -1,0 +1,89 @@
+% Edge Case Behavior
+\section[section:edgeCaseBehavior]{邊界條件下的行為}
+
+數學函式（\refsection{mathFunc}）在邊界條件下的行為
+要符合《ISO/IEC 9899：TC2》（通常稱作 C99, TC2）中的{\ftRef{節 F.9}} 和{\ftRef{節 G.6}}，
+\refsection{addReqBeyondC99}中所列之處除外。
+
+% Additional Requirements Beyond C99 TC2
+\subsection[section:addReqBeyondC99]{C99 TC2 之外的附加要求}
+
+如果函式會返回 NaN，且有多個算元為 NaN，則應當返回其中一個 NaN 算元。
+如果是 sNaN，會返回 NaN 算元的函式可能會使其消音。
+非 sNaN 轉換後應當還是非 sNaN。
+sNaN 轉換後應當是 NaN，但可能被轉換成非 sNaN。
+而 NaN 的凈荷位和正負號如何轉換則未定義。
+
+函式 \capi{half_<funcname>} 所起作用與不帶前綴 \capi{half_} 的同名函式一樣。
+他們必須符合同一邊界條件需求（參見《C99, TC2》中的{\ftRef{節 F.9}} 和{\ftRef{節 G.6}}）。
+對於其他情況，除了明確提到的地方，准許單精度函式的最大誤差為 8192 ulp
+（以單精度結果來衡量），儘管鼓勵更高的精確度。
+
+對於那些明確規定了其結果的值（參見《C99, TC2》中的{\ftRef{節 F.9}}，
+或者\refsection{addReqBeyondC99}以及後面的\refsection{ftzmECB}）
+（如： \ccmm{ceil(-1 < x < 0)} 會返回 \ccmm{-0}），
+捨入誤差（\refsection{relativeError}）或刷新行為（\refsection{ftzmECB}）的容差不會起作用。
+那些值肯定產生規定的答案，不會是其他的。
+使用 \math{\pm} 的地方，正負號會保留下來。
+例如， \math{sin(\pm{0}) = \pm{0}} 的意思就是：
+\math{sin(+0) = +0} 以及 \math{sin(-0) = -0}。
+
+% func description
+\startEnglishWithoutWhiteSpace
+\setupnarrower[left=2em,right=0em]
+\startnarrower[left,right]
+\input{chapter_onc/misc/funcdesc.tex}
+\stopnarrower
+\stopEnglishWithoutWhiteSpace
+
+% Changes to C99 TC2 Behavior
+\subsection{對 C99 TC2 的行為做出的改變}
+
+\capi{modf} 的作用如同如下實作：
+\startclc[indentnext=no]
+gentype modf(gentype value, gentype *iptr)
+{
+	*iptr = trunc(value);
+	return copysign(isinf( value ) ? 0.0 : value – *iptr, value);
+}
+\stopclc
+\capi{rint} 始終捨入為最近偶數，即使其調用者處於其他捨入模式下。
+
+% Edge Case Behavior in Flush To Zero Mode
+\subsection[section:ftzmECB]{Flush-To-Zero 模式中，邊界條件下的行為}
+
+如果去規格化數被刷成了零，則函式可能返回下列結果之一：
+\startigNum
+\item[item:nftz]任何符合 non-flush-to-zero 模式的結果；
+
+\item 如果捨入前，\refitem{nftz}所給出的結果是次規格化數，則可能會將其刷成零；
+
+\item[item:nfcr] 如果有一個或多個次規格化算元被刷成了零，則結果為符合此函式的任意未刷新的值。
+
+\item 如果捨入前，\refitem{nfcr}的結果是次規格化數，則可能將其刷成零。
+\stopigNum
+
+在上述任一情況中，如果某個算元或結果被刷成了零，零的正負號未定義。
+
+如果次規格化數被刷成了零，
+則\cnglo{device}可能採用下列方式來處理 \capi{nextafter} 的邊界情況，
+以取代\refsection{addReqBeyondC99}中的那些：
+
+\startEnglishWithoutWhiteSpace
+\setupnarrower[left=2em,right=0em]
+\startnarrower[left,right]
+\clapi{nextafter} ( +smallest normal, y < +smallest normal ) = +0.\par
+\clapi{nextafter} ( -smallest normal, y > -smallest normal ) = -0.\par
+\clapi{nextafter} ( -0, y > 0 ) returns smallest positive normal value.\par
+\clapi{nextafter} ( +0, y < 0 ) returns smallest negative normal value.\par
+\stopnarrower
+\stopEnglishWithoutWhiteSpace
+
+清晰起見，將次規格化數或去規格化數定義為位於區間 \ccmm{0 < x < TYPE_MIN}
+和 \ccmm{-TYPE_MIN < x < -0} 內的一組可表示的數。
+他們不包括 \math{\pm{0}}。
+如果在捨入前，一個非零數規格化後，其以 2 為底的指數小於 \ccmm{(TYPE_MIN_EXP - 1)}，
+就說他是次規格化數。\footnote{%
+此處要用相應浮點型別常量來替換 \cenum{TYPE_MIN} 和 \cenum{TYPE_MIN_EXP}，
+如對於 \ctype{float} 這兩個常量就應該是 \cenum{FLT_MIN} 和 \cenum{FLT_MIN_EXP}。}
+

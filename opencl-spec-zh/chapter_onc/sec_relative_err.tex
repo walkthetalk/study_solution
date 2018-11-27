@@ -1,0 +1,42 @@
+% Relative Error as ULPs
+\section[section:relativeError]{相對誤差即 ULP}
+
+本節中，我們將討論相對誤差（定義為 \ccmm{ulp}，即 units in the last place，
+浮點數間的最小間隔）的最大值。
+整數和單精度浮點數間的加、減、乘、積和熔加以及轉換\problem{沒有除？}都符合 IEEE 754，
+因此可以正確捨入。
+浮點格式間的轉換以及\refsection{explicitConversion}中的顯式轉換都必須正確捨入。
+
+ULP 的定義如下：
+
+{\ftRef%
+如果 x 是位於兩個有限連續浮點數 a 和 b 之間的實數，
+並且與 a 和 b 都不相等，則：
+\startformula[indentnext=no]
+ulp(x) = |b - a|
+\stopformula
+。否則 \math{ulp(x)} 是這兩個離 x 最近且互不相等的有限浮點數間的距離。
+此外， \math{ulp(NaN)} 就是 NaN。}
+
+\useurl[rr5504][ftp://ftp.inria.fr/INRIA/publication/publi-pdf/RR/RR-5504.pdf]
+{\ftRef%
+歸因：此定義獲得了 Jean-Michel Muller 的認可，不過他對在零處的行為做了一點澄清。
+請參考 \from[rr5504]。}
+
+\reftab{spMathUlp}\footnote{%
+內建數學函式 \capi{lgamma} 和 \capi{lgamma_r} 的 ULP 值目前還未定義。}%
+中以 ULP 的形式給出了單精度浮點算術運算的最小精確度。
+計算 ULP 值時參考的是無限精確的結果。
+其中 0 ulp 表示相應函式無需捨入。
+
+\placetable[here,split][tab:spMathUlp]
+{單精度內建數學函式的 ULP 值}
+{\input{chapter_onc/tbl/tbl_spmathulp.tex}}
+
+\reftab{dpMathUlp}中以 ULP 的形式給出了雙精度浮點算術運算的最小精確度。
+計算 ULP 值時參考的是無限精確的結果。
+其中 0 ulp 表示相應函式無需捨入。
+
+\placetable[here,split][tab:dpMathUlp]
+{雙精度內建數學函式的 ULP 值}
+{\input{chapter_onc/tbl/tbl_dpmathulp.tex}}

@@ -1,0 +1,162 @@
+\subsection{映射圖像對象}
+
+\topclfunc{clEnqueueMapImage}
+
+\startCLFUNC
+void * clEnqueueMapImage (cl_command_queue command_queue,
+			cl_mem image,
+			cl_bool blocking_map,
+			cl_map_flags map_flags,
+			const size_t *origin,
+			const size_t *region,
+			size_t *image_row_pitch,
+			size_t *image_slice_pitch,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event,
+			cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式所入隊的\cnglo{cmd}會將 \carg{image} 的某個區域映射到\cnglo{host}的位址空間中，
+並返回新位址。
+
+\carg{command_queue} 必須是一個有效的\cnglo{cmdq}。
+
+\carg{image} 是一個\cnglo{imgobj}。
+\carg{command_queue} 與 \carg{image} 必須位於同一 OpenCL \cnglo{context}中。
+
+\carg{blocking_map} 表明此映射操作是{\ftRef{阻塞的}}還是{\ftRef{非阻塞的}}。
+
+如果 \carg{blocking_map} 是 \cenum{CL_TRUE}，即映射\cnglo{cmd}是阻塞的，
+直到映射完成， \capi{clEnqueueMapImage} 才會返回，
+\cnglo{app}可以用返回的指位器存取所映射區域的內容。
+
+如果 \carg{blocking_map} 是 \cenum{CL_FALSE}，即映射\cnglo{cmd}是非阻塞的，
+直到映射\cnglo{cmd}完成後，才能使用 \capi{clEnqueueMapImage} 所返回的指位器。
+參數 \carg{event} 會返回一個\cnglo{evtobj}，可用來查詢映射\cnglo{cmd}的執行情況。
+映射\cnglo{cmd}完成後，
+\cnglo{app}就可以使用 \capi{clEnqueueMapImage} 所返回的指位器存取映射區域的內容了。
+
+\carg{map_flags} 是位欄，參見\reftab{clmapflags}。
+
+\carg{origin} 定義了所要映射區域的起始位置 $(x, y, z)$，單位像素；
+對於 2D 圖像陣列是 $(x, y)$ 以及圖像索引；
+對於 1D 圖像陣列是 $(x)$ 以及圖像索引。
+如果 \carg{image} 是 2D \cnglo{imgobj}， $origin[2]$ 必須是 0。
+如果 \carg{image} 是 1D \cnglo{imgobj}或 1D 圖像緩衝對象，
+$origin[1]$ 和 $origin[2]$ 都必須是 0。
+如果 \carg{image} 是 1D 圖像陣列對象， $origin[2]$ 必須是 0，
+$origin[1]$ 是圖像在陣列中的索引。
+如果 \carg{image} 是 2D 圖像陣列對象， $origin[2]$ 是圖像在陣列中的索引。
+
+\carg{region} 定義了映射區域的大小 $(width, height, depth)$，單位像素。
+對於 2D 圖像陣列對象， 即 $(width, height)$ 以及圖像個數。
+對於 1D 圖像陣列對象， 即 $(width)$ 以及圖像個數。
+如果 \carg{image} 是 2D 圖像對象 或 1D 圖像陣列對象， $region[2]$ 必須是 1。
+如果 \carg{image} 是 1D \cnglo{imgobj}或 1D 圖像緩衝對象，
+$region[1]$ 和 $region[2]$ 都必須是 0。
+
+\carg{image_row_pitch} 即所映射區域的掃描列間距，單位字節，不能是 \cmacro{NULL}。
+
+\carg{image_slice_pitch} 對於 3D 圖像而言是 2D 平面的大小，
+對於 1D 或 2D 圖像陣列而言分別是每個 1D 或 2D 圖像的大小。
+對於 1D 或 2D 圖像，如果此參數不是 \cmacro{NULL} 則返回零。
+對於 3D 圖像、 1D 或 2D 圖像陣列， \carg{image_slice_pitch} 不能是 \cmacro{NULL}。
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list} 中
+列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點，
+並且必須與 \carg{command_queue} 位於同一個\cnglo{context}中。
+此函式返回後，即可回收並重用 \carg{event_wait_list} 所關聯的內存。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}完成。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+\carg{event} 不能屬於 \carg{event_wait_list}。
+
+\carg{errcode_ret} 用來返回錯誤碼。如果是 \cmacro{NULL}，則不會返回錯誤碼。
+
+如果執行成功， \capi{clEnqueueMapImage} 會返回所映射區域的指位器，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue} 和 \carg{image} 位於不同的\cnglo{context}中，
+或者 \carg{command_queue} 和 \carg{event_wait_list} 中的事件位於不同的\cnglo{context}中。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，如果 \carg{image} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 $(origin, region)$ 所指定的區域越限，
+或者 \carg{map_flags} 的值無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{image_row_pitch} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{image} 是 3D 圖像、 1D 或 2D 圖像陣列對象，
+而 \carg{image_slice_pitch} 是 \cmacro{NULL}。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_INVALID_IMAGE_SIZE}，
+如果 \carg{image} 的大小（圖像寬度、高度、指定的或自動計算的行間距或面間距）
+不被 \carg{queue} 所在\cnglo{device}支持。
+
+\item \cenum{CL_IMAGE_FORMAT_NOT_SUPPORTED}，
+如果 \carg{image} 的圖像格式（圖像通道順序和數據類型）
+不被 \carg{queue} 所在\cnglo{device} 支持。
+
+\item \cenum{CL_MAP_FAILURE}，如果映射失敗。
+對於用 \cenum{CL_MEM_USE_HOST_PTR} 或 \cenum{CL_MEM_ALLOC_HOST_PTR}
+創建的\cnglo{imgobj}不能出現此錯誤。
+
+\item \cenum{CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST}，
+如果映射操作是阻塞的，且 \carg{event_wait_list} 中任一事件的執行狀態是負整數。
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，如果為 \carg{image} 分配內存失敗。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果 \carg{command_queue} 所在\cnglo{device}不支持圖像
+（即 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_FALSE}，參見\reftab{cldevquery}）。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果創建 \carg{image} 時指定了 \cenum{CL_MEM_HOST_WRITE_ONLY} 或 \cenum{CL_MEM_HOST_NO_ACCESS},
+而在 \carg{map_flags} 中設置了 \cenum{CL_MAP_READ}；
+或者創建 \carg{image} 時指定了 \cenum{CL_MEM_HOST_READ_ONLY} 或 \cenum{CL_MEM_HOST_NO_ACCESS}，
+而在 \carg{map_flags} 中設置了 \cenum{CL_MAP_WRITE} 或 \cenum{CL_MAP_WRITE_INVALIDATE_REGION}。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+所映射的區域起自 \carg{origin}，
+對於 1D \cnglo{imgobj}、 1D 圖像緩衝對象或 1D 圖像陣列，其大小至少為 $region[0]$；
+對於 2D \cnglo{imgobj}或 2D 圖像陣列，其大小至少為 $(image\_row\_pitch * region[1])$；
+對於 3D \cnglo{imgobj}，其大小至少為 $(image\_slice\_pitch * region[1])$。
+如果存取此區域外的內容，其結果\cnglo{undef}。
+
+\startnotepar
+如果創建\cnglo{bufobj}時在 \carg{mem_flags} 中指定了 \cenum{CL_MEM_USE_HOST_PTR}，
+則：
+\startigBase
+\item 當 \capi{clEnqueueMapImage} 的\cnglo{cmd}完成後，
+保證 \capi{clCreateImage} 的 \carg{host_ptr} 中所映射區域的內容是最新的。
+
+\item \capi{clEnqueueMapImage} 所返回的指位器得自創建\cnglo{imgobj}時所用的 \carg{host_ptr}。
+\stopigBase
+\stopnotepar
+
+被映射過的\cnglo{imgobj}使用 \capi{clEnqueueUnmapMemObject} 進行解映射。
+參見\refsection{unmap}。

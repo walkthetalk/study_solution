@@ -1,0 +1,51 @@
+% mem_fence
+\startbuffer[funcproto:mem_fence]
+void mem_fence (cl_mem_fence_flags flags) 
+\stopbuffer
+\startbuffer[funcdesc:mem_fence]
+\cnglo{workitem}執行\cnglo{kernel}時，為其中的裝載和存儲進行定序。
+這意味着在執行 \capi{mem_fence} 之後的裝載和存儲之前，
+會先將 \capi{mem_fence} 之前的裝載和存儲提交給內存。
+
+引數 \carg{flags} 指定內存位址空間，可以是下列常值的組合：
+\startigBase
+\item \cenum{CLK_LOCAL_MEM_FENCE}
+\item \cenum{CLK_GLOBAL_MEM_FENCE}
+\stopigBase
+\stopbuffer
+
+% read_mem_fence
+\startbuffer[funcproto:read_mem_fence]
+void read_mem_fence (cl_mem_fence_flags flags)
+\stopbuffer
+\startbuffer[funcdesc:read_mem_fence]
+讀內存屏障，僅對裝載定序。
+
+引數 \carg{flags} 指定內存位址空間，可以是下列常值的組合：
+\startigBase
+\item \cenum{CLK_LOCAL_MEM_FENCE}
+\item \cenum{CLK_GLOBAL_MEM_FENCE}
+\stopigBase
+\stopbuffer
+
+% write_mem_fence
+\startbuffer[funcproto:write_mem_fence]
+void write_mem_fence (cl_mem_fence_flags flags)
+\stopbuffer
+\startbuffer[funcdesc:write_mem_fence]
+寫內存屏障，僅對存儲定序。
+
+引數 \carg{flags} 指定內存位址空間，可以是下列常值的組合：
+\startigBase
+\item \cenum{CLK_LOCAL_MEM_FENCE}
+\item \cenum{CLK_GLOBAL_MEM_FENCE}
+\stopigBase
+\stopbuffer
+
+
+% begin table
+\startCLFD
+\clFD{mem_fence}
+\clFD{read_mem_fence}
+\clFD{write_mem_fence}
+\stopCLFD

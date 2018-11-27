@@ -1,0 +1,51 @@
+\startCLOD[\cnglo{sampler}屬性][描述]
+
+\clOD{\ccmm{<normalized coords>}}{
+指定所傳入的坐標 \math{x}、 \math{y} 和 \math{z} 是否已歸一化。
+他必須是常值，可以是下列預定義枚舉中的一個：
+\startigBase
+\item \cenum{CLK_NORMALIZED_COORDS_TRUE}
+\item \cenum{CLK_NORMALIZED_COORDS_FALSE}
+\stopigBase
+
+在單個\cnglo{kernel}中針對同一圖像多次調用 \capi{read_image{f|i|ui}} 時，
+所用\cnglo{sampler}中 \ccmm{<normalized coords>} 的值必須相同。
+}
+
+\clOD{\ccmm{<addressing mode>}}{
+指定圖像的尋址模式，即圖像坐標溢出時如何處置。
+他必須是常值，可以是下列預定義枚舉中的一個：
+\startigBase
+\item \cenum{CLK_ADDRESS_MIRRORED_REPEAT}——在整數接點處翻轉圖像坐標。
+這種尋址模式只能用於歸一化坐標。
+如果使用的不是歸一化坐標，則此模式生成的圖像坐標未定義。
+
+\item \cenum{CLK_ADDRESS_REPEAT}——溢出的坐標會繞回到有效區間內。
+這種尋址模式只能用於歸一化坐標。
+如果使用的不是歸一化坐標，則此模式生成的圖像坐標未定義。
+
+\item \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}——溢出的坐標會被壓入有效範圍內。
+
+\item \cenum{CLK_ADDRESS_CLAMP}\footnote{
+與尋址模式\cenum{CLK_ADDRESS_CLAMP_TO_EDGE}類似。}——溢出的坐標會返回顏色極值。
+
+\item \cenum{CLK_ADDRESS_NONE}——此模式下，由程式員保證坐標不會溢出，否則結果未定義。
+\stopigBase
+
+對於 1D 和 2D 圖像陣列，尋址模式僅對坐標 \math{x} 和 \math{(x,y)} 有效。
+坐標中的陣列索引所用尋址模式始終是 \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}。
+}
+
+\clOD{\ccmm{filter mode}}{
+指定所用的濾波模式。
+他必須是常值，可以是下列預定義枚舉中的一個：
+\startigBase
+\item \cenum{CLK_FILTER_NEAREST}
+\item \cenum{CLK_FILTER_LINEAR}
+\stopigBase
+
+對於這些濾波模式的描述，請參見\refsection{addressFilterMode}。
+}
+
+\stopCLOD
+

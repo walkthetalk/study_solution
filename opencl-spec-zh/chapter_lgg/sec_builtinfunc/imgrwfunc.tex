@@ -1,0 +1,160 @@
+% Image Read and Write Functions
+\subsection[section:imgRwFunc]{圖像讀寫函式}
+
+本節中所定義的內建函式僅能與\cnglo{imgobj}一起使用。
+
+聲明可被\cnglo{kernel}讀取的\cnglo{imgobj}時應帶有限定符 \cqlf{__read_only}。
+對帶有 \cqlf{__read_only} 的\cnglo{imgobj}調用 \capi{write_image} 會造成編譯錯誤。
+聲明可被\cnglo{kernel}寫入的\cnglo{imgobj}時應帶有限定符 \cqlf{__write_only}。
+對帶有 \cqlf{__write_only} 的\cnglo{imgobj}調用 \capi{read_image} 會造成編譯錯誤。
+不支持在同一\cnglo{kernel}中對同一\cnglo{imgobj}
+同時調用 \capi{read_image} 和 \capi{write_image}。
+
+\capi{read_image} 返回的是一個四組件矢量浮點數、整數或無符號整數顏色值。
+此值用 \ccmm{x}、 \ccmm{y}、 \ccmm{z}、 \ccmm{w} 來標識，
+其中 \ccmm{x} 指代紅色分量， \ccmm{y} 指代綠色分量， \ccmm{z} 指代藍色分量，
+ \ccmm{w} 指代 alpha 分量，每個分量都是一個矢量組件。
+
+% Samplers
+\subsubsection[section:samplerInImgRw]{採樣器}
+
+圖像讀取函式的引數中有一個就是\cnglo{sampler}。
+\cnglo{sampler}可作為引數由 \capi{clSetKernelArg} 傳給\cnglo{kernel}，
+也可以在 \cqlf{kernel} 函式的最外層聲明\cnglo{sampler}，
+或者是\cnglo{program}源碼中聲明的型別為 \ctype{sampler_t} 的常量。
+
+\cnglo{program}中所聲明\cnglo{sampler}變量的型別為 \ctype{sampler_t}。
+這種變量必須用 32 位無符號整形常數進行初始化，
+按位欄解釋此常量，其位欄指定了下列屬性：
+\startigBase[indentnext=no]
+\item 尋址模式
+\item 濾波模式
+\item 歸一化坐標
+\stopigBase
+這些屬性控制着 \capi{read_image{f|i|ui}} 如何讀取圖像中的元素。
+
+也可在\cnglo{program}源碼中將\cnglo{sampler}聲明為全局常量，下列三種語法均有效：
+\startclc
+const sampler_t		<sampler name> = <value>
+constant sampler_t	<sampler name> = <value>
+__constant sampler_t	<sampler_name> = <value>
+\stopclc
+
+\startnotepar
+在計算每個\cnglo{device}中指向常數位址空間的引數數目或常數位址空間的大小時，
+不考慮帶有限定符 \cqlf{constant} 的\cnglo{sampler}（參見\reftab{cldevquery}中的
+ \cenum{CL_DEVICE_MAX_CONSTANT_ARGS} 和
+ \cenum{CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE}）。
+\stopnotepar
+
+\placetable[here][tab:samplerDesc]
+{採樣器描述符}
+{\input{chapter_lgg/tbl/tbl_samplerdesc.tex}}
+
+例：
+\startclc[indentnext=no]
+const sampler_t /BTEX\ftEmp{samplerA}/ETEX = CLK_NORMALIZED_COORDS_TRUE
+			| CLK_ADDRESS_REPEAT
+			| CLK_FILTER_NEAREST;
+\stopclc
+\cnglo{sampler} {\ftEmp{samplerA}} 用的是規格化坐標、重複尋址模式和最近濾波。
+
+對於一個\cnglo{kernel}中所能聲明\cnglo{sampler}的最大數目，
+可以用 \capi{clGetDeviceInfo} 以 \cenum{CL_DEVICE_MAX_SAMPLERS} 進行查詢。
+
+% Determining the border color
+\subsubsubsection{確定顏色極值}
+
+如果\cnglo{sampler}中的 \ccmm{<addressing mode>} 是 \cenum{CLK_ADDRESS_CLAMP}，
+則溢出的圖像坐標會返回顏色極值。
+所選顏色極值取決於圖像通道順序，可以是下列中的一個：
+\startigBase
+\item 如果圖像通道順序為 \cenum{CL_A}、 \cenum{CL_INTENSITY}、 \cenum{CL_Rx}、
+\cenum{CL_RA}、 \cenum{CL_RGx}、 \cenum{CL_RGBx, CL_ARGB}、 \cenum{CL_BGRA}
+ 或 \cenum{CL_RGBA}，則所選顏色極值為 \ccmm{(0.0f, 0.0f, 0.0f, 0.0f)}。
+
+\item 如果圖像通道順序為 \cenum{CL_R}、 \cenum{CL_RG}、 \cenum{CL_RGB}
+ 或 \cenum{CL_LUMINANCE}，則所選顏色極值為 \ccmm{(0.0f, 0.0f, 0.0f, 1.0f)}。
+\stopigBase
+
+% Built-in Image Read Functions
+\subsubsection[section:builtInImgReadFunc]{內建圖像讀取函式}
+
+下列帶有\cnglo{sampler}的內建函式可用於讀取圖像\footnote{%
+这些函式不支持型别为 \ctype{mage1d_buffer_t} 的图像。%
+}。
+
+\placetable[here,split][tab:imgReadFunc]
+{內建圖像讀取函式}
+{\input{chapter_lgg/tbl/tbl_imgreadfunc.tex}}
+
+% Built-in Image Sampler-less Read Functions
+\subsubsection{內建無採樣器圖像讀取函式}
+
+下列無\cnglo{sampler}的內建函式也可用於讀取圖像。
+其行為與\refsection{builtInImgReadFunc}中坐標為整數、並帶有\cnglo{sampler}的對應函式一樣，
+相當於\cnglo{sampler}的濾波模式為 \cenum{CLK_FILTER_NEAREST}、
+歸一化坐標為 \cenum{CLK_NORMALIZED_COORDS_FALSE}、
+尋址模式為 \cenum{CLK_ADDRESS_NONE}。
+
+\placetable[here,split][tab:imgReadWithoutSamplerFunc]
+{內建無採樣器圖像讀取函式}
+{\input{chapter_lgg/tbl/tbl_imgreadwithoutsamplerfunc.tex}}
+
+% Built-in Image Write Functions
+\subsubsection{內建圖像寫入函式}
+
+下列內建函式可用於寫入圖像。
+
+\placetable[here,split][tab:imgWriteFunc]
+{內建圖像寫入函式}
+{\input{chapter_lgg/tbl/tbl_imgwritefunc.tex}}
+
+% Built-in Image Query Functions
+\subsubsection{內建圖像查詢函式}
+
+下列內建函式可用於查詢圖像資訊。
+
+\placetable[here,split][tab:imgQueryFunc]
+{內建圖像查詢函式}
+{\input{chapter_lgg/tbl/tbl_imgqueryfunc.tex}}
+
+\reftab{imgQueryFunc}中，
+\capi{get_image_channel_data_type} 和 \capi{get_image_channel_order} 所返回的帶有前綴 \cenum{CLK_} 的值
+分別對應於\reftab{imgChannelDataType}和\reftab{imgChannelOrder}中帶有前綴 \cenum{CL_} 的值。
+例如， \cenum{CL_UNORM_INT8} 和 \cenum{CLK_UNORM_INT8} 都是指通道數據類型為非歸一化的 8 位整數。
+
+\subsubsection{将图像通道映射到 read_image 所返回的颜色值上、%
+将传递给 write_image 的颜色值映射到图像通道上}
+
+\reftab{ecComponentAndImgChannel}中列出了圖像元素的各通道的顏色值
+與 \ctype{float4}、 \ctype{int4} 或 \ctype{uint4} 中組件的映射關係，
+這些矢量由 \capi{read_image{f|i|ui}} 返回或作為 \capi{write_image{f|i|ui}} 的參數 \carg{color}。
+對於未映射的組件，如果是紅、綠、藍幾個通道，則將其值置為 \ccmm{0.0}，
+而如果是 alpha 通道，則將其值置為 \math{1.0}。
+
+\placetable[here][tab:ecComponentAndImgChannel]
+{矢量組件與圖像通道的對應關係}{
+\startCLOO[通道順序][矢量組件中的通道數據]
+\clOO{\cenum{CL_R}、 \cenum{CL_Rx}}{\ccmm{(r, 0.0, 0.0, 1.0)}}
+\clOO{\cenum{CL_A}}{\ccmm{(0.0, 0.0, 0.0, a)}}
+
+\clOO{\cenum{CL_RGB}、 \cenum{CL_RGBx}}{\ccmm{(r, g, 0.0, 1.0)}}
+\clOO{\cenum{CL_RA}}{\ccmm{(r, 0.0, 0.0, a)}}
+
+\clOO{\cenum{CL_RG}、 \cenum{CL_RGx}}{\ccmm{(r, g, b, 1.0)}}
+\clOO{\cenum{CL_RGBA}、 \cenum{CL_BGRA}、 \cenum{CL_ARGB}}{\ccmm{(r, g, b, a)}}
+
+\clOO{\cenum{CL_INTENSITY}}{\ccmm{(I, I, I, I)}}
+\clOO{\cenum{CL_LUMINANCE}}{\ccmm{(L, L, L, 1.0)}}
+\stopCLOO
+}
+
+如果\cnglo{kernel}對多個圖像使用同一個尋址模式為 \cenum{CL_ADDRESS_CLAMP} 的\cnglo{sampler}，
+則可能導致實作內部使用額外的\cnglo{sampler}。
+如果通過 \capi{read_image{f | i | ui}} 對多個圖像使用同一\cnglo{sampler}，
+則實作可能需要分配額外的\cnglo{sampler}來處理不同的顏色極值（這取決於所用的圖像格式）。
+在計算\cnglo{device}所支持\cnglo{sampler}的最大數目時（\cenum{CL_DEVICE_MAX_SAMPLERS}），
+會將這些實作自行分配的\cnglo{sampler}考慮在內。
+如果所入隊的\cnglo{kernel}需要的\cnglo{sampler}超過了這個最大值，
+則會導致返回 \cenum{CL_OUT_OF_RESOURCES}。

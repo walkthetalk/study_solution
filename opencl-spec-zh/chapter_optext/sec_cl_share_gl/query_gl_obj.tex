@@ -1,0 +1,96 @@
+\subsection{由 CL 內存對象查詢 GL 對象的資訊}
+
+\topclfunc{clGetGLObjectInfo}
+
+\startCLFUNC
+cl_int clGetGLObjectInfo (
+		cl_mem memobj,
+		cl_gl_object_type *gl_object_type,
+		GLuint *gl_object_name)
+\stopCLFUNC
+
+此函式可查詢用來創建 OpenCL \cnglo{memobj}的 OpenGL 對象及其對象類型，
+即他是材質、渲染緩衝還是緩衝對象。
+
+\carg{gl_object_type} 會返回附到 \carg{memobj} 上的 GL 對象的類型，
+可以是：
+\startigBase[indentnext=no]
+\item \cenum{CL_GL_OBJECT_BUFFER}
+\item \cenum{CL_GL_OBJECT_TEXTURE2D}
+\item \cenum{CL_GL_OBJECT_TEXTURE3D}
+\item \cenum{CL_GL_OBJECT_TEXTURE2D_ARRAY}
+\item \cenum{CL_GL_OBJECT_TEXTURE1D}
+\item \cenum{CL_GL_OBJECT_TEXTURE1D_ARRAY}
+\item \cenum{CL_GL_OBJECT_TEXTURE_BUFFER}
+\item \cenum{CL_GL_OBJECT_RENDERBUFFER}
+\stopigBase
+而如果 \carg{gl_object_type} 是 \cmacro{NULL}，則將其忽略。
+
+\carg{gl_object_name} 會返回用來創建 \carg{memobj} 的 GL 對象的名字。
+如果 \carg{gl_object_name} 是 \cmacro{NULL}，則將其忽略。
+
+如果執行成功，則 \clapi{clGetGLObjectInfo} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_MEM_OBJECT}，
+如果 \carg{memobj} 無效。
+
+\item \cenum{CL_INVALID_GL_OBJECT}，
+如果沒有與 \carg{memobj} 關聯的 GL 對象。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+% clGetGLTextureInfo
+\topclfunc{clGetGLTextureInfo}
+
+\startCLFUNC
+cl_int clGetGLTextureInfo (
+			cl_mem memobj,
+			cl_gl_texture_info param_name,
+			size_t param_value_size,
+			void *param_value,
+			size_t *param_value_size_ret)
+\stopCLFUNC
+
+此函式會返回與 \carg{memobj} 關聯的 GL 材質對象的附加資訊。
+
+\carg{param_name} 指定要查詢什麼資訊。
+\reftab{glTextureInfoType}中列出了 \clapi{clGetGLTextureInfo} 所支持的資訊類型
+及 \carg{param_value} 中返回的資訊。
+
+\carg{param_value} 所指內存用於存儲查詢結果。
+如果 \carg{param_value} 是 \cmacro{NULL}，則將其忽略。
+
+\carg{param_value_size} 即 \carg{param_value} 所指內存的大小。
+其值必須大於等於\reftab{glTextureInfoType}中所列返回型別的大小。
+
+\carg{param_value_size_ret} 即拷貝到 \carg{param_value} 中數據的實際大小。
+如果 \carg{param_value_size_ret} 是 \cmacro{NULL}，則將其忽略。
+
+\placetable[here][tab:glTextureInfoType]
+{\clapi{clGetGLTextureInfo} 所支持的 \carg{param_name}}
+{\input{chapter_optext/tbl/texture_info_type.tex}}
+
+如果執行成功， \clapi{clGetGLTextureInfo} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_MEM_OBJECT}，
+如果 \carg{memobj} 無效。
+
+\item \cenum{CL_INVALID_GL_OBJECT}，
+如果沒有與 \carg{memobj} 關聯的 GL 對象。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{param_name} 無效；
+或者 \carg{param_value_size} 的值 < \reftab{glTextureInfoType}中所列返回型別的大小，
+並且 \carg{param_value} 不是 \cmacro{NULL}；
+或者 \carg{param_value} 和 \carg{param_value_size_ret} 都是 \cmacro{NULL}。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+

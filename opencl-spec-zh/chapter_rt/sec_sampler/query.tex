@@ -1,0 +1,45 @@
+\subsection{採樣器對象的相關查詢}
+
+\topclfunc{clGetSamplerInfo}
+
+\startCLFUNC
+cl_int clGetSamplerInfo (cl_sampler sampler,
+			cl_sampler_info param_name,
+			size_t param_value_size,
+			void *param_value,
+			size_t *param_value_size_ret)
+\stopCLFUNC
+
+此函式會返回\cnglo{sampler}對象的相關資訊。
+
+\carg{sampler} 即所要查詢的\cnglo{sampler}。
+
+\carg{param_name} 指定要查詢什麼資訊。
+所支持的資訊類型以及 \carg{param_value} 中所返回的內容如\reftab{samplerinfo}所示。
+
+\carg{param_value} 指向的內存用來存儲查詢結果。如果是 \cmacro{NULL}，則忽略。
+
+\carg{param_value_size} 即 \carg{param_value} 所指內存塊的大小（單位：字節）。
+其值必須 >= \reftab{samplerinfo}中返回型別的大小。
+
+\carg{param_value_size_ret} 會返回查詢結果的實際大小。如果是 \cmacro{NULL}，則忽略。
+
+\capi{clGetCommandQueueInfo} 所支持的 \carg{param_name} 的值
+以及 \carg{param_value} 中所返回的資訊如\reftab{samplerinfo}所示。
+
+\placetable[here][tab:samplerinfo]
+{\capi{clGetSamplerInfo}所支持的\carg{param_names}}
+{\input{chapter_rt/tbl/tbl_sampler_info.tex}}
+
+如果執行成功，\capi{clGetSamplerInfo} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{param_name} 不在支持之列，
+或者 \carg{param_value_size} 的值 < \reftab{samplerinfo}中返回型別的大小
+且 \carg{param_value} 不是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_SAMPLER}，如果 \carg{sampler} 無效。
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+

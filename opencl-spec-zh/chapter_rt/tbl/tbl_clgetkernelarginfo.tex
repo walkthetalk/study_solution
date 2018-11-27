@@ -1,0 +1,64 @@
+\startETD[cl_kernel_arg_info][返回型別]
+
+\clETD{CL_KERNEL_ARG_ADDRESS_QUALIFIER}{cl_kernel_arg_address_qualifier}{
+返回參數的位址限定符。所返回的值可以是下列之一：
+\startigBase
+\item \cenum{CL_KERNEL_ARG_ADDRESS_GLOBAL}
+\item \cenum{CL_KERNEL_ARG_ADDRESS_LOCAL}
+\item \cenum{CL_KERNEL_ARG_ADDRESS_CONSTANT}
+\item \cenum{CL_KERNEL_ARG_ADDRESS_PRIVATE}
+\stopigBase
+
+如果沒有指定位址限定符，則返回缺省的位址限定符 \cenum{CL_KERNEL_ARG_ADDRESS_PRIVATE}。
+}
+
+\clETD{CL_KERNEL_ARG_ACCESS_QUALIFIER}{cl_kernel_arg_access_qualifier}{
+返回參數的存取限定符。所返回的值可以是下列之一：
+\startigBase
+\item \cenum{CL_KERNEL_ARG_ACCESS_READ_ONLY}
+\item \cenum{CL_KERNEL_ARG_ACCESS_WRITE_ONLY}
+\item \cenum{CL_KERNEL_ARG_ACCESS_READ_WRITE}
+\item \cenum{CL_KERNEL_ARG_ACCESS_NONE}
+\stopigBase
+
+如果參數型別不是圖像，則返回 \cenum{CL_KERNEL_ARG_ACCESS_NONE}。
+如果參數型別是圖像，則會返回所指定的存取限定符或缺省的存取限定符。
+}
+
+\clETD{CL_KERNEL_ARG_TYPE_NAME}{char[]}{
+返回參數的型別名，即所聲明的型別名（會移除空白）。
+如果參數是無符號標量型別（即 unsigned char， unsigned short， unsigned int， unsigned long），
+則會返回 uchar， ushort， uint 和 ulong。
+所返回的型別名中不包括任何型別限定符。
+}
+
+\clETD{CL_KERNEL_ARG_TYPE_QUALIFIER}{cl_kernel_arg_type_qualifier}{
+返回參數的型別限定符。可能是：
+\startigBase
+\item \cenum{CL_KERNEL_ARG_TYPE_CONST}
+\item \cenum{CL_KERNEL_ARG_TYPE_RESTRICT}
+\item \cenum{CL_KERNEL_ARG_TYPE_VOLATILE}
+\item 以上三種的組合；或者
+\item \cenum{CL_KERNEL_ARG_TYPE_NONE}
+\stopigBase
+
+注意：如果參數是指位器，且所引用的型別聲明時帶有限定符 \cqlf{volatile}，
+則會返回 \cenum{CL_KERNEL_ARG_TYPE_VOLATILE}。
+例如，如果\cnglo{kernel}參數聲明為 \ccmm{global int volatile *x}，
+則會返回 \cenum{CL_KERNEL_ARG_TYPE_VOLATILE}；
+而對於聲明為 \ccmm{global int *volatile x} 的\cnglo{kernel}參數，
+則不會返回 \cenum{CL_KERNEL_ARG_TYPE_VOLATILE}。
+
+类似的，如果引数是指位器，且所引用型别声明时带有限定符 \cqlf{restrict} 或 \cqlf{const}，
+则返回 \cenum{CL_KERNEL_ARG_TYPE_RESTRICT} 或 \cenum{CL_KERNEL_ARG_TYPE_CONST}。
+例如，\cnglo{kernel}引数声明为 \ccmm{global int const *x}，则返回 \cenum{CL_KERNEL_ARG_TYPE_CONST}，
+但如果\cnglo{kernel}引数声明为 \ccmm{global int * const x}，则不会返回 \cenum{CL_KERNEL_ARG_TYPE_CONST}，
+如果\cnglo{kernel}引数声明时带有不变位址空间限定符，
+则会设置型别限定符 \cenum{CL_KERNEL_ARG_TYPE_CONST}。
+}
+
+\clETD{CL_KERNEL_ARG_NAME}{char[]}{
+返回參數的名字。
+}
+
+\stopETD

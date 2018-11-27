@@ -1,0 +1,27 @@
+\subsection[section:asyncCopyPrefetch]{在全局內存和局部內存間的異步拷貝以及預取}
+
+OpenCL C 編程語言實現了\reftab{asyncCopyPrefetch}中所列函式，
+可在\cnglo{glbmem}和\cnglo{locmem}間進行異步拷貝，
+以及從\cnglo{glbmem}中預取（prefetch）。
+
+如無特殊說明，泛型 \ctype{gentype} 表示函式引數可以是下列內建數據型別：
+\startigBase[indentnext=no]
+\item \cldt{char}、 \cldt[n]{char}、 \cldt{uchar}、 \cldt[n]{uchar}、
+\item \cldt{short}、 \cldt[n]{short}、 \cldt{ushort}、 \cldt[n]{ushort}、
+\item \cldt{int}、 \cldt[n]{int}、 \cldt{uint}、 \cldt[n]{uint}、
+\item \cldt{long}、 \cldt[n]{long}、 \cldt{ulong}、 \cldt[n]{ulong}、
+\item \cldt{float}、 \cldt[n]{float} 或 \cldt{double}、 \cldt[n]{double}，
+\stopigBase
+其中 \ccmmsuffix{n} 可以是 2、 3\footnote{
+對 \capi{async_work_group_copy} 和 \capi{async_work_group_strided_copy} 而言，
+矢量型別的組件數目是 3 還是 4 沒有什麼區別。}、 4、 8、 16。
+
+\placetable[here][tab:asyncCopyPrefetch]
+{內建異步拷貝和預取函式}
+{\input{chapter_lgg/tbl/tbl_asynccopyprefetch.tex}}
+
+\startnotepar
+\cnglo{kernel}必須用內建函式 \capi{wait_group_events} 等待所有異步拷貝全部完成後再退出，
+否則其行為未定義。
+\stopnotepar
+

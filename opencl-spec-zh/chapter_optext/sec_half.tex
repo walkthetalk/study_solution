@@ -1,0 +1,40 @@
+\section{半精度浮點數}
+
+此擴展增加了對 \cldt{half} 標量和矢量型別的支持，
+可以 \cldt{half} 作為內建型別進行算術運算、轉換等。
+\cnglo{app}要想使用型別 \cldt{half} 和 \cldt[n]{half}，
+必須包含編譯指示 \cemp{#pragma OPENCL EXTENSION cl_khr_fp16 : enable}。
+
+\reftab{builtInScalarDataTypes}和\reftab{builtInVectorDataTypes}中所列內建標量、矢量數據型別又做了如下擴充：
+
+\placetable[here][tab:half_type_dsc]
+{\cldt{half} 相關數據型別}
+{\input{chapter_optext/tbl/half_type_dsc.tex}}
+
+在 OpenCL API（以及頭檔）中，內建矢量數據型別 \cldt[n]{half} 被聲明為其他型別，
+以更好的為\cnglo{app}所用。
+\reftab{bihalf2appdt}中列出了 OpenCL C 編程語言中
+所定義的內建矢量數據型別 \cldt[n]{half} 與\cnglo{app}所用型別間的對應關係。
+
+\placetable[here][tab:bihalf2appdt]
+{內建矢量數據型別與應用程式所用型別的對應關係}
+{\input{chapter_optext/tbl/half2appdt.tex}}
+
+\refsection{operator}中所描述的關係、相等、邏輯以及邏輯單元算子
+均可用於 \cldt{half} 標量和 \cldt[n]{half} 矢量型別，
+所產生的結果分別為標量 \cldt{int} 和矢量 \cldt[n]{short}。
+
+可以為浮點常值添加後綴 \ccmm{h} 或 \ccmm{H}，
+以表明此常值型別為 \cldt{half}。
+
+\input{chapter_optext/sec_half/conversion.tex}
+\input{chapter_optext/sec_half/math_func.tex}
+\input{chapter_optext/sec_half/common_func.tex}
+\input{chapter_optext/sec_half/geometric_func.tex}
+\input{chapter_optext/sec_half/relation_func.tex}
+\input{chapter_optext/sec_half/vecLSF.tex}
+\input{chapter_optext/sec_half/async_copy_prefetch.tex}
+\input{chapter_optext/sec_half/img_rw_func.tex}
+\input{chapter_optext/sec_half/ieee754_compliance.tex}
+\input{chapter_optext/sec_half/relative_error.tex}
+

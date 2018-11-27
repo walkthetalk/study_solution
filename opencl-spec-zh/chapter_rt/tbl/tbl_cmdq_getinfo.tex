@@ -1,0 +1,22 @@
+\startETD[cl_command_queue_info][返回类型]
+
+\clETD{CL_QUEUE_CONTEXT}{cl_context}{
+返回創建\cnglo{cmdq}時所指定的\cnglo{context}。
+}
+
+\clETD{CL_QUEUE_DEVICE}{cl_device_id}{
+返回創建\cnglo{cmdq}時所指定的\cnglo{device}。
+}
+
+\clETD{CL_QUEUE_REFERENCE_COUNT}{cl_uint}{
+返回\cnglo{cmdq}的\cnglo{refcnt}\footnote{%
+在返回的那一刻，此\cnglo{refcnt}就已過時。\cnglo{app}中一般不太適用。提供此特性主要是為了檢測內存泄漏。}。
+}
+
+\clETD{CL_QUEUE_PROPERTIES}{cl_command_queue_properties}{
+返回\cnglo{cmdq}當前的屬性。
+這些屬性就是 \capi{clCreateCommandQueue} 的引數 \carg{properties}。
+}
+
+\stopETD
+

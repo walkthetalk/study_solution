@@ -1,0 +1,14 @@
+\startETD[cl_mem_info][返回类型]
+
+\clETD{CL_MEM_D3D10_RESOURCE_KHR}{ID3D10Resource *}{
+如果 \carg{memobj} 是用以下函式創建的，
+則返回創建 \carg{memobj} 時所指定的引數 \carg{resource}：
+\startigBase
+\item \cenum{clCreateFromD3D10BufferKHR}，
+\item \cenum{clCreateFromD3D10Texture2DKHR}，或
+\item \cenum{clCreateFromD3D10Texture3DKHR}。
+\stopigBase
+}
+
+\stopETD
+

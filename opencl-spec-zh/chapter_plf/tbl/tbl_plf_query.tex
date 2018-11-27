@@ -1,0 +1,41 @@
+\startETD[cl_platform_info][%
+返回型別\footnote{%
+對於 OpenCL 查詢函式，如果所查詢資訊的型別為 \ctype{char[]}，
+則會返回一個以 null 終止的字串。}%
+]
+
+\clETD{CL_PLATFORM_PROFILE}{char[]}{
+OpenCL 規格字串。
+返回實作所支持的規格名。
+可以是下列之一：
+\startigBase
+\item \cenum{FULL_PROFILE}——表示實作支持 OpenCL 規範（核心規範所定義的功能，無須支持任何擴展）。
+\item \cenum{EMBEDDED_PROFILE}——表示實作支持 OpenCL 嵌入式規格。
+他是對應版本 OpenCL 的一個子集。
+OpenCL \scver 的嵌入式規格請參考\refchapter{openclEmbProfile}。
+\stopigBase
+}
+
+\clETD{CL_PLATFORM_VERSION}{char[]}{
+OpenCL 版本字串。返回所支持的 OpenCL 版本。其格式如下：
+
+\cfmt{OpenCL<space><major_version.minor_version><space><platform-specific information>}
+
+所返回的 \cfmt{major_version.minor_version} 將是 \scver。
+}
+
+\clETD{CL_PLATFORM_NAME}{char[]}{
+平台名字。
+}
+
+\clETD{CL_PLATFORM_VENDOR}{char[]}{
+平台供應商的名字。
+}
+
+\clETD{CL_PLATFORM_EXTENSIONS}{char[]}{
+返回平台所支持的擴展名，以空格分隔（擴展名本身不包含空格）。
+此平台關聯的所有\cnglo{device}都要支持此處定義的擴展。
+}
+
+\stopETD
+

@@ -1,0 +1,58 @@
+\startcomponent cpnoptext
+\product opencl-spec-zh
+
+\chapter[chapter:optExt]{可選擴展}
+
+%OpenCL 1.2 所支持的可選特性在《OpenCL 1.2 擴展規範》中有所描述。
+本章列出了 OpenCL 1.2 所支持的可選特性。
+一些 OpenCL \cnglo{device} 可能支持這些可選擴展。
+對於符合 OpenCL 的實作而言，不要求支持這些可選擴展，
+但仍然希望這些可選擴展能夠獲取廣泛的支持。
+將來修訂 OpenCL 規範時，可能將這些可選擴展中所定義的功能移入必需的特性集中。
+下面簡單描述了這些擴展的定義。
+
+OpenCL 工作組所批准的 OpenCL 擴展均遵守寫列命名約定：
+\startigBase
+\item 每個擴展都有一個唯一的{\ftRef{名字字串}}，形如“\clext{cl_khr_<名字>}”。
+如果實作支持此擴展，
+則此字串會出現在\reftab{cldevquery}中的 \cenum{CL_PLATFORM_EXTENSIONS} 或 \cenum{CL_DEVICE_EXTENSIONS} 中。
+
+\item 對於擴展中所定義的所有 API 函式，其名字均形如：\clapi{cl<函式名>KHR}。
+
+\item 對於擴展中所定義的所有枚舉，其名字均形如：\clapi{CL_<枚舉名>_KHR}。
+\stopigBase
+
+後續修訂 OpenCL 時， OpenCL 工作組所批准的 OpenCL 擴展都可能被{\ftRef{提升}}為必需的核心特性。
+一旦如此，就會將相應的擴展規範合併到核心規範中。
+而對於其中的函式和枚舉，則會移除其後綴 {\ftEmp{KHR}}。
+對於相應的 OpenCL 實作而言，
+仍然要在 \cenum{CL_PLATFORM_EXTENSIONS} 或 \cenum{CL_DEVICE_EXTENSIONS} 中導出此擴展名，
+而且也要支持帶有後綴 {\ftEmp{KHR}} 的函式和枚舉，
+以方便在不同的 OpenCL 版本間進行遷移。
+
+對於供應商自定義的擴展，則要遵循下列命名約定：
+\startigBase
+\item 每個擴展都有一個唯一的{\ftRef{名字字串}}，形如“\clext{cl_<供應商的名字>_<名字>}”。
+如果實作支持此擴展，
+則此字串會出現在\reftab{cldevquery}中的 \cenum{CL_PLATFORM_EXTENSIONS} 或 \cenum{CL_DEVICE_EXTENSIONS} 中。
+
+\item 對於擴展中所定義的所有 API 函式，其名字均形如：\clapi{cl<函式名><供應商的名字>}。
+
+\item 對於擴展中所定義的所有枚舉，其名字均形如：\clapi{CL_<枚舉名>_<供應商的名字>}。
+\stopigBase
+
+\input{chapter_optext/sec_compilerdirective.tex}
+\input{chapter_optext/sec_get_function_pointer.tex}
+\input{chapter_optext/sec_64_atomic.tex}
+\input{chapter_optext/sec_write_3d_image.tex}
+\input{chapter_optext/sec_half.tex}
+\input{chapter_optext/sec_cl_from_gl.tex}
+\input{chapter_optext/sec_cl_share_gl.tex}
+\input{chapter_optext/sec_evtObj_from_sync.tex}
+\input{chapter_optext/sec_d3d10.tex}
+\input{chapter_optext/sec_dx9.tex}
+\input{chapter_optext/sec_d3d11.tex}
+\input{chapter_optext/sec_icd.tex}
+
+\stopcomponent
+

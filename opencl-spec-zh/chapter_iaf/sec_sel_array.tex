@@ -1,0 +1,16 @@
+% Selecting an Image from an Image Array
+\section{在圖像陣列中選擇圖像}
+
+讀寫 2D 圖像陣列中的 2D 圖像時，將非歸一化圖像坐標值記為 \math{(u, v, w)}。
+
+選擇 2D 圖層時這樣計算：
+\startclc
+layer = clamp(floor(rint(w)), 0, d/BTEX\low{t}/ETEX – 1)
+\stopclc
+
+讀寫 1D 圖像陣列中的 1D 圖像時，將非歸一化圖像坐標值記為 \math{(u, v)}。
+
+選擇 2D 圖層時這樣計算：
+\startclc
+layer = clamp(floor(rint(v)), 0, h/BTEX\low{t}/ETEX – 1)
+\stopclc

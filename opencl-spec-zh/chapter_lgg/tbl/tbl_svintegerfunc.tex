@@ -1,0 +1,198 @@
+% abs
+\startbuffer[funcproto:abs]
+ugentype abs(gentype x)
+\stopbuffer
+\startbuffer[funcdesc:abs]
+返回 \math{|\marg{x}|}。
+\stopbuffer
+
+% abs_diff
+\startbuffer[funcproto:abs_diff]
+ugentype abs_diff(gentype x,
+		gentype y)
+\stopbuffer
+\startbuffer[funcdesc:abs_diff]
+返回 \math{|\marg{x} - \marg{y}|}，不會有模上溢。
+\stopbuffer
+
+% add_sat
+\startbuffer[funcproto:add_sat]
+gentype add_sat(gentype x,
+		gentype y)
+\stopbuffer
+\startbuffer[funcdesc:add_sat]
+返回 \math{\marg{x} + \marg{y}}，並使結果飽和。
+\stopbuffer
+
+% hadd
+\startbuffer[funcproto:hadd]
+gentype hadd (gentype x,
+		gentype y)
+\stopbuffer
+\startbuffer[funcdesc:hadd]
+返回 \math{(\marg{x} + \marg{y})>>1}，中間的加法不會有模上溢。
+\stopbuffer
+
+% rhadd
+\startbuffer[funcproto:rhadd]
+gentype rhadd (gentype x,
+		gentype y)
+\stopbuffer
+\startbuffer[funcdesc:rhadd]
+返回 \math{(\marg{x} + \marg{y} + 1)>>1}，中間的加法不會有模上溢\footnote{
+矢量運算經常需要 \math{n+1} 個臨時位才能算出結果。
+而 \capi{rhadd} 指令具有這個額外的位，從而無需上升取樣（upsample）或下降取樣（downsample）。
+其性能優勢非常大。}。
+\stopbuffer
+
+% clamp
+\startbuffer[funcproto:clamp]
+gentype clamp (gentype x,
+		gentype minval,
+		gentype maxval)
+gentype clamp (gentype x,
+		sgentype minval,
+		sgentype maxval)
+\stopbuffer
+\startbuffer[funcdesc:clamp]
+返回 \math{\mapiemp{min}(\mapiemp{max}(\marg{x}, \marg{minval}), \marg{maxval})}。
+如果 \math{\marg{minval} > \marg{maxval}}，則結果未定義。
+\stopbuffer
+
+% clz
+\startbuffer[funcproto:clz]
+gentype clz (gentype x)
+\stopbuffer
+\startbuffer[funcdesc:clz]
+返回 \carg{x} 中前導 0 的位數，從最高有效位開始。
+\stopbuffer
+
+% mad_hi
+\startbuffer[funcproto:mad_hi]
+gentype mad_hi (gentype a,
+		gentype b,
+		gentype c)
+\stopbuffer
+\startbuffer[funcdesc:mad_hi]
+返回 \math{\mapiemp{mul_hi}(\marg{a}, \marg{b}) + \marg{c}}。
+\stopbuffer
+
+% mad_sat
+\startbuffer[funcproto:mad_sat]
+gentype mad_sat (gentype a,
+		gentype b,
+		gentype c)
+\stopbuffer
+\startbuffer[funcdesc:mad_sat]
+返回 \math{\marg{a} \times \marg{b} + \marg{c}}，並使結果飽和。
+\stopbuffer
+
+% max
+\startbuffer[funcproto:max]
+gentype max (gentype x, gentype y)
+gentype max (gentype x, sgentype y)
+\stopbuffer
+\startbuffer[funcdesc:max]
+如果 \math{\marg{x} < \marg{y}}，則返回 \carg{y}，否則返回 \carg{x}。
+\stopbuffer
+
+% min
+\startbuffer[funcproto:min]
+gentype min (gentype x, gentype y)
+gentype min (gentype x, sgentype y)
+\stopbuffer
+\startbuffer[funcdesc:min]
+如果 \math{\marg{y} < \marg{x}}，則返回 \carg{y}，否則返回 \carg{x}。
+\stopbuffer
+
+% mul_hi
+\startbuffer[funcproto:mul_hi]
+gentype mul_hi (gentype x,
+		gentype y)
+\stopbuffer
+\startbuffer[funcdesc:mul_hi]
+計算 \math{\marg{x} \times \marg{y}}，並返回乘積的高位半部（high half）。
+\stopbuffer
+
+% rotate
+\startbuffer[funcproto:rotate]
+gentype rotate (gentype v, gentype i)
+\stopbuffer
+\startbuffer[funcdesc:rotate]
+將 \carg{v} 中的每個元素都左移，其位數就是 \carg{i} 中對應元素的值
+（遵守\refsection{operator}中的移位取模規則）。
+由左側移出的位再從右側移入。
+\stopbuffer
+
+% sub_sat
+\startbuffer[funcproto:sub_sat]
+gentype sub_sat (gentype x, gentype y)
+\stopbuffer
+\startbuffer[funcdesc:sub_sat]
+返回 \math{\marg{x} - \marg{y}}，並使結果飽和。
+\stopbuffer
+
+% upsample
+\startbuffer[funcproto:upsampleshort]
+short upsample (char hi, uchar lo)
+ushort upsample (uchar hi, uchar lo)
+shortn upsample (charn hi, ucharn lo)
+ushortn upsample (ucharn hi, ucharn lo)
+\stopbuffer
+\startbuffer[funcdesc:upsampleshort]
+\math{result[i] = ((short)hi[i] << 8) | lo[i]}\par
+\math{result[i] = ((ushort)hi[i] << 8) | lo[i]}
+\stopbuffer
+\startbuffer[funcproto:upsampleint]
+int upsample (short hi, ushort lo)
+uint upsample (ushort hi, ushort lo)
+intn upsample (shortn hi, ushortn lo)
+uintn upsample (ushortn hi, ushortn lo)
+\stopbuffer
+\startbuffer[funcdesc:upsampleint]
+\math{result[i] = ((int)hi[i] << 16) | lo[i]}\par
+\math{result[i] = ((uint)hi[i] << 16) | lo[i]}
+\stopbuffer
+\startbuffer[funcproto:upsamplelong]
+long upsample (int hi, uint lo)
+ulong upsample (uint hi, uint lo)
+longn upsample (intn hi, uintn lo)
+ulongn upsample (uintn hi, uintn lo)
+\stopbuffer
+\startbuffer[funcdesc:upsamplelong]
+\math{result[i] = ((long)hi[i] << 32) | lo[i]}\par
+\math{result[i] = ((ulong)hi[i] << 32) | lo[i]}
+\stopbuffer
+
+% popcount
+\startbuffer[funcproto:popcount]
+gentype popcount (gentype x)
+\stopbuffer
+\startbuffer[funcdesc:popcount]
+返回 \carg{x} 中非零位的數目。
+\stopbuffer
+
+% begin TABLE
+\startCLFD
+
+\clFD{abs}
+\clFD{abs_diff}
+\clFD{add_sat}
+\clFD{hadd}
+\clFD{rhadd}
+\clFD{clamp}
+\clFD{clz}
+\clFD{mad_hi}
+\clFD{mad_sat}
+\clFD{max}
+\clFD{min}
+\clFD{mul_hi}
+\clFD{rotate}
+\clFD{sub_sat}
+\clFD{upsampleshort}
+\clFD{upsampleint}
+\clFD{upsamplelong}
+\clFD{popcount}
+
+\stopCLFD
+

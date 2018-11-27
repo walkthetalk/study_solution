@@ -1,0 +1,89 @@
+\subsection{創建採樣器對象}
+
+\topclfunc{clCreateSampler}
+
+\startCLFUNC
+cl_sampler clCreateSampler (cl_context context,
+			cl_bool normalized_coords,
+			cl_addressing_mode addressing_mode,
+			cl_filter_mode filter_mode,
+			cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式可以創建一個\cnglo{sampler}對象。
+至於\cnglo{sampler}怎樣工作請參考\refsection{samplerInImgRw}。
+
+\carg{context} 是一個 OpenCL \cnglo{context}。
+
+\carg{normalized_coords} 指明圖像坐標是否已歸一化
+（如果 \carg{normalized_coords} 是 \cenum{CL_TRUE}，則代表已歸一化，
+如果是 \cenum{CL_FALSE}，則未歸一化）。
+
+\carg{addressing_mode} 指明讀取圖像時如果坐標溢出如何處置。
+可以設置成 \cenum{CL_ADDRESS_MIRRORED_REPEAT}、 \cenum{CL_ADDRESS_REPEAT}、
+\cenum{CL_ADDRESS_CLAMP_TO_EDGE}、 \cenum{CL_ADDRESS_CLAMP}
+或 \cenum{CL_ADDRESS_NONE}。
+
+\carg{filter_mode} 指明讀取圖像時採用哪種濾波模式。
+可以是 \cenum{CL_FILTER_NEAREST} 或 \cenum{CL_FILTER_LINEAR}。
+
+\carg{errcode_ret} 會返回相應的錯誤碼。如果是 \cmacro{NULL}，則不會返回錯誤碼。
+
+如果成功創建了\cnglo{sampler}對象， \capi{clCreateSampler} 會將其返回，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，如果 \carg{context} 無效。
+
+\startitem
+\cenum{CL_INVALID_VALUE}，如果下列三項中的任一項或其組合無效：
+\startigBase
+\item \carg{addressing_mode}
+\item \carg{filter_mode}
+\item \carg{normalized_coords}
+\stopigBase
+\stopitem
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果 \carg{context} 中的所有\cnglo{device}都不支持圖像
+（即 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_FALSE}，參見\reftab{cldevquery}）。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clRetainSampler}
+
+\startCLFUNC
+cl_int clRetainSampler (cl_sampler sampler)
+\stopCLFUNC
+
+此函式會使 \carg{sampler} 的\cnglo{refcnt}增一。
+\capi{clCreateSampler} 會實施隱式的 \englo{retain}。
+
+如果執行成功，\capi{clRetainSampler} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_SAMPLER}，如果 \carg{sampler} 無效。
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clReleaseSampler}
+
+\startCLFUNC
+cl_int clReleaseSampler (cl_sampler sampler)
+\stopCLFUNC
+
+此函式會使 \carg{sampler} 的\cnglo{refcnt}減一。
+当 \carg{sampler} 的\cnglo{refcnt}降為 0，
+並且所有使用他的\cnglo{cmd}全部執行完畢，此\cnglo{sampler}就會被刪除。
+
+如果執行成功，\capi{clReleaseSampler} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_SAMPLER}，如果 \carg{sampler} 無效。
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

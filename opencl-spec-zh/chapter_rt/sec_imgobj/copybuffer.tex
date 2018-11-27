@@ -1,0 +1,252 @@
+\subsection{圖像對象和緩衝對象間的拷貝}
+
+\topclfunc{clEnqueueCopyImageToBuffer}
+
+\startCLFUNC
+cl_int clEnqueueCopyImageToBuffer(
+			cl_command_queue command_queue,
+			cl_mem src_image,
+			cl_mem dst_buffer,
+			const size_t *src_origin,
+			const size_t *region,
+			size_t dst_offset,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+此函式所入隊的\cnglo{cmd}用來將\cnglo{imgobj}拷貝到\cnglo{bufobj}中。
+
+\carg{command_queue} 就是拷貝\cnglo{cmd}要進入的隊列。
+\carg{command_queue}、 \carg{src_image}、 \carg{dst_buffer}
+必須位於同一 OpenCL \cnglo{context}中。
+
+\carg{src_image} 是一個\cnglo{imgobj}。
+
+\carg{dst_buffer} 是一個\cnglo{bufobj}。
+
+\carg{src_origin} 定義了源區域的起始位置 $(x, y, z)$，單位像素；
+對於 2D 圖像陣列，即 $(x, y)$ 以及圖像索引；
+對於 1D 圖像陣列，即 $(x)$ 以及圖像索引。
+如果 \carg{src_image} 是 2D \cnglo{imgobj}， $src\_origin[2]$ 必須是 0。
+如果 \carg{src_image} 是 1D \cnglo{imgobj}或 1D 圖像緩衝對象，
+$src\_origin[1]$ 和 $src\_origin[2]$ 都必須是 0。
+如果 \carg{src_image} 是 1D 圖像陣列對象， $src\_origin[1]$ 即圖像索引。
+如果 \carg{src_image} 是 2D 圖像陣列對象， $src\_origin[2]$ 即圖像索引。
+
+\carg{region} 定義了所拷貝區域的大小 $(width, height, depth)$，單位像素;
+對於 2D 圖像陣列，即 $(width, height)$ 以及圖像索引；
+對於 1D 圖像陣列，即 $(width)$ 以及圖像索引。
+如果 \carg{src_image} 是 2D \cnglo{imgobj} 或 1D 圖像陣列對象，
+$region[2]$ 必須是 1。
+如果 \carg{src_image} 是 1D 圖像或 1D 圖像緩衝對象，
+$src\_origin[1]$ 和 $region[2]$ 必須是 1。
+\carg{region} 中的值不能为 0。
+
+\carg{dst_offset} 即拷貝時目的區域在 \carg{dst_buffer} 中的起始位置。
+目的區域的大小，即 \carg{dst_cb} 這樣計算：
+如果 \carg{src_image} 是 3D \cnglo{imgobj}，
+則為 $width * height * depth * bytes/image element$；
+如果 \carg{src_image} 是 2D \cnglo{imgobj}，
+則為 $width * height * bytes/image element$；
+如果 \carg{src_image} 是 2D 圖像陣列對象，
+則為 $width * height * arraysize * bytes/image element$；
+如果 \carg{src_image} 是 1D 圖像或 1D 圖像緩衝對象，
+則為 $width * bytes/image element$；
+如果 \carg{src_image} 是 1D 圖像陣列對象，
+則為 $width * arraysize * bytes/image element$；
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list} 中
+列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點，
+並且必須與 \carg{command_queue} 位於同一個\cnglo{context}中。
+此函式返回後，即可回收並重用 \carg{event_wait_list} 所關聯的內存。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此拷貝\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}完成。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+這時可以用 \capi{clEnqueueBarrierWithWaitList} 來代替。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+則 \carg{event} 不能屬於 \carg{event_wait_list}。
+
+如果執行成功， \capi{clEnqueueCopyImageToBuffer} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue}、 \carg{src_image} 和 \carg{dst_buffer} 位於不同的\cnglo{context}中，
+或者 \carg{command_queue} 和 \carg{event_wait_list} 中的事件位於不同的\cnglo{context}中。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，如果 \carg{src_image} 或 \carg{dst_buffer} 無效；
+或者 \carg{src_image} 是由 \carg{dst_buffer} 創建的 1D 圖像 buffer 對象。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 $(src\_origin, region)$ 所指定的區域在 \carg{src_image} 中越限，
+或者 $(dst\_offset, dst\_cb)$ 所指定的區域在 \carg{dst_buffer} 中越限。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{src_origin} 和 \carg{region} 沒有遵守上面所描述的相應規則。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_MISALIGNED_SUB_BUFFER_OFFSET}，
+如果 \carg{dst_buffer} 是一個子\cnglo{bufobj}，
+並且創建他時所指定的參數 \carg{offset} 沒有
+和 \carg{queue} 所在\cnglo{device}的 \cenum{CL_DEVICE_MEM_BASE_ADDR_ALIGN} 對齊。
+
+\item \cenum{CL_INVALID_IMAGE_SIZE}，
+如果圖像的大小（寬度、高度、指定的或自動計算的行間距或面間距）
+不被 \carg{queue} 所在\cnglo{device} 支持。
+
+\item \cenum{CL_IMAGE_FORMAT_NOT_SUPPORTED}，
+如果 \carg{src_image} 的圖像格式（圖像通道順序和數據類型）
+不被 \carg{queue} 所在\cnglo{device} 支持。
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，
+如果為 \carg{src_image} 或 \carg{dst_buffer} 分配內存失敗。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果 \carg{command_queue} 所在\cnglo{device}不支持圖像
+（即\reftab{cldevquery}中的 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_FALSE}）。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clEnqueueCopyBufferToImage}
+
+\startCLFUNC
+cl_int clEnqueueCopyBufferToImage(
+			cl_command_queue command_queue,
+			cl_mem src_buffer,
+			cl_mem dst_image,
+			size_t src_offset,
+			const size_t *dst_origin,
+			const size_t *region,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+此函式所入隊的\cnglo{cmd}用來將\cnglo{bufobj}拷貝到\cnglo{imgobj}中。
+
+\carg{command_queue} 就是拷貝\cnglo{cmd}要進入的隊列。
+\carg{command_queue}、 \carg{src_buffer}、 \carg{dst_image}
+必須位於同一 OpenCL \cnglo{context}中。
+
+\carg{src_buffer} 是一個\cnglo{bufobj}。
+
+\carg{dst_image} 是一個\cnglo{imgobj}。
+
+\carg{src_offset} 即拷貝時源區域在 \carg{src_buffer} 中的起始位置。
+
+\carg{dst_origin} 定義了目的區域的起始位置 $(x, y, z)$，單位像素；
+對於 2D 圖像陣列，即 $(x, y)$ 以及圖像索引；
+對於 1D 圖像陣列，即 $(x)$ 以及圖像索引。
+如果 \carg{dst_image} 是 2D \cnglo{imgobj}， $dst\_origin[2]$ 必須是 0。
+如果 \carg{dst_image} 是 1D \cnglo{imgobj}或 1D 圖像緩衝對象，
+$dst\_origin[1]$ 和 $dst\_origin[2]$ 都必須是 0。
+如果 \carg{dst_image} 是 1D 圖像陣列對象， $dst\_origin[1]$ 即圖像索引。
+如果 \carg{dst_image} 是 2D 圖像陣列對象， $dst\_origin[2]$ 即圖像索引。
+
+\carg{region} 定義了所拷貝區域的大小 $(width, height, depth)$，單位像素;
+對於 2D 圖像陣列，即 $(width, height)$ 以及圖像索引；
+對於 1D 圖像陣列，即 $(width)$ 以及圖像索引。
+如果 \carg{dst_image} 是 2D \cnglo{imgobj} 或 1D 圖像陣列對象， $region[2]$ 必須是 1。
+如果 \carg{dst_image} 是 1D \cnglo{imgobj}或 1D 圖像緩衝對象，
+$dst\_origin[1]$ 和 $region[2]$ 必須是 1。
+\carg{region} 中的值不能为 0。
+
+所拷貝的源區域的大小，即 \carg{src_cb} 這樣計算：
+如果 \carg{dst_image} 是 3D \cnglo{imgobj}，
+則為 $width * height * depth * bytes/image element$；
+如果 \carg{dst_image} 是 2D \cnglo{imgobj}，
+則為 $width * height * bytes/image element$；
+如果 \carg{dst_image} 是 2D 圖像陣列對象，
+則為 $width * height * arraysize * bytes/image element$；
+如果 \carg{dst_image} 是 1D \cnglo{imgobj}或 1D 圖像緩衝對象，
+則為 $width * bytes/image element$；
+如果 \carg{dst_image} 是 1D 圖像陣列對象，
+則為 $width * arraysize * bytes/image element$；
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list} 中
+列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點，
+並且必須與 \carg{command_queue} 位於同一個\cnglo{context}中。
+此函式返回後，即可回收並重用 \carg{event_wait_list} 所關聯的內存。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此讀、寫\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}完成。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+這時可以用 \capi{clEnqueueBarrierWithWaitList} 來代替。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+\carg{event} 不能屬於 \carg{event_wait_list}。
+
+如果執行成功， \capi{clEnqueueCopyBufferToImage} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue}、 \carg{src_buffer} 和 \carg{dst_image} 位於不同的\cnglo{context}中，
+或者 \carg{command_queue} 和 \carg{event_wait_list} 中的事件位於不同的\cnglo{context}中。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，
+如果 \carg{src_buffer} 或 \carg{dst_image} 無效；
+或者 \carg{dst_image} 是由 \carg{src_buffer} 創建的 1D 圖像緩衝對象。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 $(dst\_origin, region)$ 所指定的區域在 \carg{dst_image} 中越限，
+或者 $(src\_offset, src\_cb)$ 所指定的區域在 \carg{src_buffer} 中越限。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{dst_origin} 和 \carg{region} 沒有遵守參數說明中描述的相應規則。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_MISALIGNED_SUB_BUFFER_OFFSET}，
+如果 \carg{src_buffer} 是一個子\cnglo{bufobj}，
+並且創建他時所指定的參數 \carg{offset} 沒有
+和 \carg{queue} 所在\cnglo{device}的 \cenum{CL_DEVICE_MEM_BASE_ADDR_ALIGN} 對齊。
+
+\item \cenum{CL_INVALID_IMAGE_SIZE}，
+如果 \carg{dst_image} 的圖像大小（寬度、高度、指定的或自動計算的行間距或面間距）
+不被 \carg{queue} 所在\cnglo{device} 支持。
+
+\item \cenum{CL_IMAGE_FORMAT_NOT_SUPPORTED}，
+如果 \carg{dst_image} 的圖像格式（圖像通道順序和數據類型）
+不被 \carg{queue} 所在\cnglo{device} 支持。
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，
+如果為 \carg{src_buffer} 或 \carg{dst_image} 分配內存失敗。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果 \carg{command_queue} 所在\cnglo{device}不支持圖像
+（即，\reftab{cldevquery}中的 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_FALSE}）。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

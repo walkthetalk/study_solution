@@ -1,0 +1,117 @@
+\subsection{設置內核引數}
+
+要想執行\cnglo{kernel}，必須設置\cnglo{kernel}引數。
+
+\topclfunc{clSetKernelArg}
+
+\startCLFUNC
+cl_int clSetKernelArg (cl_kernel kernel,
+			cl_uint arg_index,
+			size_t arg_size,
+			const void *arg_value)
+\stopCLFUNC
+
+此函式可用來設置\cnglo{kernel}的某個引數。
+
+\carg{kernel} 是一個\cnglo{kernelobj}。
+
+\carg{arg_index} 是引數索引。
+\cnglo{kernel}引數數的索引值從最左邊的 0 開始，一直到 \math{n - 1}，
+其中 \math{n} 是引數的總數。
+
+例如，試想如下內核：
+\startclc
+kernel void
+image_filter (int n, int m,
+		__constant float *filter_weights,
+		__read_only image2d_t src_image,
+		__write_only image2d_t dst_image)
+{
+	...
+}
+\stopclc
+
+在 \ccmm{image_filter} 中，引數 \ccmm{n}、 \ccmm{m}、 \ccmm{filter_weights}、
+\ccmm{src_image}、 \ccmm{dst_image} 的索引分別為 0、 1、 2、 3、 4。
+
+\carg{arg_value} 所指數據用作索引為 \carg{arg_index} 的引數的值。
+\capi{clSetKernelArg} 返回後， \carg{arg_value} 所指數據已經被複製，
+\cnglo{app}可以重用其內存。
+所有會將 \carg{kernel} 入隊的 API 調用
+（ \capi{clEnqueueNDRangeKernel} 和 \capi{clEnqueueTask}）都會使用這個引數值，
+直到再次調用 \capi{clSetKernelArg} 將其改變。
+
+如果此引數是一個\cnglo{memobj}（\cnglo{bufobj}、\cnglo{imgobj}或圖像陣列），
+\carg{arg_value} 會指向相應的對象。
+此對象必須是用 \carg{kernel} 所在的\cnglo{context}創建的。
+如果引數是一個\cnglo{bufobj}， \carg{arg_value} 可以是 \cmacro{NULL}，
+也可以指向一個為 \cmacro{NULL} 的值，這時，
+如果內核引數聲明時帶有限定符 \cqlf{__global} 或 \cqlf{__constant}，
+則使用 \cmacro{NULL} 值作為引數值。
+而如果引數聲明時所帶限定符為 \cqlf{__local}， \carg{arg_value} 必須是 \cmacro{NULL}。
+如果引數型別是 \ctype{sampler_t}，則 \carg{arg_value} 必須指向\cnglo{sampler}對象。
+
+如果引數是一個指位器，指向的是全局或不變位址空間中的內建標量或矢量型別、或用戶自定義結構體，
+則作為引數值的\cnglo{memobj}必須是一個\cnglo{bufobj}（或 \cmacro{NULL}）。
+如果引數聲明時帶有限定符 \cqlf{__constant}，
+則\cnglo{memobj}的大小不能超過 \cenum{CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE}，
+且這種引數的個數不能超過 \cenum{CL_DEVICE_MAX_CONSTANT_ARGS}。
+
+如果引數型別為 \ctype{image2d_t}，則作為引數值的\cnglo{memobj}必須是 2D \cnglo{imgobj}。
+如果引數型別為 \ctype{image3d_t}，則作為引數值的\cnglo{memobj}必須是 3D \cnglo{imgobj}。
+如果引數型別為 \ctype{image1d_t}，則作為引數值的\cnglo{memobj}必須是 1D \cnglo{imgobj}。
+如果引數型別為 \ctype{image1d_buffer_t}，則作為引數值的\cnglo{memobj}必須是 1D 圖像\cnglo{bufobj}。
+如果引數型別為 \ctype{image1d_array_t}，則作為引數值的\cnglo{memobj}必須是 1D 圖像陣列對象。
+如果引數型別為 \ctype{image2d_array_t}，則作為引數值的\cnglo{memobj}必須是 2D 圖像陣列對象。
+
+對於其他型別的引數， \carg{arg_value} 必須指向作為引數值的實際數據。
+
+\carg{arg_size} 即引數值的大小。
+如果引數是\cnglo{memobj}，則為\cnglo{bufobj}或\cnglo{imgobj}的大小。
+如果引數在聲明時帶有限定符 \cqlf{__local}，其值將是為 \cqlf{__local} 引數所分配緩衝區的大小。
+如果引數型別是 \ctype{sampler_t}，則 \carg{arg_size} 的值必須是 \ccmm{sizeof(cl_sampler)}。
+對於其他型別的引數， \carg{arg_size} 即為引數型別的大小。
+
+\startnotepar
+對於 \capi{clSetKernelArg} 所使用的作為引數值的對象
+（如\cnglo{memobj}、\cnglo{sampler}對象）而言，
+\cnglo{kernelobj}不會更新其\cnglo{refcnt}。
+用戶不要指望\cnglo{kernelobj}會為\cnglo{kernel}引數中的對象執行\cnglo{retain}操作。
+
+實作不能讓 \ctype{cl_kernel} 對象擁有其引數的\cnglo{refcnt}，
+因為沒有為用戶提供任何機制來告訴\cnglo{kernel}去釋放此所有權。
+如果\cnglo{kernel}把持了其引數的所有權，用戶就不可能確切的知道什麼時候可以安全的釋放為其分配的資源，
+如用 \cenum{CL_MEM_USE_HOST_PTR} 創建的 \ctype{cl_mem} 對象就屬於這種情況。
+\stopnotepar
+
+如果執行成功， \capi{clSetKernelArg} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_KERNEL}，如果 \carg{kernel} 無效。
+
+\item \cenum{CL_INVALID_ARG_INDEX}，如果 \carg{arg_index} 無效。
+
+\item \cenum{CL_INVALID_ARG_VALUE}，如果 \carg{arg_value} 無效。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，
+如果引數型別是\cnglo{memobj}，而 \carg{arg_value} 無效。
+
+\item \cenum{CL_INVALID_SAMPLER}，
+如果引數型別是 \ctype{sampler_t}，而 \carg{arg_value} 無效。
+
+\item \cenum{CL_INVALID_ARG_SIZE}，
+如果引數不是\cnglo{memobj}，而 \carg{arg_size} 的值與引數大小不一致；
+或者引數是\cnglo{memobj}，而 \ccmm{arg_size != sizeof(cl_mem)}；
+或者引數聲明時帶有限定符 \cqlf{__local}，而 \carg{arg_size} 是零；
+或者引數是\cnglo{sampler}，而 \ccmm{arg_size != sizeof(cl_sampler)}。
+
+\item \cenum{CL_INVALID_ARG_VALUE}，
+如果引數是帶有限定符 \cqlf{read_only} 的圖像，
+而創建\cnglo{imgobj} \carg{arg_value} 時在 \ctype{cl_mem_flags} 中設置了 \cenum{CL_MEM_WRITE}。
+或者引數是帶有限定符 \cqlf{write_only} 的圖像，
+而創建\cnglo{imgobj} \carg{arg_value} 時在 \ctype{cl_mem_flags} 中設置了 \cenum{CL_MEM_READ}。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

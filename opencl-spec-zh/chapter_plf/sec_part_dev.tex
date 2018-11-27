@@ -1,0 +1,131 @@
+\section{劃分設備}
+
+\topclfunc{clCreateSubDevices}
+
+\startCLFUNC
+cl_int clCreateSubDevices (
+		cl_device_id in_device,
+		const cl_device_partition_property *properties,
+		cl_uint num_devices,
+		cl_device_id *out_devices,
+		cl_uint *num_devices_ret)
+\stopCLFUNC
+
+此函式會按照 \carg{properties} 給定的劃分方案，
+由 \carg{in_device} 創建一個\cnglo{subdev}陣列，
+其中每個\cnglo{subdev}都包含一組\cnglo{computeunit}，且他們之間沒有交集。
+\cnglo{subdev}的使用方式跟\cnglo{rootdev}（或其\cnglo{pardev}）一樣，
+如可以用來創建\cnglo{context}、構建\cnglo{program}、進一步調用 \capi{clCreateSubDevices} 以及創建\cnglo{cmdq}。
+如果用\cnglo{subdev}創建\cnglo{cmdq}，則其中的\cnglo{cmd}只能在這個\cnglo{subdev}上執行。
+
+\carg{in_device} 即為要劃分的設備。
+
+\carg{properties} 則指明怎樣劃分。每個劃分方式緊跟相應的值。此清單以 0 終止。
+\reftab{partScheme}列出了所支持的劃分策略。\carg{properties}只能從中選擇一個。
+
+\placetable[here][tab:partScheme]{\capi{clCreateSubDevices} 所支持的劃分策略}
+{\input{chapter_plf/tbl/tbl_part_scheme.tex}}
+
+\carg{num_devices} 是 \carg{out_devices} 指向的內存塊所能容納 \ctype{cl_device_id} 的數目。
+
+\carg{out_devices} 是一塊緩衝區，用來存儲所返回的 OpenCL \cnglo{subdev}。
+如果 \carg{out_devices} 是 \cmacro{NULL}，則忽略。
+否則， \carg{num_devices} 必須大於等於（按照 \carg{properties} 所指定的劃分策略）
+所劃分成的\cnglo{subdev}的數目。
+
+\carg{num_devices_ret} 返回（按照 \carg{properties} 所指定的劃分策略）
+\carg{device}可以劃分成\cnglo{subdev}的數目。
+如果 \carg{num_devices_ret} 是 \cmacro{NULL}，則忽略。
+
+如果劃分成功， \capi{clCreateSubDevices} 會返回 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+
+\startigBase
+\item \cenum{CL_INVALID_DEVICE}，如果 \carg{in_devices} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{properties} 中的值無效，
+或者雖然有效但是此\cnglo{device}不支持。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{out_devices} 不是 \cmacro{NULL}，
+且 \carg{num_devices} 小於所創建\cnglo{subdev}的數目。
+
+\item \cenum{CL_DEVICE_PARTITION_FAILED}，如果實作支持此劃分方式，但是 \carg{in_device} 不能再細分了。
+
+\item \cenum{CL_INVALID_DEVICE_PARTITION_COUNT}，
+如果 \carg{properties} 所指定的劃分策略是 \cenum{CL_DEVICE_PARTITION_BY_COUNTS}，
+且所要求的\cnglo{subdev}數目超過了 \cenum{CL_DEVICE_PARTITION_MAX_SUB_DEVICES}，
+或者所要求的\cnglo{computeunit}總數超過了 \carg{in_device}
+的 \cenum{CL_DEVICE_PARTITION_MAX_COMPUTE_UNITS}，
+或者所要求的某個\cnglo{subdev}中\cnglo{computeunit}的數目小於 0 或者
+超過了 \carg{in_device} 的 \cenum{CL_DEVICE_PARTITION_MAX_COMPUTE_UNITS}。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+下面就如何為 \capi{clCreateSubDevices} 指定參數 \carg{properties} 給出了一些示例：
+
+要將一個包含 16 個\cnglo{computeunit}的\cnglo{device}劃分成兩個\cnglo{subdev}，
+每個包含 8 個\cnglo{computeunit}，這樣指定 \carg{properties}：
+\startclc
+	{ CL_DEVICE_PARTITION_EQUALLY, 8, 0 }
+\stopclc
+
+要將一個包含 4 個\cnglo{computeunit}的\cnglo{device}劃分成兩個\cnglo{subdev}，
+其中一個\cnglo{subdev}包含 3 個\cnglo{computeunit}，另一個只包含 1 個\cnglo{computeunit}，
+這樣指定 \carg{properties}：
+\startclc
+	{ CL_DEVICE_PARTITION_BY_COUNTS,
+	  3, 1, CL_DEVICE_PARTITION_BY_COUNTS_LIST_END, 0 }
+\stopclc
+
+按最外層的緩存列（如果有的話）劃分\cnglo{device}，這樣指定 \carg{properties}：
+\startclc
+	{ CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN,
+	  CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE,
+	  0 }
+\stopclc
+
+\topclfunc{clRetainDevice}
+
+\startCLFUNC
+cl_int clRetainDevice (cl_device_id device)
+\stopCLFUNC
+
+如果 \carg{device} 是通過調用 \capi{clCreateSubDevices} 創建的一個\cnglo{subdev}，
+則 \capi{clRetainDevice} 會使 \carg{device} 的\cnglo{refcnt}增一。
+如果 \carg{device} 是一個\cnglo{rootdev}，
+即由 \capi{clGetDeviceIDs} 所返回的一個 \ctype{cl_device_id}，
+則 \carg{device} 的\cnglo{refcnt}保持不變。
+如果執行成功或者 \carg{device} 是一個\cnglo{rootdev}，
+\capi{clRetainDevice} 會返回 \cenum{CL_SUCCESS}，
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_DEVICE}，如果 \carg{device} 是一個無效的\cnglo{subdev}。
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clReleaseDevice}
+
+\startCLFUNC
+cl_int clReleaseDevice (cl_device_id device)
+\stopCLFUNC
+
+如果 \carg{device} 是通過調用 \capi{clCreateSubDevices} 創建的一個\cnglo{subdev}，
+則 \capi{clReleaseDevice} 會使 \carg{device} 的\cnglo{refcnt}減一。
+如果 \carg{device} 是一個\cnglo{rootdev}，
+即 \capi{clGetDeviceIDs} 所返回的一個 \ctype{cl_device_id}，
+則 \carg{device} 的\cnglo{refcnt}保持不變。
+如果執行成功，\capi{clReleaseDevice} 會返回 \cenum{CL_SUCCESS}，
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_DEVICE}，如果 \carg{device} 是一個無效的\cnglo{subdev}。
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+在 \carg{device} 的\cnglo{refcnt}降為 0 並且所有附着其上的對象（如\cnglo{cmdq}）都被釋放後，
+就會刪除 \carg{device} 對象。
+

@@ -1,0 +1,21 @@
+\startETD[cl_device_info][返回型別]
+
+\clETD{CL_DEVICE_HALF_FP_CONFIG}{cl_device_fp_config}{
+描述 OpenCL \cnglo{device}的半精度浮點能力。
+此位欄包含下列值：
+\startigBase
+\item \cenum{CL_FP_DENORM}，支持去規格化數。
+\item \cenum{CL_FP_INF_NAN}，支持 INF 和 NaN。
+\item \cenum{CL_FP_ROUND_TO_NEAREST}，支持捨入為最近偶數。
+\item \cenum{CL_FP_ROUND_TO_ZERO}，支持向零捨入。
+\item \cenum{CL_FP_ROUND_TO_INF}，支持向正負無窮捨入。
+\item \cenum{CL_FP_FMA}，支持 IEEE754-2008 中的積和熔加運算。
+\item \cenum{CL_FP_SOFT_FLOAT}，軟件實現了基本的浮點運算（像加、減、乘）。
+\stopigBase
+
+此擴展要求半精度浮點能力至少為 \cenum{CL_FP_INF_NAN}
+ 以及 \cenum{CL_FP_ROUND_TO_ZERO} 或 \cenum{CL_FP_ROUND_TO_NEAREST}。
+}
+
+\stopETD
+

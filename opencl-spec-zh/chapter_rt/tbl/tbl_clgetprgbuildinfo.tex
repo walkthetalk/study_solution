@@ -1,0 +1,50 @@
+\startETD[cl_program_build_info][返回型別]
+
+\clETD{CL_PROGRAM_BUILD_STATUS}{cl_build_status}{
+返回構建、編譯或鏈接的狀態，在 \carg{program} 上為 \carg{device} 最後實施的那個
+（\capi{clBuildProgram}、 \capi{clCompileProgram} 或 \capi{clLinkProgram}）。
+
+可以是下列之一：
+\startigBase
+\item \cenum{CL_BUILD_NONE}。如果三個都沒有實施過。
+
+\item \cenum{CL_BUILD_ERROR}。如果最後實施的那個產生了錯誤。
+
+\item \cenum{CL_BUILD_SUCCESS}。如果最後實施的那個成功了。
+
+\item \cenum{CL_BUILD_IN_PROGRESS}。如果最後實施的那個還未完成。
+\stopigBase
+}
+
+\clETD{CL_PROGRAM_BUILD_OPTIONS}{char[]}{
+返回構建、編譯或鏈接的選項，即最後實施的那個的參數 \carg{options}。
+如果狀態是 \cenum{CL_BUILD_NONE}，則返回空字串。
+}
+
+\clETD{CL_PROGRAM_BUILD_LOG}{char[]}{
+返回最後實施的那個的日誌。
+如果狀態是 \cenum{CL_BUILD_NONE}，則返回空字串。
+}
+
+\clETD{CL_PROGRAM_BINARY_TYPE}{cl_program_binary_type}{
+返回 \carg{device} 所對應的二元碼的類型。
+可以是下列之一：
+\startigBase
+\item \cenum{CL_PROGRAM_BINARY_TYPE_NONE}，沒有對應的二元碼。
+
+\item \cenum{CL_PROGRAM_BINARY_TYPE_COMPILED_OBJECT}，有編譯過的二元碼。
+如果 \carg{program} 是使用 \capi{clCreateProgramWithSource} 創建
+並使用 \capi{clCompileProgram} 編譯的，
+或者是用 \capi{clCreateProgramWithBinary} 裝載的編譯過的二元碼，都屬於這種情況。
+
+\item \cenum{CL_PROGRAM_BINARY_TYPE_LIBRARY}，有庫的二元碼。
+如果用 \capi{clLinkProgram} 創建 \carg{program} 時指定了鏈接選項 \ccmm{-create-library}，
+或者是用 \capi{clCreateProgramWithBinary} 裝載的庫的二元碼，都屬於這種情況。
+
+\item \cenum{CL_PROGRAM_BINARY_TYPE_EXECUTABLE}，有可執行的二元碼。
+如果用 \capi{clLinkProgram} 創建 \carg{program} 時沒有指定鏈接選項 \ccmm{-create-library}，
+或者是用 \capi{clCreateProgramWithBinary} 裝載的可執行的二元碼，都屬於這種情況。
+\stopigBase
+}
+
+\stopETD

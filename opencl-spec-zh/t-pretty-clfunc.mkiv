@@ -1,0 +1,61 @@
+%C Copyright 2012 Yi Qingliang <niqingliang2003@tom.com>
+%C Time-stamp: <2012-05-28 00:20:20>
+%C This program is free software: you can redistribute it and/or modify
+%C it under the terms of the GNU General Public License as published by
+%C the Free Software Foundation, either version 3 of the License, or
+%C (at your option) any later version.
+%C
+%C This program is distributed in the hope that it will be useful,
+%C but WITHOUT ANY WARRANTY; without even the implied warranty of
+%C MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%C GNU General Public License for more details.
+%C
+%C You should have received a copy of the GNU General Public License
+%C along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%C
+%C
+%C This work is fully inspired by Peter Münster's pret-c module.
+%C
+%D \module
+%D   [       file=t-pretty-clfunc,
+%D        version=0.9,
+%D          title=CL func Pretty Printer for the \CONTEXT\ Macro package,
+%D         author=Yi Qingliang
+%D           date=\currentdate,
+%D      copyright=2012 YiQingliang]
+ 
+\registerctxluafile{t-pretty-clfunc.lua}{0.9}
+
+\unprotect
+
+\setupcolor[ema]
+
+\definestartstop
+    [CSnippet]
+    [DefaultSnippet]
+
+\definestartstop
+    [CSnippetApi]
+    [\c!color=darkgoldenrod,
+     \c!style=\bf]
+
+\definestartstop
+    [CSnippetArg]
+    [\c!color=blue,
+     \c!style=\it]
+
+\definestartstop
+    [CSnippetQlf]
+    [\c!color=purple,
+     \c!style=]
+
+\definestartstop
+    [CSnippetType]
+    [\c!color=forestgreen,
+     \c!style=]
+
+\definetyping
+    [CLFUNC]
+    [\c!option=clfunc]
+
+\protect \endinput

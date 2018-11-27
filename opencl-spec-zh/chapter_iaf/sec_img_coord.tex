@@ -1,0 +1,10 @@
+% Image Coordinates
+\section{圖像坐標}
+
+這影響着對圖像坐標的解釋。
+如果 \capi{read_image{f|i|ui}} 所用圖像坐標是歸一化的（\cnglo{sampler}中會指定），
+則將 \math{s}、 \math{t} 和 \math{r} 的值
+分別乘以 \math{w_t}、 \math{h_t} 和 \math{d_t}
+就可以生成非歸一化的坐標值。
+
+用 \math{(u, v, w)} 表示非歸一化的坐標值。

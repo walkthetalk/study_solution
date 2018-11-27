@@ -1,0 +1,222 @@
+% clamp
+\startbuffer[funcproto:clamp]
+gentype clamp (gentype x,
+		gentype minval,
+		gentype maxval)
+gentypef clamp (gentypef x,
+		float minval,
+		float maxval)
+gentyped clamp (gentyped x,
+		double minval,
+		double maxval)
+\stopbuffer
+\startbuffer[funcdesc:clamp]
+返回 \math{\mapiemp{fmin}(\mapiemp{fmax}(\marg{x}, \marg{minval}), \marg{maxval})}。
+如果 \math{\marg{minval} > \marg{maxval}}，則結果\cnglo{undef}。
+\stopbuffer
+
+% clamp_half
+\startbuffer[funcproto:clamp_half]
+gentype clamp (gentype x,
+		gentype minval,
+		gentype maxval)
+
+gentype clamp (gentype x,
+		half minval,
+		half maxval)
+\stopbuffer
+\startbuffer[funcdesc:clamp_half]
+返回 \math{\mapiemp{min}(\mapiemp{max}(\marg{x}, \marg{minval}), \marg{maxval})}。
+如果 \math{\marg{minval} > \marg{maxval}}，則結果\cnglo{undef}。
+\stopbuffer
+
+% degrees
+\startbuffer[funcproto:degrees]
+gentype degrees (gentype radians)
+\stopbuffer
+\startbuffer[funcdesc:degrees]
+將弧度轉換成角度，即 \math{(180/\pi)\times \marg{radians}}。
+\stopbuffer
+
+% max
+\startbuffer[funcproto:max]
+gentype max (gentype x, gentype y)
+gentypef max (gentypef x, float y)
+gentyped max (gentyped x, double y)
+\stopbuffer
+\startbuffer[funcdesc:max]
+如果 \math{\marg{x} < \marg{y}}，則返回 \carg{y}，否則返回 \carg{x}。
+如果 \carg{x} 或 \carg{y} 是無窮或 NaN，則返回的值\cnglo{undef}。
+\stopbuffer
+
+% max_half
+\startbuffer[funcproto:max_half]
+gentype max (gentype x, gentype y)
+
+gentype max (gentype x, half y)
+\stopbuffer
+\startbuffer[funcdesc:max_half]
+如果 \math{\marg{x} < \marg{y}}，則返回 \carg{y}，否則返回 \carg{x}。
+如果 \carg{x} 或 \carg{y} 是無窮或 NaN，則返回的值\cnglo{undef}。
+\stopbuffer
+
+% min
+\startbuffer[funcproto:min]
+gentype min (gentype x, gentype y)
+gentypef min (gentypef x, float y)
+gentyped min (gentyped x, double y)
+\stopbuffer
+\startbuffer[funcdesc:min]
+如果 \math{\marg{y} < \marg{x}}，則返回 \carg{y}，否則返回 \carg{x}。
+如果 \carg{x} 或 \carg{y} 是無窮或 NaN，則返回的值\cnglo{undef}。
+\stopbuffer
+
+% min_half
+\startbuffer[funcproto:min_half]
+gentype min (gentype x, gentype y)
+
+gentype min (gentype x, half y)
+\stopbuffer
+\startbuffer[funcdesc:min_half]
+如果 \math{\marg{y} < \marg{x}}，則返回 \carg{y}，否則返回 \carg{x}。
+如果 \carg{x} 或 \carg{y} 是無窮或 NaN，則返回的值\cnglo{undef}。
+\stopbuffer
+
+% mix
+\startbuffer[funcproto:mix]
+gentype mix (gentype x,
+		gentype y,
+		gentype a)
+gentypef mix (gentypef x,
+		gentypef y,
+		float a)
+gentyped mix (gentyped x,
+		gentyped y,
+		double a)
+\stopbuffer
+\startbuffer[funcdesc:mix]
+返回 \math{\marg{x} + (\marg{y} - \marg{x})\times \marg{a}}。
+其中 \carg{a} 必須在區間 \math{0.0 \cdots 1.0} 內，否則返回值\cnglo{undef}。
+\stopbuffer
+
+% mix_half
+\startbuffer[funcproto:mix_half]
+gentype mix (gentype x,
+		gentype y,
+		gentype a)
+
+gentype mix (gentype x,
+		gentype y,
+		half a)
+\stopbuffer
+\startbuffer[funcdesc:mix_half]
+返回 \math{\marg{x} + (\marg{y} - \marg{x})\times \marg{a}}。
+其中 \carg{a} 必須在區間 \math{0.0 \cdots 1.0} 內，否則返回值\cnglo{undef}。
+\stopbuffer
+
+% radians
+\startbuffer[funcproto:radians]
+gentype radians (gentype degrees)
+\stopbuffer
+\startbuffer[funcdesc:radians]
+將角度轉換成弧度，即 \math{(\pi/180)\times \marg{degrees}}。
+\stopbuffer
+
+% step
+\startbuffer[funcproto:step]
+gentype step (gentype edge,
+		gentype x)
+gentypef step (float edge,
+		gentypef x)
+gentyped step (double edge,
+		gentyped x)
+\stopbuffer
+\startbuffer[funcdesc:step]
+如果 \math{\marg{x} < \marg{edge}}，則返回 \math{0.0}，否則返回 \math{1.0}。
+\stopbuffer
+
+% step_half
+\startbuffer[funcproto:step_half]
+gentype step (gentype edge,
+		gentype x)
+
+gentype step (half edge,
+		gentype x)
+\stopbuffer
+\startbuffer[funcdesc:step_half]
+如果 \math{\marg{x} < \marg{edge}}，則返回 \math{0.0}，否則返回 \math{1.0}。
+\stopbuffer
+
+% smoothstep
+\startbuffer[funcproto:smoothstep]
+gentype smoothstep (gentype edge0,
+		gentype edge1,
+		gentype x)
+gentypef smoothstep (float edge0,
+		float edge1,
+		gentypef x)
+gentyped smoothstep (double edge0,
+		double edge1,
+		gentyped x)
+\stopbuffer
+\startbuffer[funcdesc:smoothstep]
+如果 \math{\marg{x} \leq \marg{edge0}}，則返回 \math{0.0}；
+
+如果 \math{\marg{x} \geq \marg{edge1}}，則返回 \math{1.0}；
+
+如果 \math{\marg{edge0} < \marg{x} < \marg{edge1}}，
+則實施平滑埃爾米特插值（smooth Hermite interpolation）。
+在某些地方需要能進行平滑過渡的臨界函式，這時就可使用此函式。
+
+此函式等同於：
+\startcintbl
+gentype t;
+t = clamp((x - edge0) / (edge1 - edge1), 0, 1);
+return t * t * (3 - 2 * t);
+\stopcintbl
+
+如果 \math{\marg{edge0} \geq \marg{edge1}}，
+或者 \carg{x}、 \carg{edge0}、 \carg{edge1} 中的任意一個是 NaN，則結果\cnglo{undef}。
+\stopbuffer
+
+% smoothstep_half
+\startbuffer[funcproto:smoothstep_half]
+gentype smoothstep (gentype edge0,
+		gentype edge1,
+		gentype x)
+
+gentype smoothstep (half edge0,
+		half edge1,
+		gentype x)
+\stopbuffer
+\startbuffer[funcdesc:smoothstep_half]
+如果 \math{\marg{x} \leq \marg{edge0}}，則返回 \math{0.0}；
+
+如果 \math{\marg{x} \geq \marg{edge1}}，則返回 \math{1.0}；
+
+如果 \math{\marg{edge0} < \marg{x} < \marg{edge1}}，
+則實施平滑埃爾米特插值（smooth Hermite interpolation）。
+在某些地方需要能進行平滑過渡的臨界函式，這時就可使用此函式。
+
+此函式等同於：
+\startcintbl
+gentype t;
+t = clamp((x - edge0) / (edge1 - edge1), 0, 1);
+return t * t * (3 - 2 * t);
+\stopcintbl
+
+如果 \math{\marg{edge0} \geq \marg{edge1}}，
+或者 \carg{x}、 \carg{edge0}、 \carg{edge1} 中的任意一個是 NaN，則結果\cnglo{undef}。
+\stopbuffer
+
+% sign
+\startbuffer[funcproto:sign]
+gentype sign (gentype x)
+\stopbuffer
+\startbuffer[funcdesc:sign]
+如果 \math{\marg{x} > 0}，則返回 \math{1.0}；
+如果 \math{\marg{x} = -0.0}，則返回 \math{-0.0}；
+如果 \math{\marg{x} = +0.0}，則返回 \math{+0.0}；
+如果 \math{\marg{x} < 0}，則返回 \math{-1.0}；
+如果 \carg{x} 是 NaN，則返回 \math{0.0}。
+\stopbuffer

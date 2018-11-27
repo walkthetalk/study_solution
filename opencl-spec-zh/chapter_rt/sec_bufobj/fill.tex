@@ -1,0 +1,99 @@
+\subsection{填充緩衝對象}
+
+\topclfunc{clEnqueueFillBuffer}
+
+\startCLFUNC
+cl_int clEnqueueFillBuffer (
+			cl_command_queue command_queue,
+			cl_mem buffer,
+			const void *pattern,
+			size_t pattern_size,
+			size_t offset,
+			size_t size,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+此函式所入隊的\cnglo{cmd}可以按給定的範式（ pattern ）填充\cnglo{bufobj}。
+\carg{buffer} 的一些用法資訊（如是否可由\cnglo{kernel}或\cnglo{host}讀寫、
+以及創建 \carg{buffer} 時所指定的引數 \ctype{cl_mem_flags}）
+會被 \capi{clEnqueueFillBuffer} 忽略。
+
+\carg{command_queue} 即這個填充\cnglo{cmd}要插入的隊列。
+\carg{command_queue} 和 \carg{buffer} 必須位於用一個 OpenCL \cnglo{context}中。
+
+\carg{buffer} 是一個\cnglo{bufobj}。
+
+\carg{pattern} 指向數據範式（ data pattern ），其大小為 \carg{pattern_size}。
+用 \carg{pattern} 填充的區域在 \carg{buffer} 中的偏移量為 \carg{offset}，
+大小是 \carg{size}。
+數據範式必須是 OpenCL 所支持的標量或矢量的整數或浮點數型別，
+參見\refsection{bisdt}和\refsection{bivdt}。
+例如，如果數據範式是 \ctype{float4}，
+則 \carg{pattern} 指向一個型別為 \ctype{cl_float4} 的值，
+且 \carg{pattern_size} 是 \ctype{sizeof(cl_float4)}。
+\carg{pattern_size} 的最大值就是
+OpenCL \cnglo{device}所支持的最大的整數或浮點數矢量數據型別的大小。
+函式返回後，就可以重用或者釋放 \carg{pattern} 所指向的內存了。
+
+\carg{offset} 即填充區域在 \carg{buffer} 中的偏移量，單位：字節，
+他必須是 \carg{pattern_size} 的整數倍。
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list}
+中列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是 0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點，
+並且必須與 \carg{command_queue} 位於同一個\cnglo{context}中。
+此函式返回後，就可以回收並重用 \carg{event_wait_list} 所關聯的內存了。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}完成。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+不過可以用 \capi{clEnqueueBarrierWithWaitList} 代替。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+\carg{event} 不能屬於 \carg{event_wait_list}。
+
+如果執行成功， \capi{clEnqueueFillBuffer} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue} 和 \carg{buffer} 位於不同的\cnglo{context}中，
+或者 \carg{command_queue} 和 \carg{event_wait_list} 中的事件
+位於不同的\cnglo{context}中。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，如果 \carg{buffer} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \math{(\marg{offset}, \marg{size})} 所指定的區域越限。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{pattern} 是 \cmacro{NULL}，
+或者 \carg{pattern_size} 是 0，
+或者 \carg{pattern_size} 不屬於 \ccmm{{1, 2, 4, 8, 16, 32, 64, 128}}。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{offset} 和 \carg{size} 不是 \carg{pattern_size} 的整數倍。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_MISALIGNED_SUB_BUFFER_OFFSET}，
+如果 \carg{buffer} 是子\cnglo{bufobj}，
+且創建此對象時所指定的 \carg{offset} 沒有與 \carg{queue} 所關聯\cnglo{device}
+的 \cenum{CL_DEVICE_MEM_BASE_ADDR_ALIGN} 對齊。
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，如果為 \carg{buffer} 分配內存失敗。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

@@ -1,0 +1,334 @@
+\subsection{讀、寫以及拷貝圖像對象}
+
+\topclfunc{clEnqueueReadImage}
+
+\topclfunc{clEnqueueWriteImage}
+
+\startCLFUNC
+cl_int clEnqueueReadImage (cl_command_queue command_queue,
+			cl_mem image,
+			cl_bool blocking_read,
+			const size_t *origin,
+			const size_t *region,
+			size_t row_pitch,
+			size_t slice_pitch,
+			void *ptr,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+
+cl_int clEnqueueWriteImage (cl_command_queue command_queue,
+			cl_mem image,
+			cl_bool blocking_write,
+			const size_t *origin,
+			const size_t *region,
+			size_t input_row_pitch,
+			size_t input_slice_pitch,
+			const void * ptr,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+這兩個函式所入隊的\cnglo{cmd}可用於讀寫\cnglo{imgobj}，
+此\cnglo{cmd}可以將圖像或圖像陣列的內容讀取到\cnglo{host}內存中，
+或者由\cnglo{host}內存寫入到圖像或圖像陣列中。
+
+\carg{command_queue} 就是\cnglo{cmd}要進入的隊列。
+\carg{command_queue} 和 \carg{image} 必須是由同一個 OpenCL \cnglo{context}創建的。
+
+\carg{image} 是\cnglo{imgobj}或圖像陣列對象。
+
+\carg{blocking_read} 和 \carg{blocking_write}
+表明讀寫操作是{\ftRef{阻塞}}的還是{\ftRef{非阻塞}}的。
+
+如果 \carg{blocking_read} 是 \cenum{CL_TRUE}，即讀\cnglo{cmd}是阻塞的，
+直到將圖像數據完全拷貝到 \carg{ptr} 所指內存中後， \capi{clEnqueueReadImage} 才會返回。
+
+如果 \carg{blocking_read} 是 \cenum{CL_FALSE}，即讀\cnglo{cmd}是非阻塞的，
+\capi{clEnqueueReadBuffer} 將\cnglo{cmd}入隊後就會返回。
+只有等到讀\cnglo{cmd}執行完畢，才能繼續使用 \carg{ptr} 所指向的內容。
+參數 \carg{event} 所返回的\cnglo{evtobj}可用來查詢讀\cnglo{cmd}的執行情況。
+讀\cnglo{cmd}完成後，\cnglo{app}就可以繼續使用 \carg{ptr} 所指向的內容了。
+
+如果 \carg{blocking_write} 是 \cenum{CL_TRUE}，
+OpenCL 實作會拷貝 \carg{ptr} 所指向的數據，並將寫\cnglo{cmd}入隊。
+\capi{clEnqueueWriteBuffer} 返回後，
+\cnglo{app}就可以重用 \carg{ptr} 所指向的內存了。
+
+如果 \carg{blocking_write} 是 \cenum{CL_FALSE}，
+OpenCL 實作會用 \carg{ptr} 實施非阻塞的寫操作。
+既然非阻塞，實作就可以立即返回。返回後，\cnglo{app}還不能立刻就使用 \carg{ptr} 所指內存。
+參數 \carg{event} 所返回的\cnglo{evtobj}可用來查詢寫\cnglo{cmd}的執行情況。
+寫\cnglo{cmd}完成後，\cnglo{app}就可以重用 \carg{ptr} 所指向的內存了。
+
+\carg{origin} 定義了所要讀寫區域的起始位置 \math{(x, y, z)}，單位像素；
+對於 2D 圖像陣列是偏移量 \math{(x, y)} 以及圖像索引；
+對於 1D 圖像陣列是偏移量 \math{(x)} 以及圖像索引。
+如果 \carg{image} 是 2D \cnglo{imgobj}， \math{\marg{origin}[2]} 必須是 0。
+如果 \carg{image} 是 1D \cnglo{imgobj}或 1D 圖像緩衝對象，
+\math{\marg{origin}[1]} 和 \math{\marg{origin}[2]} 都必須是 0。
+如果 \carg{image} 是 1D 圖像陣列對象，
+\math{\marg{origin}[2]} 必須是 0， \math{\marg{origin}[1]} 是圖像在陣列中的索引。
+如果 \carg{image} 是 2D 圖像陣列對象，則 \math{\marg{origin}[2]} 是圖像在陣列中的索引。
+
+\carg{region} 定義了要讀寫區域的大小 \math{(width, height, depth)}，單位像素。
+對於 2D 圖像陣列對象， 即 \math{(width, height)} 以及圖像個數。
+對於 1D 圖像陣列對象， 即 \math{(width)} 以及圖像個數。
+如果 \carg{image} 是 2D \cnglo{imgobj}或 1D 圖像陣列對象， \math{\marg{region}[2]} 必須是 1。
+如果 \carg{image} 是 1D \cnglo{imgobj}或 1D 圖像緩衝對象，
+\math{\marg{region}[1]} 和 \math{\marg{region}[2]} 都必須是 1。
+\carg{region} 中的值不能为 0。
+
+\capi{clEnqueueReadImage} 中的 \carg{row_pitch}
+和 \capi{clEnqueueWriteImage} 中的 \carg{input_row_pitch} 即每行的長度，單位字節。
+其值必須大於或等於 \math{\mvar{元素大小} * width}。
+如果 \carg{row_pitch} 或 \carg{input_row_pitch} 是 0，
+則會根據 \math{\mvar{元素大小} * width} 自動計算行間距。
+
+\capi{clEnqueueReadImage} 中的 \carg{slice_pitch}
+和 \capi{clEnqueueWriteImage} 中的 \carg{input_slice_pitch}
+即 3D 圖像的 3D 區域中 2D 平面大小，或者 1D、 2D 圖像陣列中每個圖像的大小，單位字節。
+如果 \carg{image} 是 1D 或 2D 圖像，其值必須是 0，
+否則必須大於或等於 \math{\marg{row_pitch} * height}。
+如果 \carg{slice_pitch} 或 \carg{input_slice_pitch} 是 0，
+則會根據 \math{\marg{row_pitch} * height} 自動計算面間距。
+
+\carg{ptr} 指向\cnglo{host}中的一塊內存，
+用作讀\cnglo{cmd}的數據源以及寫\cnglo{cmd}的目的地。
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list} 中
+列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是 0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點，
+並且必須與 \carg{command_queue} 位於同一\cnglo{context}中。
+此函式返回後，就可以回收並重用 \carg{event_wait_list} 所關聯的內存了。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此讀、寫\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}完成。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+\carg{event} 不能屬於 \carg{event_wait_list}。
+
+如果執行成功，
+\capi{clEnqueueReadImage} 和 \capi{clEnqueueWriteImage} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue} 和 \carg{image} 位於不同的\cnglo{context}中，
+或者 \carg{command_queue} 和 \carg{event_wait_list} 中的事件位於不同的\cnglo{context}中。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，如果 \carg{image} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \math{(\marg{origin}, \marg{region})} 所指定的區域越限，
+或者 \carg{ptr} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{origin} 和 \carg{region} 沒有遵守上面所描述的相應規則。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_INVALID_IMAGE_SIZE}，
+如果圖像的大小（寬度、高度、指定的或自動計算的行間距或面間距）
+不被 \carg{command_queue} 所關聯\cnglo{device} 支持。
+
+\item \cenum{CL_IMAGE_FORMAT_NOT_SUPPORTED}，
+如果 \carg{image} 的圖像格式（圖像通道順序和數據類型）
+不被 \carg{command_queue} 所關聯\cnglo{device} 支持。
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，如果為 \carg{image} 分配內存失敗。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果 \carg{command_queue} 所關聯\cnglo{device}不支持圖像
+（即\reftab{cldevquery}中的 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_FALSE})。
+
+\item \cenum{CL_INVALID_OPERATION}，如果調用的是 \capi{clEnqueueReadImage}，
+但創建 \carg{image} 時指定了 \cenum{CL_MEM_HOST_WRITE_ONLY} 或 \cenum{CL_MEM_HOST_NO_ACCESS}。
+
+\item \cenum{CL_INVALID_OPERATION}，如果調用的是 \capi{clEnqueueWriteImage}，
+但創建 \carg{image} 時指定了 \cenum{CL_MEM_HOST_READ_ONLY} 或 \cenum{CL_MEM_HOST_NO_ACCESS}。
+
+\item \cenum{CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST}，
+如果讀寫操作是阻塞的，並且 \carg{event_wait_list} 中任一事件的執行結果是負整數。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\startnotepar% start note
+如果調用 \capi{clEnqueueReadImage} 時，參數 \carg{ptr} 的值為
+\math{\marg{host_ptr} + (\marg{origin}[2] * \marg{image_slice_pitch} + \marg{origin}[1] * \marg{image_row_pitch} + \marg{origin}[0] * \mvar{單像素字節數}}，
+其中 \carg{host_ptr} 是用 \cenum{CL_MEM_USE_HOST_PTR} 創建 \carg{image} 時指定的，
+為避免\cnglo{undef}行為必須滿足下列要求：
+\startigBase
+\item 在讀\cnglo{cmd}開始執行前，所有使用此\cnglo{imgobj}的\cnglo{cmd}都已執行完畢。
+
+\item \capi{clEnqueueReadImage} 的 \carg{row_pitch} 和 \carg{slice_pitch}
+必須設置成圖像的行間距和面間距。
+
+\item 此\cnglo{imgobj}沒有被映射。
+
+\item 在讀\cnglo{cmd}執行完以前，任何\cnglo{cmdq}都不能使用此\cnglo{imgobj}。
+\stopigBase
+
+如果調用 \capi{clEnqueueWriteImage} 時，參數 \carg{ptr} 的值為
+\math{\marg{host_ptr} + (\marg{origin}[2] * \marg{image_slice_pitch} + \marg{origin}[1] * \marg{image_row_pitch} + \marg{origin}[0] * \mvar{單像素字節數}}，
+其中 \carg{host_ptr} 是用 \cenum{CL_MEM_USE_HOST_PTR} 創建 \carg{image} 時指定的，
+為避免\cnglo{undef}行為必須滿足下列要求：
+\startigBase
+\item 在寫\cnglo{cmd}開始執行前，\cnglo{host}內存中的內容已經最新。
+
+\item \capi{clEnqueueWriteImage} 的 \carg{input_row_pitch}
+和 \carg{input_slice_pitch} 必須設置成圖像的行間距和面間距。
+
+\item 此\cnglo{imgobj}沒有被映射。
+
+\item 在寫\cnglo{cmd}執行完以前，任何\cnglo{cmdq}都不能使用此\cnglo{imgobj}。
+\stopigBase
+\stopnotepar% stop note
+
+\topclfunc{clEnqueueCopyImage}
+
+\startCLFUNC
+cl_int clEnqueueCopyImage (cl_command_queue command_queue,
+			cl_mem src_image,
+			cl_mem dst_image,
+			const size_t *src_origin,
+			const size_t *dst_origin,
+			const size_t *region,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+此函式會將一個拷貝\cnglo{cmd}入隊。
+\carg{src_image} 和 \carg{dst_image} 可以是 1D、 2D、 3D 圖像或者 1D、 2D 圖像陣列對象，
+允許我們實施下列拷貝動作：
+\startigBase
+\item 由 1D \cnglo{imgobj}拷貝到 1D \cnglo{imgobj}。
+\item 由 1D \cnglo{imgobj}拷貝到 2D \cnglo{imgobj} 的掃描列，反之亦可。
+\item 由 1D \cnglo{imgobj}拷貝到 3D \cnglo{imgobj} 的 2D 平面的掃描列，反之亦可。
+\item 由 1D \cnglo{imgobj}拷貝到 1D 或 2D 圖像陣列對象中某個圖像的掃描列，反之亦可。
+\item 由 2D \cnglo{imgobj}拷貝到 2D \cnglo{imgobj}。
+\item 由 2D \cnglo{imgobj}拷貝到 3D \cnglo{imgobj} 的 2D 平面，反之亦可。
+\item 由 2D \cnglo{imgobj}拷貝到 2D 圖像陣列對象中的某個圖像，反之亦可。
+\item 由 1D 圖像陣列對象拷貝到 1D 圖像陣列對象，反之亦可。
+\item 由 2D 圖像陣列對象拷貝到 2D 圖像陣列對象，反之亦可。
+\item 由 3D \cnglo{imgobj}拷貝到 3D \cnglo{imgobj}。
+\stopigBase
+
+\carg{command_queue} 就是拷貝\cnglo{cmd}要進入的隊列。
+\carg{command_queue}、 \carg{src_image}、 \carg{dst_image}
+必須位於同一 OpenCL \cnglo{context}中。
+
+\carg{src_origin} 定義了源區域的偏移量。
+對於 1D、 2D 或 3D 圖像，即 \math{(x, y, z)}，單位像素；
+對於 2D 圖像陣列，即 \math{(x, y)} 以及圖像索引；
+對於 1D 圖像陣列，即 \math{(x)} 以及圖像索引。
+如果 \carg{src_image} 是 2D \cnglo{imgobj}， \math{\marg{src_origin}[2]} 必須是 0。
+如果 \carg{src_image} 是 1D \cnglo{imgobj}，
+\math{\marg{src_origin}[1]} 和 \math{\marg{src_origin}[2]} 都必須是 0。
+如果 \carg{src_image} 是 1D 圖像陣列對象， \math{\marg{src_origin}[1]} 即圖像索引。
+如果 \carg{src_image} 是 2D 圖像陣列對象， \math{\marg{src_origin}[2]} 即圖像索引。
+
+\carg{dst_origin} 除了對應的是 \carg{dst_image}，其他都跟 \carg{src_origin} 一樣。
+
+\carg{region} 定義了要拷貝的 1D、 2D 或 3D 區域 \math{(width, height, depth)}，單位像素;
+對於 2D 圖像陣列，即 2D 區域 \math{(width, height)} 以及圖像索引；
+對於 1D 圖像陣列，即 1D 區域 \math{(width)} 以及圖像索引。
+如果 \carg{src_image} 或 \carg{dst_image} 是 2D \cnglo{imgobj} 或 1D 圖像陣列對象，
+\math{\marg{region}[2]} 必須是 1。
+如果 \carg{src_image} 或 \carg{dst_image} 是 1D 圖像或 1D 圖像緩衝對象，
+\math{\marg{src_origin}[1]} 和 \math{\marg{region}[2]} 必須是 1。
+\carg{region} 中的值不能为 0。
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list} 中
+列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是 0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點，
+並且必須與 \carg{command_queue} 位於同一個\cnglo{context}中。
+此函式返回後，就可以回收並重用 \carg{event_wait_list} 所關聯的內存了。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此拷貝\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}結束。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+這時可以用 \capi{clEnqueueBarrierWithWaitList} 來代替。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+則 \carg{event} 不能屬於 \carg{event_wait_list}。
+
+目前要求 \carg{src_image} 和 \carg{dst_image} 具有完全相同的圖像格式
+（即創建 \carg{src_image} 和 \carg{dst_image} 時所指定的 \ctype{cl_image_format} 必須相同）。
+
+如果執行成功， \capi{clEnqueueCopyImage} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue}、 \carg{src_image} 和 \carg{dst_image} 位於不同的\cnglo{context}中，
+或者 \carg{command_queue} 和 \carg{event_wait_list} 中的事件位於不同的\cnglo{context}中。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，如果 \carg{src_image} 或 \carg{dst_image} 無效。
+
+\item \cenum{CL_IMAGE_FORMAT_MISMATCH}，
+如果 \carg{src_image} 和 \carg{dst_image} 所使用的圖像格式不同。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \math{(\marg{src_origin}, \marg{region})} 所指定的區域在 \carg{src_image} 中越限，
+或者 \math{(\marg{dst_origin}, \marg{region})} 所指定的區域在 \carg{dst_image} 中越限。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{src_origin}、 \carg{dst_origin} 和 \carg{region} 沒有遵守上面所描述的相應規則。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{src_buffer} 和 \carg{dst_buffer} 是同一個\cnglo{bufobj}，
+且 \carg{src_slice_pitch} 不等於 \carg{dst_slice_pitch}
+或者 \carg{src_row_pitch} 不等於 \carg{dst_row_pitch}。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_INVALID_IMAGE_SIZE}，
+如果圖像的大小（寬度、高度、指定的或自動計算的行間距或面間距）
+不被 \carg{queue} 所關聯\cnglo{device} 支持。
+
+\item \cenum{CL_IMAGE_FORMAT_NOT_SUPPORTED}，
+如果 \carg{src_image} 或 \carg{dst_image} 的圖像格式（圖像通道順序和數據類型）
+不被 \carg{queue} 所關聯\cnglo{device} 支持。
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，
+如果為 \carg{src_image} 或 \carg{dst_image} 分配內存失敗。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+
+\item \cenum{CL_INVALID_OPERATION}，如果調用的是 \capi{clEnqueueReadBufferRect}，
+但創建 \carg{buffer} 時指定了 \cenum{CL_MEM_HOST_WRITE_ONLY} 或 \cenum{CL_MEM_HOST_NO_ACCESS}。
+
+\item \cenum{CL_INVALID_OPERATION}，如果 \carg{command_queue} 所關聯\cnglo{device}不支持圖像
+（即，\reftab{cldevquery}中的 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_FALSE})。）。
+
+\item \cenum{CL_MEM_COPY_OVERLAP}，
+如果 \carg{src_image} 和 \carg{dst_image} 是同一個\cnglo{imgobj}，並且源區域和宿區域重疊。
+\stopigBase

@@ -1,0 +1,73 @@
+\startETD[cl_event_info][返回型別]
+
+\clETD{CL_EVENT_COMMAND_QUEUE}{cl_command_queue}{
+返回 \carg{event} 所關聯的\cnglo{cmdq}。
+對於用戶\cnglo{evtobj}，會返回 \cmacro{NULL}。
+}
+
+\clETD{CL_EVENT_CONTEXT}{cl_context}{
+返回 \carg{event} 所關聯的\cnglo{context}。
+}
+
+\clETD{CL_EVENT_COMMAND_TYPE}{cl_command_type}{
+返回 \carg{event} 所關聯的\cnglo{cmd}。
+可以是下列之一：
+\startigBase
+\item \cenum{CL_COMMAND_NDRANGE_KERNEL}
+\item \cenum{CL_COMMAND_TASK}
+\item \cenum{CL_COMMAND_NATIVE_KERNEL}
+\item \cenum{CL_COMMAND_READ_BUFFER}
+\item \cenum{CL_COMMAND_WRITE_BUFFER}
+\item \cenum{CL_COMMAND_COPY_BUFFER}
+\item \cenum{CL_COMMAND_READ_IMAGE}
+\item \cenum{CL_COMMAND_WRITE_IMAGE}
+\item \cenum{CL_COMMAND_COPY_IMAGE}
+\item \cenum{CL_COMMAND_COPY_BUFFER_TO_IMAGE}
+\item \cenum{CL_COMMAND_COPY_IMAGE_TO_BUFFER}
+\item \cenum{CL_COMMAND_MAP_BUFFER}
+\item \cenum{CL_COMMAND_MAP_IMAGE}
+\item \cenum{CL_COMMAND_UNMAP_MEM_OBJECT}
+\item \cenum{CL_COMMAND_MARKER}
+\item \cenum{CL_COMMAND_ACQUIRE_GL_OBJECTS}
+\item \cenum{CL_COMMAND_RELEASE_GL_OBJECTS}
+\item \cenum{CL_COMMAND_READ_BUFFER_RECT}
+\item \cenum{CL_COMMAND_WRITE_BUFFER_RECT}
+\item \cenum{CL_COMMAND_COPY_BUFFER_RECT}
+\item \cenum{CL_COMMAND_USER}
+\item \cenum{CL_COMMAND_BARRIER}
+\item \cenum{CL_COMMAND_MIGRATE_MEM_OBJECTS}
+\item \cenum{CL_COMMAND_FILL_BUFFER}
+\item \cenum{CL_COMMAND_FILL_IMAGE}
+\stopigBase
+}
+
+\clETD{CL_EVENT_COMMAND_EXECUTION_STATUS}{cl_int}{
+返回 \carg{event} 所標識的\cnglo{cmd}的執行狀態
+\footnote{錯誤碼的值是負的，事件狀態的值是正的。
+事件狀態的值這樣變化：從第一個或初始狀態，即最大值（\cenum{CL_QUEUED}），
+一直到最後一個或完成的狀態，即最小值（\cenum{CL_COMPLETE} 或負整數）。
+ \cenum{CL_COMPLETE} 跟 \cenum{CL_SUCCESS} 一樣。
+}。
+有效值為：
+\startigBase
+\item \cenum{CL_QUEUED}（\cnglo{cmd}已經入隊）；
+
+\item \cenum{CL_SUBMITTED}
+（\cnglo{host}已經將所入隊的\cnglo{cmd}提交給了\cnglo{cmdq}所關聯的\cnglo{device}）；
+
+\item \cenum{CL_RUNNING}（\cnglo{device}正在執行這個\cnglo{cmd}）；
+
+\item \cenum{CL_COMPLETED}（\cnglo{cmd}已經完成）；或
+
+\item 錯誤碼，一個負整數（\cnglo{cmd}異常終止——可能由非法內存存取所導致）。
+與\cnglo{platform}或運行時 API 調用所返回的值或 \carg{errcode_ret} 的值使用同一套錯誤碼。
+
+\stopigBase
+}
+
+\clETD{CL_EVENT_REFERENCE_COUNT}{cl_uint}{
+返回 \carg{event} 的\cnglo{refcnt}\footnote{%
+在返回的那一刻，此\cnglo{refcnt}就已過時。
+\cnglo{app}中一般不太適用。提供此特性主要是為了檢測內存泄漏。}。
+}
+\stopETD

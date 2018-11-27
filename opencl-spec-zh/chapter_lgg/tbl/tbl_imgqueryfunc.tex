@@ -1,0 +1,155 @@
+% get_image_width
+\startbuffer[funcproto:get_image_width]
+int get_image_width (image1d_t image)
+int get_image_width (
+	image1d_buffer_t image)
+int get_image_width (image2d_t image)
+int get_image_width (image3d_t image)
+int get_image_width (
+	image1d_array_t image)
+int get_image_width (
+	image2d_array_t image)
+\stopbuffer
+\startbuffer[funcdesc:get_image_width]
+返回圖像寬度，單位像素。
+\stopbuffer
+
+% get_image_height
+\startbuffer[funcproto:get_image_height]
+int get_image_height (image2d_t image)
+int get_image_height (image3d_t image)
+int get_image_height (
+	image2d_array_t image)
+\stopbuffer
+\startbuffer[funcdesc:get_image_height]
+返回圖像高度，單位像素。
+\stopbuffer
+
+% get_image_depth
+\startbuffer[funcproto:get_image_depth]
+int get_image_depth (image3d_t image)
+\stopbuffer
+\startbuffer[funcdesc:get_image_depth]
+返回圖像深度，單位像素。
+\stopbuffer
+
+% get_image_channel_data_type
+\startbuffer[funcproto:get_image_channel_data_type]
+int get_image_channel_data_type (
+	image1d_t image)
+int get_image_channel_data_type (
+	image1d_buffer_t image)
+int get_image_channel_data_type (
+	image2d_t image)
+int get_image_channel_data_type (
+	image3d_t image)
+int get_image_channel_data_type (
+	image1d_array_t image)
+int get_image_channel_data_type (
+	image2d_array_t image)
+\stopbuffer
+\startbuffer[funcdesc:get_image_channel_data_type]
+返回通道數據類型，有效值有：
+\startigBase
+\item \cenum{CLK_SNORM_INT8}
+\item \cenum{CLK_SNORM_INT16}
+\item \cenum{CLK_UNORM_INT8}
+\item \cenum{CLK_UNORM_INT16}
+\item \cenum{CLK_UNORM_SHORT_565}
+\item \cenum{CLK_UNORM_SHORT_555}
+\item \cenum{CLK_UNORM_SHORT_101010}
+\item \cenum{CLK_SIGNED_INT8}
+\item \cenum{CLK_SIGNED_INT16}
+\item \cenum{CLK_SIGNED_INT32}
+\item \cenum{CLK_UNSIGNED_INT8}
+\item \cenum{CLK_UNSIGNED_INT16}
+\item \cenum{CLK_UNSIGNED_INT32}
+\item \cenum{CLK_HALF_FLOAT}
+\item \cenum{CLK_FLOAT}
+\stopigBase
+\stopbuffer
+
+% get_image_channel_order
+\startbuffer[funcproto:get_image_channel_order]
+int get_image_channel_order (
+	image1d_t image)
+int get_image_channel_order (
+	image1d_buffer_t image)
+int get_image_channel_order (
+	image2d_t image)
+int get_image_channel_order (
+	image3d_t image)
+int get_image_channel_order (
+	image1d_array_t image)
+int get_image_channel_order (
+	image2d_array_t image)
+\stopbuffer
+\startbuffer[funcdesc:get_image_channel_order]
+返回通道順序，有效值有：
+\startigBase
+\item \cenum{CLK_A}
+\item \cenum{CLK_R}
+\item \cenum{CLK_Rx}
+\item \cenum{CLK_RG}
+\item \cenum{CLK_RGx}
+\item \cenum{CLK_RA}
+\item \cenum{CLK_RGB}
+\item \cenum{CLK_RGBx}
+\item \cenum{CLK_RGBA}
+\item \cenum{CLK_ARGB}
+\item \cenum{CLK_BGRA}
+\item \cenum{CLK_INTENSITY}
+\item \cenum{CLK_LUMINANCE}
+\stopigBase
+\stopbuffer
+
+% get_image_dim_2d
+\startbuffer[funcproto:get_image_dim_2d]
+int2 get_image_dim (image2d_t image)
+int2 get_image_dim (
+	image2d_array_t image)
+\stopbuffer
+\startbuffer[funcdesc:get_image_dim_2d]
+將 2D 圖像的寬度和高度存入 \ctype{int2} 返回。
+其中組件 \carg{x} 是寬度，組件 \carg{y} 是高度。
+\stopbuffer
+
+% get_image_dim_3d
+\startbuffer[funcproto:get_image_dim_3d]
+int4 get_image_dim (image3d_t image)
+\stopbuffer
+\startbuffer[funcdesc:get_image_dim_3d]
+將 3D 圖像的寬度、高度和深度存入 \ctype{int4} 返回。
+其中組件 \carg{x} 是寬度，組件 \carg{y} 是高度，組件 \carg{z} 是深度，組件 \carg{w} 是 0。
+\stopbuffer
+
+% get_image_array_size_2d
+\startbuffer[funcproto:get_image_array_size_2d]
+size_t get_image_array_size(
+	image2d_array_t image)
+\stopbuffer
+\startbuffer[funcdesc:get_image_array_size_2d]
+返回 2D 圖像陣列中圖像的個數。
+\stopbuffer
+
+% get_image_array_size_1d
+\startbuffer[funcproto:get_image_array_size_1d]
+size_t get_image_array_size(
+	image1d_array_t image)
+\stopbuffer
+\startbuffer[funcdesc:get_image_array_size_1d]
+返回 1D 圖像陣列中圖像的個數。
+\stopbuffer
+
+% begin table
+\startCLFD
+\clFD{get_image_width}
+\clFD{get_image_height}
+\clFD{get_image_depth}
+\clFD{get_image_channel_data_type}
+\clFD{get_image_channel_order}
+\clFD{get_image_dim_2d}
+\clFD{get_image_dim_3d}
+\clFD{get_image_array_size_2d}
+\clFD{get_image_array_size_1d}
+\stopCLFD

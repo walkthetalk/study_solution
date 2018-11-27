@@ -1,0 +1,171 @@
+\subsection[section:compilerOption]{編譯器選項}
+
+編譯器選項分為以下幾種：預處理器選項、數學本徵選項、優化控制選項以及其他選項。
+本規範定義了一套標準選項，用於在線或離線構建\cnglo{program}執行體，
+所有 OpenCL C 編譯器都必須支持。
+也可以通過增加一些針對特定供應商或特定平台的選項對其進行擴展。
+
+% Preprocessor options
+\subsubsection[section:preprocessorOption]{預處理器選項}
+
+這些選項用於控制預處理器，在真正編譯前對源碼進行預處理。
+
+\startclOption{-D \carg{name}}
+預定義一個名為 \carg{name} 的巨集，其值為 1。
+\stopclOption
+
+\startclOption{-D \carg{name}=\carg{definition}}
+就像預處理指示（directive） \ccmm{#define} 那樣，
+在翻譯的第三個階段中會將 \carg{definition} 的內容符號化並處理。
+不過遇到內嵌的換行符會進行截斷。
+\stopclOption
+
+對於選項 \ccmm{-D}，
+會按照在 \capi{clBuildProgram} 或 \capi{clCompileProgram} 的引數 \carg{options} 中
+出現的順序進行處理。
+
+\startclOption{-I \carg{dir}}
+將 \carg{dir} 加入到頭檔的搜索路徑中。
+\stopclOption
+
+% Math Intrinsics Options
+\subsubsection[section:MathIntrinsicsOption]{數學本徵選項}
+這些選項會控制編譯器中浮點算術相關的行為。
+他們會影響速度與正確性之間的權衡。
+
+\startclOption{-cl-single-precision-constant}
+將雙精度浮點常數視為單精度浮點常數。
+\stopclOption
+
+\startclOption{-cl-denorms-are-zero}
+此選項用來控制如何處理單、雙精度浮點去規格化數（denormalized number）。
+如果作為構建選項，單精度去規格化數會被刷成零；
+此時如果支持雙精度，則雙精度去規格化數也可能會被刷成零。
+此選項僅作為性能建議，如果\cnglo{device}支持單精度（或雙精度）去規格化數，
+OpenCL 編譯器可以選擇不將其刷成零。
+
+如果\cnglo{device}不支持單精度（或雙精度）去規格化數，
+即 \cenum{CL_DEVICE_SINGLE_FP_CONFIG} 中沒有設置 \cenum{CL_FP_DENORM}，
+則對於單精度數此選項會被忽略。
+
+如果\cnglo{device}不支持雙精度，或者支持雙精度但不支持雙精度（或雙精度）去規格化數，
+即 \cenum{CL_DEVICE_DOUBLE_FP_CONFIG} 中沒有設置 \cenum{CL_FP_DENORM}，
+則對於雙精度數此選項會被忽略。
+
+此選項僅對\cnglo{program}中的標量或矢量浮點變數以及其上的運算起作用，
+對於讀寫\cnglo{imgobj}則無效。
+\stopclOption
+
+\startclOption{-cl-fp32-correctly-rounded-divide-sqrt}
+對於\cnglo{program}源碼中的單精度浮點除法（\ccmm{x/y} 和 \ccmm{1/x}）和 \ccmm{sqrt} 而言，
+\cnglo{app}可以使用此選項來保證對他們進行正確的捨入；
+而如果沒有使用此選項，則他們的最小數值精確度在\refsection{relativeError}中定義。
+
+只有在對應\cnglo{device}的 \cenum{CL_DEVICE_SINGLE_FP_CONFIG}
+（參見\reftab{cldevquery}）
+中設置了 \cenum{CL_FP_CORRECTLY_ROUNDED_DIVIDE_SQRT} 時，才能使用此選項；
+否則編譯會失敗。
+\stopclOption
+
+% optimization options
+\subsubsection[section:OptimizationOption]{優化選項}
+
+這些選項控制各種優化。打開優化選項會使編譯器嘗試改進性能和/或代碼大小，
+代價就是犧牲編譯時間，還可能降低調試\cnglo{program}的能力。
+
+\startclOption{-cl-opt-disable}
+此選項會去能所有優化。缺省情況下優化是打開的。
+\stopclOption
+
+下列選項會控制編譯器中浮點算術相關的行為。
+這些選項以犧牲正確性為代價來換取性能的提升，必須明確使能。
+由於他們可能會導致不正確的輸出，而這些輸出則依賴於數學函式對 IEEE 754 標準的具體實作，
+因此缺省這些選項都是關閉的。
+
+\startclOption{-cl-mad-enable}
+允許用 \ccmm{mad} 代替 \ccmm{a * b + c}。
+ \ccmm{mad} 會用較低的精確度來計算 \ccmm{a * b + c}。
+例如，一些 OpenCL \cnglo{device}實現的 \ccmm{mad} 在加 \ccmm{c} 前會對 \ccmm{a * b} 進行截斷。
+\stopclOption
+
+\startclOption{-cl-no-signed-zeros}
+允許在進行浮點算術運算時忽略零的正負。
+在 IEEE 754 中，對於 \ccmm{+0.0} 和 \ccmm{-0.0} 的行為是不同的，
+這會導致不能對像 \ccmm{x + 0.0} 或 \ccmm{0.0 * x} 這樣的算式進行簡化
+（即使只帶有 \ccmm{-cl-finite-math} ）。
+\stopclOption
+
+\startclOption{-cl-unsafe-math-optimizations}
+允許對浮點算術的優化：
+\startigBase
+\item 假定參數和結果都是有效的；
+\item 可能違反 IEEE 754 的標準；以及
+\item 可能違反\refsection{relativeError}中所定義的對單雙精度浮點數的數值符合性的要求，
+還有\refsection{edgeCaseBehavior}中邊界條件下的行為。
+\stopigBase
+此選項包含了 \ccmm{-cl-no-signed-zeros} 和 \ccmm{-cl-mad-enable}。
+\stopclOption
+
+\startclOption{-cl-finite-math-only}
+在執行浮點算術運算時，可以假定引數和結果都不是 NaN 或 \math{\pm\infty}。
+這可能違反\refsection{relativeError}中所定義的對單雙精度浮點數的數值符合性的要求，
+還有\refsection{edgeCaseBehavior}中邊界條件下的行為。
+\stopclOption
+
+\startclOption{-cl-fast-relaxed-math}
+相當於 \ccmm{-cl-finite-math-only} 和 \ccmm{-cl-unsafe-math-optimizations} 的組合。
+對浮點算術的優化可以違反 IEEE 754 的標準，
+也可以違反\refsection{relativeError}中所定義的對單雙精度浮點數的數值符合性的要求，
+還有\refsection{edgeCaseBehavior}中邊界條件下的行為。
+此選項會使得\cnglo{program}中定義預處理器巨集 \ccmm{__FAST_RELAXED_MATH__}。
+\stopclOption
+
+% Options to Request or Suppress Warnings
+\subsubsection{請求或抑制警告的選項}
+
+警告（warning）是一些診斷訊息，表示一些構造不屬於錯誤但是有風險，或者可能是錯誤。
+下列選項是獨立於語言的，不是用來使能特定警告，
+而是用來控制 OpenCL 編譯器所產生的診斷訊息的種類。
+
+\startclOption{-w}
+禁止所有警告訊息。
+\stopclOption
+
+\startclOption{-Werror}
+把所有警告都當成錯誤。
+\stopclOption
+
+% Options Controlling the OpenCL C version
+\subsubsection[section:ctrlcveroption]{控制 OpenCL C 版本的選項}
+
+下面的選項控制編譯器所使用的 OpenCL C 的版本。
+
+\startclOption{-cl-std=}
+確定所使用的 OpenCL C 語言的版本。
+必須為此選項提供一個值。有效的值有：
+\startigBase
+\item CL1.1 —— 所有 OpenCL C \cnglo{program}都使用 OpenCL 1.1 規範\refchapter{clcpl}中所定義的特性。
+\item CL1.2 —— 所有 OpenCL C \cnglo{program}都使用 OpenCL 1.2 規範\refchapter{clcpl}中所定義的特性。
+\stopigBase
+\stopclOption
+
+對於任何一個\cnglo{device}，
+如果其 \cenum{CL_DEVICE_OPENCL_C_VERSION} 為 OpenCL C 1.0，
+使用的選項卻是 \ccmm{-cl-std=1.1}，
+則對 \capi{clBuildProgram} 或 \capi{clCompileProgram} 的調用都會{\ftEmp{失敗}}；
+而如果其 \cenum{CL_DEVICE_OPENCL_C_VERSION} 為 OpenCL C 1.1，
+使用選項卻是 \ccmm{-cl-std=1.2}，
+對 \capi{clBuildProgram} 或 \capi{clCompileProgram} 的調用也都會{\ftEmp{失敗}}。
+
+如果沒有指定選項 \ccmm{-cl-std}，
+則使用相應\cnglo{device}的 \cenum{CL_DEVICE_OPENCL_C_VERSION} 作為 OpenCL C 的版本
+為其編譯\cnglo{program}。
+
+% Options for Querying Kernel Argument Information
+\subsubsection{用於查詢內核引數資訊的選項}
+
+\startclOption{-cl-kernel-arg-info}
+此選項允許編譯器將\cnglo{kernel}引數的資訊存儲到\cnglo{program}執行體中。
+所存儲的資訊包括引數名、引數型別、所使用的位址限定符以及存取限定符。
+至於怎樣查詢這些資訊請參考 \capi{clGetKernelArgInfo} 的描述。
+\stopclOption

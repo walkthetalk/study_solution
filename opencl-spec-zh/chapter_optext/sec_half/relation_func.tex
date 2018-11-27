@@ -1,0 +1,37 @@
+\subsection[section:relationFunc]{關係函式}
+
+對\reftab{svRelationalFunc}中所列內建關係函式作了擴充，
+引數可以為 \cldt{half} 和 \cldt[n]{half}，
+其中 \ccmmsuffix{n} 可以是 2、 3、 4、 8、 16，
+參見\reftab{relationalFuncHalf}。
+
+關係算子和相等算子（<、 <=、 >、 >=、 !=、 ==）也可用於矢量型別 \cldt[n]{half}，
+所產生的結果為 \cldt[n]{short}，參見\refsection{operator}。
+
+對於標量型別的引數，如果所指定的關係為 {\ftRef{false}}，則下列函式（參見\reftab{svRelationalFunc}）會返回 0，否則返回 1：
+\startigBase[indentnext=no]
+\item \capi{isequal}、 \capi{isnotequal}、
+\item \capi{isgreater}、 \capi{isgreaterequal}、
+\item \capi{isless}、 \capi{islessequal}、
+\item \capi{islessgreater}、
+\item \capi{isfinite}、 \capi{isinf}、
+\item \capi{isnan}、 \capi{isnormal}、
+\item \capi{isordered}、 \capi{isunordered} 和
+\item \capi{signbit}。
+\stopigBase
+而對於矢量型別的引數，如果所指定的關係為 {\ftRef{false}}，則返回 0，
+否則返回 -1 （即所有位都是 1）。
+
+如果任一引數為 NaN，則下列關係函式返回 0：
+\startigBase[indentnext=no]
+\item \capi{isequal}、
+\item \capi{isgreater}、 \capi{isgreaterequal}、
+\item \capi{isless}、 \capi{islessequal} 和
+\item \capi{islessgreater}。
+\stopigBase
+如果引數為標量，則當任一引數為 NaN 時， \capi{isnotequal} 返回 1；
+而如果引數為矢量，則當任一引數為 NaN 時， \capi{isnotequal} 返回 -1。
+
+\placetable[here,split][tab:relationalFuncHalf]
+{內建關係函式}
+{\input{chapter_optext/tbl/relational_func_half.tex}}

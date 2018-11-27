@@ -1,0 +1,30 @@
+\startETD[cl_context_info][返回型別]
+
+\clETD{CL_CONTEXT_REFERENCE_COUNT}{cl_unit}{
+返回 \carg{context} 的\cnglo{refcnt}\footnote{%
+在返回的那一刻，此\cnglo{refcnt}就已過時。\cnglo{app}中一般不太適用。提供此特性主要是為了檢測內存泄漏。}。
+}
+
+\clETD{CL_CONTEXT_NUM_DEVICES}{cl_unit}{
+返回 \carg{context} 中\cnglo{device}的數目。
+}
+
+\clETD{CL_CONTEXT_DEVICES}{cl_device_id[]}{
+返回 \carg{context} 中\cnglo{device}的清單。
+}
+
+\clETD{CL_CONTEXT_PROPERTIES}{cl_context_properties[]}{
+返回調用 \capi{clCreateContext} 或 \capi{clCreateContextFromType}
+時所指定的引數 \carg{properties}。
+
+對於調用 \capi{clCreateContext} 或 \capi{clCreateContextFromType}
+創建 \carg{context} 時所指定的引數 \carg{properties} 而言，
+如果此引數不是 \cmacro{NULL}，實作必須返回此引數的值。
+而如果此引數是 \cmacro{NULL}，實作可以選擇將 \carg{param_value_size_ret} 置為 0，
+即没有返回属性值，
+也可以將 \carg{param_value} 的內容置為 0
+（0 用作\cnglo{context}屬性清單的終止標記）。
+}
+
+\stopETD
+

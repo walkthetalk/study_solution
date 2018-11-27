@@ -1,0 +1,49 @@
+\section[section:oooe]{內核和內存對象命令的亂序執行}
+
+提交給\cnglo{cmdq}的 OpenCL 函式按調用順序入隊，
+但執行順序卻是可配置的，既可以\cnglo{inordexec}，也可以\cnglo{outordexec}。
+\capi{clCreateCommandQueue} 的參數 \carg{properties} 可用來指定執行順序。
+
+如果沒有為\cnglo{cmdq}設置屬性 \cenum{CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE}，
+則其中的\cnglo{cmd}\cnglo{inordexec}。
+例如，如果\cnglo{app}先調用 \capi{clEnqueueNDRangeKernel} 執行\cnglo{kernel} A，
+然後調用 \capi{clEnqueueNDRangeKernel} 執行\cnglo{kernel} B，
+則\cnglo{app}可以假定 A 執行完後 B 才開始執行。
+如果\cnglo{kernel} A 所輸出的\cnglo{memobj}是\cnglo{kernel} B 的輸入，
+那麼就通過執行\cnglo{kernel} A 所產生的\cnglo{memobj}而言，
+\cnglo{kernel} B 就可以看到其中正確的數據。
+如果為\cnglo{cmdq}設置了屬性 \cenum{CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE}，
+則不保證\cnglo{kernel} B 開始執行前，\cnglo{kernel} A 一定執行完畢。
+
+\cnglo{app}可以通過設置\cnglo{cmdq}的屬性 \cenum{CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE}，
+將其中的\cnglo{cmd}配置成\cnglo{outordexec}。
+創建\cnglo{cmdq}時就可以設置此屬性。
+在\cnglo{outordexec}模式下，不保證\cnglo{cmd}按入隊的順序執行完畢。
+由於不保證\cnglo{kernel}會\cnglo{inordexec}
+（這裡的順序是指調用 \capi{clEnqueueNDRangeKernel} 的順序），
+因此很可能先入隊的\cnglo{kernel} A （用事件 A 來標識）
+開始執行和/或執行完畢要比後入隊的\cnglo{kernel} B 晚。
+要想保證\cnglo{kernel}的執行順序，可以等待某個事件（這裡就是事件 A）。
+對事件 A 的等待可以通過為\cnglo{kernel} B 調用 \capi{clEnqueueNDRangeKernel} 時
+設置其參數 \carg{event_wait_list} 來實現。
+
+另外， OpenCL 還提供下列\cnglo{cmd}：
+\startigBase[indentnext=no]
+\item \cnglo{marker}，由 \capi{clEnqueueMarkerWithWaitList} 入隊，用於等待一些事件；
+\item \cnglo{barrier}，由 \capi{clEnqueueBarrierWithWaitList} 入隊；
+\stopigBase
+等待事件的\cnglo{cmd}可以保證事件所標識的\cnglo{cmd}完成後，下一批\cnglo{cmd}才開始執行。
+而\cnglo{barrier}\cnglo{cmd}則保證\cnglo{cmdq}中所有之前入隊的\cnglo{cmd}都執行完畢後，
+下一批\cnglo{cmd}才開始執行。
+
+類似的，如果設置了屬性 \cenum{CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE}，
+那麼在 \capi{clEnqueueNDRangeKernel}、
+\capi{clEnqueueTask} 或 \capi{clEnqueueNativeKernel}
+之後入隊的一些讀、寫、拷貝或映射\cnglo{memobj}的\cnglo{cmd}
+可能不會等待\cnglo{kernel}執行完畢。
+要想保證\cnglo{cmd}的正確順序，
+可以使用\cnglo{marker}\cnglo{cmd}等待 \capi{clEnqueueNDRangeKernel}、
+\capi{clEnqueueTask} 或 \capi{clEnqueueNativeKernel}
+所返回的\cnglo{evtobj}，
+或者使用\cnglo{barrier}\cnglo{cmd}，
+這樣只有在\cnglo{kernel}執行完畢後，才會開始讀寫\cnglo{memobj}。

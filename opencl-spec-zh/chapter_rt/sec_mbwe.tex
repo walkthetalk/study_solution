@@ -1,0 +1,129 @@
+\section{標註、屏障以及對事件的等待}
+
+\topclfunc{clEnqueueMarkerWithWaitList}
+
+\startCLFUNC
+cl_int clEnqueueMarkerWithWaitList(
+			cl_command_queue command_queue,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+此函式會將一個\cnglo{marker}\cnglo{cmd}入隊，
+此\cnglo{cmd}會等待 \carg{event_wait_list} 中的事件完成，
+如果 \carg{event_wait_list} 為空，
+則等待 \carg{command_queue} 中之前入隊的\cnglo{cmd}完成。
+此\cnglo{cmd}會返回一個可以等待的事件，
+即可以等在這個事件上，來確定 \carg{event_wait_list} 中的事件完成，
+或者 \carg{command_queue} 中之前入隊的\cnglo{cmd}完成。
+
+\carg{command_queue} 是一個\cnglo{cmdq}。
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list}
+ 即執行這個\cnglo{cmd}前需要完成的事件。
+
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+\carg{num_events_in_wait_list} 必須是 0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+\carg{event_wait_list} 中的事件必須有效，
+並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點。
+\carg{event_wait_list} 中的事件與 \carg{command_queue} 必須位於同一\cnglo{context}中。
+當此函式返回後，就可以重用或者釋放 \carg{event_wait_list} 所關聯的內存了。
+
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則此\cnglo{cmd}會等到 \carg{command_queue} 中所有之前入隊的\cnglo{cmd}完成。
+
+\carg{event} 會返回一個\cnglo{evtobj}，可用來識別此\cnglo{cmd}。
+如果 \carg{event} 是 \cmacro{NULL}，
+那麼\cnglo{app}就無法查詢此\cnglo{cmd}的狀態，或者等待此\cnglo{cmd}的完成。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+參數 \carg{event} 不能是 \carg{event_wait_list} 中的事件。
+
+如果執行成功， \capi{clEnqueueMarkerWithWaitList} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue} 和 \carg{event_wait_list} 中的任一事件所关联的\cnglo{context}不同。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clEnqueueBarrierWithWaitList}
+
+\startCLFUNC
+cl_int clEnqueueBarrierWithWaitList(
+			cl_command_queue command_queue,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+此函式會將一個\cnglo{barrier}\cnglo{cmd}入隊，
+此\cnglo{cmd}會等待 \carg{event_wait_list} 中的事件完成，
+如果 \carg{event_wait_list} 為空，
+則等待 \carg{command_queue} 中之前入隊的\cnglo{cmd}完成。
+此\cnglo{cmd}會阻塞\cnglo{cmd}的執行，
+即，所有之後入隊的\cnglo{cmd}都得等到他完成後才能執行。
+此\cnglo{cmd}會返回一個可以等待的事件，
+即可以等在這個事件上，來確定 \carg{event_wait_list} 中的事件完成，
+或者 \carg{command_queue} 中之前入隊的\cnglo{cmd}完成。
+
+\carg{command_queue} 是一個\cnglo{cmdq}。
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list}
+ 即執行這個\cnglo{cmd}前需要完成的事件。
+
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+ \carg{num_events_in_wait_list} 必須是 0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+ \carg{event_wait_list} 中的事件必須有效，
+並且 \carg{num_events_in_wait_list} 必須大於 0。
+ \carg{event_wait_list} 中的事件充當同步點。
+ \carg{event_wait_list} 中的事件與 \carg{command_queue} 必須位於同一\cnglo{context}中。
+當此函式返回後，就可以重用或者釋放 \carg{event_wait_list} 所關聯的內存了。
+
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則此\cnglo{cmd}會等到 \carg{command_queue} 中所有之前入隊的\cnglo{cmd}完成。
+
+\carg{event} 會返回一個\cnglo{evtobj}，可用來識別此\cnglo{cmd}。
+如果 \carg{event} 是 \cmacro{NULL}，
+那麼\cnglo{app}就無法查詢此\cnglo{cmd}的狀態，或者等待此\cnglo{cmd}的完成。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+參數 \carg{event} 不能是 \carg{event_wait_list} 中的事件。
+
+如果執行成功， \capi{clEnqueueBarrierWithWaitList} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue} 和 \carg{event_wait_list} 中的任一事件所关联的\cnglo{context}不同。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

@@ -1,0 +1,27 @@
+\startED[\ctype{cl_map_flags}]
+
+\clED{CL_MAP_READ}{
+表明所映射區域是用來讀的。
+當 \capi{clEnqueueMap{Buffer | Image}} 所入隊的\cnglo{cmd}完成時，
+保證所返回的指位器中所映射區域的內容是最新的。
+}
+
+\clED{CL_MAP_WRITE}{
+表明所映射區域是用來寫的。
+當 \capi{clEnqueueMap{Buffer | Image}} 所入隊的\cnglo{cmd}完成時，
+保證所返回的指位器中所映射區域的內容是最新的。
+}
+
+\clED{CL_MAP_WRITE_INVALIDATE_REGION}{
+表明所映射區域是用來寫的。
+所映射區域中的原有內容會被丟棄。
+一種典型的情況就是\cnglo{host}會複寫（overwrite）其內容。
+此標誌告訴實作可以不用保證 \capi{clEnqueueMap{Buffer | Image}} 所返回的指位器中
+所映射區域的內容是最新的，
+這會極大提升性能。
+
+他和 \cenum{CL_MAP_WRITE} 是互斥的。
+}
+
+\stopED
+

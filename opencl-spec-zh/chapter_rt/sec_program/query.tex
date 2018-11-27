@@ -1,0 +1,117 @@
+\subsection{程式對象相關的查詢}
+
+\topclfunc{clGetProgramInfo}
+
+\startCLFUNC
+cl_int clGetProgramInfo (cl_program program,
+			cl_program_info param_name,
+			size_t param_value_size,
+			void *param_value,
+			size_t *param_value_size_ret)
+\stopCLFUNC
+
+此函式會返回\cnglo{programobj}的相關資訊。
+
+\carg{program} 即所要查詢的\cnglo{programobj}。
+
+\carg{param_name} 指定要查詢什麼資訊。
+\reftab{clGetProgramInfo}中列出了所支持的資訊類型以及 \carg{param_value} 中返回的資訊。
+
+\carg{param_value} 指向的內存用來存儲查詢結果。
+如果 \carg{param_value} 是 \cmacro{NULL}，則忽略。
+
+\carg{param_value_size} 即 \carg{param_value} 所指內存塊的大小。
+其值必須 >= \reftab{clGetProgramInfo}中返回型別的大小。
+
+\carg{param_value_size_ret} 返回查詢結果的實際大小。
+如果 \carg{param_value_size_ret} 是 \cmacro{NULL}，則忽略。
+
+\placetable[here][tab:clGetProgramInfo]
+{\capi{clGetProgramInfo} 所支持的 \carg{param_names}}
+{\input{chapter_rt/tbl/tbl_clgetprginfo.tex}}
+
+如果執行成功，\capi{clGetProgramInfo} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{param_name} 無效，
+或者 \carg{param_value_size} < \reftab{clGetProgramInfo}中返回型別的大小，
+且 \carg{param_value} 不是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_PROGRAM}，如果 \carg{program} 無效。
+
+\startitem \cenum{CL_INVALID_PROGRAM_EXECUTABLE}，
+如果 \carg{param_name} 是：
+\startigBase[indentnext=no]
+\item \cenum{CL_PROGRAM_NUM_KERNELS}
+\item 或 \cenum{CL_PROGRAM_KERNEL_NAMES},
+\stopigBase
+並且在 \carg{program} 所關聯的\cnglo{device}中至少有一個\cnglo{device}
+所對應的\cnglo{program}執行體沒有成功構建。
+\stopitem
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clGetProgramBuildInfo}
+
+\startCLFUNC
+cl_int clGetProgramBuildInfo (cl_program program,
+			cl_device_id device,
+			cl_program_build_info param_name,
+			size_t param_value_size,
+			void *param_value,
+			size_t *param_value_size_ret)
+\stopCLFUNC
+
+此函式會返回\cnglo{programobj}中某個\cnglo{device}所對應的構建資訊。
+
+\carg{program} 即所要查詢的\cnglo{programobj}。
+
+\carg{device} 指定要查詢哪個\cnglo{device}的構建資訊。
+\carg{device} 必須是 \carg{program} 所關聯的\cnglo{device}。
+
+\carg{param_name} 指定要查詢什麼資訊。
+\reftab{clGetProgramBuildInfo}中列出了所支持的資訊類型以及 \carg{param_value} 中返回的資訊。
+
+\carg{param_value} 指向的內存用來存儲查詢結果。
+如果 \carg{param_value} 是 \cmacro{NULL}，則忽略。
+
+\carg{param_value_size} 即 \carg{param_value} 所指內存塊的大小。
+其值必須 >= \reftab{clGetProgramBuildInfo}中返回型別的大小。
+
+\carg{param_value_size_ret} 返回查詢結果的實際大小。
+如果 \carg{param_value_size_ret} 是 \cmacro{NULL}，則忽略。
+
+\placetable[here][tab:clGetProgramBuildInfo]
+{\capi{clGetProgramBuildInfo} 所支持的 \carg{param_names}}
+{\input{chapter_rt/tbl/tbl_clgetprgbuildinfo.tex}}
+
+如果執行成功，\capi{clGetProgramBuildInfo} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_DEVICE}，
+如果 \carg{device} 不是與 \carg{program} 相關聯的\cnglo{device}。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{param_name} 無效，
+或者 \carg{param_value_size} < \reftab{clGetProgramBuildInfo}中返回型別的大小，
+且 \carg{param_value} 不是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_PROGRAM}，如果 \carg{program} 無效。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\startnotepar
+為\cnglo{pardev}構建的\cnglo{program}二元碼（編譯過的二元碼、庫的二元碼或者可執行的二元碼）
+可以被他的所有\cnglo{subdev}所使用。
+如果沒有為某個\cnglo{subdev}構建相應的\cnglo{program}二元碼，則會使用其\cnglo{pardev}的。
+
+一個\cnglo{device}的\cnglo{program}二元碼，
+無論是為 \capi{clCreateProgramWithBinary} 所指定的，
+還是用 \capi{clGetProgramInfo} 查詢得到的，
+都可以用到相應\cnglo{rootdev}、及其任意級別的\cnglo{subdev}上。
+\stopnotepar

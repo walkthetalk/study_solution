@@ -1,0 +1,84 @@
+\section[section:getFuncPtr]{獲取 OpenCL API 擴展函式指位器}
+
+\topclfunc{clGetExtensionFunctionAddressForPlatform}
+
+\startCLFUNC
+void* clGetExtensionFunctionAddressForPlatform (
+			cl_platform_id platform,
+			const char *funcname)
+\stopCLFUNC
+
+\startnotepar
+由於沒有任何方式來限定對\cnglo{device}的查詢，
+對於此擴展在這個\cnglo{platform}中不同\cnglo{device}上的所有實作而言，
+所返回的函式指位器必須都能正常運作。
+如果\cnglo{device}不支持此擴展，則調用擴展中的函式時，其行為\cnglo{undef}。
+\stopnotepar
+
+此函式會返回給定 \carg{platform} 的擴展函式 \carg{funcname} 的位址。
+需要將所返回的指位器轉型成對應的函式指位器型別，
+此擴展函式在對應的擴展規範和頭檔中定義。
+如果返回的是 \cmacro{NULL}，則表明實作中沒有所指定的函式，或者 \carg{platform} 無效。
+即使返回的不是 \cmacro{NULL}，也不保證 \carg{platform} 真正支持此擴展函式。
+要想確定 OpenCL 實作是否支持某個擴展，
+\cnglo{app}必須用下列兩種方式之一進行查詢：
+\startclc
+clGetPlatformInfo(platform, CL_PLATFORM_EXTENSIONS, ... )
+clGetDeviceInfo(device, CL_DEVICE_EXTENSIONS, ... )
+\stopclc
+
+對於 OpenCL 的核心函式（非擴展函式），不能使用此函式進行查詢。
+而對於那些能用此函式進行查詢的函式，
+實作也可以選擇由實現那些函式的目標庫靜態導入那些函式。
+然而，\cnglo{app}要想可移植，就不能依賴這種行為。
+
+對於所有會增加 API 引入點的擴展，都必須聲明 \ccmm{typedef} 的函式指位器型別。
+這些 \ccmm{typedef} 是擴展接口所必需的一部分，在相應頭檔中提供
+（如果是 OpenCL 擴展，則為 \ccmm{cl_ext.h}；
+而如果是 OpenCL / OpenGL 共享擴展，則為 \ccmm{cl_gl_ext.h}）。
+
+所有會影響\cnglo{host} API 的擴展都必須遵循下列約定：
+\startclc[indentnext=no]
+#ifndef extension_name
+#define extension_name		1
+
+// all data typedefs, token #defines, prototypes, and
+// function pointer typedefs for this extension
+
+// function pointer typedefs must use the
+// following naming convention
+typedef CL_API_ENTRY /BTEX{\ftRef{return type}}/ETEX
+		(CL_API_CALL */BTEX{\ftRef{clextension_func_nameTAG_fn}}/ETEX)(...);
+
+#endif // extension_name
+\stopclc
+其中 \ccmm{TAG} 可以是 \ccmm{KHR}、 \ccmm{EXT} 或 \ccmm{vendor-specific}。
+
+例如，擴展 \clext{cl_khr_gl_sharing} 在 \ccmm{cl_gl_ext.h} 中增加了下列代碼：
+\startclc
+#ifndef cl_khr_gl_sharing
+#define cl_khr_gl_sharing	1
+
+// all data typedefs, token #defines, prototypes, and
+// function pointer typedefs for this extension
+#define CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR	-1000
+#define CL_CURRENT_DEVICE_FOR_GL_CONTEXT_KHR	0x2006
+#define CL_DEVICES_FOR_GL_CONTEXT_KHR		0x2007
+#define CL_GL_CONTEXT_KHR			0x2008
+#define CL_EGL_DISPLAY_KHR			0x2009
+#define CL_GLX_DISPLAY_KHR			0x200A
+#define CL_WGL_HDC_KHR				0x200B
+#define CL_CGL_SHAREGROUP_KHR			0x200C
+
+// function pointer typedefs must use the
+// following naming convention
+typedef CL_API_ENTRY cl_int
+	(CL_API_CALL *clGetGLContextInfoKHR_fn)(
+		const cl_context_properties * /* properties */,
+		cl_gl_context_info /* param_name */,
+		size_t /* param_value_size */,
+		void * /* param_value */,
+		size_t * /*param_value_size_ret*/);
+
+#endif // cl_khr_gl_sharing
+\stopclc

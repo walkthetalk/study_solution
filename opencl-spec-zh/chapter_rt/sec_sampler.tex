@@ -1,0 +1,11 @@
+\section{採樣器對象}
+
+\cnglo{sampler}對象所描述的是當\cnglo{kernel}讀取圖像時怎樣對其採樣。
+\cnglo{kernel}中使用內建函式讀取圖像時將\cnglo{sampler}作為引數之一。
+此引數可以是用 OpenCL 函式創建的\cnglo{sampler}對象，
+也可以是\cnglo{kernel}中聲明的\cnglo{sampler}。
+本節我們將討論如何利用 OpenCL 函式創建\cnglo{sampler}對象。
+
+\input{chapter_rt/sec_sampler/create.tex}
+\input{chapter_rt/sec_sampler/query.tex}
+

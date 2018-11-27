@@ -1,0 +1,18 @@
+\startcomponent cpnnumcom
+\product opencl-spec-zh
+
+\chapter{OpenCL 數值符合性}
+本章將描述 C99 和 IEEE 754 的一些特性，
+所有符合 OpenCL 的\cnglo{device}都必須支持這些特性。
+
+本章所描述的功能都是針對單精度浮點數的。
+目前，只要求支持單精度浮點數，而雙精度浮點數是一個可選特性。
+
+\input{chapter_onc/sec_round_mode.tex}
+\input{chapter_onc/sec_inf_nan_denorm.tex}
+\input{chapter_onc/sec_fp_exception.tex}
+\input{chapter_onc/sec_relative_err.tex}
+\input{chapter_onc/sec_edge_case_behavior.tex}
+
+\stopcomponent
+

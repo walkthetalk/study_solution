@@ -1,0 +1,224 @@
+\subsection{創建程式對象}
+
+\topclfunc{clCreateProgramWithSource}
+
+\startCLFUNC
+cl_program clCreateProgramWithSource (cl_context context,
+			cl_uint count,
+			const char **strings,
+			const size_t *lengths,
+			cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式可以創建一個\cnglo{programobj}，並將 \carg{strings} 中的源碼裝載到這個對象中。
+此對象所關聯的\cnglo{device}就是 \carg{context} 所關聯的\cnglo{device}。
+\carg{strings} 中的源碼是 OpenCL C 程式源碼、頭檔，
+或者自定義的代碼（對應與自定義\cnglo{device}，並且需要在線編譯器的支持）。
+
+\carg{context} 是一個 OpenCL \cnglo{context}。
+
+\carg{strings} 是一個字串陣列，有 \carg{count} 個元素，
+字串可以 null 終止，這些字串就構成了源碼。
+
+\carg{lengths} 也是一個陣列，其中的元素代表字符個數（字串長度）。
+如果某個元素是零，則相應的字串以 null 終止。
+如果 \carg{lengths} 是 \cmacro{NULL}，則 \carg{strings} 中所有字串都以 null 終止。
+所有大於零的值都不包括 null 終止符。
+
+\carg{errcode_ret} 會返回相應的錯誤碼。
+如果 \carg{errcode_ret} 是 \cmacro{NULL}，則不會返回錯誤碼。
+
+如果成功創建了\cnglo{programobj}，則 \capi{clCreateProgramWidthSource} 會將其返回，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，如果 \carg{context} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{count} 是零，或者 \carg{strings} 或其中任一項是 \cmacro{NULL}。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clCreateProgramWithBinary}
+
+\startCLFUNC
+cl_program clCreateProgramWithBinary (cl_context context,
+			cl_uint num_devices,
+			const cl_device_id *device_list,
+			const size_t *lengths,
+			const unsigned char **binaries,
+			cl_int *binary_status,
+			cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式會創建一個\cnglo{programobj}，並將 \carg{binary} 中的內容裝載到此對象中。
+
+\carg{context} 是一個 OpenCL \cnglo{context}。
+
+\carg{device_list} 指向 \carg{context} 中的\cnglo{device}。
+\carg{device_list} 不能是 \cmacro{NULL}。
+所裝載的二元碼會在此清單中的\cnglo{device}上執行。
+
+\carg{num_devices} 即 \carg{device_list} 中\cnglo{device}的數目。
+
+此\cnglo{programobj}所關聯的\cnglo{device}就是 \carg{device_list} 中的\cnglo{device}。
+而 \carg{device_list} 中的\cnglo{device}又必須是 \carg{context} 關聯的\cnglo{device}。
+
+\carg{lengths} 是一個陣列，其元素是所裝載\cnglo{program}二元碼的字節數。
+
+\carg{binaries} 也是一個陣列，每個元素都指向所要加載的\cnglo{program}二元碼。
+$binaries[i]$ 對應於 $device\_list[i]$，其大小為 $lengths[i]$。
+$lengths[i]$ 不能是零，並且 $binaries[i]$ 不能是 \cmacro{NULL}。
+
+\carg{binaries} 中的內容為下列之一：
+\startigBase
+\item \cnglo{program}執行體，可以運行在 \carg{context} 所關聯的\cnglo{device}上；
+
+\item 為 \carg{context} 中的\cnglo{device}編譯過的\cnglo{program}；或
+
+\item 為 \carg{context} 中的\cnglo{device}編譯過的庫。
+\stopigBase
+
+\cnglo{program}二元碼可能包含下列之一，或二者兼有：
+\startigBase
+\item 針對特定\cnglo{device}（device-specific）的代碼，和/或
+\item 針對特定實作（implementation-specific）的中間表示
+（intermediate representation，简称 IR）（將被轉換成針對特定\cnglo{device}的代碼）。
+\stopigBase
+
+\carg{binary_status} 將返回
+\carg{device_list} 中\cnglo{device}所對應的\cnglo{program}二元碼是否裝載成功。
+他是一個有 \carg{num_devices} 個元素的陣列。
+如果 $device\_list[i]$ 所對應的\cnglo{program}二元碼裝載成功，
+則 $binary\_status[i]$ 為 \cenum{CL_SUCCESS}；
+如果 $lengths[i]$ 是零或者 $binaries[i]$ 是 \cmacro{NULL}，
+則 $binary\_status[i]$ 為 \cenum{CL_INVALID_VALUE}；
+如果\cnglo{program}二元碼無效，則 $binary\_status[i]$ 為 \cenum{CL_INVALID_BINARY}。
+
+\carg{errcode_ret} 會返回相應的錯誤碼。
+如果 \carg{errcode_ret} 是 \cmacro{NULL}，則不會返回錯誤碼。
+
+如果成功創建了\cnglo{programobj}，則 \capi{clCreateProgramWithBinary} 會將其返回，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，如果 \carg{context} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{device_list} 是 \cmacro{NULL}，或者 \carg{num_devices} 是零。
+
+\item \cenum{CL_INVALID_DEVICE}，
+如果 \carg{device_list} 中的 OpenCL \cnglo{device}不在 \carg{context} 中。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{lengths} 或 \carg{binaries} 是 \cmacro{NULL}，
+或者任一項 $lengths[i]$ 是零，或者 $binaries[i]$ 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_BINARY}，
+如果任一\cnglo{program}二元碼無效。
+\carg{binary_status} 會返回對應於每個\cnglo{device}的狀態。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+OpenCL 中，\cnglo{app}可以使用\cnglo{program}源碼或二元碼創建\cnglo{programobj}，
+並構建相應的\cnglo{program}執行體。
+這非常有用，當\cnglo{program}在系統中相應\cnglo{device}上第一次使用時，
+\cnglo{app}可以裝載\cnglo{program}源碼並編譯、鏈接，在線生成\cnglo{program}執行體。
+然後\cnglo{app}就可以查詢這些執行體並將其緩存起來，
+後續再使用此\cnglo{program}時就不必編譯、鏈接了。
+\cnglo{app}可以讀取並加載緩存起來的執行體，
+從而很大程度上減少\cnglo{app}花在初始化上的時間。
+
+\topclfunc{clCreateProgramWithBuiltInKernels}
+
+\startCLFUNC
+cl_program clCreateProgramWithBuiltInKernels(
+			cl_context context,
+			cl_uint num_devices,
+			const cl_device_id *device_list,
+			const char *kernel_names,
+			cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式會創建一個\cnglo{programobj}，並將內建\cnglo{kernel}的相關資訊裝載到此對象中。
+
+\carg{context} 是一個 OpenCL \cnglo{context}。
+
+\carg{device_list} 指向 \carg{context} 中的\cnglo{device}。
+\carg{device_list} 不能是 \cmacro{NULL}。
+所加載的內建\cnglo{kernel}會在此清單中的\cnglo{device}上執行。
+
+\carg{num_devices} 即 \carg{device_list} 中\cnglo{device}的數目。
+
+此\cnglo{programobj}所關聯的\cnglo{device}就是 \carg{device_list} 中的\cnglo{device}。
+而 \carg{device_list} 中的\cnglo{device}又必須是 \carg{context} 所關聯的\cnglo{device}。
+
+\carg{kernel_names} 是一組內建\cnglo{kernel}的名字，以分號分隔。
+
+\carg{errcode_ret} 會返回相應的錯誤碼。
+如果 \carg{errcode_ret} 是 \cmacro{NULL}，則不會返回錯誤碼。
+
+如果成功創建了\cnglo{programobj}，
+則 \capi{clCreateProgramWithBuiltInKernels} 會將其返回，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，如果 \carg{context} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{device_list} 是 \cmacro{NULL}，或者 \carg{num_devices} 是零。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{kernel_names} 是 \cmacro{NULL}，
+或者對於 \carg{kernel_names} 中的任一\cnglo{kernel}，
+\carg{device_list} 中的所有\cnglo{device}都不支持。
+
+\item \cenum{CL_INVALID_DEVICE}，
+如果 \carg{device_list} 中的 OpenCL \cnglo{device} 不在 \carg{context} 中。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clRetainProgram}
+
+\startCLFUNC
+cl_int clRetainProgram (cl_program program)
+\stopCLFUNC
+
+此函式會使 \carg{program} 的\cnglo{refcnt}增一。
+\capi{clRetainProgram} 會實施隱式的\cnglo{retain}。
+執行成功後會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤的一種：
+\startigBase
+\item \cenum{CL_INVALID_PROGRAM}，如果 \carg{program} 無效。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clReleaseProgram}
+
+\startCLFUNC
+cl_int clReleaseProgram (cl_program program)
+\stopCLFUNC
+
+此函式會使 \carg{program} 的\cnglo{refcnt}減一。
+當所有與 \carg{program} 關聯的\cnglo{kernelobj}都被刪除，
+並且 \carg{program} 的\cnglo{refcnt}變成零，此\cnglo{programobj}就會被刪除。
+執行成功後會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤的一種：
+\startigBase
+\item \cenum{CL_INVALID_PROGRAM}，如果 \carg{program} 無效。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

@@ -1,0 +1,12 @@
+\startED[\ctype{cl_mem_migration}]
+
+\clED{CL_MIGRATE_MEM_OBJECT_HOST}{
+  表明要將\cnglo{memobj}遷移到\cnglo{host}上，無視\cnglo{cmdq}。
+}
+
+\clED{CL_MIGRATE_MEM_OBJECT_CONTENT_UNDEFINED}{
+  表明遷移後，\cnglo{memobj}的內容是未定義的。
+  遷移時不會招致遷移內容所帶來的開銷。
+}
+
+\stopED

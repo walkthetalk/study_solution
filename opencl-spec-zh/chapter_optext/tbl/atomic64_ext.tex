@@ -1,0 +1,119 @@
+% atomic_min
+\startbuffer[funcproto:atomic64_min]
+long atomic_min (
+	volatile __global long *p,
+	long val)
+long atomic_min (
+	volatile __local long *p,
+	long val)
+
+ulong atomic_min (
+	volatile __global ulong *p,
+	ulong val)
+ulong atomic_min (
+	volatile __local ulong *p,
+	ulong val)
+\stopbuffer
+\startbuffer[funcdesc:atomic64_min]
+讀取 \carg{p} 所指向的 64 位值（記為 \math{old}）。
+計算 \math{\mapiemp{min}(old, \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_max
+\startbuffer[funcproto:atomic64_max]
+long atomic_max (
+	volatile __global long *p,
+	long val)
+long atomic_max (
+	volatile __local long *p,
+	long val)
+
+ulong atomic_max (
+	volatile __global ulong *p,
+	ulong val)
+ulong atomic_max (
+	volatile __local ulong *p,
+	ulong val)
+\stopbuffer
+\startbuffer[funcdesc:atomic64_max]
+讀取 \carg{p} 所指向的 64 位值（記為 \math{old}）。
+計算 \math{\mapiemp{max}(old, \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_and
+\startbuffer[funcproto:atomic64_and]
+long atomic_and (
+	volatile __global long *p,
+	long val)
+long atomic_and (
+	volatile __local long *p,
+	long val)
+
+ulong atomic_and (
+	volatile __global ulong *p,
+	ulong val)
+ulong atomic_and (
+	volatile __local ulong *p,
+	ulong val)
+\stopbuffer
+\startbuffer[funcdesc:atomic64_and]
+讀取 \carg{p} 所指向的 64 位值（記為 \math{old}）。
+計算 \math{(old \mcmm{&} \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_or
+\startbuffer[funcproto:atomic64_or]
+long atomic_or (
+	volatile __global long *p,
+	long val)
+long atomic_or (
+	volatile __local long *p,
+	long val)
+
+ulong atomic_or (
+	volatile __global ulong *p,
+	ulong val)
+ulong atomic_or (
+	volatile __local ulong *p,
+	ulong val)
+\stopbuffer
+\startbuffer[funcdesc:atomic64_or]
+讀取 \carg{p} 所指向的 64 位值（記為 \math{old}）。
+計算 \math{(old \mcmm{|} \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+% atomic_xor
+\startbuffer[funcproto:atomic64_xor]
+long atomic_xor (
+	volatile __global long *p,
+	long val)
+long atomic_xor (
+	volatile __local long *p,
+	long val)
+
+ulong atomic_xor (
+	volatile __global ulong *p,
+	ulong val)
+ulong atomic_xor (
+	volatile __local ulong *p,
+	ulong val)
+\stopbuffer
+\startbuffer[funcdesc:atomic64_xor]
+讀取 \carg{p} 所指向的 64 位值（記為 \math{old}）。
+計算 \math{(old \mcmm{^} \marg{val})} 並將結果存儲到 \carg{p} 所指位置中。
+此函式返回 \math{old}。
+\stopbuffer
+
+
+% begin table
+\startCLFD
+\clFD{atomic64_min}
+\clFD{atomic64_max}
+\clFD{atomic64_and}
+\clFD{atomic64_or}
+\clFD{atomic64_xor}
+\stopCLFD

@@ -1,0 +1,99 @@
+% async_work_group_copy
+\startbuffer[funcproto:async_work_group_copy]
+event_t async_work_group_copy (
+	__local gentype *dst,
+	const __global gentype *src,
+	size_t num_gentypes,
+	event_t event)
+event_t async_work_group_copy (
+	__global gentype *dst,
+	const __local gentype *src,
+	size_t num_gentypes,
+	event_t event)
+\stopbuffer
+\startbuffer[funcdesc:async_work_group_copy]
+從 \carg{src} 異步拷貝 \carg{num_gentypes} 個 \ctype{gentype} 元素
+到 \carg{dst} 中。
+\cnglo{workgrp}中的所有\cnglo{workitem}都會實施此異步拷貝，
+因此在\cnglo{workgrp}中，
+使用相同引數值執行\cnglo{kernel}的所有\cnglo{workitem}必須都能執行到此函式，
+否則結果未定義。
+
+返回的\cnglo{evtobj}可由 \capi{wait_group_events} 用來等待異步拷貝完畢。
+可以使用引數 \carg{event} 將 \capi{async_work_group_copy} 與之前的異步拷貝關聯在一起，
+從而使得多個異步拷貝間可共享同一事件；否則 \carg{event} 必須是零。
+
+如果引數 \carg{event} 非零，則會將其中的\cnglo{evtobj}返回。
+
+此函式不會對源數據實施隱式同步，如在拷貝前執行 \capi{barrier}。
+\stopbuffer
+
+% async_work_group_strided_copy
+\startbuffer[funcproto:async_work_group_strided_copy]
+event_t async_work_group_strided_copy (
+	__local gentype *dst,
+	const __global gentype *src,
+	size_t num_gentypes,
+	size_t src_stride,
+	event_t event)
+event_t async_work_group_strided_copy (
+	__global gentype *dst,
+	const __local gentype *src,
+	size_t num_gentypes,
+	size_t dst_stride,
+	event_t event)
+\stopbuffer
+\startbuffer[funcdesc:async_work_group_strided_copy]
+從 \carg{src} 異步採集 \carg{num_gentypes} 個 \ctype{gentype} 元素
+到 \carg{dst} 中。
+參數 \carg{src_stride} 為從 \carg{src} 中讀取元素時所用跨距。
+參數 \carg{dst_stride} 為將元素寫入 \carg{dst} 中時所用跨距。
+\cnglo{workgrp}中的所有\cnglo{workitem}都會實施此異步採集，
+因此在\cnglo{workgrp}中，
+使用相同引數值執行\cnglo{kernel}的所有\cnglo{workitem}必須都能執行到此函式，
+否則結果未定義。
+
+返回的\cnglo{evtobj}可由 \capi{wait_group_events} 用來等待異步拷貝完畢。
+可以使用引數 \carg{event} 將 \capi{async_work_group_strided_copy} 與之前的異步拷貝
+關聯在一起，
+從而使得多個異步拷貝間可共享同一事件；
+否則 \carg{event} 必須是零。
+
+如果引數 \carg{event} 非零，則會將其中的\cnglo{evtobj}返回。
+
+此函式不會對源數據實施隱式同步，如在拷貝前執行 \capi{barrier}。
+
+如果 \carg{src_stride} 或 \carg{dst_stride} 是 0，
+或者拷貝時， \carg{src_stride} 或 \carg{dst_stride} 使得
+ \carg{src} 或 \carg{dst} 指位器超過了位址空間的上界，
+則 \capi{async_work_group_strided_copy} 的行為未定義。
+\stopbuffer
+
+% wait_group_events
+\startbuffer[funcproto:wait_group_events]
+void wait_group_events (
+	int num_events,
+	event_t *event_list)
+\stopbuffer
+\startbuffer[funcdesc:wait_group_events]
+等待用來表示 \capi{async_work_group_copy} 操作完成的事件。
+實施等待後會釋放 \carg{event_list} 中的\cnglo{evtobj}。
+對於某個\cnglo{workgrp}中的\cnglo{workitem}而言，
+如果執行\cnglo{kernel}時
+用的 \carg{num_events} 以及 \carg{event_list} 中的\cnglo{evtobj}一樣，
+則它們必須都能執行到此函式；
+否則結果未定義。
+\stopbuffer
+
+% prefetch
+\startbuffer[funcproto:prefetch]
+void prefetch (
+	const __global gentype *p,
+	size_t num_gentypes)
+\stopbuffer
+\startbuffer[funcdesc:prefetch]
+預取 \math{\marg{num_gentypes}
+ \times \mapiemp{sizeof}(\mtype{gentype})} 字節到全局緩存中。
+預取指令會作用到\cnglo{workgrp}中的\cnglo{workitem}上，
+不會影響\cnglo{kernel}的功能性行為。
+\stopbuffer

@@ -1,0 +1,129 @@
+\subsection{映射緩衝對象}
+
+\topclfunc{clEnqueueMapBuffer}
+
+\startCLFUNC
+void * clEnqueueMapBuffer (cl_command_queue command_queue,
+			cl_mem buffer,
+			cl_bool blocking_map,
+			cl_map_flags map_flags,
+			size_t offset,
+			size_t size,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event,
+			cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式所入隊的\cnglo{cmd}會將 \carg{buffer} 的某個區域
+映射到\cnglo{host}的位址空間中，並返回新位址。
+
+\carg{command_queue} 必須是一個有效的\cnglo{cmd}。
+
+\carg{blocking_map} 表明此映射操作是{\ftRef{阻塞的}}還是{\ftRef{非阻塞的}}。
+
+如果 \carg{blocking_map} 是 \cenum{CL_TRUE}，即映射\cnglo{cmd}是阻塞的，
+直到映射完成， \capi{clEnqueueMapBuffer} 才會返回，
+\cnglo{app}可以用返回的指位器存取所映射區域的內容。
+
+如果 \carg{blocking_map} 是 \cenum{CL_FALSE}，即映射\cnglo{cmd}是非阻塞的，
+直到映射\cnglo{cmd}完成後，才能使用返回的指位器。
+參數 \carg{event} 會返回一個\cnglo{evtobj}，可用來查詢映射\cnglo{cmd}的執行情況。
+映射\cnglo{cmd}完成後，
+\cnglo{app}就可以使用返回的指位器存取映射區域的內容了。
+
+\carg{map_flags} 是位欄，參見\reftab{clmapflags}。
+
+\carg{buffer} 是一個\cnglo{bufobj}，
+必須與 \carg{command_queue} 位於同一 OpenCL \cnglo{context}中。
+
+\carg{offset} 和 \carg{size} 即所要映射的區域在\cnglo{bufobj}中的偏移量和大小，
+單位都是字節。
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list}
+中列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是 0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點，
+並且必須與 \carg{command_queue} 位於同一個\cnglo{context}中。
+此函式返回後，就可以回收並重用 \carg{event_wait_list} 所關聯的內存了。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}完成。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+\carg{event} 不能屬於 \carg{event_wait_list}。
+
+\carg{errcode_ret} 用來返回錯誤碼。如果是 \cmacro{NULL}，則不會返回錯誤碼。
+
+\placetable[here][tab:clmapflags]
+{所支持的 \ctype{cl_map_flags}}
+{\input{chapter_rt/tbl/tbl_clmapflags.tex}}
+
+如果執行成功， \capi{clEnqueueMapBuffer} 會返回映射區域的指位器，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue} 和 \carg{buffer} 位於不同的\cnglo{context}中，
+或者 \carg{command_queue} 和 \carg{event_wait_list} 中的事件位於不同的\cnglo{context}中。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，如果 \carg{buffer} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \math{(\marg{offset}, \marg{size})} 所指定的區域越限，
+或者 \carg{size} 是 0，
+或者 \carg{map_flags} 的值無效。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_MISALIGNED_SUB_BUFFER_OFFSET}，
+如果 \carg{buffer} 是子\cnglo{bufobj}，
+且創建此對象時所指定的 \carg{offset} 沒有與 \carg{command_queue} 所關聯\cnglo{device}
+的 \cenum{CL_DEVICE_MEM_BASE_ADDR_ALIGN} 對齊。
+
+\item \cenum{CL_MAP_FAILURE}，如果映射失敗。
+對於用 \cenum{CL_MEM_USE_HOST_PTR} 或 \cenum{CL_MEM_ALLOC_HOST_PTR}
+創建的\cnglo{bufobj}不能出現此錯誤。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果創建 \carg{buffer} 時指定了 \cenum{CL_MEM_HOST_WRITE_ONLY} 或 \cenum{CL_MEM_HOST_NO_ACCESS},
+而在 \carg{map_flags} 中設置了 \cenum{CL_MAP_READ}；
+或者創建 \carg{buffer} 時指定了 \cenum{CL_MEM_HOST_READ_ONLY} 或 \cenum{CL_MEM_HOST_NO_ACCESS}，
+而在 \carg{map_flags} 中設置了 \cenum{CL_MAP_WRITE} 或 \cenum{CL_MAP_WRITE_INVALIDATE_REGION}。
+
+\item \cenum{CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST}，
+如果映射操作是阻塞的，且 \carg{event_wait_list} 中任一事件的執行狀態是負整數。
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，如果為 \carg{buffer} 分配內存失敗。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+所返回的指位器僅可用於存取所映射的區域 \math{(\marg{offset}, \marg{size})}，雖然實作可能映射更大的區域。
+對於存取此區域外的內容，其結果\cnglo{undef}。
+
+\startnotepar
+如果創建\cnglo{bufobj}時在 \carg{mem_flags} 中指定了 \cenum{CL_MEM_USE_HOST_PTR}，
+則：
+\startigBase
+\item 當 \capi{clEnqueueMapBuffer} 所入隊的\cnglo{cmd}完成後，
+保證 \capi{clCreateBuffer} 的 \carg{host_ptr} 中所映射區域的內容是最新的。
+
+\item \capi{clEnqueueMapBuffer} 所返回的指位器得自創建\cnglo{bufobj}時所用的 \carg{host_ptr}。
+\stopigBase
+\stopnotepar
+
+被映射過的\cnglo{bufobj}使用 \capi{clEnqueueUnmapMemObject} 進行解映射。
+參見\refsection{unmap}。

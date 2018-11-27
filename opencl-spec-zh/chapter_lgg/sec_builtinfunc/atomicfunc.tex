@@ -1,0 +1,21 @@
+\subsection[section:atomicFunc]{原子函式}
+
+OpenCL C 編程語言實現了\reftab{atomicFunc}中所列函式，
+可用來對位於 \cqlf{__global} 或 \cqlf{__local} 內存中的 32 位帶符號、
+無符號整數以及單精度浮點數\footnote{
+只有 \capi{atomic_xchg} 才支持單精度浮點數據型別。}進行原子操作。
+
+\startnotepar
+OpenCL 1.0 規範的節 9.5 和節 9.6 中列有如下擴展：
+\startigBase
+\item \clext{cl_khr_global_int32_base_atomics}
+\item \clext{cl_khr_global_int32_extended_atomics}
+\item \clext{cl_khr_local_int32_base_atomics}
+\item \clext{cl_khr_local_int32_extended_atomics}
+\stopigBase
+其中所定義的帶有前綴 \capi{atom_} 的內建原子函式也在支持之列。
+\stopnotepar
+
+\placetable[here,split][tab:atomicFunc]
+{內建原子函式}
+{\input{chapter_lgg/tbl/tbl_atomicfunc.tex}}

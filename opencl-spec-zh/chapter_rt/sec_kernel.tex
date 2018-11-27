@@ -1,0 +1,11 @@
+\section{內核對象}
+
+\cnglo{kernel}就是\cnglo{program}中聲明的一個函式。
+對於\cnglo{program}中的任一函式，
+都可以通過加上限定符 \cqlf{__kernel} 將其標識為\cnglo{kernel}。
+\cnglo{kernelobj}中封裝了\cnglo{program}中的某個 \cqlf{__kernel} 函式
+以及執行此函式時所用的引數。
+
+\input{chapter_rt/sec_kernel/create.tex}
+\input{chapter_rt/sec_kernel/setarg.tex}
+\input{chapter_rt/sec_kernel/query.tex}

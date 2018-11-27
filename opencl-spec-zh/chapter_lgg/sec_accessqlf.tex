@@ -1,0 +1,25 @@
+\section{存取限定符}
+
+\cnglo{kernel}參數中的\cnglo{imgobj}可以聲明為只讀的或只寫的。
+\cnglo{kernel}不能對一個\cnglo{imgobj}即讀又寫。
+對於\cnglo{kernel}參數中的\cnglo{imgobj}，
+如果\cnglo{kernel}要讀取他，則聲明時要加上限定符 \cqlfemp{__read_only} （或 \cqlfemp{read_only}）；
+如果\cnglo{kernel}要寫入他，則聲明時要加上限定符 \cqlfemp{__write_only} （或 \cqlfemp{write_only}）。
+缺省的限定符為 \cqlfemp{__read_only}。
+
+下面例子：
+\startclc
+__kernel void foo (read_only image2d_t imageA,
+		   write_only image2d_t imageB)
+{
+	....
+}
+\stopclc
+\cvar{imageA} 是一個只讀的 2D \cnglo{imgobj}，
+而 \cvar{imageB} 是一個只寫的 2D \cnglo{imgobj}。
+
+下列保留關鍵字僅用作存取限定符，不作他用：
+\startigBase
+\item \cqlf{__read_only}、 \cqlf{__write_only}、 \cqlf{__read_write}、
+\item \cqlf{read_only}、 \cqlf{write_only} 和 \cqlf{read_write}。
+\stopigBase

@@ -1,0 +1,511 @@
+\startETD[cl_device_info][返回型別]
+
+\clETD{CL_DEVICE_TYPE}{cl_device_type}{
+OpenCL \cnglo{device}類型，當前支持：
+\startigBase
+\item \cenum{CL_DEVICE_TYPE_CPU}，
+\item \cenum{CL_DEVICE_TYPE_GPU}，
+\item \cenum{CL_DEVICE_TYPE_ACCELERATOR}，
+\item \cenum{CL_DEVICE_TYPE_DEFAULT}，或者
+\item 以上值的组合，或者
+\item \cenum{CL_DEVICE_TYPE_CUSTOM}。
+\stopigBase
+}
+
+\clETD{CL_DEVICE_VENDOR_ID}{cl_uint}{
+唯一的\cnglo{device}供應商標識符。例如可以是 PCIe ID。
+}
+
+\clETD{CL_DEVICE_MAX_COMPUTE_UNITS}{cl_uint}{
+OpenCL \cnglo{device}上的並行\cnglo{computeunit}的數目。最小值是 1。
+}
+
+\clETD{CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS}{cl_uint}{
+\cnglo{dppm}中所用全局和局部\cnglo{workitem} ID 的最大維數
+（參見 \capi{clEnqueueNDRangeKernel}）。
+對於類型不是 \cenum{CL_DEVICE_TYPE_CUSTOM} 的\cnglo{device}，其最小值是 3。
+}
+
+\clETD{CL_DEVICE_MAX_WORK_ITEM_SIZES}{size_t[]}{
+對\capi{clEnqueueNDRangeKernel}而言，
+\cnglo{workgrp}中每個維度上可以指派\cnglo{workitem}的最大數目。
+
+返回 \carg{n} 個型別為 \ctype{size_t} 的表項。
+其中 \carg{n} 是查詢 \cenum{CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS} 時所返回的值。
+
+對於不是 \cenum{CL_DEVICE_TYPE_CUSTOM} 的\cnglo{device}，最小值是\math{(1, 1, 1)}。
+}
+
+\clETD{CL_DEVICE_MAX_WORK_GROUP_SIZE}{size_t}{
+用\cnglo{dppm}執行\cnglo{kernel}時，
+\cnglo{workgrp}中所能容納\cnglo{workitem}的最大數目
+（参见 \capi{clEnqueueNDRangeKernel}）。
+最小值是 1。
+}
+
+\clETDMulti{%
+\cenum{CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR}\par
+\cenum{CL_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT}\par
+\cenum{CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT}\par
+\cenum{CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG}\par
+\cenum{CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT}\par
+\cenum{CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE}\par
+\cenum{CL_DEVICE_PREFERRED_VECTOR_WIDTH_HALF}
+}{cl_uint}{
+可以放入矢量中的內建標量型別所期望的原生矢量的寬度。
+矢量寬度定義為可以可以容納標量元素的數目。
+
+如果不支持雙精度浮點數，\cenum{CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE} 必須返回0。
+
+如果不支持擴展 \clext{cl_khr_fp16}，
+\cenum{CL_DEVICE_PREFERRED_VECTOR_WIDTH_HALF} 必須返回0。
+}
+
+\clETDMulti{
+\cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_CHAR}\par
+\cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_SHORT}\par
+\cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_INT}\par
+\cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_LONG}\par
+\cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_FLOAT}\par
+\cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE}\par
+\cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_HALF}
+}{cl_uint}{
+返回原生 ISA 矢量寬度。
+此矢量寬度定義為所能容納標量元素的數目。
+
+如果不支持雙精度浮點數，\cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE} 必須返回0。
+
+如果不支持擴展 \clext{cl_khr_fp16}，
+\cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_HALF} 必須返回0。
+}
+
+\clETD{CL_DEVICE_MAX_CLOCK_FREQUENCY}{cl_uint}{
+\cnglo{device}的時鐘頻率可以配置成的最大值，單位：MHz。
+}
+
+\clETD{CL_DEVICE_ADDRESS_BITS}{cl_uint}{
+計算設備的位址空間缺省大小，無符號整數，單位：bit。
+當前支持 32 位或 64 位。
+如果嵌入式規格報告的值是 64，則必須支持擴展 \clext{cles_khr_int64}。%
+}
+
+\problem{多了一個 CL_DEVICE_MAX_WORK_GROUP_SIZE}
+
+\clETD{CL_DEVICE_MAX_MEM_ALLOC_SIZE}{cl_ulong}{\problem{unsigned long long}
+所能分配的\cnglo{memobj}大小的最大值，單位：字節。
+對於類型不是 \cenum{CL_DEVICE_TYPE_CUSTOM} 的\cnglo{device}，此值最小為：
+
+\math{max(\menum{CL_DEVICE_GLOBAL_MEM_SIZE} * 1/4, 1 * 1024 * 1024)}%
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_IMAGE_SUPPORT}{cl_bool}{
+如果 OpenCL \cnglo{device}支持圖像，則為 \cenum{CL_TRUE}，否則為 \cenum{CL_FALSE}。
+}
+
+\clETD{CL_DEVICE_MAX_READ_IMAGE_ARGS}{cl_uint}{
+\cnglo{kernel}可以同時讀取多少\cnglo{imgobj}。
+如果 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，則此值至少是 8。%
+}
+
+\clETD{CL_DEVICE_MAX_WRITE_IMAGE_ARGS}{cl_uint}{
+\cnglo{kernel}可以同時寫入多少\cnglo{imgobj}。
+如果 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，則此值至少是 1。%
+}
+
+\clETD{CL_DEVICE_IMAGE2D_MAX_WIDTH}{size_t}{
+2D 图像的最大寬度，單位：像素。%
+如果 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，則此值至少是 2048。%
+}
+
+\clETD{CL_DEVICE_IMAGE2D_MAX_HEIGHT}{size_t}{
+2D 圖像的最大高度，單位：像素。
+如果 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，則此值至少是 2048。%
+}
+
+\clETD{CL_DEVICE_IMAGE3D_MAX_WIDTH}{size_t}{
+3D 圖像的最大寬度，單位：像素。
+如果 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，則此值至少是 0。%
+}
+
+\clETD{CL_DEVICE_IMAGE3D_MAX_HEIGHT}{size_t}{
+3D 圖像的最大高度，單位：像素。
+如果 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，則此值至少是 0。%
+}
+
+\clETD{CL_DEVICE_IMAGE3D_MAX_DEPTH}{size_t}{
+3D 圖像的最大深度，單位：像素。
+如果 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，則此值至少是 0。%
+}
+
+\clETD{CL_DEVICE_IMAGE_MAX_BUFFER_SIZE}{size_t}{
+由\cnglo{bufobj}所創建的 1D 圖像的最大像素數。
+如果 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，則此值至少是 2048。%
+}
+
+\clETD{CL_DEVICE_IMAGE_MAX_ARRAY_SIZE}{size_t}{
+1D 或 2D 圖像陣列中圖像的最大數目。
+如果 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，則此值至少是 256。%
+}
+
+\clETD{CL_DEVICE_MAX_SAMPLERS}{cl_uint}{
+一個\cnglo{kernel}內最多可以使用多少個\cnglo{sampler}。
+關於\cnglo{sampler}的細節請參考\refsection{imgRwFunc}。
+
+如果 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，則此值至少是 8。%
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_MAX_PARAMETER_SIZE}{size_t}{
+\cnglo{kernel}引數的最大字節數。
+
+如果設備類型不是 \cenum{CL_DEVICE_TYPE_CUSTOM}，則此值至少要是 256。%
+}
+
+\clETD{CL_DEVICE_MEM_BASE_ADDR_ALIGN}{cl_uint}{
+如果設備類型不是 \cenum{CL_DEVICE_TYPE_CUSTOM}，
+至少要是\cnglo{device}所支持的 OpenCL 內建數據型別中最大的那種的大小，單位：bit。
+（ FULL 規格中是 \ctype{long16}，EMBEDDED 規格中是 \ctype{long16} 或 \ctype{int16} ）
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_SINGLE_FP_CONFIG}{cl_device_fp_config}{
+描述\cnglo{device}的單精度浮點能力。此位欄支持下列值：
+\startigBase
+\item \cenum{CL_FP_DENORM}——支持去規格化數（ denorm ）。
+\item \cenum{CL_FP_INF_NAN}——支持 INF 和 qNaN。
+\item \cenum{CL_FP_ROUND_TO_NEAREST}——支持捨入為最近偶數。
+\item \cenum{CL_FP_ROUND_TO_ZERO}——支持向零捨入。
+\item \cenum{CL_FP_ROUND_TO_INF}——支持向正無窮和負無窮捨入。
+\item \cenum{CL_FP_FMA}——支持 IEEE754-2008 中的積和熔加运算（fused multiply-add, FMA）。
+\item \cenum{CL_FP_CORRECTLY_ROUNDED_DIVIDE_SQRT}——除法和開方可以按 IEEE754 規範進行正確的捨入。
+\item \cenum{CL_FP_SOFT_FLOAT}——軟件中實現了基本的浮點運算（加、減、乘）。
+\stopigBase
+
+如果\cnglo{device}類型不是 \cenum{CL_DEVICE_TYPE_CUSTOM}，其浮點能力至少要是：
+\cenum{CL_FP_ROUND_TO_ZERO} 或 \cenum{CL_FP_ROUND_TO_NEAREST}。%
+}
+
+\clETD{CL_DEVICE_DOUBLE_FP_CONFIG}{cl_device_fp_config}{
+描述\cnglo{device}的雙精度浮點能力。此位欄支持下列值：
+\startigBase
+\item \cenum{CL_FP_DENORM}——支持去規格化數。
+\item \cenum{CL_FP_INF_NAN}——支持 INF 和 qNaN。
+\item \cenum{CL_FP_ROUND_TO_NEAREST}——支持捨入為最近偶數。
+\item \cenum{CL_FP_ROUND_TO_ZERO}——支持向零捨入。
+\item \cenum{CL_FP_ROUND_TO_INF}——支持向正無窮和負無窮捨入。
+\item \cenum{CL_FP_FMA}——支持 IEEE75-2008 中的積和熔加运算（fused multiply-add, FMA）。
+\item \cenum{CL_FP_SOFT_FLOAT}——軟件中實現了基本的浮點運算（加、減、乘）。
+\stopigBase
+
+由於雙精度浮點是一個可選特性，所以最小的雙精度浮點能力可以是0。
+
+而如果\cnglo{device}支持雙精度浮點，則其能力至少要是：
+
+\cenum{CL_FP_FMA} \textbar
+
+\cenum{CL_FP_ROUND_TO_NEAREST} \textbar
+
+\cenum{CL_FP_ROUND_TO_ZERO} \textbar
+
+\cenum{CL_FP_ROUND_TO_INF} \textbar
+
+\cenum{CL_FP_INF_NAN} \textbar
+
+\cenum{CL_FP_DENORM}。
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_GLOBAL_MEM_CACHE_TYPE}{cl_device_mem_cache_type}{
+所支持的全局內存緩存的類型。其值可以是：
+\startigBase
+\item \cenum{CL_NONE},
+\item \cenum{CL_READ_ONLY_CACHE} 和
+\item \cenum{CL_READ_WRITE_CACHE}。
+\stopigBase
+}
+
+\clETD{CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE}{cl_uint}{
+\cnglo{glbmem}緩存列（cache line）的字節數。
+}
+
+\clETD{CL_DEVICE_GLOBAL_MEM_CACHE_SIZE}{cl_ulong}{
+\cnglo{glbmem}緩存的字節數。
+}
+
+\clETD{CL_DEVICE_GLOBAL_MEM_SIZE}{cl_ulong}{
+全局\cnglo{device}內存的字節數。
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE}{cl_ulong}{
+一次所能分配的常量緩衝區的最大字節數。
+對於類型不是 \cenum{CL_DEVICE_TYPE_CUSTOM} 的\cnglo{device}，最小值是 1KB。%
+}
+
+\clETD{CL_DEVICE_MAX_CONSTANT_ARGS}{cl_uint}{
+單個\cnglo{kernel}中，最多能有多少個參數在聲明時帶有限定符\cqlf{__constant}。
+對於類型不是 \cenum{CL_DEVICE_TYPE_CUSTOM} 的\cnglo{device}，最小值是 4。
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_LOCAL_MEM_TYPE}{cl_device_local_mem_type}{
+所支持的\cnglo{locmem}的類型。
+可以是 \cenum{CL_LOCAL}（意指專用的\cnglo{locmem}，如 SRAM ）或 \cenum{CL_GLOBAL}。
+
+對於\cnglo{customdev}，如果不支持\cnglo{locmem}，可以返回 \cenum{CL_NONE}。
+}
+
+\clETD{CL_DEVICE_LOCAL_MEM_SIZE}{cl_ulong}{
+\cnglo{locmem}區的字節數。
+對於類型不是 \cenum{CL_DEVICE_TYPE_CUSTOM} 的\cnglo{device}，最小值是 1KB。%
+}
+
+\clETD{CL_DEVICE_ERROR_CORRECTION_SUPPORT}{cl_bool}{
+如果所有對\cnglo{computedevmem}（包括\cnglo{glbmem}和\cnglo{constmem}）的存取，
+都可以由\cnglo{device}進行糾錯，則為 \cenum{CL_TRUE}，否則為 \cenum{CL_FALSE}。
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_HOST_UNIFIED_MEMORY}{cl_bool}{
+如果\cnglo{device}和\cnglo{host}共有一個統一的內存子系統，
+則為 \cenum{CL_TRUE}，否則為 \cenum{CL_FALSE}。
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_PROFILING_TIMER_RESOLUTION}{size_t}{
+\cnglo{device}定時器的精度。單位是納秒。詳情參見\refsection{profileMoKernel}。
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_ENDIAN_LITTLE}{cl_bool}{
+如果 OpenCL \cnglo{device}是小端（little-endian）的，
+則為 \cenum{CL_TRUE}，否則為\cenum{CL_FALSE}。
+}
+
+\clETD{CL_DEVICE_AVAILABLE}{cl_bool}{
+如果\cnglo{device}可用，則為 \cenum{CL_TRUE}，否則為\cenum{CL_FALSE}。
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_COMPILER_AVAILABLE}{cl_bool}{
+如果沒有可用的編譯器來編譯程式源碼，則為 \cenum{CL_FALSE}，否則為 \cenum{CL_TRUE}。
+
+只有嵌入式平台的規格才可以是 \cenum{CL_FALSE}。
+}
+
+\clETD{CL_DEVICE_LINKER_AVAILABLE}{cl_bool}{
+如果沒有可用的鏈接器，則為 \cenum{CL_FALSE}，否則為 \cenum{CL_TRUE}。
+
+只有嵌入式平台的規格才可以是 \cenum{CL_FALSE}。
+
+如果 \cenum{CL_DEVICE_COMPILER_AVAILABLE} 是 \cenum{CL_TRUE}，則他必須是 \cenum{CL_TRUE}。
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_EXECUTION_CAPABILITIES}{cl_device_exec_capabilities}{
+描述\cnglo{device}的執行能力。此位欄包含以下值：
+\startigBase
+\item \cenum{CL_EXEC_KERNEL}——這個 OpenCL \cnglo{device}可以執行 OpenCL \cnglo{kernel}。
+\item \cenum{CL_EXEC_NATIVE_KERNEL}——這個 OpenCL \cnglo{device}可以執行原生\cnglo{kernel}。
+\stopigBase
+
+其中 \cenum{CL_EXEC_KERNEL} 是必需的。
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_QUEUE_PROPERTIES}{cl_command_queue_properties}{
+\cnglo{cmdq}的屬性。此位欄包含以下值：
+\startigBase
+\item \cenum{CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE}
+\item \cenum{CL_QUEUE_PROFILING_ENABLE}
+\stopigBase
+
+參見\reftab{clcmdprop}。
+
+其中 \cenum{CL_QUEUE_PROFILING_ENABLE} 是必需的。
+}
+
+\clETD{CL_DEVICE_BUILT_IN_KERNELS}{char[]}{
+\cnglo{device}所支持的內建\cnglo{kernel}的清單，以分號分隔。
+如果不支持內建\cnglo{kernel}，則返回空字串。
+}
+
+\if 0
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_PLATFORM}{cl_platform_id}{
+此\cnglo{device}所關聯的\cnglo{platform}。
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_NAME}{char[]}{
+\cnglo{device}的名字。
+}
+
+\clETD{CL_DEVICE_VENDOR}{char[]}{
+供應商的名字。
+}
+
+\clETD{CL_DEVICE_VERSION}{char[]}{
+OpenCL 軟件驅動的版本，格式為：
+
+\cfmt{major_number.minor_number}。
+}
+
+\clETD{CL_DEVICE_PROFILE}{char[]}{
+OpenCL 規格字串。
+返回\cnglo{device}所支持的規格名稱。
+可以是下列字串之一：
+\startigBase
+\item \cenum{FULL_PROFILE}——如果\cnglo{device}支持 OpenCL 規範
+（核心規格所定義的功能，不要求支持任何擴展）。
+
+\item \cenum{EMBEDDED_PROFILE}——如果\cnglo{device}支持 OpenCL 嵌入式規格。
+\stopigBase
+
+返回的是 OpenCL \cnglo{framework}所實現了的規格。
+如果返回的是 \cenum{FULL_PROFILE}，
+則 OpenCL \cnglo{framework}支持符合 \cenum{FULL_PROFILE} 的\cnglo{device}，
+可能也支持符合 \cenum{EMBEDDED_PROFILE} 的 \cnglo{device}。
+所有 \cnglo{device} 都得有可用的編譯器，
+即 \cenum{CL_DEVICE_COMPILER_AVAILABLE} 必須是 \cenum{CL_TRUE}。
+而如果返回的是 \cenum{EMBEDDED_PROFILE}，
+則僅支持符合 \cenum{EMBEDDED_PROFILE} 的\cnglo{device}。
+}
+
+\clETD{CL_DEVICE_VERSION}{char[]}{
+OpenCL 版本字串。返回\cnglo{device}所支持的 OpenCL 版本。
+格式如下：
+
+\cfmt{OpenCL<space><major_version.minor_version><space><vendor-specific information>}
+
+所返回的 \cfmt{major_version.minor_version} 的值將是\scver。
+}
+
+\clETD{CL_DEVICE_OPENCL_C_VERSION}{char[]}{
+OpenCL C 版本字串。
+對於類型不是 \cenum{CL_DEVICE_TYPE_CUSTOM} 的 \cnglo{device}，
+返回編譯器在其上所支持的 OpenCL C 的最高版本。
+格式如下：
+
+\cfmt{OpenCL<space>C<space><major_version.minor_version><space><vendor-specific information>}
+
+如果 \cenum{CL_DEVICE_VERSION} 是 OpenCL \scver，
+則 \cfmt{major_version.minor_version} 必須是 \scver。
+如果 \cenum{CL_DEVICE_VERSION} 是 OpenCL 1.1，
+則 \cfmt{major_version.minor_version} 必須是 1.1。
+如果 \cenum{CL_DEVICE_VERSION} 是 OpenCL 1.0，
+則 \cfmt{major_version.minor_version} 可以是 1.0 或 1.1。
+}
+
+\clETD{CL_DEVICE_EXTENSIONS}{char[]}{
+返回\cnglo{device}所支持的擴展名清單，以空格分隔（擴展名本身不包含空格）。
+所返回的清單可能包含供應商支持的擴展名，也可能是下列已獲 Khronos 批准的擴展名：
+\startigBase
+\item \clext{cl_khr_int64_base_atomics}
+\item \clext{cl_khr_int64_extended_atomics}
+\item \clext{cl_khr_fp16}
+\item \clext{cl_khr_gl_sharing}
+\item \clext{cl_khr_gl_event}
+\item \clext{cl_khr_d3d10_sharing}
+\item \clext{cl_khr_media_sharing}
+\item \clext{cl_khr_d3d11_sharing}
+\stopigBase
+
+對於支持 OpenCL C \scver 的\cnglo{device}，
+所返回的清單中必須包含下列已獲 Khronos 批准的擴展名：
+\startigBase
+\item \clext{cl_khr_global_int32_base_atomics}
+\item \clext{cl_khr_global_int32_extended_atomics}
+\item \clext{cl_khr_local_int32_base_atomics}
+\item \clext{cl_khr_local_int32_extended_atomics}
+\item \clext{cl_khr_byte_addressable_store}
+\item \clext{cl_khr_fp64}（如果支持雙精度浮點，為向後兼容必須支持此擴展）
+\stopigBase
+
+詳情請參考《OpenCL \scver 擴展規範》。
+}
+
+\clETD{}{}{}
+\fi
+
+\clETD{CL_DEVICE_PRINTF_BUFFER_SIZE}{size_t}{
+\cnglo{kernel}調用 printf 時，由一個內部緩衝區存儲其輸出，此區域大小的最大值。
+對於嵌入式規格，最小為 1KB。
+}
+
+\clETD{}{}{}
+
+\clETD{CL_DEVICE_PREFERRED_INTEROP_USER_SYNC}{cl_bool}{
+OpenCL 和其他 API （如 DirectX ）間共享\cnglo{memobj}時，
+如果\cnglo{device}的偏好是讓用戶自己負責同步，則其值為 \cenum{CL_TRUE}；
+而如果\cnglo{device}或實作已經具備有效的方式來進行同步，則其值為 \cenum{CL_FALSE}。
+}
+
+\clETD{CL_DEVICE_PARENT_DEVICE}{cl_device_id}{
+返回此\cnglo{subdev}所屬\cnglo{pardev}的 \ctype{cl_device_id}。
+如果 \carg{device} 是\cnglo{rootdev}，則返回 \cmacro{NULL}。
+}
+
+\clETD{CL_DEVICE_PARTITION_MAX_SUB_DEVICES}{cl_uint}{
+劃分\cnglo{device}時，所能創建的\cnglo{subdev}的最大數目。
+
+所返回的值不能超過 \cenum{CL_DEVICE_MAX_COMPUTE_UNITS}。
+}
+
+\clETD{CL_DEVICE_PARTITION_PROPERTIES}{cl_device_partition_property[]}{
+返回 \carg{device} 所支持的劃分方式。
+這是一個陣列，元素型別為 \ctype{cl_device_partition_property}，其值可以是：
+\startigBase
+\item \cenum{CL_DEVICE_PARTITION_EQUALLY}
+\item \cenum{CL_DEVICE_PARTITION_BY_COUNTS}
+\item \cenum{CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN}
+\stopigBase
+
+如果此\cnglo{device}不支持任何劃分方式，則返回 0。
+}
+
+\clETD{CL_DEVICE_PARTITION_AFFINITY_DOMAIN}{cl_device_affinity_domain}{
+用 \cenum{CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN} 劃分 \carg{device} 時，
+所支持的相似域（ affinity domain )。
+此位欄的值如下所示：
+\startigBase
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_NUMA}
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_L4_CACHE}
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_L3_CACHE}
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE}
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE}
+\item \cenum{CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE}
+\stopigBase
+
+如果以上都不支持，就返回 0。
+}
+
+\clETD{CL_DEVICE_PARTITION_TYPE}{cl_device_partition_property[]}{
+如果 \carg{device} 是\cnglo{subdev}，
+則會返回調用 \capi{clCreateSubDevices} 時所指定的引數 \carg{properties}。
+否則返回的 \carg{param_value_size_ret} 可能是 0 即不存在任何劃分方式；
+或者 \carg{param_value} 所指內存中的屬性值是 0 （0 用來終止屬性清單）。
+}
+
+\clETD{CL_DEVICE_REFERENCE_COUNT}{cl_uint}{
+返回 \carg{device} 的\cnglo{refcnt}。
+如果是\cnglo{rootdev}，則返回 1。
+}
+
+\stopETD
+

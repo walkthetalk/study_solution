@@ -1,0 +1,346 @@
+% write_image_2d
+\startbuffer[funcproto:write_image_2d]
+void write_imagef (
+	image2d_t image,
+	int2 coord,
+	float4 color)
+void write_imagei (
+	image2d_t image,
+	int2 coord,
+	int4 color)
+void write_imageui (
+	image2d_t image,
+	int2 coord,
+	uint4 color)
+\stopbuffer
+\startbuffer[funcdesc:write_image_2d]
+將 \carg{color} 寫入 2D \cnglo{imgobj} \carg{image} 中
+由坐標 \math{(coord.x, coord.y)} 所指定的位置上。
+寫之前會進行適當的格式轉換。
+\math{coord.x} 和 \math{coord.y} 會被當成非歸一化坐標，
+其值必須分別在區間 \math{0 \cdots \mvar{圖像寬度}-1}
+和 \math{0 \cdots \mvar{圖像高度}-1} 內。
+
+對於 \capi{write_imagef}，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是預定義壓縮過的格式
+或者 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT16}、
+ \cenum{CL_UNORM_INT16}、 \cenum{CL_HALF_FLOAT} 或 \cenum{CL_FLOAT}。
+
+對於 \capi{write_imagei} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase
+\item \cenum{CL_SIGNED_INT8}
+\item \cenum{CL_SIGNED_INT16}
+\item \cenum{CL_SIGNED_INT32}
+\stopigBase
+
+對於 \capi{write_imageui} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase
+\item \cenum{CL_UNSIGNED_INT8}
+\item \cenum{CL_UNSIGNED_INT16}
+\item \cenum{CL_UNSIGNED_INT32}
+\stopigBase
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上述所列範圍內，
+或者坐標 \math{(x, y)} 不在 \math{(0 \cdots \mvar{圖像寬度}-1, 0 \cdots \mvar{圖像高度}-1)} 範圍內，
+則 \capi{write_imagef}、 \capi{write_imagei} 和 \capi{write_imageui} 的行為\cnglo{undef}。
+\stopbuffer
+
+% write_imageh_2d
+\startbuffer[funcproto:write_imageh_2d]
+void write_imageh (
+	image2d_t image,
+	int2 coord,
+	half4 color)
+\stopbuffer
+\startbuffer[funcdesc:write_imageh_2d]
+將 \carg{color} 寫入 2D \cnglo{imgobj} \carg{image} 中
+由坐標 \math{(coord.x, coord.y)} 所指定的位置上。
+寫之前會進行適當的格式轉換。
+\math{coord.x} 和 \math{coord.y} 會被當成非歸一化坐標，
+其值必須分別在區間 \math{0 \cdots \mvar{圖像寬度}-1}
+和 \math{0 \cdots \mvar{圖像高度}-1} 內。
+
+對於 \capi{write_imageh}，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是預定義壓縮過的格式
+或者 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT16}、
+ \cenum{CL_UNORM_INT16} 或 \cenum{CL_HALF_FLOAT}。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上述所列範圍內，
+或者坐標 \math{(x, y)} 不在 \math{(0 \cdots \mvar{圖像寬度}-1, 0 \cdots \mvar{圖像高度}-1)} 範圍內，
+則 \capi{write_imageh} 的行為\cnglo{undef}。
+\stopbuffer
+
+% write_image_2da
+\startbuffer[funcproto:write_image_2da]
+void write_imagef (
+	image2d_array_t image,
+	int4 coord,
+	float4 color)
+void write_imagei (
+	image2d_array_t image,
+	int4 coord,
+	int4 color)
+void write_imageui (
+	image2d_array_t image,
+	int4 coord,
+	uint4 color)
+\stopbuffer
+\startbuffer[funcdesc:write_image_2da]
+用 \math{coord.z} 確定 2D 圖像陣列 \carg{image} 中的某一 2D 圖像，
+將 \carg{color} 寫入 此 2D 圖像中
+由坐標 \math{(coord.x, coord.y)} 所指定的位置上。
+寫之前會進行適當的格式轉換。
+\math{coord.x}、 \math{coord.y} 以及 \math{coord.z} 會被當成非歸一化坐標，
+其值必須分別在區間 \math{0 \cdots \mvar{image width}-1}、
+\math{0 \cdots \mvar{image height}-1} 和 \math{0 \cdots \mvar{image number}-1} 內。
+
+對於 \capi{write_imagef}，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是預定義壓縮過的格式
+或者 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT16}、
+ \cenum{CL_UNORM_INT16}、 \cenum{CL_HALF_FLOAT} 或 \cenum{CL_FLOAT}。
+
+對於 \capi{write_imagei} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase
+\item \cenum{CL_SIGNED_INT8}
+\item \cenum{CL_SIGNED_INT16}
+\item \cenum{CL_SIGNED_INT32}
+\stopigBase
+
+對於 \capi{write_imageui} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase
+\item \cenum{CL_UNSIGNED_INT8}
+\item \cenum{CL_UNSIGNED_INT16}
+\item \cenum{CL_UNSIGNED_INT32}
+\stopigBase
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上述所列範圍內，
+或者坐標 \math{(x, y, z)} 不在 \math{(0 \cdots \mvar{image width}-1, 0 \cdots \mvar{image height}-1, 0 \cdots \mvar{image number}-1)}
+範圍內，
+則 \capi{write_imagef}、 \capi{write_imagei} 和 \capi{write_imageui} 的行為未定義。
+\stopbuffer
+
+% write_imageh_2da
+\startbuffer[funcproto:write_imageh_2da]
+void write_imageh (
+	image2d_array_t image,
+	int4 coord,
+	half4 color)
+\stopbuffer
+\startbuffer[funcdesc:write_imageh_2da]
+用 \math{coord.z} 確定 2D 圖像陣列 \carg{image} 中的某一 2D 圖像，
+將 \carg{color} 寫入 此 2D 圖像中
+由坐標 \math{(coord.x, coord.y)} 所指定的位置上。
+寫之前會進行適當的格式轉換。
+\math{coord.x}、 \math{coord.y} 以及 \math{coord.z} 會被當成非歸一化坐標，
+其值必須分別在區間 \math{0 \cdots \mvar{image width}-1}、
+\math{0 \cdots \mvar{image height}-1} 和 \math{0 \cdots \mvar{image number}-1} 內。
+
+對於 \capi{write_imageh}，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是預定義壓縮過的格式
+或者 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT16}、
+ \cenum{CL_UNORM_INT16} 或 \cenum{CL_HALF_FLOAT}。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上述所列範圍內，
+或者坐標 \math{(x, y, z)} 不在 \math{(0 \cdots \mvar{image width}-1, 0 \cdots \mvar{image height}-1, 0 \cdots \mvar{image number}-1)}
+範圍內，
+則 \capi{write_imageh} 的行為未定義。
+\stopbuffer
+
+% write_image_1d
+\startbuffer[funcproto:write_image_1d]
+void write_imagef (
+	image1d_t image,
+	int coord,
+	float4 color)
+void write_imagei (
+	image1d_t image,
+	int coord,
+	int4 color)
+void write_imageui (
+	image1d_t image,
+	int coord,
+	uint4 color)
+void write_imagef (
+	image1d_buffer_t image,
+	int coord,
+	float4 color)
+void write_imagei (
+	image1d_buffer_t image,
+	int coord,
+	int4 color)
+void write_imageui (
+	image1d_buffer_t image,
+	int coord,
+	uint4 color)
+\stopbuffer
+\startbuffer[funcdesc:write_image_1d]
+將 \carg{color} 寫入 1D \cnglo{imgobj} \carg{image} 中
+由坐標 \math{coord} 所指定的位置上。
+寫之前會進行適當的格式轉換。
+\math{coord} 會被當成非歸一化坐標，
+其值必須在區間 \math{0 \cdots \mvar{image width}-1} 內。
+
+對於 \capi{write_imagef}，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是預定義壓縮過的格式
+或者 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT16}、
+ \cenum{CL_UNORM_INT16}、 \cenum{CL_HALF_FLOAT} 或 \cenum{CL_FLOAT}。
+
+對於 \capi{write_imagei} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase
+\item \cenum{CL_SIGNED_INT8}
+\item \cenum{CL_SIGNED_INT16}
+\item \cenum{CL_SIGNED_INT32}
+\stopigBase
+
+對於 \capi{write_imageui} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase
+\item \cenum{CL_UNSIGNED_INT8}
+\item \cenum{CL_UNSIGNED_INT16}
+\item \cenum{CL_UNSIGNED_INT32}
+\stopigBase
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上述所列範圍內，
+或者坐標不在 \math{0 \cdots \mvar{image width}-1} 範圍內，
+則 \capi{write_imagef}、 \capi{write_imagei} 和 \capi{write_imageui} 的行為未定義。
+\stopbuffer
+
+% write_imageh_1d
+\startbuffer[funcproto:write_imageh_1d]
+void write_imageh (
+	image1d_t image,
+	int coord,
+	half4 color)
+void write_imageh (
+	image1d_buffer_t image,
+	int coord,
+	half4 color)
+\stopbuffer
+\startbuffer[funcdesc:write_imageh_1d]
+將 \carg{color} 寫入 1D \cnglo{imgobj} \carg{image} 中
+由坐標 \math{coord} 所指定的位置上。
+寫之前會進行適當的格式轉換。
+\math{coord} 會被當成非歸一化坐標，
+其值必須在區間 \math{0 \cdots \mvar{image width}-1} 內。
+
+對於 \capi{write_imageh}，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是預定義壓縮過的格式
+或者 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT16}、
+ \cenum{CL_UNORM_INT16} 或 \cenum{CL_HALF_FLOAT}。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上述所列範圍內，
+或者坐標不在 \math{0 \cdots \mvar{image width}-1} 範圍內，
+則 \capi{write_imageh} 的行為未定義。
+\stopbuffer
+
+% write_image_1da
+\startbuffer[funcproto:write_image_1da]
+void write_imagef (
+	image1d_array_t image,
+	int2 coord,
+	float4 color)
+void write_imagei (
+	image1d_array_t image,
+	int2 coord,
+	int4 color)
+void write_imageui (
+	image1d_array_t image,
+	int2 coord,
+	uint4 color)
+\stopbuffer
+\startbuffer[funcdesc:write_image_1da]
+用 \math{coord.y} 確定 1D 圖像陣列 \carg{image} 中的某一 1D 圖像，
+將 \carg{color} 寫入 此 1D 圖像中
+由坐標 \math{coord.x} 所指定的位置上。
+寫之前會進行適當的格式轉換。
+\math{coord.x} 和 \math{coord.y} 會被當成非歸一化坐標，
+其值必須分別在區間 \math{0 \cdots \mvar{image width}-1} 和 \math{0 \cdots \mvar{image number}-1} 之間。
+
+對於 \capi{write_imagef}，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是預定義壓縮過的格式
+或者 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT16}、
+ \cenum{CL_UNORM_INT16}、 \cenum{CL_HALF_FLOAT} 或 \cenum{CL_FLOAT}。
+
+對於 \capi{write_imagei} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase
+\item \cenum{CL_SIGNED_INT8}
+\item \cenum{CL_SIGNED_INT16}
+\item \cenum{CL_SIGNED_INT32}
+\stopigBase
+
+對於 \capi{write_imageui} 而言，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是下列值之一：
+\startigBase
+\item \cenum{CL_UNSIGNED_INT8}
+\item \cenum{CL_UNSIGNED_INT16}
+\item \cenum{CL_UNSIGNED_INT32}
+\stopigBase
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上述所列範圍內，
+或者坐標 \math{(x, y)} 不在 \math{(0 \cdots \mvar{image width}-1, 0 \cdots \mvar{image number}-1)}
+範圍內，
+則 \capi{write_imagef}、 \capi{write_imagei} 和 \capi{write_imageui} 的行為未定義。
+\stopbuffer
+
+% write_imageh_1da
+\startbuffer[funcproto:write_imageh_1da]
+void write_imageh (
+	image1d_array_t image,
+	int2 coord,
+	half4 color)
+\stopbuffer
+\startbuffer[funcdesc:write_imageh_1da]
+用 \math{coord.y} 確定 1D 圖像陣列 \carg{image} 中的某一 1D 圖像，
+將 \carg{color} 寫入 此 1D 圖像中
+由坐標 \math{coord.x} 所指定的位置上。
+寫之前會進行適當的格式轉換。
+\math{coord.x} 和 \math{coord.y} 會被當成非歸一化坐標，
+其值必須分別在區間 \math{0 \cdots \mvar{image width}-1} 和 \math{0 \cdots \mvar{image number}-1} 之間。
+
+對於 \capi{write_imageh}，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是預定義壓縮過的格式
+或者 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT16}、
+ \cenum{CL_UNORM_INT16} 或 \cenum{CL_HALF_FLOAT}。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上述所列範圍內，
+或者坐標 \math{(x, y)} 不在 \math{(0 \cdots \mvar{image width}-1, 0 \cdots \mvar{image number}-1)}
+範圍內，
+則 \capi{write_imageh} 的行為未定義。
+\stopbuffer
+
+% write_imageh_3d
+\startbuffer[funcproto:write_imageh_3d]
+void write_imageh (
+	image3d_t image,
+	int4 coord,
+	half4 color)
+\stopbuffer
+\startbuffer[funcdesc:write_imageh_3d]
+將 \carg{color} 寫入 3D \cnglo{imgobj} \carg{image} 中
+由坐標 \math{(coord.xyz)} 所指定的位置上。
+寫之前會進行適當的格式轉換。
+\math{coord.x}、 \math{coord.y} 和 \math{coord.z} 會被當成非歸一化坐標，
+其值必須分別在區間 \math{0 \cdots \mvar{圖像寬度}-1}、
+ \math{0 \cdots \mvar{圖像高度}-1} 和 \math{0 \cdots \mvar{圖像深度}-1} 內。
+
+對於 \capi{write_imageh}，
+創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 必須是預定義壓縮過的格式
+或者 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT16}、
+ \cenum{CL_UNORM_INT16} 或 \cenum{CL_HALF_FLOAT}。
+
+如果創建\cnglo{imgobj}時所用的 \carg{image_channel_data_type} 不再上述所列範圍內，
+或者坐標 \math{(x, y, z)} 不在
+ \math{(0 \cdots \mvar{圖像寬度}-1, 0 \cdots \mvar{圖像高度}-1, 0 \cdots \mvar{圖像深度}-1)} 範圍內，
+則 \capi{write_imageh} 的行為\cnglo{undef}。
+
+\startnotepar
+僅當\cnglo{device}支持擴展 \clext{cl_khr_3d_image_writes} 時，此內建函式才可用。
+\stopnotepar
+\stopbuffer
+

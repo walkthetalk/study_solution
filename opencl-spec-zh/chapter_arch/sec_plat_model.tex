@@ -1,0 +1,47 @@
+\section{平台模型}
+
+OpenCL 平台模型的定義可以查看\reffig{plfmodel}。
+此模型中有一個\cngloemp{host}，
+並且有一個或多個 {\ftEmp{OpenCL}} \cnglo{device}與其相連。
+每個 OpenCL \cnglo{device}可劃分成一個或多個\cnglo{computeunit}（CU），
+每個\cnglo{computeunit}又可劃分成一個或多個\cnglo{prcele}（PE）。
+\cnglo{device}上的計算是在\cnglo{prcele}中進行的。
+
+\input{fig/PlfMode.tex}
+\placefigure[here][fig:plfmodel]
+{平台模型}
+{\reuseMPgraphic{plfMode}}
+
+OpenCL \cnglo{app}會按照\cnglo{host}\cnglo{platform}的原生模型
+在這個\cnglo{host}上運行。
+\cnglo{host}上的 OpenCL \cnglo{app}提交\cngloemp{cmd}
+給\cnglo{device}中的\cnglo{prcele}以執行計算任務。
+\cnglo{computeunit}中的\cnglo{prcele}會作為 SIMD 單元（執行指令流的步伐一致）
+或 SPMD 單元（每個 PE 維護自己的程式計數器）執行指令流。
+
+\subsection{平台對多版本的支持}
+OpenCL 的設計目標就是要支持同一\cnglo{platform}中多種具有不同能力的設備。
+這些設備可以符合不同版本的 OpenCL 規範。
+對於一個 OpenCL 系統，有三個重要的版本 ID 要考慮：
+\cnglo{platform}版本、\cnglo{device}版本、
+\cnglo{device}所支持的 OpenCL C 語言的版本。
+
+\cnglo{platform}版本表明了所支持的 OpenCL 運行時的版本。
+這包括可由\cnglo{host}用來與 OpenCL 運行時交互的所有 API，
+像\cnglo{context}、\cnglo{memobj}、\cnglo{device}、\cnglo{cmdq}。
+
+\cnglo{device}版本表明了\cnglo{device}的能力，
+獨立於運行時和編譯器的版本，由 \capi{clGetDeviceInfo} 所返回的\cnglo{device}資訊來描述。
+有很多特性都與\cnglo{device}版本有關，如資源限制和擴展功能。
+所返回的版本號即為此\cnglo{device}所符合的 OpenCL 規範的最高版本號，
+但不會高於\cnglo{platform}版本。
+
+語言版本，可以讓開發人員據此知道此\cnglo{device}所支持的 OpenCL 編程語言具備哪些特性。
+此版本會是所支持語言的最高版本。
+
+OpenCL C 被設計為向後兼容的，
+因此對於一個\cnglo{device}而言，只要支持語言的某一個版本，就可以說他符合標準。
+如果某個\cnglo{device}支持多個語言版本，編譯器缺省使用最高的那個版本。
+語言的版本不會高於\cnglo{platform}的版本，
+但可能高於\cnglo{device}的版本（參見\refsection{ctrlcveroption}）。
+

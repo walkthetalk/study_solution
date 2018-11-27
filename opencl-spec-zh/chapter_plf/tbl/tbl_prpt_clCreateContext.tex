@@ -1,0 +1,15 @@
+\startETD[cl_context_properties][屬性值]
+
+\clETD{CL_CONTEXT_PLATFORM}{cl_platform_id}{
+指定要使用哪個 \cnglo{platform}。
+}
+
+\clETD{CL_CONTEXT_INTEROP_USER_SYNC}{cl_bool}{
+OpenCL 和其他 API 之間的同步是否由用戶自己負責。
+對於其使用限制，請參考《OpenCL \scver 擴展規範》中相應章節。
+
+如果沒有指定此屬性，則缺省值為 \cenum{CL_FALSE}。
+}
+
+\stopETD
+

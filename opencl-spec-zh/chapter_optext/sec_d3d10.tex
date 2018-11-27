@@ -1,0 +1,292 @@
+\section{與 Direct3D 10 共享內存對象}
+
+\subsection{簡介}
+
+本擴展是為了使得在 OpenCL 和 Direct3D 10 間可以進行互操作。
+其運作方式與\refsection{clShareGl}和\refsection{clEvtObjFromGlSync}中的 OpenGL 類似。
+如果實作支持本擴展，
+則 \cenum{CL_PLATFORM_EXTENSIONS} 或 \cenum{CL_DEVICE_EXTENSIONS} 中
+應包含字串 \clext{cl_khr_d3d10_sharing}，參見\reftab{cldevquery}。
+
+\subsection{頭檔}
+
+目前本擴展中的所有接口都由 \ccmm{cl_d3d10.h} 提供。
+
+\subsection{新例程和新函式}
+
+\startCLFUNC
+cl_int clGetDeviceIDsFromD3D10KHR (
+		cl_platform_id platform,
+		cl_d3d10_device_source_khr d3d_device_source,
+		void *d3d_object,
+		cl_d3d10_device_set_khr d3d_device_set,
+		cl_uint num_entries,
+		cl_device_id *devices,
+		cl_uint *num_devices)
+cl_mem clCreateFromD3D10BufferKHR (
+		cl_context context,
+		cl_mem_flags flags,
+		ID3D10Buffer *resource,
+		cl_int *errcode_ret)
+cl_mem clCreateFromD3D10Texture2DKHR (
+		cl_context context,
+		cl_mem_flags flags,
+		ID3D10Texture2D *resource,
+		UINT subresource,
+		cl_int *errcode_ret)
+cl_mem clCreateFromD3D10Texture3DKHR (
+		cl_context context,
+		cl_mem_flags flags,
+		ID3D10Texture3D *resource,
+		UINT subresource,
+		cl_int *errcode_ret)
+cl_int clEnqueueAcquireD3D10ObjectsKHR (
+		cl_command_queue command_queue,
+		cl_uint num_objects,
+		const cl_mem *mem_objects,
+		cl_uint num_events_in_wait_list,
+		const cl_event *event_wait_list,
+		cl_event *event)
+cl_int clEnqueueReleaseD3D10ObjectsKHR (
+		cl_command_queue command_queue,
+		cl_uint num_objects,
+		const cl_mem *mem_objects,
+		cl_uint num_events_in_wait_list,
+		const cl_event *event_wait_list,
+		cl_event *event)
+\stopCLFUNC
+
+\subsection{新符記}
+
+\clapi{clGetDeviceIDsFromD3D10KHR} 的參數 \carg{d3d_device_source} 的值可以是：
+\startclc
+CL_D3D10_DEVICE_KHR		0x4010
+CL_D3D10_DXGI_ADAPTER_KHR	0x4011
+\stopclc
+
+\clapi{clGetDeviceIDsFromD3D10KHR} 的參數 \carg{d3d_device_set} 的值可以是：
+\startclc
+CL_PREFERRED_DEVICES_FOR_D3D10_KHR	0x4012
+CL_ALL_DEVICES_FOR_D3D10_KHR		0x4013
+\stopclc
+
+\clapi{clCreateContext} 和 \clapi{clCreateContextFromType} 的
+參數 \carg{properties} 可以是：
+\startclc
+CL_CONTEXT_D3D10_DEVICE_KHR	0x4014
+\stopclc
+
+\clapi{clGetContextInfo} 的參數 \carg{param_name} 可以是：
+\startclc
+CL_CONTEXT_D3D10_PREFER_SHARED_RESOURCES_KHR	0x402C
+\stopclc
+
+\clapi{clGetMemObjectInfo} 的參數 \carg{param_name} 可以是：
+\startclc
+CL_MEM_D3D10_RESOURCE_KHR	0x4015
+\stopclc
+
+\clapi{clGetImageInfo} 的參數 \carg{param_name} 可以是：
+\startclc
+CL_IMAGE_D3D10_SUBRESOURCE_KHR	0x4016
+\stopclc
+
+當 \carg{param_name} 是 \cenum{CL_EVENT_COMMAND_TYPE} 時，
+ \clapi{clGetEentInfo} 的參數 \carg{param_alue} 可以是：
+\startclc
+CL_COMMAND_ACQUIRE_D3D10_OBJECTS_KHR	0x4017
+CL_COMMAND_RELEASE_D3D10_OBJECTS_KHR	0x4018
+\stopclc
+
+如果指定的 Direct3D 10 \cnglo{device}與\cnglo{context}中的\cnglo{device}不兼容，
+則 \clapi{clCreateContext} 和 \clapi{clCreateContextFromType} 會返回：
+\startclc
+CL_INVALID_D3D10_DEVICE_KHR		-1002
+\stopclc
+
+\clapi{clCreateFromD3D10BufferKHR} 的參數 \carg{resource} 必須是 Direct3D 10 \cnglo{bufobj}，
+而 \clapi{clCreateFromD3D10Texture2DKHR} 和 \clapi{clCreateFromD3D10Texture3DKHR} 的
+參數 \carg{resource} 必須是 Direct3D 10 材質對象，
+否則這些函式會返回：
+\startclc
+CL_INVALID_D3D10_RESOURCE_KHR		-1003
+\stopclc
+
+如果參數 \carg{mem_objects} 中的任一對象已經由 OpenCL 獲取了，
+那麼 \clapi{clEnqueueAcquireD3D10ObjectsKHR} 會返回：
+\startclc
+CL_D3D10_RESOURCE_ALREADY_ACQUIRED_KHR	-1004
+\stopclc
+
+如果參數 \carg{mem_objects} 中的任一對象已經由 OpenCL 獲取了，
+那麼 \clapi{clEnqueueReleaseD3D10ObjectsKHR} 會返回：
+\startclc
+CL_D3D10_RESOURCE_NOT_ACQUIRED_KHR	-1005
+\stopclc
+
+% Additions to Chapter 4 of the OpenCL 1.2 Specification
+\subsection{對第 4 章的補充}
+
+\refsection{contexts}中，用下列內容取代 \clapi{clCreateContext} 後面對 \carg{properties} 的描述：
+\startreplacepar
+\carg{properties} 指向一個特性列，即 \ccmm{<特性名, 值>} 的陣列，以零終止。
+如果此陣列中沒有某個特性，則使用其缺省值，參見\reftab{prptForclCreateContext}。
+如果 \carg{properties} 是 \cmacro{NULL} 或者是空的（第一個值就是零），所有特性都使用缺省值。
+\stopreplacepar
+
+\reftab{prptCtx_D3D10}是對\reftab{prptForclCreateContext}的補充。
+
+\placetable[here][tab:prptCtx_D3D10]
+{創建上下文時所用特性}
+{\input{chapter_optext/tbl/prpt_clCreateContext_d3d10.tex}}
+
+下列內容作為對 \clapi{clCreateContext} 所返回的錯誤列的補充：
+\startreplacepar
+\startigBase
+\item \cenum{CL_INVALID_D3D10_DEVICE_KHR}，
+如果屬性 \cenum{CL_CONTEXT_D3D10_DEVICE_KHR} 的值不是 \cmacro{NULL}，
+並且沒有指定一個有效的 Direct3D 10 \cnglo{device}（\carg{cl_device_ids}）。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果屬性 \cenum{CL_INVALID_D3D10_DEVICE_KHR} 的值不是 \cmacro{NULL}，
+以表明要與 Direct3D 10 進行互操作，但同時又指定了要與其他圖形 API 進行互操作。
+\stopigBase
+\stopreplacepar
+
+\clapi{clCreateContextFromType} 所返回的錯誤列中也要添加上面所描述的兩個新錯誤。
+
+\reftab{paramNameclGetContextInfo}要增加\reftab{prpt_clGetContextInfo_d3d10}中所列內容：
+
+\placetable[here][tab:prpt_clGetContextInfo_d3d10]
+{\clapi{clGetContextInfo} 所支持的屬性名}
+{\input{chapter_optext/tbl/prpt_clGetContextInfo_d3d10.tex}}
+
+% Additions to Chapter 5 of the OpenCL 1.2 Specification
+\subsection{對第五章的補充}
+
+為 \clapi{clGetMemObjectInfo} 所返回的錯誤碼添加以下內容：
+\startreplacepar
+\startigBase
+\startitem
+\cenum{CL_INVALID_D3D10_RESOURCE_KHR}，
+如果 \carg{param_name} 是 \cenum{CL_MEM_D3D10_RESOURCE_KHR}，
+並且 \carg{memobj} 不是由以下函式創建的：
+\startigBase
+\item \clapi{clCreateFromD3D10BufferKHR}，
+\item \clapi{clCreateFromD3D10Texture2DKHR}，或
+\item \clapi{clCreateFromD3D10Texture3DKHR}。
+\stopigBase
+\stopitem
+\stopigBase
+\stopreplacepar
+
+將\reftab{meminfo_d3d10}中的內容添加到\reftab{meminfo}中。
+
+\placetable[here][tab:meminfo_d3d10]
+{\capi{clGetMemObjectInfo}所支持的\carg{param_names}}
+{\input{chapter_optext/tbl/memobj_info_d3d10.tex}}
+
+為 \clapi{clGetImageInfo} 所返回的錯誤碼添加以下內容：
+\startreplacepar
+\startigBase
+\startitem
+\cenum{CL_INVALID_D3D10_RESOURCE_KHR}，
+如果 \carg{param_name} 是 \cenum{CL_MEM_D3D10_SUBRESOURCE_KHR}，
+並且 \carg{image} 不是由以下函式創建的：
+\startigBase
+\item \clapi{clCreateFromD3D10Texture2DKHR}，或
+\item \clapi{clCreateFromD3D10Texture3DKHR}。
+\stopigBase
+\stopitem
+\stopigBase
+\stopreplacepar
+
+將\reftab{clgetimginfo_d3d10}中的內容添加到\reftab{clgetimginfo}中。
+
+\placetable[here][tab:clgetimginfo_d3d10]
+{\capi{clGetImageInfo}所支持的\carg{param_names}}
+{\input{chapter_optext/tbl/clgetimginfo_d3d10.tex}}
+
+在\reftab{clGetEventInfo}中，
+當 \carg{cl_event_info} = \cenum{CL_EVENT_COMMAND_TYPE} 時，
+對其返回值的描述增加以下內容：
+\startreplacepar
+\startigBase
+\item \cenum{CL_COMMAND_ACQUIRE_D3D10_OBJECTS_KHR}
+\item \cenum{CL_COMMAND_RELEASE_D3D10_OBJECTS_KHR}
+\stopigBase
+\stopreplacepar
+
+% Sharing Memory Objects with Direct3D 10 Resources
+\subsection{與 Direct3D 10 資源共享內存對象}
+
+\cnglo{app}可以使用本節所討論 OpenCL 函式將 Direct3D 10 資源當成 OpenCL \cnglo{memobj}使用。
+這樣就可以在 OpenCL 和 Direct3D 10 之間有效的共享數據。
+由 OpenCL API 所執行的\cnglo{kernel}可以通過讀寫\cnglo{memobj}來操控 Direct3D 10 資源。
+可以由 Direct3D 10 材質資源創建 OpenCL \cnglo{imgobj}；
+也可以由 Direct3D 10 緩衝資源創建 OpenCL \cnglo{bufobj}；
+但是這樣做有個前提：當且僅當 OpenCL \cnglo{context}是在 Direct3D 10 設備上創建的。
+
+\topclfunc{clGetDeviceIDsFromD3D10KHR}
+
+\startCLFUNC
+cl_int clGetDeviceIDsFromD3D10KHR(
+		cl_platform_id platform,
+		cl_d3d10_device_source_khr d3d_device_source,
+		void *d3d_object,
+		cl_d3d10_device_set_khr d3d_device_set,
+		cl_uint num_entries,
+		cl_device_id *devices,
+		cl_uint *num_devices)
+\stopCLFUNC
+
+\carg{platform} 即 \clapi{clGetPlatformIDs} 所返回的\cnglo{platform} ID。
+
+\carg{d3d_device_source} 指定了 \carg{d3d_object} 的類型，
+且必須是\reftab{dxten_device_type} 中的一個。
+
+\carg{d3d_object} 即所查詢 OpenCL \cnglo{device}所對應的對象。
+其類型必須是\reftab{dxten_device_type} 中的一個。
+
+\carg{d3d_device_set} 指定所返回的\cnglo{device}集，必須是\reftab{dxten_device_set} 中的值。
+
+\carg{num_entries} 即 \ctype{cl_device_id} 條目（可以添加到 \carg{devices} 中）的數目，
+如果 \carg{devices} 不是 \cmacro{NULL}，則 \carg{num_entries} 必須大於零。
+
+\carg{devices} 返回所找到的 OpenCL \cnglo{device}清單。
+其中的 \ctype{cl_device_id} 可以用來識別一個特定的 OpenCL \cnglo{device}。
+如果 \carg{devices} 是 \cmacro{NULL}，則忽略此參數。
+所返回的 OpenCL \cnglo{device}數量是 \carg{num_entries} 的值
+和 \carg{d3d_object} 所對應 OpenCL \cnglo{device}的數量中較小的那個。
+
+\carg{num_devices} 返回的是 \carg{d3d_object} 所對應的所有 OpenCL \cnglo{device}的數目。
+如果 \carg{num_devices} 是 \cmacro{NULL}，則忽略此參數。
+
+如果執行成功，則 \clapi{clGetDeviceIDsFromD3D10KHR} 會返回 \cenum{CL_SUCCESS}；
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_PLATFORM}，如果 \carg{platform} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{d3d_device_source} 的值無效、
+\carg{d3d_device_set} 的值無效、 \carg{num_entries} 爲零但 \carg{devices} 不是 \cmacro{NULL}，
+或者 \carg{num_devices} 和 \carg{devices} 都是 \cmacro{NULL}。
+
+\item \cenum{CL_DEVICE_NOT_FOUND}，
+如果沒有找到任何與 \carg{d3d_object} 所對應的 OpenCL \cnglo{device}。
+\stopigBase
+
+\placetable[here][tab:dxten_device_type]
+{\clapi{clGetDeviceIDsFromD3D10KHR} 所查詢的 OpenCL \cnglo{device}種類與對應對象的型別}
+{\input{chapter_optext/tbl/dx10_device_type.tex}}
+
+\placetable[here][tab:dxten_device_set]
+{\clapi{clGetDeviceIDsFromD3D10KHR} 所查詢的 OpenCL \cnglo{device}集}
+{\input{chapter_optext/tbl/dx10_device_set.tex}}
+
+\todo{TODO:}
+
+% Issues
+\subsection{問題}
+
+\todo{TODO:}
+

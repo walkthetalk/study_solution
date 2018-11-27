@@ -1,0 +1,36 @@
+% mad24
+\startbuffer[funcproto:mad24]
+gentype mad24 (gentype x, 
+		gentype y,
+		gentype z)
+\stopbuffer
+\startbuffer[funcdesc:mad24]
+計算 \math{x \times y +z}，其中 \math{x} 和 \math{y} 均為 24 位整數，
+\math{z} 和返回值均為 32 位整數。
+至於如何實施 24 位整數乘法，請參考 \capi{mul24} 的定義。
+\stopbuffer
+
+% mul24
+\startbuffer[funcproto:mul24]
+gentype mul24 (gentype x,
+		gentype y)
+\stopbuffer
+\startbuffer[funcdesc:mul24]
+計算 \math{x} 和 \math{y} 的乘積。
+其中 \math{x} 和 \math{y} 均為 32 位整數，但僅使用低 24 位。
+\math{z} 和返回值均為 32 位整數。
+至於如何實施 24 位整數乘法，請參考 \capi{mul24} 的定義。
+要使用此函式，必須滿足以下條件：
+如果 \math{x} 和 \math{y} 是帶符號整數，則其值必須在區間 \math{[-2^{23}, 2^{23}-1]} 內；
+如果 \math{x} 和 \math{y} 是無符號整數，則其值必須在區間 \math{[0, 2^{24}-1]} 內。
+如果不滿足上述條件，則其結果\cnglo{impdef}。
+\stopbuffer
+
+% begin TABLE
+\startCLFD
+
+\clFD{mad24}
+\clFD{mul24}
+
+\stopCLFD
+

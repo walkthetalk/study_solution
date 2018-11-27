@@ -1,0 +1,79 @@
+\startETD[cl_program_info][返回型別]
+
+\clETD{CL_PROGRAM_REFERENCE_COUNT}{cl_uint}{
+返回 \carg{program} 的\cnglo{refcnt}。\footnote{%
+在返回的那一刻，此\cnglo{refcnt}就已過時。
+\cnglo{app}中一般不太適用。提供此特性主要是為了檢測內存泄漏。}
+}
+
+\clETD{CL_PROGRAM_CONTEXT}{cl_context}{
+返回創建\cnglo{programobj}時所指定的\cnglo{context}。
+}
+
+\clETD{CL_PROGRAM_NUM_DEVICES}{cl_uint}{
+返回 \carg{program} 所關聯\cnglo{device}的數目。
+}
+
+\clETD{CL_PROGRAM_DEVICES}{cl_device_id[]}{
+返回 \carg{program} 所關聯的\cnglo{device}。
+可以是創建\cnglo{programobj}時所用\cnglo{context}中的\cnglo{device}；
+也可以是用 \capi{clCreateProgramWithBinary} 創建\cnglo{programobj}時
+所指定的\cnglo{device}中的一個子集。
+}
+
+\clETD{CL_PROGRAM_SOURCE}{char[]}{
+返回傳給 \capi{clCreateProgramWithSource} 的\cnglo{program}源碼。
+返回的字串中將所有源碼都串在了一起，並以 null 終止（原有的 null 會被剝離）。
+
+如果 \carg{program} 是用
+\capi{clCreateProgramWithBinary} 或 \capi{clCreateProgramWithBuiltinKernels} 創建的，
+可能返回空字串，或者相應的\cnglo{program}源碼，這取決於二元碼中是否包含\cnglo{program}源碼。
+
+\carg{param_value_size_ret} 中會返回源碼中字符的實際數目，包含 null 終止符。
+}
+
+\clETD{CL_PROGRAM_BINARY_SIZES}{size_t[]}{
+返回一個陣列，內含 \carg{program} 所關聯的所有\cnglo{device}對應的\cnglo{program}二元碼
+（可以是可執行二元碼、編譯過的二元碼或者庫的二元碼）的大小。
+陣列的大小等於與 \carg{program} 所關聯的\cnglo{device}的個數。
+如果任一\cnglo{device}沒有對應的二元碼，則返回零。
+
+如果 \carg{program} 是用 \capi{clCreateProgramWithBuiltinKernels} 創建的，
+可能陣列中的所有元素都是零。
+}
+
+\clETD{CL_PROGRAM_BINARIES}{unsigned char *[]}{
+返回一個陣列，內含 \carg{program} 所關聯的所有\cnglo{device}對應的\cnglo{program}二元碼
+（可以是可執行二元碼、編譯過的二元碼或者庫的二元碼）。
+對於 \carg{program} 所關聯的每個\cnglo{device}而言，
+所返回的二元碼可能是用 \capi{clCreateProgramWithBinary} 創建 \carg{program} 時所指定的二元碼，
+或者是用 \capi{clBuildProgram} 或 \capi{clLinkProgram} 所生成的可執行二元碼。
+如果是用 \capi{clCreateProgramWithSource} 生成的 \carg{program}，
+則返回的是 \capi{clBuildProgram}、 \capi{clCompileProgram} 或 \capi{clLinkProgram} 所生成的二元碼。
+所返回的可能是針對特定實作的中間表示（又叫做 IR），或針對特定設備的可執行二元碼，也可能二者兼有。
+至於二元碼中會返回哪種資訊由 OpenCL 實作來決定。
+
+\carg{param_value} 指向一個包含 \math{n} 個指位器的陣列，所有指位器都由調用者分配，
+其中 \math{n} 就是 \carg{program} 所關聯\cnglo{device}的數目。
+對於每個指位器需要分配多少內存，可以通過此表中的 \cenum{CL_PROGRAM_BINARY_SIZES} 進行查詢。
+
+實作可以使用陣列中的元素來存儲特定\cnglo{device}所對應的\cnglo{program}二元碼，如果有的話。
+至於陣列中的元素都對應於哪個\cnglo{device}，可以使用 \cenum{CL_PROGRAM_DEVICES} 進行查詢。
+\cenum{CL_PROGRAM_BINARIES} 和 \cenum{CL_PROGRAM_DEVICES} 所返回的陣列具有一對一的關係。
+}
+
+\clETD{CL_PROGRAM_NUM_KERNELS}{size_t}{
+返回 \carg{program} 中聲明的\cnglo{kernel}總數。
+對於 \carg{program} 所關聯的\cnglo{device}而言，
+至少要為其中之一成功構建了可執行\cnglo{program}，
+然後才能使用此資訊。
+}
+
+\clETD{CL_PROGRAM_KERNEL_NAMES}{char[]}{
+返回 \carg{program} 中\cnglo{kernel}的名字，以分號間隔。
+對於 \carg{program} 所關聯的\cnglo{device}而言，
+至少要為其中之一成功構建了可執行\cnglo{program}，
+然後才能使用此資訊。
+}
+
+\stopETD

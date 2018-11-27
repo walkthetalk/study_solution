@@ -1,0 +1,33 @@
+\section{存儲類別限定符}
+
+所支持的存儲類別限定符有 \cqlf{typedef}、 \cqlf{extern} 和 \cqlf{static}。
+而 \cqlf{auto} 和 \cqlf{register} 則不在支持之列。
+
+存儲類別限定符 \cqlf{extern} 只可用在
+函式（包括\cnglo{kernel}函式和非\cnglo{kernel}函式）、
+在\cnglo{program}作用域內聲明的全局變量
+以及函式（包括\cnglo{kernel}函式和非\cnglo{kernel}函式）內部聲明的變量上。
+而存儲類別限定符 \cqlf{static} 只可用在非\cnglo{kernel}函式和
+在\cnglo{program}作用域內聲明的全局變量上。
+
+例：
+\startclc
+extern constant float4 noise_table[256];
+static constant float4 color_table[256];
+
+extern kernel void my_foo(image2d_t img);
+extern void my_bar(global float *a);
+
+kernel void my_func(image2d_t img, global float *a)
+{
+	extern constant float4 a;
+	static constant float4 b;	// error.
+	static float c;			// error.
+
+	...
+	my_foo(img);
+	...
+	my_bar(a);
+	...
+}
+\stopclc

@@ -1,0 +1,36 @@
+\subsection[section:linkOption]{連接器選項}
+
+此規範定義了一組標準的連接器選項， OpenCL C 編譯器在鏈接\cnglo{program}時必須支持。
+這些選項分成兩種：庫鏈接選項和\cnglo{program}鏈接選項。
+也可以通過增加一些針對特定供應商或特定平台的選項對其進行擴展。
+
+% Library Linking Options
+\subsubsection{庫鏈接選項}
+
+將編譯後的二元碼鏈接成庫時可以指定下列選項。
+
+\startclOption{-create-library}
+將編譯後的二元碼（由 \capi{clLinkProgram} 的引數 \carg{input_programs} 提供）鏈接成庫。
+\stopclOption
+
+\startclOption{-enable-link-options}
+鏈接器在將庫與\cnglo{program}執行體進行鏈接時，
+可以按照鏈接選項修正庫的行為（參見\refsection{programLinkOption}）。
+此選項必須與 \ccmm{-create-library} 一起使用。
+\stopclOption
+
+% Program Linking Options
+\subsubsection[section:programLinkOption]{程式鏈接選項}
+
+在鏈接\cnglo{program}執行體時可以使用下列選項：
+\startigBase
+\item \ccmm{-cl-denorms-are-zero}
+\item \ccmm{-cl-no-signed-zeroes}
+\item \ccmm{-cl-unsafe-math-optimizations}
+\item \ccmm{-cl-finite-math-only}
+\item \ccmm{-cl-fast-relaxed-math}
+\stopigBase
+
+這些選項在\refsection{MathIntrinsicsOption}和\refsection{OptimizationOption}中有所描述。
+鏈接器可能會將這些選項應用到 \capi{clLinkProgram} 中的所有目標碼上；
+也可能只應用到以 \ccmm{-enable-link-option} 創建的庫上。

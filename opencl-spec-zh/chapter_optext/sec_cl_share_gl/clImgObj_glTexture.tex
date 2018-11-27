@@ -1,0 +1,126 @@
+\subsection{由 GL 材質創建 CL 圖像對象}
+
+\topclfunc{clCreateFromGLTexture}
+
+\startCLFUNC
+cl_mem clCreateFromGLTexture (
+			cl_context context,
+			cl_mem_flags flags,
+			GLenum texture_target,
+			GLint miplevel,
+			GLuint texture,
+			cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式可以：
+\startigBase
+\item 由 OpenGL 2D 材質對象、或 OpenGL cubemap 材質對象的某一面創建 OpenCL 2D \cnglo{imgobj}。
+
+\item 由 OpenGL 2D 材質陣列對象創建 OpenCL 2D 圖像陣列對象。
+
+\item 由 OpenGL 1D 材質對象創建 OpenCL 1D 圖像對象。
+
+\item 由 OpenGL 材質緩衝對象創建 OpenCL 1D 圖像緩衝對象。
+
+\item 由 OpenGL 1D 材質陣列對象創建 OpenCL 1D 圖像陣列對象。
+
+\item 由 OpenGL 3D 材質對象創建 OpenCL 3D 圖像對象。
+\stopigBase
+
+\carg{context} 是一個由 OpenGL \cnglo{context}創建的 OpenCL \cnglo{context}。
+
+\carg{flags} 是位欄，用於指定用法資訊。參見\reftab{clmemflags}。
+此處只能使用 \cenum{CL_MEM_READ_ONLY}、 \cenum{CL_MEM_WRITE_ONLY} 和 \cenum{CL_MEM_READ_WRITE}。
+
+\carg{texture_target} 必須是下列值之一：
+\startigBase[indentnext=no]
+\item \cenum{GL_TEXTURE_1D}
+\item \cenum{GL_TEXTURE_1D_ARRAY}
+\item \cenum{GL_TEXTURE_BUFFER}
+\item \cenum{GL_TEXTURE_2D}
+\item \cenum{GL_TEXTURE_2D_ARRAY}
+\item \cenum{GL_TEXTURE_3D}
+\item \cenum{GL_TEXTURE_CUBE_MAP_POSITIVE_X}
+\item \cenum{GL_TEXTURE_CUBE_MAP_POSITIVE_Y}
+\item \cenum{GL_TEXTURE_CUBE_MAP_POSITIVE_Z}
+\item \cenum{GL_TEXTURE_CUBE_MAP_NEGATIVE_X}
+\item \cenum{GL_TEXTURE_CUBE_MAP_NEGATIVE_Y}
+\item \cenum{GL_TEXTURE_CUBE_MAP_NEGATIVE_Z}
+\item \cenum{GL_TEXTURE_RECTANGLE}\footnote{%
+要求 OpenGL 3.1。
+如果支持 OpenGL 擴展 \clext{GL_ARG_texture_rectangle}，
+也可以是 \cenum{GL_TEXTURE_RECTANGLE_ARG}。}
+\stopigBase
+\carg{texture_target} 僅用來定義 \carg{texture} 的圖像類型。
+此參數不會引用所綁定的 GL 材質對象。
+
+\carg{miplevel} 即所用的 mipmap 級別\footnote{%
+如果 \carg{miplevel} 的值 > 0，則實作可能返回 \cenum{CL_INVALID_OPERATION}。}。
+如果 \carg{texture_target} 是 \cenum{GL_TEXTURE_BUFFER}，
+則 \carg{miplevel} 必須是 0。
+
+\carg{texture} 是一個 GL 1D、 2D、 3D、 1D 陣列、 2D 陣列、 cubemap、 矩形或緩衝材質對象。
+這個材質對象（按照材質上 OpenGL 規則的完整性）必須是完整的材質。
+OpenGL 為 \carg{miplevel} 的 \carg{texture} 所定義的格式和維度
+會被用來創建 OpenCL \cnglo{imgobj}。
+僅當 GL 材質對象的內部格式可以映射到
+\reftab{imgChannelOrder}和\reftab{imgChannelDataType}中所列通道次序和數據型別時，
+才可以用來創建 OpenCL \cnglo{imgobj}。
+
+\carg{errcode_ret} 會返回相應的錯誤碼，見下文。
+如果他是 \cmacro{NULL}，則不會返回錯誤碼。
+
+如果成功創建了\cnglo{imgobj}，則 \clapi{clCreateFromGLTexture} 會將其返回，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{context} 無效，或者不是由 GL \cnglo{context}創建的。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{flags} 的值無效，
+或者 \carg{texture_target} 的值不再上面所述範圍內。
+
+\item \cenum{CL_INVALID_MIP_LEVEL}，
+如果 \carg{miplevel} 小於（OpenGL 實作的） level\low{base} 或者（對於 OpenGL ES 實作而言）是零；
+或者大於 q （無論是 OpenGL 還是 OpenGL ES）。
+ OpenGL 2.1 規範中的{\ftRef{節 3.8.10}} 和 OpenGL ES 2.0 中的{\ftRef{節 3.7.10}} 中
+定義了 level\low{base} 和 q 。
+
+\item \cenum{CL_INVALID_MIP_LEVEL}，
+如果 \carg{miplevel} 大於零，並且 OpenGL 實作不支持由非零 mipmap 級別創建。
+
+\item \cenum{CL_INVALID_GL_OBJECT}，
+如果 \carg{texture} 不是 \carg{texture_target} 類型的 GL 材質對象；
+或者沒有定義 \carg{miplevel} 的 \carg{texture}；
+或者指定的 \carg{miplevel} 的寬或高是零。
+
+\item \cenum{CL_INVALID_IMAGE_FORMAT_DESCRIPTOR}，
+如果 OpenGL 材質內部格式不能映射到所支持的 OpenCL 圖像格式上。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果 \carg{texture} 是邊界寬度值大於零的 GL 材質對象。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+如果存在對應的 CL \cnglo{imgobj}，
+但是通過 GL API （如 \capi{glTexImage2D}、 \capi{glTexImage3D} 或者
+修改了材質參數 \cenum{GL_TEXTURE_BASE_LEVEL} 或 \cenum{GL_TEXTURE_MAX_LEVEL}）
+修改了 GL 材質對象的狀態，
+則後續使用 CL \cnglo{imgobj}時會導致\cnglo{undef}的行為。
+
+可使用函式 \clapi{clRetainMemObject} 和 \clapi{clReleaseMemObject} 來
+\cnglo{retain}和\cnglo{release}此\cnglo{imgobj}。
+
+\reftab{ImgFmtMap}列出了 GL 材質內部格式與 CL 圖像格式間的對應關係。
+只要 GL 材質對象是\reftab{ImgFmtMap}中所列格式，就保證能將其映射到表中對應的 CL 圖像格式上。
+如果材質對象是其他 OpenGL 內部格式，
+則可能（但不保證）也能映射到 CL 圖像格式上；
+如果存在這樣的映射，則保證保留所有顏色組件、數據型別，並且每個組件的位數至少與分配 OpenGL 對象時相同。
+
+\placetable[here][tab:ImgFmtMap]
+{GL 內部格式到 CL 圖像格式的映射}
+{\input{chapter_optext/tbl/img_fmt_map.tex}}
+

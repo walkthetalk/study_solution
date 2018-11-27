@@ -1,0 +1,134 @@
+\subsection{創建內核對象}
+
+\topclfunc{clCreateKernel}
+
+\startCLFUNC
+cl_kernel clCreateKernel (cl_program program,
+			const char *kernel_name,
+			cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式可用來創建\cnglo{kernelobj}。
+
+\carg{program} 是一個\cnglo{programobj}，帶有成功構建的執行體。
+
+\carg{kernel_name} 是\cnglo{program}中一個函式的名字，
+聲明時帶有限定符 \cqlf{__kernel}。
+
+\carg{errcode_ret} 會返回相應的錯誤碼。
+如果 \carg{errcode_ret} 是 \cmacro{NULL}，則不會返回錯誤碼。
+
+如果成功創建了\cnglo{kernelobj}，則 \capi{clCreateKernel} 會將其返回，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_PROGRAM}，如果 \carg{program} 無效。
+
+\item \cenum{CL_INVALID_PROGRAM_EXECUTABLE}，
+如果沒有為 \carg{program} 成功構建的執行體。
+
+\item \cenum{CL_INVALID_KERNEL_NAME}，
+如果 \carg{program} 中找不到 \carg{kernel_name}。
+
+\item \cenum{CL_INVALID_KERNEL_DEFINITION}，
+如果 \carg{kernel_name} 的函式定義（如參數個數、參數型別）
+在已經具有對應執行體的那些\cnglo{device}上有所區別。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{kernel_name} 是 \cmacro{NULL}。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clCreateKernelsInProgram}
+
+\startCLFUNC
+cl_int clCreateKernelsInProgram (cl_program program,
+			cl_uint num_kernels,
+			cl_kernel *kernels,
+			cl_uint *num_kernels_ret)
+\stopCLFUNC
+
+此函式會為 \carg{program} 中的所有\cnglo{kernel}函式創建對應的\cnglo{kernelobj}。
+如果某個 \cqlf{__kernel} 函式的定義在已經具有執行體的那些\cnglo{device}上不完全一樣，
+則不會為其創建\cnglo{kernelobj}。
+
+\carg{program} 是一個\cnglo{programobj}，具有成功構建的執行體。
+
+\carg{num_kernels} 即 \carg{kernels} 中 \ctype{cl_kernel} 的數目。
+
+\carg{kernels} 用來存儲所返回的\cnglo{kernelobj}。
+如果 \carg{kernels} 是 \cmacro{NULL}，則忽略；
+否則， \carg{num_kernels} 的值必須大於或等於 \carg{program} 中\cnglo{kernel}的數目。
+
+\carg{num_kernels_ret} 即 \carg{program} 中\cnglo{kernel}的數目。
+如果 \carg{num_kernels_ret} 是 \cmacro{NULL}，則忽略。
+
+如果執行成功， \capi{clCreateKernelsInProgram} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_PROGRAM}，如果 \carg{program} 無效。
+
+\item \cenum{CL_INVALID_PROGRAM_EXECUTABLE}，
+如果 \carg{program} 中的任一\cnglo{device}沒有對應的執行體。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{kernels} 不是 \cmacro{NULL}，
+或者 \carg{num_kernels} 的值小於 \carg{program} 中\cnglo{kernel}的數目。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+只有當已將有效的\cnglo{program}源碼或者二元碼加載到了\cnglo{programobj}中，
+並且至少為一個此對象所關聯的\cnglo{device}成功構建了執行體時，才能創建\cnglo{kernelobj}。
+
+對於一個\cnglo{programobj}而言，如果有關聯的\cnglo{kernelobj}，
+則不允許改變\cnglo{program}執行體，
+也就是說此時調用 \capi{clBuildProgram} 或 \capi{clCompileProgram}
+會返回 \cenum{CL_INVALID_OPERATION}。
+\carg{program} 所在的 OpenCL \cnglo{context}即為 \carg{kernel} 所在的\cnglo{context}。
+\carg{program} 所關聯的\cnglo{device}即為 \carg{kernel} 所關聯的\cnglo{device}。
+對於\cnglo{programobj}中的\cnglo{device}而言，只要有對應的\cnglo{program}執行體，
+就可以執行此對象中聲明的\cnglo{kernel}。
+
+\topclfunc{clRetainKernel}
+
+\startCLFUNC
+cl_int clRetainKernel (cl_kernel kernel)
+\stopCLFUNC
+
+此函式會使 \carg{kernel} 的\cnglo{refcnt}增一。
+執行成功後會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤的一種：
+\startigBase
+\item \cenum{CL_INVALID_KERNEL}，如果 \carg{kernel} 無效。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\capi{clCreateKernel} 或 \capi{clCreateKernelsInProgram} 會實施隱式的\cnglo{retain}。
+
+\topclfunc{clReleaseKernel}
+
+\startCLFUNC
+cl_int clReleaseKernel (cl_kernel kernel)
+\stopCLFUNC
+
+此函式會使 \carg{kernel} 的\cnglo{refcnt}減一。
+執行成功後會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤的一種：
+\startigBase
+\item \cenum{CL_INVALID_KERNEL}，如果 \carg{kernel} 無效。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+當 \carg{kernel} 的\cnglo{refcnt}變成零，隊列中的所有\cnglo{cmd}都不再需要此對象時，
+此對象就會被刪除。

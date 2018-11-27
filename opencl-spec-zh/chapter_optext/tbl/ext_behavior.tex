@@ -1,0 +1,20 @@
+\startbuffer[enExtDsc]
+其行為遵守擴展 \cref{extension_name} 的規定。
+
+如果指定了 \cemp{all}，或者不支持 \cref{extension_name}，
+則會在 \cdrtemp{#pragma OPENCL EXTENSION} 上報告錯誤。
+\stopbuffer
+
+\startbuffer[disExtDsc]
+其行為（包括發出錯誤、警告）如同語言定義中沒有擴展 \cref{extension_name} 那樣。
+
+如果指定了 \cemp{all}，則其行為必須回退到所編譯語言的無擴展核心版本。
+
+如果不支持 \cref{extension_name}，
+則會在 \cdrtemp{#pragma OPENCL EXTENSION} 上發出警告。
+\stopbuffer
+
+\startCLOD[behavior][描述]
+\clOD{enable}{\getbuffer[enExtDsc]}
+\clOD{disable}{\getbuffer[disExtDsc]}
+\stopCLOD

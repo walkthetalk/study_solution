@@ -1,0 +1,150 @@
+
+\section{執行模型}
+OpenCL \cnglo{program}的執行分為兩種情況：
+在一個或多個 {\ftEmp{OpenCL}} \cngloemp{device}上執行\cngloemp{kernel}；
+在\cnglo{host}上執行\cngloemp{host}\cngloemp{program}。
+\cnglo{host}\cnglo{program}為\cnglo{kernel}定義了\cnglo{context}
+並管理\cnglo{kernel}的執行。
+
+OpenCL 執行模型的核心就是\cnglo{kernel}是怎麼執行的。
+\cnglo{host}提交\cnglo{kernel}時會定義一個索引空間。
+\cnglo{kernel}的實體會在此空間中的所有點上執行。
+\cnglo{kernel}的實體稱為\cngloemp{workitem}，
+通過在索引空間中的坐標來標識，這個坐標就是\cnglo{workitem}的\cnglo{glbid}。
+所有\cnglo{workitem}都會執行相同的代碼，但是代碼的執行路徑和參與運算的數據可能會不同。
+
+\cnglo{workitem}被組織到\cngloemp{workgrp}中。
+\cnglo{workgrp}以更粗粒度對索引空間進行了分解。
+\cnglo{workgrp}帶有一個唯一的 ID，他與\cnglo{workitem}所使用的索引空間具有同樣的維數。
+\cnglo{workitem}具有一個\cnglo{locid}，此 ID 在其所隸屬的\cnglo{workgrp}中是唯一的；
+因此任一\cnglo{workitem}都可以通過其\cnglo{glbid}
+或其\cnglo{locid}加\cnglo{workgrp} ID 來唯一標識。
+同一\cnglo{workgrp}中的\cnglo{workitem}
+會在同一\cnglo{computeunit}中的多個\cnglo{prcele}上並發執行。
+
+在 OpenCL 中，索引空間又叫做 NDRange。
+NDRange 是一個 N 維的索引空間，其中 N 可以是一、二或者三。
+NDRange 由一個長度為 N 的整數陣列來定義，
+他指定了索引空間各維度的寬度（起自偏移索引 F， F 缺省為 0）。
+每個\cnglo{workitem}的\cnglo{glbid}和\cnglo{locid}都是 N 維元組。
+\cnglo{glbid}的取值範圍從 F 開始，直到 F 加相應維度上的元素個數減一。
+
+\cnglo{workgrp}的 ID 跟\cnglo{workitem}的\cnglo{glbid}差不多。
+一個長度為 N 的陣列定義了每個維度上\cnglo{workgrp}的數目。
+\cnglo{workitem}在所隸屬的\cnglo{workgrp}中有一個\cnglo{locid}，
+此 ID 中各維度的取值範圍為0到\cnglo{workgrp}在相應維度上的大小減一。
+因此，\cnglo{workgrp}的 ID 加上其中一個\cnglo{locid}可以唯一確定一個\cnglo{workitem}。
+有兩種途徑來標識一個\cnglo{workitem}：
+根據全局索引，或根據\cnglo{workgrp}索引加一個局部索引。
+
+接下來請看\reffig{indexspace}中的二維索引空間，
+其中包括\cnglo{workitem}、其\cnglo{glbid}以及相應的 ID 元組：
+\cnglo{workgrp} ID 和\cnglo{locid}。
+\cnglo{workitem}的索引空間為 \math{(G_x, G_y)}，
+每個\cnglo{workgrp}的大小是 \math{(S_x, S_y)}，
+\cnglo{glbid}的偏移量是 \math{(F_x, F_y)}。
+全局索引定義了一個 \math{G_x} 乘 \math{G_y} 的索引空間，
+所能容納的\cnglo{workitem}總數是 \math{G_x} 和 \math{G_y} 的乘積。
+局部索引定義了一個 \math{S_x} 乘 \math{S_y} 的索引空間，
+一個\cnglo{workgrp}中所能容納\cnglo{workitem}的數目是 \math{S_x} 和 \math{S_y} 的乘積。
+如果知道每個\cnglo{workgrp}的大小和\cnglo{workitem}的總數，
+就能算出有多少\cnglo{workgrp}。
+\cnglo{workgrp}是由一個二維的索引空間來唯一標識的。
+\cnglo{workitem}可以用他的\cnglo{glbid} \math{(g_x, g_y)} 標識，
+或用\cnglo{workgrp} ID \math{(w_x, w_y)}、
+\cnglo{workgrp}的大小 \math{(S_x, S_y)} 和
+在\cnglo{workgrp}中的\cnglo{locid} \math{(s_x, s_y)} 三項組合起來標識：
+\startformula
+(g_x, g_y) = (w_x * S_x + s_x + F_x, w_y * S_y + s_y + F_y)
+\stopformula
+
+\cnglo{workgrp}的數目可以這樣計算：
+\startformula
+(W_x, W_y) = (G_x / S_x, G_y / S_y)
+\stopformula
+
+給定\cnglo{glbid}和\cnglo{workgrp}大小，\cnglo{workitem}所屬\cnglo{workgrp}的 ID 為：
+\startformula
+(w_x, w_y) = ((g_x - s_x - F_x) / S_x, (g_y - s_y - F_y) / S_y)
+\stopformula
+
+\input{fig/NDRange.tex}
+\placefigure[here][fig:indexspace]
+{NDRange 索引空间示例}
+{\reuseMPgraphic{NDRange}}
+
+很多編程模型都可以映射到這個執行模型上。
+OpenCL 明確支持的有兩種：\cngloemp{dppm}和\cngloemp{tppm}。
+
+% Execution Model: Context and Command Queues
+\subsection[section:exemodel:contextandcmdq]{執行模型：上下文和命令隊列}
+
+\cnglo{host}會為執行\cnglo{kernel}定義一個\cnglo{context}。
+\cnglo{context}包括以下\cnglo{res}：
+\startigNum
+\item \cngloemp{device}：\cnglo{host}可以使用的 OpenCL \cnglo{device}集。
+\item \cngloemp{kernel}：運行在 OpenCL \cnglo{device}上的 OpenCL 函式。
+\item \cngloemp{programobj}：實現\cnglo{kernel}的\cnglo{program}源碼和執行體。
+\item \cngloemp{memobj}：一組\cnglo{memobj}，
+對\cnglo{host}和 OpenCL \cnglo{device}可見。
+\cnglo{memobj}包含一些值，\cnglo{kernel}實體可以在其上進行運算。
+\stopigBase
+
+\cnglo{host}使用 OpenCL API 中的函式來創建並操控\cnglo{context}。
+\cnglo{host}會創建一個稱為\cnglo{cmdq}的數據結構
+來協調\cnglo{device}上\cnglo{kernel}的執行。
+\cnglo{host}還會將\cnglo{cmd}入隊，
+這些\cnglo{cmd}將在\cnglo{context}中的\cnglo{device}上被調度。
+這些\cnglo{cmd}包括：
+\startigBase
+\item {\ftEmp{\cnglo{kernel}執行命令}}：
+在\cnglo{device}的\cnglo{prcele}上執行\cnglo{kernel}。
+
+\item {\ftEmp{内存命令}}：讀寫\cnglo{memobj}或者在\cnglo{memobj}間傳輸數據，
+或者從\cnglo{host}的位址空間中映射、解映射\cnglo{memobj}。
+
+\item {\ftEmp{同步命令}}：限制命令的執行順序。
+\stopigBase
+
+\cnglo{cmdq}負責\cnglo{cmd}的調度，使其可以在\cnglo{device}上執行。
+在\cnglo{host}和\cnglo{device}上，\cnglo{cmd}的執行是異步的。
+\cnglo{cmd}的執行有兩種模式：
+\startigBase
+\item \cngloemp{inordexec}：
+\cnglo{cmd}嚴格按照在\cnglo{cmdq}中出現的順序開始和結束執行。
+換言之，前面的\cnglo{cmd}結束後，才能執行後面的\cnglo{cmd}。
+這使隊列中\cnglo{cmd}的執行順序串行化。
+
+\item \cngloemp{outordexec}：
+按順序執行\cnglo{cmd}，但後續\cnglo{cmd}執行前不必等待前面\cnglo{cmd}結束。
+任何順序上的限制都是由程式員通過顯式的同步\cnglo{cmd}强加的。
+\stopigBase
+
+提交給隊列的\cnglo{kernel}執行命令和內存命令都會生成\cnglo{evtobj}。
+這些\cnglo{evtobj}可以用來控制\cnglo{cmd}的執行順序、
+協調\cnglo{cmd}在\cnglo{host}和\cnglo{device}間的運行。
+
+一個\cnglo{context}中可以有多個隊列。
+這些隊列並發運行、相互獨立，OpenCL 中沒有顯式的機制來對他們進行同步。
+
+% Execution Model: Categories of Kernels
+\subsection{執行模型：內核的種類}
+
+OpenCL 執行模型支持兩種\cnglo{kernel}：
+\startigBase
+\item {\ftEmp{OpenCL \cnglo{kernel}}}，
+用 OpenCL C 編程語言編寫，並用 OpenCL C 編譯器編譯而成。
+所有 OpenCL 的實作都支持 OpenCL \cnglo{kernel}。
+實作也可能提供其他機制創建 OpenCL \cnglo{kernel}。
+
+\item {\ftEmp{原生\cnglo{kernel}}}，
+通過\cnglo{host}函式指位器調用。
+原生\cnglo{kernel}與 OpenCL \cnglo{kernel}一起入隊在\cnglo{device}上執行，
+並共享\cnglo{memobj}。
+例如，這些原生\cnglo{kernel}可以是\cnglo{app}代碼中定義的函式，也可以是從庫中導出的函式。
+注意，在 OpenCL 中，
+執行原生\cnglo{kernel}的能力是一個可選功能，原生\cnglo{kernel}的語義\cnglo{impdef}。
+可以使用 OpenCL API 中的一些函式來查詢\cnglo{device}的能力
+並確定\cnglo{device}是否具備某種能力。
+\stopigBase
+

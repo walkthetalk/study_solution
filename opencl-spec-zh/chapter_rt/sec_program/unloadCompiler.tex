@@ -1,0 +1,20 @@
+\subsection{卸載編譯器}
+
+\topclfunc{clUnloadPlatformCompiler}
+
+\startCLFUNC
+cl_int clUnloadPlatformCompiler (cl_platform_id platform)
+\stopCLFUNC
+
+此函式可用來釋放 OpenCL 編譯器為 \carg{platform} 分配的資源。
+這僅作為\cnglo{app}的建議，不保證將來不再使用編譯器，也不保證真正卸載編譯器。
+如果在 \capi{clUnloadPlatformCompiler} 之後調用
+\capi{cl{Build | Compile | Link}Program} 來構建\cnglo{program}執行體，
+有必要的話會重新加載編譯器。
+
+如果執行成功， \capi{clUnloadPlatformCompiler} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_PLATFORM}，如果 \carg{platform} 無效。
+\stopigBase
+

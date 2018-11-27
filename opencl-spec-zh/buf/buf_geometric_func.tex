@@ -1,0 +1,140 @@
+% cross
+\startbuffer[funcproto:cross]
+float4 cross (float4 p0, float4 p1)
+float3 cross (float3 p0, float3 p1)
+double4 cross (double4 p0, double4 p1)
+double3 cross (double3 p0, double3 p1)
+\stopbuffer
+\startbuffer[funcdesc:cross]
+返回 \math{p0.xyz} 和 \math{p1.xyz} 的叉乘。
+所返回的 \ctype{float4} 中的組件 \math{w} 為 \math{0.0}。
+\stopbuffer
+
+% cross_half
+\startbuffer[funcproto:cross_half]
+half4 cross (half4 p0, half4 p1)
+half3 cross (half3 p0, half3 p1)
+\stopbuffer
+\startbuffer[funcdesc:cross_half]
+返回 \math{p0.xyz} 和 \math{p1.xyz} 的叉乘。
+所返回的 \ctype{float4} 中的組件 \math{w} 為 \math{0.0}。
+\stopbuffer
+
+% dot
+\startbuffer[funcproto:dot]
+float dot (floatn p0, floatn p1)
+double dot (doublen p0, doublen p1)
+\stopbuffer
+\startbuffer[funcdesc:dot]
+計算點乘。
+\stopbuffer
+
+% dot_half
+\startbuffer[funcproto:dot_half]
+half dot (gentype p0, gentype p1)
+\stopbuffer
+\startbuffer[funcdesc:dot_half]
+計算點乘。
+\stopbuffer
+
+% distance
+\startbuffer[funcproto:distance]
+float distance (floatn p0,
+		floatn p1)
+double distance (doublen p0,
+		doublen p1)
+\stopbuffer
+\startbuffer[funcdesc:distance]
+返回 \carg{p0} 和 \carg{p1} 的距離。
+即 \math{\mapiemp{length}(\marg{p0} - \marg{p1})}。
+\stopbuffer
+
+% distance_half
+\startbuffer[funcproto:distance_half]
+half distance (gentype p0,
+		gentype p1)
+\stopbuffer
+\startbuffer[funcdesc:distance_half]
+返回 \carg{p0} 和 \carg{p1} 的距離。
+即 \math{\mapiemp{length}(\marg{p0} - \marg{p1})}。
+\stopbuffer
+
+% length
+\startbuffer[funcproto:length]
+float length (floatn p)
+double length (doublen p)
+\stopbuffer
+\startbuffer[funcdesc:length]
+返回矢量 \carg{p} 的長度，即 \math{\sqrt{p.x^2+p.y^2+\cdots}}。
+\stopbuffer
+
+% length_half
+\startbuffer[funcproto:length_half]
+half length (gentype p)
+\stopbuffer
+\startbuffer[funcdesc:length_half]
+返回矢量 \carg{p} 的長度，即 \math{\sqrt{p.x^2+p.y^2+\cdots}}。
+\stopbuffer
+
+% normalize
+\startbuffer[funcproto:normalize]
+floatn normalize (floatn p)
+doublen normalize (doublen p)
+\stopbuffer
+\startbuffer[funcdesc:normalize]
+返回的矢量方向與 \carg{p} 相同，長度為 \math{1}。
+\stopbuffer
+
+% normalize_half
+\startbuffer[funcproto:normalize_half]
+gentype normalize (gentype p)
+\stopbuffer
+\startbuffer[funcdesc:normalize_half]
+返回的矢量方向與 \carg{p} 相同，長度為 \math{1}。
+\stopbuffer
+
+% fast_distance
+\startbuffer[funcproto:fast_distance]
+float fast_distance (floatn p0,
+		floatn p1)
+\stopbuffer
+\startbuffer[funcdesc:fast_distance]
+返回 \math{\mapiemp{fast_length}(\marg{p0} - \marg{p1})}。
+\stopbuffer
+
+% fast_length
+\startbuffer[funcproto:fast_length]
+float fast_length (floatn p)
+\stopbuffer
+\startbuffer[funcdesc:fast_length]
+返回 \math{\mapiemp{half_sqrt}(p.x^2 + p.y^2 + \cdots)}。
+\stopbuffer
+
+% fast_normalize
+\startbuffer[funcproto:fast_normalize]
+floatn fast_normalize (floatn p)
+\stopbuffer
+\startbuffer[funcdesc:fast_normalize]
+返回的矢量方向與 \math{p} 相同，長度為 \math{1}。
+\capi{fast_normalize} 是這樣計算的：
+
+\math{p * \mapiemp{half_rsqrt}(p.x^2 + p.y^2 + \cdots)}
+
+返回值與下面語句結果（具有無窮精度）的誤差在 8192 ulp 內：
+\startcintbl[escape=yes,indentnext=no]
+if (/BTEX\capi{all}/ETEX(/BTEX\math{p == 0.0f}/ETEX))
+	/BTEX\math{result = p}/ETEX;
+else
+	/BTEX\math{result = p / \mapiemp{sqrt}(p.x^2 + p.y^2 + \cdots )}/ETEX;
+\stopcintbl
+但是下列情況例外：
+\startigNum
+\item 如果平方和大於 \cmacro{FLT_MAX}，則結果中對應的浮點值未定義。
+
+\item 如果平方和小於 \cmacro{FLT_MIN}，則實作可能直接返回 \math{p}。
+
+\item 如果\cnglo{device}處於“將去規格化數刷成零”的模式，
+則在計算前會將算元中
+量級小於 \math{\mapiemp{sqrt}(\mmacro{FLT_MIN})} 的元素刷成零。
+\stopigNum
+\stopbuffer

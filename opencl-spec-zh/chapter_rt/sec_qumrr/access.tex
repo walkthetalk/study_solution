@@ -1,0 +1,44 @@
+\subsection{存取所映射的區域}
+
+本節將介紹 OpenCL \cnglo{cmd}是如何存取所映射區域的。
+
+如果某\cnglo{memobj}的某區域映射為可寫
+（即 \capi{clEnqueueMap{Buffer | Image}} 的參數 \carg{map_flags} 中
+設置了 \cenum{CL_MAP_WRITE} 或 \cenum{CL_MAP_WIRTE_INVALIDATE_REGION} ），
+在將其解映射之前，
+對於此\cnglo{memobj}以及與其相關的\cnglo{memobj}
+（與此區域有重疊的子\cnglo{bufobj}或 1D 圖像\cnglo{bufobj}）而言，
+此區域的內容是\cnglo{undef}的。
+
+對於一個\cnglo{memobj}以及與其相關的\cnglo{memobj}
+（與此區域有重疊的子\cnglo{bufobj}或 1D 圖像\cnglo{bufobj}）而言，
+\cnglo{cmdq}中的多個\cnglo{cmd}都可以將其中某個區域或重疊區域映射為可讀
+（即 \carg{mem_flags} = \cenum{CL_MAP_READ}）。
+對於\cnglo{memobj}中映射為可讀的區域，
+\cnglo{kernel}以及其他 OpenCL \cnglo{cmd}（像 \capi{clEnqueueCopyBuffer}）都可以讀取其內容。
+
+對於一個\cnglo{memobj}以及與其相關的\cnglo{memobj}
+（與此區域有重疊的子\cnglo{bufobj}或 1D 圖像\cnglo{bufobj}）而言，
+如果映射（或解映射）的區域有重疊，則認為是錯誤，
+會導致 \capi{clEnqueueMap{Buffer | Image}} 返回 \cenum{CL_INVALID_OPERATION}。
+
+如果\cnglo{memobj}映射為可寫，
+則\cnglo{app}要保證在其他會讀寫其內容的\cnglo{kernel}或\cnglo{cmd}開始執行前將其解映射，
+否則其行為\cnglo{undef}。
+這些行為包括讀寫此\cnglo{memobj}，
+讀寫與其相關的\cnglo{memobj}（子\cnglo{bufobj}或 1D 圖像\cnglo{bufobj}），
+讀寫其父對象（如果此\cnglo{memobj}本身是子\cnglo{bufobj}或 1D 圖像\cnglo{bufobj}）。
+
+而如果\cnglo{memobj}映射為可讀，
+則要保證其他會改寫其內容的\cnglo{kernel}或\cnglo{cmd}開始執行前將其解映射，
+否則其行為\cnglo{undef}。
+這些行為包括對此\cnglo{memobj}的寫操作，
+對與其相關的\cnglo{memobj}（子\cnglo{bufobj}或 1D 圖像\cnglo{bufobj}）的寫操作，
+對其父對象（如果此\cnglo{memobj}本身是子\cnglo{bufobj}或 1D 圖像\cnglo{bufobj}）的寫操作。
+
+在解映射後，如果繼續使用之前映射後的指位器來存取所映射的區域，其行為\cnglo{undef}。
+
+在遵守上面所列規則的前提下，
+可以將 \capi{clEnqueueMap{Buffer | Image}} 所返回的指位器作為引數 \carg{ptr} 調用
+\capi{clEnqueue{Read | Write}Buffer}、\capi{clEnqeue{Read | Write}BufferRect}
+或 \capi{clEnqueue{Read | Write}Image}。

@@ -1,0 +1,19 @@
+\subsection{雜類矢量函式}
+
+另外，OpenCL C 編程語言還實現了\reftab{miscVectorFunc}中所列內建矢量函式。
+如無特殊說明，泛型 \cldt[n]{gentype} （或 \cldt[m]{gentype}）表示函式引數的型別可以為：
+\startigBase[indentnext=no]
+\item \ctype{char{2|4|8|16}}、 \ctype{uchar{2|4|8|16}}、
+\item \ctype{short{2|4|8|16}}、 \ctype{ushort{2|4|8|16}}、
+\item \ctype{half{2|4|8|16}}\footnote{%
+僅當支持擴展 \clext{cl_khr_fp16} 時才有效。}、
+\item \ctype{int{2|4|8|16}}、 \ctype{uint{2|4|8|16}}、
+\item \ctype{long{2|4|8|16}}、 \ctype{ulong{2|4|8|16}}、
+\item \ctype{float{2|4|8|16}} 或 \ctype{double{2|4|8|16}}\footnote{%
+僅當支持雙精度浮點數時才有效}。
+\stopigBase
+而泛型 \cldt[n]{ugentype} 則為內建無符號整形。
+
+\placetable[here][tab:miscVectorFunc]
+{內建雜類矢量函式}
+{\input{chapter_lgg/tbl/tbl_miscvectorfunc.tex}}

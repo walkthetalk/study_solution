@@ -1,0 +1,37 @@
+\bTABLE[option=stretch]
+
+\bTABLEhead
+  \bTR[background=color,backgroundcolor=gray]
+    \bTH 圖像類型 \eTH
+    \bTH \carg{host_ptr} 所指緩衝的大小 \eTH
+  \eTR
+\eTABLEhead
+
+\bTABLEbody
+  \bTR
+    \bTD \cenum{CL_MEM_OBJECT_IMAGE1D} \eTD
+    \bTD >= image_row_pitch \eTD
+  \eTR
+  \bTR
+    \bTD \cenum{CL_MEM_OBJECT_IMAGE1D_BUFFER} \eTD
+    \bTD >= image_row_pitch \eTD
+  \eTR
+  \bTR
+    \bTD \cenum{CL_MEM_OBJECT_IMAGE2D} \eTD
+    \bTD >= image_row_pitch * image_height \eTD
+  \eTR
+  \bTR
+    \bTD \cenum{CL_MEM_OBJECT_IMAGE3D} \eTD
+    \bTD >= image_slice_pitch * image_depth \eTD
+  \eTR
+  \bTR
+    \bTD \cenum{CL_MEM_OBJECT_IMAGE1D_ARRAY} \eTD
+    \bTD >= image_slice_pitch * image_array_size \eTD
+  \eTR
+  \bTR
+    \bTD \cenum{CL_MEM_OBJECT_IMAGE2D_ARRAY} \eTD
+    \bTD >= image_slice_pitch * image_array_size \eTD
+  \eTR
+\eTABLEbody
+
+\eTABLE

@@ -1,0 +1,120 @@
+\topclfunc{clLinkProgram}
+
+\startCLFUNC
+cl_program clLinkProgram (cl_context context,
+			cl_uint num_devices,
+			const cl_device_id *device_list,
+			const char *options,
+			cl_uint num_input_programs,
+			const cl_program *input_programs,
+			void (CL_CALLBACK *pfn_notify)(
+						cl_program program,
+						void *user_data),
+			void *user_data,
+			cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式可以將一組目標碼和庫鏈接成執行體，
+並創建一個包含這個執行體的\cnglo{programobj}。
+對於這個執行體，
+可以使用 \capi{clGetProgramInfo}(\carg{program}, \cenum{CL_PROGRAM_BINARIES}, ...) 對其進行查詢，
+也可以由 \capi{clCreateProgramWithBinary} 用來創建新的\cnglo{programobj}。
+
+如果 \carg{device_list} 不是 \cmacro{NULL}，
+則所返回的\cnglo{programobj}關聯的就是 \carg{device_list} 中的\cnglo{device}；
+否則，關聯的就是 \carg{context} 中的\cnglo{device}。
+
+\carg{context} 是一個 OpenCL \cnglo{context}。
+
+\carg{device_list} 指向 \carg{context} 中的\cnglo{device}。
+如果 \carg{device_list} 是 \cmacro{NULL}，
+則鏈接動作的目標\cnglo{device}是 \carg{context} 中的所有\cnglo{device}（仅限具有编译目标可用的那些）。
+否則，僅為此清單中的\cnglo{device}實施鏈接（仅限具有编译目标可用的那些）。
+
+\carg{num_devices} 即 \carg{device_list} 中\cnglo{device}的數目。
+
+\carg{options} 指向一個以 null 終止的字串，用來描述鏈接選項。
+所支持的選項請參閱\refsection{linkOption}。
+
+\carg{num_input_programs} 即 \carg{input_programs} 中\cnglo{program}的數目。
+
+\carg{input_programs} 是一個陣列，每一項都是一個\cnglo{programobj}，
+他們是編譯過的二元碼或庫，將被鏈接成\cnglo{program}執行體。
+對於目標設備而言，有以下幾種情況：
+\startigBase
+\item \carg{input_programs} 中的所有\cnglo{program}都包含針對此\cnglo{device}的二元碼或庫。
+這種情況下，就為此\cnglo{device}實施鏈接來生成\cnglo{program}執行體。
+
+\item 所有\cnglo{program}都不包含針對此\cnglo{device}的二元碼或庫。
+這種情況下，不會為此\cnglo{device}實施鏈接，也不會生成對應的\cnglo{program}執行體。
+
+\item 所有其他情況都會返回錯誤 \cenum{CL_INVALID_OPERATION}。
+\stopigBase
+
+\carg{pfn_notify} 是\cnglo{app}所註冊的一個回調函式。
+在鏈接完成後（無論成功還是失敗）會被調用。
+
+如果 \carg{pfn_notify} 不是 \cmacro{NULL}，一旦可以開始鏈接，
+\capi{clLinkProgram} 就會立刻返回，而不必等待鏈接完成。
+一旦鏈接完成， \carg{pfn_notify} 就會被調用，
+並返回一個\cnglo{programobj}（跟 \capi{clLinkProgram} 返回的一樣）。
+\cnglo{app}可以查詢鏈接的狀態以及日誌。
+此函式可能會被異步調用。
+\cnglo{app}需要保證此函式是線程安全的。
+
+如果 \carg{pfn_notify} 是 \cmacro{NULL}，
+直到鏈接完畢， \capi{clLinkProgram} 才會返回。
+
+\carg{user_data} 在調用 \carg{pfn_notify} 時作為引數傳入，可以是 \cmacro{NULL}。
+
+如果\cnglo{context}、\cnglo{device}、輸入的\cnglo{program}以及鏈接選項都是有效的，
+並且實施鏈接所需的\cnglo{host}和\cnglo{device}資源都可用，那麼就可以開始進行鏈接了。
+如果可以開始鏈接， \capi{clLinkProgram} 會返回一個非零的\cnglo{programobj}。
+
+如果 \carg{pfn_notify} 是 \cmacro{NULL}，
+鏈接成功會將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}，
+鏈接失敗會將其置為 \cenum{CL_LINK_FAILURE}。
+
+如果 \carg{pfn_notify} 不是 \cmacro{NULL}， \capi{clLinkProgram} 不必等到鏈接完成，
+一旦可以開始鏈接，就可以將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS} 並返回。
+\carg{pfn_notify} 會返回 \cenum{CL_SUCCESS} 或 \cenum{CL_LINK_FAILURE} 以表示鏈接成功與否。
+
+否則 \capi{clLinkProgram} 會返回 \cmacro{NULL}，
+並在 \carg{errcode_ret} 中返回相應的錯誤碼。
+\cnglo{app}應當查詢此\cnglo{programobj}的鏈接狀態，以判定鏈接是否成功。
+返回的錯誤碼可以是：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，如果 \carg{context} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{device_list} 是 \cmacro{NULL} 而 \carg{num_devices} 大於零，
+或者 \carg{device_list} 不是 \cmacro{NULL} 而 \carg{num_devices} 等於零。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{num_input_programs} 是零，且 \carg{input_programs} 是 \cmacro{NULL}；
+或者 \carg{num_input_programs} 是零，而 \carg{input_programs} 不是 \cmacro{NULL}；
+或者 \carg{num_input_programs} 不是零，而 \carg{input_programs} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_PROGRAM}，
+如果 \carg{input_programs} 中的\cnglo{programobj}無效。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{pfn_notify} 是 \cmacro{NULL}，而 \carg{user_data} 不是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_DEVICE}，
+如果 \carg{device_list} 中的任一\cnglo{device}不屬於 \carg{context}。
+
+\item \cenum{CL_INVALID_LINKER_OPTIONS}，如果 \carg{options} 中的連接器選項無效。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果沒有遵守上面對參數 \carg{input_programs} 的介紹中所列的規則。
+
+\item \cenum{CL_LINKER_NOT_AVAILABLE}，如果沒有可用的連接器，
+即 \cenum{CL_DEVICE_LINKER_AVAILABLE} 是 \cenum{CL_FALSE}，參見\reftab{cldevquery}。
+
+\item \cenum{CL_LINK_PROGRAM_FAILURE}，如果鏈接失敗。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

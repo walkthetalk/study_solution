@@ -1,0 +1,477 @@
+% vloadn
+\startbuffer[funcproto:vloadn]
+gentypen vloadn (size_t offset,
+	const __global gentype *p)
+gentypen vloadn (size_t offset,
+	const __local gentype *p)
+gentypen vloadn (size_t offset,
+	const __constant gentype *p)
+gentypen vloadn (size_t offset,
+	const __private gentype *p)
+\stopbuffer
+\startbuffer[funcdesc:vloadn]
+由位址 \math{(\marg{p} + (\marg{offset} \times n))} 讀取
+ \math{\mapiemp{sizeof}(\text{\cldt[n]{gentype}})} 字節的數據並將其返回。
+對於位址 \math{(\marg{p} + (\marg{offset} \times n))} 而言，
+如果 \cldt{gentype} 為 \cldt{char}、 \cldt{uchar}，則他必須按 8 位對齊；
+如果 \cldt{gentype} 為 \cldt{short}、 \cldt{ushort}，則他必須按 16 位對齊;
+如果 \cldt{gentype} 為 \cldt{int}、 \cldt{uint}、 \cldt{float}，
+則他必須按 32 位對齊；
+如果 \cldt{gentype} 為 \cldt{long}、 \cldt{ulong}，則他必須按 64 位對齊。
+\stopbuffer
+
+% vstoren
+\startbuffer[funcproto:vstoren]
+void vstoren (gentypen data,
+	size_t offset,
+	__global gentype *p)
+void vstoren (gentypen data,
+	size_t offset,
+	__local gentype *p)
+void vstoren (gentypen data,
+	size_t offset,
+	__private gentype *p)
+\stopbuffer
+\startbuffer[funcdesc:vstoren]
+將 \carg{data} 中
+ \math{\mapiemp{sizeof}(\text{\cldt[n]{gentype}})} 字節的數據寫入
+位址 \math{(\marg{p} + (\marg{offset} \times n))} 中。
+對於位址 \math{(\marg{p} + (\marg{offset} \times n))} 而言，
+如果 \cldt{gentype} 為 \cldt{char}、 \cldt{uchar}，則他必須按 8 位對齊；
+如果 \cldt{gentype} 為 \cldt{short}、 \cldt{ushort}，則他必須按 16 位對齊;
+如果 \cldt{gentype} 為 \cldt{int}、 \cldt{uint}、 \cldt{float}，
+則他必須按 32 位對齊；
+如果 \cldt{gentype} 為 \cldt{long}、 \cldt{ulong}，則他必須按 64 位對齊。
+\stopbuffer
+
+% vload_half
+\startbuffer[funcproto:vload_half]
+float vload_half (size_t offset,
+		const __global half *p)
+float vload_half (size_t offset,
+		const __local half *p)
+float vload_half (size_t offset,
+		const __constant half *p)
+float vload_half (size_t offset,
+		const __private half *p)
+\stopbuffer
+\startbuffer[funcdesc:vload_half]
+由位址 \math{(\marg{p} + \marg{offset})} 讀取
+ \math{\mapiemp{sizeof}(\mtype{half})} 字節的數據。
+將讀到的數據按 \cldt{half} 值解釋，將其轉換為 \cldt{float} 後返回。
+位址 \math{(\marg{p} + \marg{offset})} 必須按 16 位對齊。
+\stopbuffer
+
+% vload_halfn
+\startbuffer[funcproto:vload_halfn]
+floatn vload_halfn (size_t offset,
+		const __global half *p)
+floatn vload_halfn (size_t offset,
+		const __local half *p)
+floatn vload_halfn (size_t offset,
+		const __constant half *p)
+floatn vload_halfn (size_t offset,
+		const __private half *p)
+\stopbuffer
+\startbuffer[funcdesc:vload_halfn]
+由位址 \math{(\marg{p} + (\marg{offset} \times n))} 讀取
+ \math{\mapiemp{sizeof}(\text{\cldt[n]{half}})} 字節的數據。
+將讀到的數據按 \cldt[n]{half} 值解釋，將其轉換為 \cldt[n]{float} 後返回。
+位址 \math{(\marg{p} + (\marg{offset} \times n))} 必須按 16 位對齊。
+\stopbuffer
+
+% vstore_half_float
+\startbuffer[funcproto:vstore_half_float]
+void vstore_half (float data,
+	size_t offset,
+	__global half *p)
+void vstore_half_rte (float data,
+	size_t offset,
+	__global half *p)
+void vstore_half_rtz (float data,
+	size_t offset,
+	__global half *p)
+void vstore_half_rtp (float data,
+	size_t offset,
+	__global half *p)
+void vstore_half_rtn (float data,
+	size_t offset,
+	__global half *p)
+
+void vstore_half (float data,
+	size_t offset,
+	__local half *p)
+void vstore_half_rte (float data,
+	size_t offset,
+	__local half *p)
+void vstore_half_rtz (float data,
+	size_t offset,
+	__local half *p)
+void vstore_half_rtp (float data,
+	size_t offset,
+	__local half *p)
+void vstore_half_rtn (float data,
+	size_t offset,
+	__local half *p)
+
+void vstore_half (float data,
+	size_t offset,
+	__private half *p)
+void vstore_half_rte (float data,
+	size_t offset,
+	__private half *p)
+void vstore_half_rtz (float data,
+	size_t offset,
+	__private half *p)
+void vstore_half_rtp (float data,
+	size_t offset,
+	__private half *p)
+void vstore_half_rtn (float data,
+	size_t offset,
+	__private half *p)
+\stopbuffer
+\startbuffer[funcdesc:vstore_half_float]
+先按某種捨入模式將 \carg{data} 中的 \cldt{float} 值轉換為 \cldt{half} 值。
+然後將其寫入位址 \math{\marg{p} + \marg{offset}} 中。
+位址 \math{\marg{p} + \marg{offset}} 必須按 16 位對齊。
+
+\clapi{vstore_half} 使用缺省的捨入模式。
+缺省的捨入模式為捨入為最近偶數。
+\stopbuffer
+
+% vstore_halfn_float
+\startbuffer[funcproto:vstore_halfn_float]
+void vstore_halfn (floatn data,
+	size_t offset,
+	__global half *p)
+void vstore_halfn_rte (floatn data,
+	size_t offset,
+	__global half *p)
+void vstore_halfn_rtz (floatn data,
+	size_t offset,
+	__global half *p)
+void vstore_halfn_rtp (floatn data,
+	size_t offset,
+	__global half *p)
+void vstore_halfn_rtn (floatn data,
+	size_t offset,
+	__global half *p)
+
+void vstore_halfn (floatn data,
+	size_t offset,
+	__local half *p)
+void vstore_halfn_rte (floatn data,
+	size_t offset,
+	__local half *p)
+void vstore_halfn_rtz (floatn data,
+	size_t offset,
+	__local half *p)
+void vstore_halfn_rtp (floatn data,
+	size_t offset,
+	__local half *p)
+void vstore_halfn_rtn (floatn data,
+	size_t offset,
+	__local half *p)
+
+void vstore_halfn (floatn data,
+	size_t offset,
+	__private half *p)
+void vstore_halfn_rte (floatn data,
+	size_t offset,
+	__private half *p)
+void vstore_halfn_rtz (floatn data,
+	size_t offset,
+	__private half *p)
+void vstore_halfn_rtp (floatn data,
+	size_t offset,
+	__private half *p)
+void vstore_halfn_rtn (floatn data,
+	size_t offset,
+	__private half *p)
+\stopbuffer
+\startbuffer[funcdesc:vstore_halfn_float]
+先按某種捨入模式將 \carg{data} 中的 \cldt[n]{float} 值轉換為 \cldt[n]{half} 值。
+然後將其寫入位址 \math{(\marg{p} + (\marg{offset} \times n))} 中。
+位址 \math{(\marg{p} + (\marg{offset} \times n))} 必須按 16 位對齊。
+
+\clapi[n]{vstore_half} 使用缺省的捨入模式。
+缺省的捨入模式為捨入為最近偶數。
+\stopbuffer
+
+% vstore_half_double
+\startbuffer[funcproto:vstore_half_double]
+void vstore_half (double data,
+	size_t offset,
+	__global half *p)
+void vstore_half_rte (double data,
+	size_t offset,
+	__global half *p)
+void vstore_half_rtz (double data,
+	size_t offset,
+	__global half *p)
+void vstore_half_rtp (double data,
+	size_t offset,
+	__global half *p)
+void vstore_half_rtn (double data,
+	size_t offset,
+	__global half *p)
+
+void vstore_half (double data,
+	size_t offset,
+	__local half *p)
+void vstore_half_rte (double data,
+	size_t offset,
+	__local half *p)
+void vstore_half_rtz (double data,
+	size_t offset,
+	__local half *p)
+void vstore_half_rtp (double data,
+	size_t offset,
+	__local half *p)
+void vstore_half_rtn (double data,
+	size_t offset,
+	__local half *p)
+
+void vstore_half (double data,
+	size_t offset,
+	__private half *p)
+void vstore_half_rte (double data,
+	size_t offset,
+	__private half *p)
+void vstore_half_rtz (double data,
+	size_t offset,
+	__private half *p)
+void vstore_half_rtp (double data,
+	size_t offset,
+	__private half *p)
+void vstore_half_rtn (double data,
+	size_t offset,
+	__private half *p)
+\stopbuffer
+\startbuffer[funcdesc:vstore_half_double]
+先按某種捨入模式將 \carg{data} 中的 \cldt{double} 值轉換為 \cldt{half} 值。
+然後將其寫入位址 \math{\marg{p} + \marg{offset}} 中。
+位址 \math{\marg{p} + \marg{offset}} 必須按 16 位對齊。
+
+\clapi{vstore_half} 使用缺省的捨入模式。
+缺省的捨入模式為捨入為最近偶數。
+\stopbuffer
+
+% vstore_halfn_double
+\startbuffer[funcproto:vstore_halfn_double]
+void vstore_halfn (doublen data,
+	size_t offset,
+	__global half *p)
+void vstore_halfn_rte (doublen data,
+	size_t offset,
+	__global half *p)
+void vstore_halfn_rtz (doublen data,
+	size_t offset,
+	__global half *p)
+void vstore_halfn_rtp (doublen data,
+	size_t offset,
+	__global half *p)
+void vstore_halfn_rtn (doublen data,
+	size_t offset,
+	__global half *p)
+
+void vstore_halfn (doublen data,
+	size_t offset,
+	__local half *p)
+void vstore_halfn_rte (doublen data,
+	size_t offset,
+	__local half *p)
+void vstore_halfn_rtz (doublen data,
+	size_t offset,
+	__local half *p)
+void vstore_halfn_rtp (doublen data,
+	size_t offset,
+	__local half *p)
+void vstore_halfn_rtn (doublen data,
+	size_t offset,
+	__local half *p)
+
+void vstore_halfn (doublen data,
+	size_t offset,
+	__private half *p)
+void vstore_halfn_rte (doublen data,
+	size_t offset,
+	__private half *p)
+void vstore_halfn_rtz (doublen data,
+	size_t offset,
+	__private half *p)
+void vstore_halfn_rtp (doublen data,
+	size_t offset,
+	__private half *p)
+void vstore_halfn_rtn (doublen data,
+	size_t offset,
+	__private half *p)
+\stopbuffer
+\startbuffer[funcdesc:vstore_halfn_double]
+先按某種捨入模式將 \carg{data} 中的 \cldt[n]{double} 值轉換為 \cldt[n]{half} 值。
+然後將其寫入位址 \math{(\marg{p} + (\marg{offset} \times n))} 中。
+位址 \math{(\marg{p} + (\marg{offset} \times n))} 必須按 16 位對齊。
+
+\clapi[n]{vstore_half} 使用缺省的捨入模式。
+缺省的捨入模式為捨入為最近偶數。
+\stopbuffer
+
+% vloada_halfn
+\startbuffer[funcproto:vloada_halfn]
+floatn vloada_halfn (size_t offset,
+	const __global half *p)
+floatn vloada_halfn (size_t offset,
+	const __local half *p)
+floatn vloada_halfn (size_t offset,
+	const __constant half *p)
+floatn vloada_halfn (size_t offset,
+	const __private half *p)
+\stopbuffer
+\startbuffer[funcdesc:vloada_halfn]
+對於 n 為 2、 4、 8 和 16，
+由位址 \math{(\marg{p} + (\marg{offset} \times n))} 讀取
+ \math{\mapiemp{sizeof}(\text{\cldt[n]{half}})} 字節的數據。
+讀到的數據解釋為 \cldt[n]{half} 值，將其轉換為 \cldt[n]{float} 值後返回。
+
+位址 \math{(\marg{p} + (\marg{offset} \times n))} 必須按
+ \math{\mapiemp{sizeof}(\text{\cldt[n]{half}})} 字節對齊。
+
+如果 n = 3，則由位址 \math{(\marg{p} + (\marg{offset} \times 4))} 讀取
+ \ctype{half3} 並返回 \ctype{float3}。
+位址 \math{(\marg{p} + (\marg{offset} \times 4))} 按
+ \math{\mapiemp{sizeof}(\text{\cldt{half}}) \times 4} 字節對齊。
+\stopbuffer
+
+% vstorea_halfn_float
+\startbuffer[funcproto:vstorea_halfn_float]
+void vstorea_halfn (floatn data,
+	size_t offset,
+	__global half *p)
+void vstorea_halfn_rte (floatn data,
+	size_t offset,
+	__global half *p)
+void vstorea_halfn_rtz (floatn data,
+	size_t offset,
+	__global half *p)
+void vstorea_halfn_rtp (floatn data,
+	size_t offset,
+	__global half *p)
+void vstorea_halfn_rtn (floatn data,
+	size_t offset,
+	__global half *p)
+
+void vstorea_halfn (floatn data,
+	size_t offset,
+	__local half *p)
+void vstorea_halfn_rte (floatn data,
+	size_t offset,
+	__local half *p)
+void vstorea_halfn_rtz (floatn data,
+	size_t offset,
+	__local half *p)
+void vstorea_halfn_rtp (floatn data,
+	size_t offset,
+	__local half *p)
+void vstorea_halfn_rtn (floatn data,
+	size_t offset,
+	__local half *p)
+
+void vstorea_halfn (floatn data,
+	size_t offset,
+	__private half *p)
+void vstorea_halfn_rte (floatn data,
+	size_t offset,
+	__private half *p)
+void vstorea_halfn_rtz (floatn data,
+	size_t offset,
+	__private half *p)
+void vstorea_halfn_rtp (floatn data,
+	size_t offset,
+	__private half *p)
+void vstorea_halfn_rtn (floatn data,
+	size_t offset,
+	__private half *p)
+\stopbuffer
+\startbuffer[funcdesc:vstorea_halfn_float]
+按某種捨入模式將 \carg{data} 中的 \cldt[n]{float} 轉換為 \cldt[n]{half}。
+
+如果 n 為 2、 4、 8 和 16，
+則將 \cldt[n]{half} 值寫入位址 \math{(\marg{p} + (\marg{offset} \times n))}
+位址 \math{(\marg{p} + (\marg{offset} \times n))} 必須按
+ \math{\mapiemp{sizeof}(\text{\cldt[n]{half}})} 字節對齊。
+
+如果 n = 3，
+則將 \ctype{half3} 值寫入位址 \math{(\marg{p} + (\marg{offset} \times 4))}
+位址 \math{(\marg{p} + (\marg{offset} \times 4))} 按
+ \math{\mapiemp{sizeof}(\text{\cldt{half}}) \times 4} 字節對齊。
+
+\capi{vstorea_halfn} 使用缺省的捨入模式。
+缺省的捨入模式為捨入為最近偶數。
+\stopbuffer
+
+% vstorea_halfn_double
+\startbuffer[funcproto:vstorea_halfn_double]
+void vstorea_halfn (doublen data,
+	size_t offset,
+	__global half *p)
+void vstorea_halfn_rte (doublen data,
+	size_t offset,
+	__global half *p)
+void vstorea_halfn_rtz (doublen data,
+	size_t offset,
+	__global half *p)
+void vstorea_halfn_rtp (doublen data,
+	size_t offset,
+	__global half *p)
+void vstorea_halfn_rtn (doublen data,
+	size_t offset,
+	__global half *p)
+
+void vstorea_halfn (doublen data,
+	size_t offset,
+	__local half *p)
+void vstorea_halfn_rte (doublen data,
+	size_t offset,
+	__local half *p)
+void vstorea_halfn_rtz (doublen data,
+	size_t offset,
+	__local half *p)
+void vstorea_halfn_rtp (doublen data,
+	size_t offset,
+	__local half *p)
+void vstorea_halfn_rtn (doublen data,
+	size_t offset,
+	__local half *p)
+
+void vstorea_halfn (doublen data,
+	size_t offset,
+	__private half *p)
+void vstorea_halfn_rte (doublen data,
+	size_t offset,
+	__private half *p)
+void vstorea_halfn_rtz (doublen data,
+	size_t offset,
+	__private half *p)
+void vstorea_halfn_rtp (doublen data,
+	size_t offset,
+	__private half *p)
+void vstorea_halfn_rtn (doublen data,
+	size_t offset,
+	__private half *p)
+\stopbuffer
+\startbuffer[funcdesc:vstorea_halfn_double]
+按某種捨入模式將 \carg{data} 中的 \cldt[n]{double} 轉換為 \cldt[n]{half}。
+
+如果 n 為 2、 4、 8 和 16，
+則將 \cldt[n]{half} 值寫入位址 \math{(\marg{p} + (\marg{offset} \times n))}
+位址 \math{(\marg{p} + (\marg{offset} \times n))} 必須按
+ \math{\mapiemp{sizeof}(\text{\cldt[n]{half}})} 字節對齊。
+
+如果 n = 3，
+則將 \ctype{half3} 值寫入位址 \math{(\marg{p} + (\marg{offset} \times 4))}
+位址 \math{(\marg{p} + (\marg{offset} \times 4))} 按
+ \math{\mapiemp{sizeof}(\text{\cldt{half}}) \times 4} 字節對齊。
+
+\capi{vstorea_halfn} 使用缺省的捨入模式。
+缺省的捨入模式為捨入為最近偶數。
+\stopbuffer

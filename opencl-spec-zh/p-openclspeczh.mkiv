@@ -1,0 +1,853 @@
+%D \module
+%D   [     file=p-openclspeczh,
+%D      version=2014.05.01,
+%D        title=\CONTEXT\ User Module,
+%D     subtitle=openclspeczh,
+%D       author=Yi Qingliang,
+%D         date=\currentdate,
+%D    copyright=Yi Qingliang,
+%D        email=niqingliang2003@gmail.com,
+%D      license=Public Domain]
+
+\writestatus{loading}{ConTeXt User Module / openclspeczh}
+\startmodule[p-openclspeczh]
+
+\usemodule[t-pretty-clfunc]
+
+\define\prdname{OpenCL 規範中文版}
+\define\scver{1.2}
+
+\placebookmarks[
+  chapter,section,subsection,subsubsection% put these in the pdf index
+][
+  all% open all by default
+]
+
+\placebookmarks[
+  title%
+][
+  force=yes%
+]
+
+\setupinteraction[
+  state=start,
+  color=blue,
+  contrastcolor=blue,
+  style=bold,
+  title={OpenCL 規範中文版},
+  author={倪慶亮},
+  subtitle={Khronos OpenCL Working Group},
+  keyword=OpenCL 規範 中文,
+]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% clOption %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definedescription[clOption][
+  %headstyle	normal bold slanted boldslanted type cap small... command
+  %style	normal bold slanted boldslanted type cap small... command
+  %color	name
+  %width	fit broad dimension
+  %distance	dimension
+  %sample	text
+  %text	text
+  %align	flushleft middle flushright
+  margin=2em,	%standard yes no dimension
+  alternative=top,	%left right top serried inmargin inleft inright hanging
+  headcommand=\hskip-2em,	%command
+  %command=\hskip-2em,	%command
+  %hang=,	%fit broad number
+  before=\vskip.5em,		%command
+  inbetween=\vskip.0em,		%command
+  after=\vskip.5em,		%command
+  %indentnext	yes no
+  indenting=yes,	%never not no yes always first next
+]
+%% clSpecifier
+\definedescription[clSpecifier][
+  width=3em,
+  distance=1em,
+  margin=2em,	%standard yes no dimension
+  alternative=hanging,	%left right top serried inmargin inleft inright hanging
+  before=\vskip.5em,		%command
+  after=\vskip.5em,		%command
+  indenting=yes,
+]
+%% clCmmDesc
+\definedescription[clCmmDesc][
+  headstyle=\tt\tf,
+  style=\tt\tf,
+  margin=2em,	%standard yes no dimension
+  alternative=top,	%left right top serried inmargin inleft inright hanging
+  headcommand=\hskip-2em,	%command
+  before=\vskip.25em,		%command
+  inbetween=\vskip.0em,		%command
+  after=\vskip.25em,		%command
+  indenting=yes,	%never not no yes always first next
+]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% glossary
+\definesynonyms[sClGlo][sClGlos][\englo][\cnglo]
+
+\definedescription[clglodsc][
+  headstyle={\rm\bfa},	%normal bold slanted boldslanted type cap small... command
+  %style=normal,	%normal bold slanted boldslanted type cap small... command
+  %color=,		%name
+  %width=fit,		%fit broad dimension
+  %distance=,		%dimension
+  %sample=,		%text
+  %text=,		%text
+  %align=,		%flushleft middle flushright
+  %margin=2em,		%standard yes no dimension
+  alternative=top,		%left right top serried inmargin inleft inright hanging
+  %headcommand=\vskip.0em,		%command % ERROR: with texlive 2012
+  %command=\hskip-2em,	%command
+  %hang=,		%fit broad number
+  before=\vskip.0em,		%command
+  inbetween=\vskip.0em,		%command
+  after=\vskip.0em,		%command
+  %indentnext=,		%yes no
+  indenting=yes,	%never not no yes always first next
+]
+
+% NOTE: you can only use the star/stop form of clglo
+\def\startclglo{\dotripleargument\dostartclglo}
+\long\def\dostartclglo[#1][#2][#3]#4\stopclglo{%
+\sClGlo[#1]{#2}{#3}%
+\reference[clglocn:#1]{#2}%
+\startclglodsc{#2（#3）}%
+#4
+\stopclglodsc
+}
+
+\define[1]\cngloemp{{\ftEmp{\cnglo{#1}}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% enum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defineenumeration[example][
+  text={例},
+  headstyle=\rm\bf,	%normal bold slanted boldslanted type cap small... command
+%  headcolor=blue:7,
+%style	normal bold slanted boldslanted type cap small... command
+%color	name
+%width	fit broad dimension
+%distance	dimension
+%sample	text
+%text	text
+%align	flushleft middle flushright
+%margin	standard yes no dimension
+  alternative=top,	%left right top serried inmargin inleft inright hanging
+%headcommand	command
+%hang	fit broad number
+%before	command
+%inbetween	command
+%after	command
+%indentnext	yes no
+%indenting	never not no yes always first next
+  prefix=yes,
+  prefixsegments=chapter, %chapter:section
+]
+
+\defineenumeration[QUESTION][
+  text={問題},
+  right={：},
+  headstyle=\rm\bf,	%normal bold slanted boldslanted type cap small... command
+  headcolor=red,
+  %style=\rm\bf,		%normal bold slanted boldslanted type cap small... command
+  color=red,	%name
+  width=fit,	%fit broad dimension
+  distance=0em,		%dimension
+%sample	text
+%text	text
+  %align=flushleft,	%flushleft middle flushright
+  %margin=no,	%standard yes no dimension
+  alternative=serried,	%left right top serried inmargin inleft inright hanging
+  %hang=2,		%fit broad number
+%headcommand	command
+%before	command
+%inbetween	command
+%after={},	%command
+%indentnext	yes no
+%indenting	never not no yes always first next
+  %prefix=no,
+  %prefixsegments=chapter, %chapter:section
+]
+
+\definestartstop[ANSWER]
+
+\definesymbol [1] [*]
+\definesymbol [2] [-]
+% no number
+\defineitemgroup[igBase][levels=2]
+\setupitemgroup[igBase]
+[1]
+[packed,joinedup,]
+%standard broad serried packed unpacked stopper joinedup atmargin inmargin autointro loose repeat section paragraph intext random columns
+%standard: default setup
+%n*broad:  extra horizontal white space after symbol
+%n*serried:little horizontal white space after symbol
+%packed:   no whitespace between items
+%stopper:  punctuation after item separator
+%joinedup: no white space before and after itemization
+%atmargin: item separator at the margin
+%inmargin: item separator in margin
+[
+%margin	no standard dimension
+  leftmargin=2em,	%no standard dimension
+%rightmargin	no standard dimension
+%width	dimension
+%distance	dimension
+%factor	number
+%items	number
+%start	number
+  before=,	%command
+  inbetween=,	%command
+  after={\blank[.5ex]},	%command
+%left	text
+%right	text
+%beforehead	command
+%afterhead	command
+%headstyle=boldslanted, %normal bold slanted boldslanted type cap small... command
+%marstyle=boldslanted, %normal bold slanted boldslanted type cap small... command
+%symstyle=boldslanted, %normal bold slanted boldslanted type cap small... command
+%stopper	text
+%n	number
+%symbol	number
+%align	left right normal
+%indentnext	yes no
+]
+\setupitemgroup[igBase][2]
+[packed,joinedup,][
+  leftmargin=4em,	%no standard dimension
+  before=,	%command
+  inbetween=,	%command
+  after=,	%command
+]
+\setupitemgroup[igBase][1][1] % 枚举的标识必须单独定义，否则无效，可选的
+\setupitemgroup[igBase][2][2]
+%m	A numbered list, with lowercase (“medieval”, aka “oldstyle”) numbers.
+%1 … 8	Different kinds of bullets. All items get the same symbol.
+%a	Items are numbered a., b., c., …
+%A	Items are numbered A., B., C., …
+%AK	Items are numbered A., B., C., …, in small caps.
+%r	Items are numbered in lowercase Roman numerals.
+%R	Items are numbered in uppercase Roman numerals.
+%KR	Items are numbered in uppercase Roman numerals, small caps style.
+
+
+% with number
+\defineitemgroup[igNum][levels=1]
+\setupitemgroup[igNum]
+[each]
+[packed,joinedup,]
+[
+  leftmargin=2em,	%no standard dimension
+  before=,	%command
+  inbetween=,	%command
+  after={\blank[.5ex]},	%command
+]
+\setupitemgroup[igNum][1][n]
+
+% big item
+\defineitemgroup[igBig][levels=2]
+\setupitemgroup[igBig][1]
+[packed,joinedup,]
+[
+  leftmargin=0em,
+  before=,
+  inbetween=,
+  after={\blank[.5ex]},
+  width=2em,
+]
+\setupitemgroup[igBig][1][a]
+\setupitemgroup[igBig][2]
+[packed,joinedup,]
+[
+  leftmargin=2em,
+  before=,
+  inbetween=,
+  after=,
+  width=2em,
+]
+\setupitemgroup[igBig][2][1]
+
+
+\startuniqueMPgraphic{frontcoverBG}
+    path p;
+    u := 1cm; w := OverlayWidth; h := OverlayHeight;
+    roundcorner := 8pt; offset := 12pt;
+
+    color shade;
+    shade := (.6,.6,.6);
+
+    for i = 0 step .02 until 1:
+        fill unitsquare xyscaled (w-i*u,h-i*u) squeezed (8pt,6pt)
+             shifted (offset+i*u/2,-offset+i*u/2)
+             withcolor transparent (1,.1,shade);
+    endfor;
+
+    p := unitsquare xyscaled (w, h) shifted (offset/2, -offset/2) squeezed (8pt,6pt);
+    fill p withcolor \MPcolor{gray};
+    draw p withcolor (0.6,0.8,1);
+\stopuniqueMPgraphic
+\defineoverlay[frontcoverBG][\uniqueMPgraphic{frontcoverBG}]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% font style %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\define\ftEmp{\bf} % emphasize
+\define\ftRef{\it} % reference
+\definetype[capi][ % api
+  %space	on off
+  %option	slanted normal none
+  style=\tt\bf,	%normal bold slanted boldslanted type cap small ... command
+  %color	name
+]
+\define[1]\mapi{%
+\text{\capi{#1}}%
+}
+
+\definetype[capiemp][
+  style=\tt\bf,
+]
+\define[1]\mapiemp{%
+\text{\capiemp{#1}}%
+}
+
+\definetype[carg][ % argument
+  style=\tt\it,
+]
+\define[1]\marg{%
+\text{\carg{#1}}%
+}
+
+\definetype[ctype][ % type
+  style=\tt\tf,
+]
+\define[1]\mtype{%
+\text{\ctype{#1}}%
+}
+
+\definetype[ctypeemp][ % type
+  style=\tt\bf,
+]
+
+\definetype[cenum][ % enumeration
+  style=\tt\tf,
+]
+\define[1]\menum{%
+\text{\cenum{#1}}%
+}
+
+\definetype[cenumemp][ % type
+  style=\tt\bf,
+]
+
+\definetype[cqlf][ % qualifier
+  style=\tt\it,
+]
+\definetype[cqlfemp][
+  style=\tt\bf,
+]
+\definetype[cdrt][ % directive
+  style=\tt\tf,
+]
+\definetype[cdrtemp][
+  style=\tt\bf,
+]
+
+\definetype[cmacro][
+  style=\tt\tf,
+]
+\define[1]\mmacro{%
+\text{\cmacro{#1}}%
+}
+
+\definetype[cmacroemp][
+  style=\tt\bf,
+]
+\definetype[cpragmaemp][
+  style=\tt\bf,
+]
+
+\definetype[cvar][ % variable
+  style=\tt\tf,
+]
+\define[1]\mvar{%
+\text{\cvar{#1}}%
+}
+
+\definetype[ckey][
+  style=\tt\tf,
+]
+
+\definetype[ccmm][ % common
+  style=\tt\tf,
+]
+\define[1]\mcmm{%
+\text{\ccmm{#1}}%
+}
+
+\definetype[ccmmsuffix][
+  style=\tt\it,
+]
+\definetype[cemp][
+  style=\tt\bf,
+]
+\definetype[cempsuffix][
+  style=\tt\bi,
+]
+\definetype[cref][
+  style=\tt\it,
+]
+\definetype[cfmt][% format
+  style=\tt\it,
+]
+\definetype[clext][ % opencl extension
+  style=\rm\bf,
+]
+
+\def\clcmm{\dodoubleempty\doCLCMM}
+\unexpanded\def\doCLCMM[#1][#2]#3{%
+\doifsomethingelse{#2}%
+{\ccmm{#3}\ccmmsuffix{#1}\ccmm{x}\ccmmsuffix{#2}}%
+{\doifsomethingelse{#1}{\ccmm{#3}\ccmmsuffix{#1}}{\ccmm{#3}}}%
+}
+
+\def\clemp{\dodoubleempty\doCLEMP}
+\unexpanded\def\doCLEMP[#1][#2]#3{%
+\ifsecondargument
+\cemp{#3}\cempsuffix{#1}\cemp{x}\cempsuffix{#2}%
+\else
+\iffirstargument
+\cemp{#3}\cempsuffix{#1}%
+\else
+\cemp{#3}%
+\fi
+\fi
+}
+
+\def\cldt{\clcmm}
+\def\cldtemp{\clemp}
+\def\clapi{\clemp}
+
+\setupformulas[
+  %location	left right
+  %left	text
+  %right	text
+  %align	flushleft middle flushright
+  %option	middle
+  %strut	yes no
+  %distance=0.01ex,	%dimension
+  %margin	dimension standard yes no
+  %leftmargin	dimension
+  %rightmargin	dimension
+  indentnext=auto,	%yes no
+  %alternative	name
+  %spacebefore=0.01ex,	%dimension
+  %after	dimension
+  %separator	text
+  %conversion	numbers characters Characters romannumerals Romannumerals text
+]
+
+\setuphead[chapter][
+  page=right, %left right yes % 是否固定於左頁或右頁
+  continue=no, %yes no % 第一個是否緊接上一層，優先於*page*
+  sectionnumber=no,
+]
+\setuphead[section][
+  sectionsegments=2:*,
+]
+\setuphead[title][
+  sectionsegments=2:*,
+]
+
+\definesorting[sClFunc][sClFuncs]
+
+\define[1]\topclfunc{%
+\sClFunc{#1}%
+\reference[sClFunc:#1]{#1}%
+\hskip-2em\framed[%
+  width=\overlaywidth,
+  frame=off,
+  bottomframe=on,
+  align=flushleft,
+  before={\blank[0.5ex]},
+  after={},
+  framecolor=darkgray,
+  rulethickness=2pt,
+]{#1}\par%
+}
+
+% number~name~name
+\define[3]\listtopclfunc{%
+\clapi{#2} \at[sClFunc:#3]\par%
+}
+
+\setupsorting[sClFunc][%
+  criterium=all,	% all used
+  %before=,	%COMMAND
+  %after=,	%COMMAND
+  command=\listtopclfunc,	%\...#1#2#3
+  %state=,	%start stopallmodes
+  %style=,	%normal bold slanted boldslanted type cap small... COMMAND
+  %expansion=,	%yes no command
+]
+
+
+\usemodule[t-pretty-clfunc]
+\setuptyping[CLFUNC][
+  margin=no,	%dimension standard yes no
+  escape=yes,	%character %{[[,]]}
+  tab=8,	%number yes no
+  numbering=no,	%line file no
+]
+
+\setuptyping[
+  escape=yes,	%character %{[[,]]}
+  %space	on off
+  tab=8,	%number yes no
+]
+
+\definetyping[clc][%option=c,
+  bodyfont=9pt,
+  %space	on off
+  %page	yes no
+  %option	slanted normal commands color none
+  %text	yes no
+  %icommand	command
+  %vcommand	command
+  %ccommand	command
+  before={\vskip.5ex\starttextbackground[verb]},	%command
+  after={\stoptextbackground\vskip.5ex},	%command
+  margin=no,	%dimension standard yes no
+  %evenmargin	dimension
+  %oddmargin	dimension
+  %blank	dimension small medium big standard halfline line
+  escape=yes,	%character %{[[,]]}
+  %space	on off
+  tab=8,	%number yes no
+  %page	yes no
+  %indentnext	yes no
+  style=\tt\tf,		%normal bold slanted boldslanted type cap small... command
+  %color	name
+  %palet	name
+  %lines=yes,	%yes no hyphenated
+  %empty	yes all no
+  numbering=line,	%line file no
+]
+
+% note
+\defineframedtext[replacepar][
+  bodyfont=small,	%5pt ... 12pt small big
+%  style=\ftRef, %normal bold slanted boldslanted type cap small... COMMAND
+  %left=,	%COMMAND
+  %right,	%COMMAND
+  %before=,	%COMMAND
+  %after,	%COMMAND
+  %inner,	%COMMAND
+  %linecorrection=,	%on off
+  %depthcorrection=,	%on off
+  %margin=,	%standard yes no
+  %location=,	%left right middle none
+  indenting={first,always,2em},	%never none not no yes always first next small medium big normal odd even DIMENSION
+  %inherits from \setupframed
+  background=screen,
+  frame=off,
+  rightframe=on,
+  leftframe=on,
+  framecolor=darkgreen,
+  rulethickness=3pt,
+  width=local,
+]
+
+
+\definereferenceformat[refclglo][
+  left=,	%text
+  right=,	%text
+  %text=,	%text
+  %label=,	%name
+  command=\about,	%command % default is \in
+]
+\define[1]\refglo{%
+\refclglo[clglocn:#1]%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% shortcut %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\define\opencl{OpenCL}
+\define\clver{2.0}
+\define\clrev{22}
+
+\define\scclver{OpenCL 2.0}
+\define\schostfailres{為\cnglo{host}上的 OpenCL 實作分配資源時失敗}
+\define\scdevfailres{為\cnglo{device}上的 OpenCL 實作分配資源時失敗}
+\define\scinf{INF}
+\define\scqnan{Quiet NaN}
+\define\scfma{FMA}
+\define\scnfma{積和熔加运算}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setupTABLE[%
+    %frameoffset=.5\linewidth,
+    %backgroundoffset=\v!frame,
+    %framecolor=\s!black,
+    %width=\v!fit,
+    %height=\v!fit,
+    %autowidth=\v!yes,
+    %rulethickness=\linewidth,
+    %strut=\v!yes,
+    %autostrut=\v!no,
+    %
+    %color=,
+    style={\rmx},
+    headstyle={\rmx\bf},
+    %headcolor=,
+    %aligncharacter=\v!no,
+    %alignmentcharacter={,},
+    %option=, % \v!stretch
+    %header=,
+    %spaceinbetween=,
+    %maxwidth=8em,
+    %textwidth=\hsize,
+    split=yes,	% repeat
+    %splitoffset=0pt,
+    %distance=\zeropoint,           % individual column
+    %columndistance=\zeropoint,     % each column (whole table)
+    %leftmargindistance=\zeropoint, % whole table
+    %rightmargindistance=\zeropoint,% whole table
+    %left=,
+    %right=,
+    %setups=,
+    splitmethod=b%
+]
+\setupTABLE[header][
+    style={\rmx\bf},
+    background=color,
+    backgroundcolor=gray:1,
+]
+
+%%%%%%%%%%%%%%%%%%% ETD: enum / type / desc
+\def\startETD{\dodoubleempty\dostartETD}
+
+\long\def\dostartETD[#1][#2]#3\stopETD{%
+  \startlocalfootnotes
+  \bTABLE[option=stretch]
+  \bTABLEhead
+    \bTR[background=color,backgroundcolor=gray:1]
+        \bTH \ctype{#1} \eTH
+        \bTH #2 \eTH
+    \eTR
+  \eTABLEhead
+  \bTABLEbody
+    #3
+  \eTABLEbody
+  \eTABLE
+  \placelocalfootnotes[style=\rmx,before=,after=,]
+  \stoplocalfootnotes
+}
+
+\define[3]\clETDMulti{
+\bTR[background=color,backgroundcolor=gray:1]
+  \bTC #1 \eTC
+  \bTC \ctype{#2} \eTC
+\eTR
+\bTR
+  \bTC[nc=2]
+    \parindent2em
+    #3
+  \eTC
+\eTR
+}
+
+\define[3]\clETD{
+\bTR[background=color,backgroundcolor=gray:1]
+  \bTC \cenum{#1} \eTC
+  \bTC \ctype{#2} \eTC
+\eTR
+\bTR
+  \bTC[nc=2]
+    \parindent2em
+    #3
+  \eTC
+\eTR
+}
+%%%%%%%%%%%%%%%%%%% ED: enum / desc
+\def\startED{\dodoubleempty\dostartED}
+
+\long\def\dostartED[#1]#2\stopED{%
+  \startlocalfootnotes
+  \bTABLE[option=stretch]
+  \bTABLEhead
+    \bTR[background=color,backgroundcolor=gray:1]
+        \bTH #1 \eTH
+    \eTR
+  \eTABLEhead
+  \bTABLEbody
+    #2
+  \eTABLEbody
+  \eTABLE
+  \placelocalfootnotes[style=\rmx,before=,after=,]
+  \stoplocalfootnotes
+}
+
+\define[2]\clED{
+\bTR[background=color,backgroundcolor=gray:1]
+  \bTC \cenum{#1} \eTC
+\eTR
+\bTR
+  \bTC
+    \parindent2em
+    #2
+  \eTC
+\eTR
+}
+%%%%%%%%%%%%%%%%%%% OD: object / desc
+\def\startCLOD{\dodoubleempty\dostartCLOD}
+
+\long\def\dostartCLOD[#1][#2]#3\stopCLOD{%
+  \startlocalfootnotes
+  \bTABLE[option=stretch]
+  \bTABLEhead
+    \bTR[background=color,backgroundcolor=gray:1]
+        \bTH #1 \eTH
+        \bTH #2 \eTH
+    \eTR
+  \eTABLEhead
+  \bTABLEbody
+    #3
+  \eTABLEbody
+  \eTABLE
+  \placelocalfootnotes[style=\rmx,before=,after=,]
+  \stoplocalfootnotes
+}
+
+\define[2]\clOD{
+\bTR
+  \bTD #1 \eTD
+  \bTD
+    \parindent2em
+    #2 \eTD
+\eTR
+}
+\define[2]\clMD{
+\clOD{\cmacro{#1}}{#2}
+}
+%%%%%%%%%%%%%%%%%%% OO: object / object
+\def\startCLOO{\dodoubleargument\dostartCLOO}
+
+\long\def\dostartCLOO[#1][#2]#3\stopCLOO{%
+  \midaligned{
+  \bTABLE
+  \setupTABLE[c][each][align={middle,lohi}]
+  \bTABLEhead
+    \bTR[background=color,backgroundcolor=gray:1]
+        \bTH #1 \eTH
+        \bTH #2 \eTH
+    \eTR
+  \eTABLEhead
+  \bTABLEbody
+    #3
+  \eTABLEbody
+  \eTABLE
+  }
+}
+
+\define[2]\clOO{
+\bTR
+  \bTD #1 \eTD
+  \bTD #2 \eTD
+\eTR
+}
+
+% macro - macro
+\define[1]\clMM{
+\clOO{\cmacroemp{#1}}{\cmacroemp{CL_#1}}
+}
+
+% macro - macro for half
+\define[1]\clMMH{
+\clMM{HALF_#1}
+}
+
+% macro - macro for float
+\define[1]\clMMF{
+\clMM{FLT_#1}
+}
+
+% macro - macro for double
+\define[1]\clMMD{
+\clMM{DBL_#1}
+}
+
+% constant - math
+\define[2]\clCM{
+\clOO{\cmacroemp{#1}}{\math{#2}}
+}
+%%%%%%%%%%%%%%%%%%% FD: fuction / desc
+\def\startCLFD{\dostartCLFD}
+
+\long\def\dostartCLFD#1\stopCLFD{%
+  \startlocalfootnotes
+  \bTABLE[option=stretch]
+  \setuptyping[option=CLFUNC]
+
+  \bTABLEhead
+    \bTR[background=color,backgroundcolor=gray:1]
+        \bTH 函式 \eTH
+        \bTH 描述 \eTH
+    \eTR
+  \eTABLEhead
+  \bTABLEbody
+    #1
+  \eTABLEbody
+  \eTABLE
+  \placelocalfootnotes[style=\rmx,before=,after=,]
+  \stoplocalfootnotes
+}
+
+\define[1]\clFD{
+\bTR
+  \bTD \typebuffer[funcproto:#1] \eTD
+  \bTD \parindent2em\getbuffer[funcdesc:#1] \eTD
+\eTR
+}
+%%%%%%%%%%%%%%%%%%% FD: fuction / accuracy
+\def\startCLFA{\dostartCLFA}
+
+\long\def\dostartCLFA[#1][#2]#3\stopCLFA{%
+  \bTABLE
+  \setupTABLE[c][odd][align={flushright,lohi}]
+  \setupTABLE[c][even][align={flushleft,lohi}]
+  \bTABLEhead
+    \bTR[background=color,backgroundcolor=gray:1]
+        \bTH #1 \eTH
+        \bTH #2 \eTH
+    \eTR
+  \eTABLEhead
+  \bTABLEbody
+    #3
+  \eTABLEbody
+  \eTABLE
+}
+
+\define[2]\clFA{
+\bTR
+  \bTD #1 \eTD
+  \bTD #2 \eTD
+\eTR
+}
+
+% api
+\define[2]\clFAA{
+\bTR
+  \bTD \capi{#1} \eTD
+  \bTD #2 \eTD
+\eTR
+}
+
+% math
+\define[2]\clFAM{
+\bTR
+  \bTD \math{#1} \eTD
+  \bTD #2 \eTD
+\eTR
+}
+
+\stopmodule
+\endinput
+

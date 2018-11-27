@@ -1,0 +1,194 @@
+\startcomponent cpn-change
+\product opencl-spec-zh
+
+\chapter{變化}
+
+\section{自 OpenCL 1.0 發生的變化}
+
+OpenCL 1.1 的平台層和運行時（{\ftRef{第 4 章}}和{\ftRef{第 5 章}}）加入了如下特性：
+\startigBase
+\startitem
+\reftab{cldevquery} 中加入了如下查詢：
+\startigBase
+\item \cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_CHAR}
+\item \cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_SHORT}
+\item \cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_INT}
+\item \cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_LONG}
+\item \cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_FLOAT}
+\item \cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE}
+\item \cenum{CL_DEVICE_NATIVE_VECTOR_WIDTH_HALF}
+\item \cenum{CL_DEVICE_HOST_UNIFIED_MEMORY}
+\item \cenum{CL_DEVICE_OPENCL_C_VERSION}
+\stopigBase
+\stopitem
+
+\item \capi{clGetContextInfo} 中加入了查詢 \cenum{CL_CONTEXT_NUM_DEVICES}。
+
+\item 可選圖像格式： \cenum{CL_Rx}、 \cenum{CL_RGx} 和 \cenum{CL_RGBx}。
+
+\item 對子\cnglo{bufobj}的支持，
+可以用 \capi{clCreateSubBuffer} 創建一個\cnglo{bufobj}來指代另一\cnglo{bufobj}的某個特定區域。
+
+\startitem
+下列函式分別可以讀、寫、拷貝\cnglo{bufobj}的某個矩形區域：
+\startigBase
+\item \capi{clEnqueueReadBufferRect}、
+\item \capi{clEnqueueWriteBufferRect} 和
+\item \capi{clEnqueueCopyBufferRect}。
+\stopigBase
+\stopitem
+
+\item \capi{clSetMemObjectDestructorCallback} 允許用戶註冊一個回調函式，
+當\cnglo{memobj}被刪除、其資源被釋放時會調用此函式。
+
+\item 構建\cnglo{program}執行體時可以使用選項來控制所用的 OpenCL C 的版本。
+在{\ftRef{節 5.6.4.5}} 中有所描述。
+
+\item \capi{clGetKernelWorkGroupInfo} 中加入了查詢 \cenum{CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE}。
+
+\item 支持用戶事件。允許執行\cnglo{cmd}前等在用戶事件上。
+加入了新 API： \capi{clCreateUserEvent} 和 \capi{clSetUserEventStatus}。
+
+\item \capi{clSetEventCallback} 可以為\cnglo{cmd}的特定執行狀態註冊回調函式。
+\stopigBase
+
+OpenCL 1.1 的平台層和運行時（{\ftRef{第 4 章}}和{\ftRef{第 5 章}}）還進行了如下修正：
+\startigBase
+\startitem
+\reftab{cldevquery} 中的下列查詢：
+\startigBase
+\item \cenum{CL_DEVICE_MAX_PARAMETER_SIZE} 由 256 變成了 1024 字節。
+\item \cenum{CL_DEVICE_LOCAL_MEM_SIZE} 由 16KB 變成了 32KB。
+\stopigBase
+\stopitem
+
+\item \capi{clEnqueueNDRangeKernel} 的引數 \carg{global_work_offset} 可以是非零值。
+
+\item 除了 \capi{clSetKernelArg}，其他所有 API 都是\cnglo{thsafe}的。
+\stopigBase
+
+OpenCL 1.1 中的 OpenCL C 編程語言（{\ftRef{第 6 章}}）加入了如下特性：
+\startigBase
+\item 3 組件矢量數據型別
+
+\startitem
+新的內建函式：
+\startigBase
+\item \cnglo{workitem}函式 \capi{get_global_offset}，在{\ftRef{節 6.12.1}}中定義。
+\item 數學函式 \capi{minmag} 和 \capi{maxmag}，在{\ftRef{節 6.12.2}}中定義。
+\item 整數函式 \capi{clamp}，在{\ftRef{節 6.12.3}}中定義。
+\item 整數函式 \capi{min} 和 \capi{max} 的矢量、標量變體，在{\ftRef{節 6.12.3}}中定義。
+\item \capi{async_work_group_strided_copy}，在{\ftRef{節 6.12.10}}中定義。
+\item \capi{vec_step}、 \capi{shuffle} 和 \capi{shuffle2}，在{\ftRef{節 6.12.12}}中定義。
+\stopigBase
+\stopitem
+
+\item 擴展 \clext{cl_khr_byte_addressable_store} 移入了核心規範。
+
+\startitem
+下列擴展都移入了核心規範，內建原子函式的名字前綴由 \capi{atom_} 變成了 \capi{atomic_}。
+\startigBase
+\item \clext{cl_khr_global_int32_base_atomics}、
+\item \clext{cl_khr_global_int32_extended_atomics}、
+\item \clext{cl_khr_local_int32_base_atomics} 和
+\item \clext{cl_khr_local_int32_extended_atomics} 。
+\stopigBase
+\stopitem
+
+\item 巨集 \cmacro{CL_VERSION_1_0} 和 \cmacro{CL_VERSION_1_1}。
+\stopigBase
+
+在 OpenCL 1.1 中，建議不再使用 OpenCL 1.0 的如下特性：
+\startigBase
+\item 不再支持 API \capi{clSetCommandQueueProperty}。
+\item 不再支持巨集 \cmacro{__ROUNDING_MODE__}。
+\item \capi{clBuildProgram} 的引數 \carg{options} 不再支持選項 \ccmm{–cl-strict-aliasing}。
+\stopigBase
+
+OpenCL 1.1 的{\ftRef{第 9 章}}中加入了如下擴展：
+\startigBase
+\item \clext{cl_khr_gl_event}，由 GL 同步對象創建 CL \cnglo{evtobj}。
+\item \clext{cl_khr_d3d10_sharing}，與 Direct3D 10 共享\cnglo{memobj}。
+\stopigBase
+
+OpenCL 1.1 的 OpenCL ES 規格（{\ftRef{第 10 章}}）中做了如下修正：
+\startigBase
+\item 對 64 位整數的支持是可選的。
+\stopigBase
+
+\section{自 OpenCL 1.1 發生的變化}
+
+OpenCL 1.2 的平台層和運行時（{\ftRef{第 4 章}}和{\ftRef{第 5 章}}）加入了如下特性：
+\startigBase
+\item 支持\cnglo{customdev}和\cnglo{bikernel}。
+
+\item 可以依據\cnglo{device}所支持的劃分方案來劃分\cnglo{device}。
+
+\item 擴充了 \carg{cl_mem_flags}，以描述\cnglo{host}如何存取 \ctype{cl_mem} 對象中的數據。
+
+\item \capi{clEnqueueFillBuffer} 和 \capi{clEnqueueFillImage}，
+支持以某種範式填充\cnglo{bufobj}或以某種顏色填充\cnglo{imgobj}。
+
+\item \carg{cl_map_flags} 中加入了 \cenum{CL_MAP_WRITE_INVALIDATE_REGION}。
+規範中還對 \cenum{CL_MAP_WRITE} 的行為做了進一步澄清。
+
+\item 新的圖像型別： 1D 圖像、由\cnglo{bufobj}創建的 1D 圖像、 1D 圖像陣列和 2D 圖像陣列。
+
+\item \capi{clCreateImage}，可以創建\cnglo{imgobj}。
+
+\item API \capi{clEnqueueMigrateMemObjects} 顯式地控制\cnglo{memobj}的位置，
+或者將其從一個\cnglo{device}遷移到另一個\cnglo{device}上。
+
+\item 編譯和鏈接的分離。
+
+\item \capi{clGetProgramInfo} 中加入了一些查詢，
+用於在\cnglo{program}中可以查詢\cnglo{kernel}的數目以及\cnglo{kernel}的名字。
+
+\item \capi{clGetProgramBuildInfo} 中加入了一些查詢，
+用於查詢編譯、鏈接的狀態和選項。
+
+\item API \capi{clGetKernelArgInfo} 可以返回\cnglo{kernel}引數的資訊。
+
+\item \capi{clEnqueueMarkerWithWaitList} 和 \capi{clEnqueueBarrierWithWaitList}。
+\stopigBase
+
+OpenCL 1.2 中的 OpenCL C 編程語言（{\ftRef{第 6 章}}）加入了如下特性：
+\startigBase
+\item 雙精度現在是一個可選的核心特性，而不再是擴展。
+
+\item 新的內建圖像型別： \ctype{image1d_t}、 \ctype{image1d_array_t} 和 \ctype{image2d_array_t}。
+
+\startitem
+新的內建函式：
+\startigBase
+\item 用於讀寫 1D 圖像、 1D 和 2D 圖像陣列的函式，
+在{\ftRef{節 6.12.14.2}}、{\ftRef{節 6.12.14.3}}和{\ftRef{節 6.12.14.4}}中定義。
+
+\item 無需\cnglo{sampler}的讀取圖像的函式，在{\ftRef{節 6.12.14.3}}中定義。
+
+\item 整數函式\capi{popcount}，在{\ftRef{節 6.12.3}}中定義。
+
+\item 函式 \capi{printf}，在{\ftRef{節 6.12.13}}中定義。
+\stopigBase
+\stopitem
+
+\item 存儲類別限定符 \cqlf{extern} 和 \cqlf{static}，在{\ftRef{節 6.8}}中定義。
+
+\item 巨集 \cmacro{CL_VERSION_1_2} 和 \cmacro{__OPENCL_C_VERSION__}。
+\stopigBase
+
+在 OpenCL 1.2 中，建議不再使用 OpenCL 1.1 的如下 API：
+\startigBase
+\item \capi{clEnqueueMarker}、 \capi{clEnqueueBarrier} 和 \capi{clEnqueueWaitForEvents}。
+\item \capi{clCreateImage2D} 和 \capi{clCreateImage3D}。
+\item \capi{clUnloadCompiler} 和 \capi{clGetExtensionFunctionAddress}。
+\item \capi{clCreateFromGLTexture2D} 和 \capi{clCreateFromGLTexture3D}。
+\stopigBase
+
+在 OpenCL 1.2 中，建議不再使用如下查詢：
+\startigBase
+\item \reftab{cldevquery}中的 \cenum{CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE}
+（由 \capi{clGetDeviceInfo} 使用）。
+\stopigBase
+
+\stopcomponent

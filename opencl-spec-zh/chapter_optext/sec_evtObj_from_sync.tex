@@ -1,0 +1,241 @@
+\section[section:clEvtObjFromGlSync]{由 GL 同步對象創建 CL 事件對象}
+
+% Overview
+\subsection{簡介}
+
+本擴展允許由 OpenGL 隔柵同步對象創建 OpenCL \cnglo{evtobj}，
+從而潛在地提高在兩種 API 間共享圖像和緩衝的效率。
+對應的擴展 \clext{GL_ARB_cl_event} 可以由 OpenCL \cnglo{evtboj}創建 OpenGL 同步對象，
+他可以與本擴展互補。
+
+另外，本擴展修改了 \clapi{clEnqueueAcquireGLObjects} 和 \clapi{clEnqueueReleaseGLObjects} 的行為，
+如果 OpenGL \cnglo{context} 與 OpenCL \cnglo{context} 綁定到了同一個線程中，
+則他可以隱式保證其同步。
+
+如果實作支持本擴展，
+則 \cenum{CL_PLATFORM_EXTENSIONS} 或 \cenum{CL_DEVICE_EXTENSIONS} 中
+應該有字串 \clext{cl_khr_gl_event}，
+參見\reftab{cldevquery}。
+
+% New Procedures and Functions
+\subsection{新例程和新函式}
+
+\startCLFUNC
+cl_event clCreateEventFromGLsyncKHR (
+			cl_context context,
+			GLsync sync,
+			cl_int *errcode_ret);
+\stopCLFUNC
+
+% New Tokens
+\subsection{新的符記}
+
+調用 \clapi{clGetEventInfo} 時
+如果 \carg{param_name} 是 \cenum{CL_EVENT_COMMAND_TYPE}，則會返回：
+\startclc
+CL_COMMAND_GL_FENCE_SYNC_OBJECT_KHR	0x200D
+\stopclc
+
+% Additions to Chapter 5 of the OpenCL 1.2 Specification
+\subsection{對第五章的補充}
+
+將下面內容添加到\refsection{evtObj}的第四段中（\clapi{clCreateUserEvent} 的描述之前）：
+\startreplacepar
+\cnglo{evtobj}也可用來反映 OpenGL 同步對象的狀態。
+同步對象指的是 OpenGL 命令流中所執行的隔柵（fence）命令。
+這為在 OpenGL 和 OpenCL 間共享緩衝和圖像提供了一種新方法（參見\refsection{syncCLGL}）。
+\stopreplacepar
+
+在\reftab{clGetEventInfo}關於 \clapi{clGetEventInfo} 的描述中，
+\carg{param_name} 為 \cenum{CL_EVENT_COMMAND_TYPE} 時，
+所返回的 \carg{param_value} 的值增加一項： \cenum{CL_COMMAND_GL_FENCE_SYNC_OBJECT_KHR}。
+
+新添{\ftRef{節 5.9.1}} {\ftEmp{將\cnglo{evtobj}鏈接到 OpenGL 同步對象上}}：
+\startreplacepar
+可以通過鏈接 OpenGL {\ftEmp{同步對象}}來創建\cnglo{evtobj}。
+這種\cnglo{evtobj}的完成就相當於等待與所鏈接 GL 同步對象相關聯隔柵命令的完成。
+
+\topclfunc{clCreateEventFromGLsyncKHR}
+
+\startCLFUNC
+cl_event clCreateEventFromGLsyncKHR (
+			cl_context context,
+			GLsync sync,
+			cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式會創建一個帶鏈接的\cnglo{evtobj}。
+
+\carg{context} 是一個利用擴展 \clext{cl_khr_gl_sharing}，
+由 OpenGL \cnglo{context}或共享組創建的的 OpenCL \cnglo{context}。
+
+\carg{sync} 是 \carg{context} 所關聯 GL 共享組中同步對象的名字。
+
+如果成功創建了\cnglo{evtobj}，則 \clapi{clCreateEventFromGLsyncKHR} 會將其返回，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{context} 無效，或者不是由 GL \cnglo{context}創建的。
+
+\item \cenum{CL_INVALID_GL_OBJECT}，
+如果 \carg{sync} 不是 \carg{context} 所關聯 GL 共享組中同步對象的名字。
+\stopigBase
+
+對於這種\cnglo{evtobj}調用 \clapi{clGetEventInfo} 時會返回下列值：
+\startigBase
+\item 如果查詢的是 \cenum{CL_EVENT_COMMAND_QUEUE}，則結果為 \cmacro{NULL}，
+因為此事件沒有與任何 OpenCL \cnglo{cmdq}關聯。
+
+\item 如果查詢的是 \cenum{CL_EVENT_COMMAND_TYPE}，
+則結果是 \cenum{CL_COMMAND_GL_FENCE_SYNC_OBJECT_KHR}，
+表明此事件關聯的是 GL 同步對象，而不是 OpenCL \cnglo{cmd}。
+
+\item 如果查詢的是 \cenum{CL_EVENT_COMMAND_EXECUTION_STATUS}，
+則結果要麼是 \cenum{CL_SUBMITTED}，表明同步對象所關聯的隔柵\cnglo{cmd}還未完成，
+要麼是 \cenum{CL_COMPLETE}，表明隔柵\cnglo{cmd}完成了。
+\stopigBase
+
+\clapi{clCreateEventFromGLsyncKHR} 會在返回的\cnglo{evtobj}上實施隱式的 \clapi{clRetainEvent}。
+創建這種帶鏈接的\cnglo{evtobj}時也會在所鏈接的 GL 同步對象上放置一個引用。
+當這種\cnglo{evtobj}被刪除時，這個引用也會被移除。
+
+\clapi{clCreateEventFromGLsyncKHR} 所返回的事件可能
+只能由 \clapi{clEnqueueAcquireGLObjects} 使用。
+將這種事件傳遞給其他 CL API 會生成錯誤 \cenum{CL_INVALID_EVENT}。
+\stopreplacepar % stop replace par
+
+% Additions to Chapter 9 of the OpenCL 1.2 Specification
+\subsection{對第九章的補充}
+
+對 \clapi{clEnqueueAcquireGLObjects} 的參數 \carg{event} 增加以下描述：
+\startreplacepar
+如果一個 OpenGL \cnglo{context}綁定到了當前線程上，
+那麼同時滿足下列兩個條件的 OpenGL \cnglo{cmd}會在執行
+緊跟 \clapi{clEnqueueAcquireGLObjects} 的所有 OpenCL \cnglo{cmd}
+（這些 OpenCL \cnglo{cmd}會影響或存取 \carg{mem_objects} 中的\cnglo{memobj}）前完成：
+\startigNum[indentnext=no]
+\item 會影響或存取 \carg{mem_objects} 中\cnglo{memobj}的內容；
+\item 是在調用 \clapi{clEnqueueAcquireGLObjects} 之前在此 OpenGL \cnglo{context}上發起的。
+\stopigNum
+如果所返回的\cnglo{evtobj}不是 \cmacro{NULL}，
+則只有當這樣的 OpenGL \cnglo{cmd}完成後，他才會報告完成。
+\stopreplacepar
+
+對 \clapi{clEnqueueReleaseGLObjects} 的參數 \carg{event} 增加以下描述：
+\startreplacepar
+如果一個 OpenGL \cnglo{context}綁定到了當前線程上，
+那麼只有當 \clapi{clEnqueueReleaseGLObjects} 之前的所有 OpenCL \cnglo{cmd}
+（這些 OpenCL \cnglo{cmd}會影響或存取 \carg{mem_objects} 中的\cnglo{memobj}）
+執行完畢後，
+同時滿足下列兩個條件的 OpenGL \cnglo{cmd}才會執行：
+\startigNum[indentnext=no]
+\item 會影響或存取 \carg{mem_objects} 中\cnglo{memobj}的內容；
+\item 是在調用 \clapi{clEnqueueReleaseGLObjects} 之後在此 OpenGL \cnglo{context}上發起的。
+\stopigNum
+如果所返回的\cnglo{evtobj}不是 \cmacro{NULL}，
+則只有當他報告完成後，才會執行這些 OpenGL \cnglo{cmd}。
+\stopreplacepar
+
+用下列內容取代\refsection{syncCLGL}的第二段：
+\startreplacepar
+調用 \clapi{clEnqueueAcquireGLObjects} 之前，
+\cnglo{app}必須確保會存取 \carg{mem_objects} 中對象並且處於擱置狀態的 OpenGL 操作全部完成。
+
+如果支持擴展 \clext{cl_khr_gl_event}，
+並且 OpenGL \cnglo{context}與 OpenCL \cnglo{context}綁定到了同一線程上，
+則 OpenCL 實作會確保（針對此 OpenGL \cnglo{context}）這種擱置的 OpenGL 操作全部完成。
+這也叫{\ftRef{隱式同步}}。
+
+如果支持擴展 \clext{cl_khr_gl_event}，
+並且所談及的 OpenGL \cnglo{context}支持隔柵同步對象，
+要想確定 OpenGL \cnglo{cmd}完成了，
+可以用 \capi{glFenceSync} 在那些\cnglo{cmd}後面放置一個 GL 隔柵\cnglo{cmd}，
+然後用 \clapi{clCreateEventFromGLsyncKHR} 由所產生的 GL 同步對象創建一個事件，
+並通過 \clapi{clEnqueueAcquireGLObjects} 來確定這個\cnglo{evtobj}完成了。
+這種方法可能比 \clapi{glFinish} 更加高效，
+稱作{\ftRef{顯式同步}}。
+當 OpenGL \cnglo{context}綁定的是存取\cnglo{memobj}的另一個線程時，
+顯式同步最有用。
+
+如果支持擴展 \clext{cl_khr_gl_event}，
+要想確定 OpenGL \cnglo{cmd}完成了，
+可以在所有帶有對這些對象的擱置引用的 OpenGL \cnglo{context}上
+發起並等待\cnglo{cmd} \clapi{glFinish} 的完成。
+一些實作可能提供其他有效的同步方法。
+如果存在這樣的方法，會在特定\cnglo{platform}的文檔中對其進行描述。
+
+注意，對於所有 OpenGL 實作以及所有 OpenCL 實作，
+只有 \clapi{glFinish} 才是可移植的，其他方法都不是。
+鑒於 \clapi{glFinish} 是一種代價高昂的操作，
+如果在某個\cnglo{platform}上支持擴展 \clext{cl_khr_gl_event}，
+應盡量避免使用 \clapi{glFinish}。
+\stopreplacepar
+
+% Issues
+\subsection{問題}
+
+\startQUESTION
+如何處理 CL 事件和 GL 同步的相互引用？
+\stopQUESTION
+\startANSWER
+已有提案：帶鏈接的 CL 事件會在 GL 同步對象上放置一個引用。
+刪除 CL 事件時會移除這個引用。
+還有一些代價更高的方案可以通過 GL 同步來反映 CL 事件\cnglo{refcnt}的變化。
+\stopANSWER
+
+\startQUESTION
+在其他 API 中如何處理到同步基元的鏈接？
+\stopQUESTION
+\startANSWER
+還未解決。
+我們想至少要有一種方式可以將事件鏈接到 EGL 同步對象上。
+可能沒有模擬 DX 的概念。
+對於所鏈接的每種同步基元應當都有一個入口點，
+如 \clapi{clCreateEventFromEGLSyncKHR}。
+
+另一種方案就是通用的 \clapi{clCreateEventFromExternalEvent}，可以接受一個特性列。
+這個特性列中可以包含外部基元的類型以及其附屬資訊
+（GL 同步對象句柄、 EGL display 以及同步對象句柄，等等）。
+這樣就可以重用同一個入口點。
+
+這些可能會作為一個獨立的擴展。
+\stopANSWER
+
+\startQUESTION
+\cenum{CL_EVENT_COMMAND_TYPE} 對應的是\cnglo{cmd}（隔柵）的類型還是
+所鏈接同步對象的類型？
+\stopQUESTION
+\startANSWER
+已有提案：所鏈接同步對象的類型。
+\stopANSWER
+
+\startQUESTION
+是否要同時支持顯式同步和隱式同步？
+\stopQUESTION
+\startANSWER
+已有提案：是的。
+隱式同步適用於 GL 和 CL 在同一\cnglo{app}線程中執行的情況。
+而顯式同步則適用於在不同線程中執行、但 \capi{glFinish} 代價又太高的情況。
+\stopANSWER
+
+\startQUESTION
+本擴展是\cnglo{platform}擴展還是\cnglo{device}擴展？
+\stopQUESTION
+\startANSWER
+已有提案：\cnglo{platform}擴展。
+這樣的話，要想僅僅使用公開的 GL API 來實現 sync->event 語義需要做大量的工作；
+但是，同一運行時中可能會有多個對 GL 支持層級不同的驅動和\cnglo{device}同時存在。
+\stopANSWER
+
+\startQUESTION
+什麼地方才能使用由 GL 同步對象生成的事件？
+\stopQUESTION
+\startANSWER
+已有提案：僅當調用 \clapi{clEnqueueAcquireGLObjects} 時才能使用，
+其他任何地方使用這種事件都會產生錯誤。
+其他地方也沒有明確的用例，而且要想支持他還有一個成本問題，
+在所有其他將其作為參數的\cnglo{cmd}中檢查事件源都要有相應的成本，
+經過權衡，採用了目前的方案。
+\stopANSWER
+

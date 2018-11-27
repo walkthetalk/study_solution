@@ -1,0 +1,157 @@
+\section{位址空間限定符}
+
+OpenCL 實現了下列相互分離的位址空間：
+ \cqlfemp{__global}、 \cqlfemp{__local}、
+ \cqlfemp{__constant}、 \cqlfemp{__private}。
+在聲明變量時，可以使用位址空間限定符來指定用哪塊區域的內存來分配對象。
+ OpenCL 對 C 中型別限定符的語法做了擴展， OpenCL 中的型別限定符可以包含一個位址空間名。
+如果某個對象的型別中帶有位址空間名，則在指定的位址空間中分配此對象；
+否則，在缺省的位址空間中分配此對象。
+
+也可以使用不帶前綴 \cqlf{__} 的位址空間限定符即
+ \cqlfemp{global}、 \cqlfemp{local}、 \cqlfemp{constant}、 \cqlfemp{private}
+ 來代替相應帶前綴 \cqlf{__} 的位址空間限定符。
+
+對於\cnglo{program}中的函式引數以及函式的局部變量而言，缺省的位址空間為 \cqlf{__private}。
+所有函式引數必須位於 \cqlf{__private} 位址空間中。
+
+如果 \cqlf{__kernel} 函式的引數聲明為指位器或某種型別的陣列，
+則他指向的位址空間必須是 \cqlf{global}、 \cqlf{local}、 \cqlf{constant}。
+兩個指位器要想相互賦值，他們必須指向同一個位址空間。
+將指向位址空間 A 的指位器轉型成為指向位址空間 B 的指位器是\cnglo{illegal}的。
+
+如果變量的作用域是整個\cnglo{program}，則沒有對應的缺省位址空間。
+這樣的變量在聲明時必須加上 \cqlf{__constant}。
+
+例：
+\startclc
+// declares a pointer p in the __private address space that
+// points to an int object in address space __global
+__global int *p;
+
+// declares an array of 4 floats in the __private address space.
+float x[4];
+\stopclc
+
+函式所返回的值沒有對應的位址空間。
+聲明函式時，如果在返回的型別上加了位址空間限定符，則會產生編譯錯誤；
+除非函式返回的是指位器，並且限定符是用在指位器指向的對象上。
+
+例：
+\startclc
+__private int f() { ... }		// should generate an error
+__local int *f() { ... }		// allowed
+__local int * __private f() { ... };	// should generate an error.
+\stopclc
+
+% __global or global
+\subsection{__global （或 global）}
+
+位址空間名 \cqlfemp{__global} 或 \cqlfemp{global} 用來
+指代分配自\cnglo{glbmem}的\cnglo{memobj}（\cnglo{bufobj}或\cnglo{imgobj}）。
+
+\cnglo{bufobj} 可聲明為指位器，指向標量、矢量或用戶自定義的結構體。
+這樣\cnglo{kernel}就可以讀寫緩衝區中任意位置的內容。
+
+在\cnglo{host}代碼中通過調用相應 API 分配\cnglo{memobj}陣列時，他的實際大小就確定了。
+
+一些例子：
+\startclc
+__global float4	*color;		// An array of float4 elements
+typedef struct {
+	float	a[3];
+	int	b[2];
+} foo_t;
+__global foo_t	*my_info;	// An array of foo_t elements.
+\stopclc
+
+\cnglo{imgobj}始终在全局位址空间内分配，
+对于图像型别，不能添加限定符 \cqlf{__global} 或 \cqlf{global}。
+不能直接存取\cnglo{imgobj}的元素。 OpenCL 提供有內建函式可用來讀寫\cnglo{imgobj}。
+
+限定符 \cqlfemp{const} 可以與 \cqlfemp{__global} 一起使用來聲明一個只讀的\cnglo{bufobj}。
+
+% __local or local
+\subsection{__local （或 local）}
+
+如果要在\cnglo{locmem}中分配變量，
+並在某個\cnglo{workgrp}中的所有\cnglo{workitem}間共享，
+則可以使用位址空間名 \cqlfemp{__local} 或 \cqlfemp{local}。
+指向 \cqlfemp{__local} 位址空間的指位器可以作為函式（包括\cnglo{kernel}函式）的引數。
+對於在\cnglo{kernel}函式內聲明的 \cqlfemp{__local} 變量，
+其作用域僅為此\cnglo{kernel}函式。
+
+關於在\cnglo{kernel}函式內聲明的 \cqlfemp{__local} 變量，下面是一些例子：
+\startclc
+__kernel void my_func(...)
+{
+	__local float	a;	// A single float allocated
+				// in local address space
+	__local float	b[10];	// An array of 10 floats
+				// allocated in local address space.
+
+	if (...)
+	{
+		// example of variable in __local address space
+		// but not declared at __kernel function scope.
+		__local float	c;	<- not allowed.
+	}
+}
+\stopclc
+
+不能對在\cnglo{kernel}函式內聲明的 \cqlfemp{__local} 變量進行初始化：
+\startclc
+__kernel void my_func(...)
+{
+	__local float	a = 1;	<- not allowed
+
+	__local float	b;
+	b = 1;			<- allowed
+}
+\stopclc
+
+\startnotepar
+如果\cnglo{kernel}函式內聲明了 \cqlfemp{__local} 變量，
+則會為執行此\cnglo{kernel}的每個\cnglo{workgrp}都分配一個，
+並且只在\cnglo{workgrp}的生命週期內才存在。
+\stopnotepar
+
+% __constant or constant
+\subsection{__constant （或 constant）}
+
+位址空間名 \cqlfemp{__constant} 或 \cqlfemp{constant} 所描述的變量分配自\cnglo{glbmem}，
+並且在\cnglo{kernel}中作為只讀變量來使用。
+所有\cnglo{workitem}（包括全局\cnglo{workitem}）在執行\cnglo{kernel}時都可以讀取這些變量。
+
+所有常值字串都存儲在 \cqlf{__constant} 位址空間中。
+
+\startnotepar
+在給\cnglo{kernel}的常數引數進行計數時，
+每個指向 \cqlf{__constant} 位址空間的指位器引數都會使計數增一。
+參見\reftab{cldevquery}中的 \cenum{CL_DEVICE_MAX_CONSTANT_ARGS}。
+\stopnotepar
+
+如果變量的作用域是整個\cnglo{program}或\cnglo{kernel}函式的最外層，
+則可以在 \cqlf{__constant} 位址空間中聲明他。
+必須對這種變量進行初始化，並且所用的值必須是編譯時常數。
+對這種變量的寫操作會導致編譯時錯誤。
+
+不要求實作將這種聲明聚合進幾個常數引數中，以使引數個數最少。這種行為\cnglo{impdef}。
+
+想要代碼是可移植的，就必須做最保守的假定，
+即每個在函式或\cnglo{program}的作用域中聲明的 \cqlfemp{__constant} 變量
+在計數時都算是一個單獨的引數。
+
+% __private or private
+\subsection{__private （或 private）}
+
+\cnglo{kernel}函式中所聲明的不帶位址空間限定符的變量，非\cnglo{kernel}函式中的所有變量，
+以及所有函式引數都位於 \cqlfemp{__private} 或 \cqlfemp{private} 位址空間中。
+如果所聲明的變量是指位器，並且沒有指定位址空間限定符，
+則認為他指向的是 \cqlfemp{__private} 位址空間。
+
+下列保留關鍵字僅用作位址空間限定符，不作他用：
+\startigBase
+\item \cqlf{__global}、 \cqlf{__constant}、 \cqlf{__local}、 \cqlf{__private}、
+\item \cqlf{global}、 \cqlf{constant}、 \cqlf{local} 和 \cqlf{private}。
+\stopigBase

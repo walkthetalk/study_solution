@@ -1,0 +1,46 @@
+\subsection{數學函式}
+
+對\reftab{svMathFunc}中所列內建數學函式作了擴充，
+函式引數和返回值也可以是 \cldt{half} 和 \cldt[n]{half}，
+參見\reftab{svMathFuncHalf}。
+現在， \cldt{gentype} 也包含 \cldt{half} 和 \cldt[n]{half}，
+其中 \ccmmsuffix{n} 可以是 2、 3、 4、 8、 16。
+
+對於函式的任一特定用法，所有引數以及返回值的實際型別必須相同。
+
+\placetable[here,split][tab:svMathFuncHalf]
+{標量和矢量引數內建數學函式表}
+{\input{chapter_optext/tbl/math_func_half.tex}}
+
+巨集 \cmacroemp{FP_FAST_FMAF} 用來指明對於半精度浮點數，
+ \capi{fma} 函式族是否比直接編碼更快。
+如果定義了此巨集，則表明對算元為 \ctype{float} 的乘、加運算，
+函式 \capi{fma} 一般跟直接編碼一樣快，或者更快。
+
+下列巨集必須使用指定的值。
+可以在預處理指示 \ccmm{#if} 中使用這些常量算式。
+\startclc
+#define HALF_DIG		3
+#define HALF_MANT_DIG		11
+#define HALF_MAX_10_EXP		+4
+#define HALF_MAX_EXP		+16
+#define HALF_MIN_10_EXP		-4
+#define HALF_MIN_EXP		-13
+#define HALF_RADIX		2
+#define HALF_MAX		0x1.ffcp15h
+#define HALF_MIN		0x1.0p-14h
+#define HALF_EPSILON		0x1.0p-10f
+\stopclc
+
+\reftab{tblHalfMacroAndApp}中給出了上面所列巨集與\cnglo{app}所用的巨集名字之間的對應關係。
+
+\placetable[here][tab:tblHalfMacroAndApp]
+{半精度浮點巨集與應用程式所用巨集的對應關係}
+{\input{chapter_optext/tbl/mmhalf.tex}}
+
+除此之外，還有一些常量可用，如\reftab{tblHalfMacroConst}所示。
+他們的型別都是 \ctype{float}，在 \ctype{float} 型別的精度內是準確的。
+
+\placetable[here][tab:tblHalfMacroConst]
+{半精度浮點常量}
+{\input{chapter_optext/tbl/const_half.tex}}

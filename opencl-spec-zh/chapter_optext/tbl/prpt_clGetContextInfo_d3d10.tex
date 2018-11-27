@@ -1,0 +1,11 @@
+\startETD[cl_context_info][返回型別]
+
+\clETD{CL_CONTEXT_D3D10_PREFER_SHARED_RESOURCES_KHR}{cl_bool}{
+在與 OpenCL 共享 Direct3D 10 資源時，
+如果 \carg{MiscFlags} 中設置了 \cenum{D3D10_RESOURCE_MISC_SHARED} （創建時指定）的資源
+比沒有設置此標誌的更快，則返回 \cenum{CL_TRUE}，
+否則返回 \cenum{CL_FALSE}。
+}
+
+\stopETD
+

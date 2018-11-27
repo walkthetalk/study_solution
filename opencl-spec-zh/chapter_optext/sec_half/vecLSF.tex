@@ -1,0 +1,18 @@
+\subsection[section:vectorLsFuncHalf]{矢量數據裝載和存儲函式}
+
+對\reftab{vectorLsFunc}中所列的矢量數據裝載（\clapi[n]{vload}）和存儲（\clapi[n]{vstore}）函式作了擴充，
+可以讀寫 \cldt{half} 標量和矢量值，
+參見\reftab{vectorLsFuncHalf}。
+
+對泛型 \cldt{gentype} 也作了擴充，包含 \cldt{half}。
+而對泛型 \cldt[n]{gentype} 也作了擴充，包含了 \cldt[n]{half}，
+其中 \ccmmsuffix{n} 為 2、 3、 4、 8 或 16。
+
+\startnotepar
+\capi{vload3} 和 \capi{vstore3}
+均由位址 \math{(\marg{p} + (\marg{offset}\times 3))} 讀寫矢量組件 \ccmm{x}、 \ccmm{y}、 \ccmm{z}。
+\stopnotepar
+
+\placetable[here,split][tab:vectorLsFuncHalf]
+{矢量數據裝載、存儲函式表}
+{\input{chapter_optext/tbl/vectorls_func_half.tex}}

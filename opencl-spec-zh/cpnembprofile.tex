@@ -1,0 +1,240 @@
+\startcomponent cpnembprofile
+\product opencl-spec-zh
+
+\chapter[chapter:openclEmbProfile]{OpenCL 嵌入式規格}
+
+前面章節描述了對桌面平台的特性要求。
+本節則描述針對手持或嵌入式平台的 OpenCL 1.2 嵌入式規格，
+此規格是完整規格的一個子集。
+《OpenCL 1.2 擴展規範》中定義的可選擴展對兩種規格都有效。
+
+OpenCL 1.2 嵌入式規格有如下局限：
+\startigNum
+\startitem
+64 位整數，即 \ctype{long}、 \ctype{ulong}，包括相應的矢量數據型別，
+以及相關的運算都是可選的。
+如果嵌入式規格的實作支持 64 位整數，
+則報告中有擴展字串 \clext{cles_khr_int64}\footnote{%
+在不同的嵌入式設備上， 64 位整數算術的性能可能有重大差異。}。
+\stopitem
+
+\startitem
+對 3D 圖像的支持是可選的。是否支持 3D 圖像主要取決於下列值：
+\startigBase
+\item \cenum{CL_DEVICE_IMAGE3D_MAX_WIDTH}、
+\item \cenum{CL_DEVICE_IMAGE3D_MAX_HEIGHT} 和
+\item \cenum{CL_DEVICE_IMAGE3D_MAX_DEPTH}。
+\stopigBase
+
+如果這些值為零，則嵌入式規格中調用 \capi{clCreateImage} 創建 3D 圖像將失敗，
+並在引數 \carg{errcode_ret} 中返回 \cenum{CL_INVALID_OPERATION}；
+而且在\cnglo{kernel}中聲明型別為 \ctype{image3d_t} 的引數將會導致編譯錯誤。
+
+如果這些值 大於零，則表明嵌入式規格的實作是支持 3D 圖像的。
+\capi{clCreateImage} 會和完整規格中定義的那樣正常工作。
+\cnglo{kernel}中可以使用數據型別 \ctype{image3d_t}。
+\stopitem
+
+\startitem
+对写入 2D 图像阵列的支持是可选的。
+如果嵌入式规格支持扩展 \capi{ cles_khr_2d_image_array_writes}，
+则表明支持写入 2D 图像阵列。
+\stopitem
+
+\startitem
+如果創建圖像和圖像陣列是所用的
+\cvar{image_channel_data_type} 為 \cenum{CL_FLOAT} 或 \cenum{CL_HALF_FLOAT}，
+則他們只能使用濾波模式為 \cenum{CL_FILTER_NEAREST} 的\cnglo{sampler}。
+如果 2D 和 3D 圖像的
+\cvar{image_channel_data_type} 為 \cenum{CL_FLOAT} 或 \cenum{CL_HALF_FLOAT}，
+而\cnglo{sampler}的 \cvar{filter_mode} 為 \cenum{CL_FILTER_LINEAR}，
+則 \capi{read_imagef} 和 \capi{read_imageh}\footnote{%
+如果支持擴展 \clext{cl_khr_fp16}。} 的返回值未定義。
+\stopitem
+
+\startitem
+對於圖像和圖像陣列，支持下列\cnglo{sampler}尋址模式：
+\startigBase
+\item \cenum{CLK_ADDRESS_NONE}、
+\item \cenum{CLK_ADDRESS_MIRRORED_REPEAT}、
+\item \cenum{CLK_ADDRESS_REPEAT}、
+\item \cenum{CLK_ADDRESS_CLAMP_TO_EDGE}、
+\item \cenum{CLK_ADDRESS_CLAMP}。
+\stopigBase
+\stopitem
+
+\startitem
+規定單精度浮點能力（由 \cenum{CL_DEVICE_SINGLE_FP_CONFIG} 給出）至少要為
+\cenum{CL_FP_ROUND_TO_ZERO} 或 \cenum{CL_FP_ROUND_TO_NEAREST}。
+如果支持 \cenum{CL_FP_ROUND_TO_NEAREST}，
+則缺省的捨入模式為捨入為最近偶數，否則缺省的捨入模式為向零捨入。
+\stopitem
+
+\startitem
+單精度浮點運算（加、減和乘）必須要能正確捨入。
+如果結果是零，則可能始終是 0.0。
+除法和開方的精確度由\reftab{EP_ulpMathFunc}給出。
+
+如果 \cenum{CL_DEVICE_SINGLE_FP_CONFIG} 中沒有設置 \cenum{CL_FP_INF_NAN}，
+但是某個算元或加、減、乘、除的結果引發了上溢或無效異常（參見 IEEE 754 規範），
+則結果的值\cnglo{impdef}。
+同樣，如果某個算元是 NaN，
+則單精度比較算子
+（\ccmm{<}、 \ccmm{>}、 \ccmm{<=}、 \ccmm{>=}、 \ccmm{==}、 \ccmm{!=}）
+所返回的值也\cnglo{impdef}。
+
+所有情況下，轉換（\refsection{conversionCast}和\refsection{vectorLsFunc}）
+都要像 \cenum{FULL_PROFILE} 一樣正確捨入，包括那些會消耗或產生 INF 或 NaN 的轉換。
+內建數學函式（\refsection{mathFunc}）的表現也與 \cenum{FULL_PROFILE} 中描述的一樣，
+包括\refsection{addReqBeyondC99}中所描述的邊界條件下的行為，
+但是精確度則以\reftab{EP_ulpMathFunc}為准。
+
+\startnotepar
+如果減法和乘法缺省為向零捨入，
+\capi{fract}、 \capi{fma} 和 \capi{fdim} 所產生的結果應當已經按此模式正確捨入了。
+\stopnotepar
+
+對於基本的浮點運算，上述內容實際是放寬了 IEEE 754 中的要求，儘管極度不情願，
+但是這樣可以為那些硬件預算有嚴格限制的嵌入式設備提供更大的靈活性。
+\stopitem
+
+\startitem
+對於由 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT16}
+和 \cenum{CL_SNORM_INT16} 到 \ctype{float} 的轉換，
+在嵌入式規格中要求其精度 \math{\leq 2 ulp}，
+這取代了\refsection{normIntToFloat}中的 \math{\leq 1.5 ulp}。
+在嵌入式規格中，\refsection{normIntToFloat}中的異常情況以及下列異常情況都有效。
+
+\startclCmmDesc{對於 \cenum{CL_UNORM_INT8}}
+\ccmm{0} 必須轉換為 \ccmm{0.0f}
+
+\ccmm{255} 必須轉換為 \ccmm{1.0f}
+\stopclCmmDesc
+
+\startclCmmDesc{對於 \cenum{CL_UNORM_INT16}}
+\ccmm{0} 必須轉換為 \ccmm{0.0f}
+
+\ccmm{65535} 必須轉換為 \ccmm{1.0f}
+\stopclCmmDesc
+
+\startclCmmDesc{對於 \cenum{CL_SNORM_INT8}}
+\ccmm{-128} 和 \ccmm{-127} 必須轉換為 \ccmm{-1.0f}
+
+\ccmm{0} 必須轉換為 \ccmm{0.0f}
+
+\ccmm{127} 必須轉換為 \ccmm{1.0f}
+\stopclCmmDesc
+
+\startclCmmDesc{對於 \cenum{CL_SNORM_INT16}}
+\ccmm{-32768} 和 \ccmm{-32767} 必須轉換為 \ccmm{-1.0f}
+
+\ccmm{0} 必須轉換為 \ccmm{0.0f}
+
+\ccmm{32767} 必須轉換為 \ccmm{1.0f}
+\stopclCmmDesc
+
+\startclCmmDesc{對於 \cenum{CL_UNORM_INT_101010}}
+\ccmm{0} 必須轉換為 \ccmm{0.0f}
+
+\ccmm{1023} 必須轉換為 \ccmm{1.0f}
+\stopclCmmDesc
+\stopitem
+
+\startitem
+\refsection{atomicFunc}中所定義的原子函式是可選的。
+\stopitem
+\stopigNum
+
+《OpenCL 1.2 擴展規範》中所定義的下列可選擴展對嵌入式規格同樣可用：
+\startigBase
+\item \clext{cl_khr_int64_base_atomics}
+\item \clext{cl_khr_int64_extended_atomics}
+\item \clext{cl_khr_fp16}
+\item \clext{cles_khr_int64}。
+如果支持雙精度浮點數，即 \cenum{CL_DEVICE_DOUBLE_FP_CONFIG} 不是零，
+則必須支持 \clext{cles_khr_int64}。
+\item \clext{cles_khr_2d_image_array_writes}。
+此扩展指明此嵌入式规格\cnglo{device}支持写入 2D 图像阵列。
+
+\stopigBase
+
+OpenCL 1.0 和 OpenCL 1.1 規範中所定義的下列擴展（{\ftRef{第 9 章}}）對嵌入式規格同樣可用：
+\startigBase
+\item \clext{cl_khr_global_int32_base_atomics}
+\item \clext{cl_khr_global_int32_extended_atomics}
+\item \clext{cl_khr_local_int32_base_atomics}
+\item \clext{cl_khr_local_int32_extended_atomics}
+\stopigBase
+
+\reftab{EP_ulpMathFunc}中描述了嵌入式規格中，
+單精度浮點算術運算的最小精確度，以 ULP 值的形式給出。
+計算 ULP 值時參考的是無限精確的結果。
+其中 0 ulp 表示相應函式無需捨入。
+
+\placetable[force,here,split][tab:EP_ulpMathFunc]
+{內建數學函式的 ULP 值}
+{\input{chapter_emb_profile/tbl/tbl_ep_spmathulp.tex}}
+
+語言中加入了巨集 \cmacro{__EMBEDDED_PROFILE__} （參見\refsection{pp_macro}）。
+對於那些實現了嵌入式規格的 OpenCL \cnglo{device}，此巨集為整數常量 1，
+否則未定義此巨集。
+
+如果 OpenCL 實作僅支持嵌入式規格，
+則\reftab{plfquery}中的 \cenum{CL_PLATFORM_PROFILE}
+會返回字串 \cenum{EMBEDDED_PROFILE}。
+
+嵌入式規格中，\reftab{cldevquery}所指定的最小值和最大值變化如下：
+
+\input{chapter_emb_profile/tbl/tbl_ep_dev_query.tex}
+
+如果\reftab{cldevquery}中的 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_TRUE}，
+則實作指派給下列項的值必須大於或等於上表中給出的最小值：
+\startigBase[indentnext=no]
+\item \cenum{CL_DEVICE_MAX_READ_IMAGE_ARGS}、
+\item \cenum{CL_DEVICE_MAX_WRITE_IMAGE_ARGS}、
+\item \cenum{CL_DEVICE_IMAGE2D_MAX_WIDTH}、
+\item \cenum{CL_DEVICE_IMAGE2D_MAX_HEIGHT}、
+\item \cenum{CL_DEVICE_IMAGE3D_MAX_WIDTH}、
+\item \cenum{CL_DEVICE_IMAGE3D_MAX_HEIGHT}、
+\item \cenum{CL_DEVICE_IMAGE3D_MAX_DEPTH}、
+\item \cenum{CL_DEVICE_MAX_SAMPLERS}。
+\stopigBase
+另外， OpenCL 嵌入式規格的實作必須支持下列圖像格式。
+
+對於 2D 和可選的 3D 圖像，至少要支持下列圖像格式（讀寫都要支持）：
+
+\bTABLE[option=stretch]
+\bTABLEhead
+\bTR[background=color,backgroundcolor=gray]
+\bTH image_num_channels \eTH
+\bTH image_channel_order \eTH
+\bTH image_channel_data_type \eTH
+\eTR
+\eTABLEhead
+\bTABLEbody
+
+\bTR
+  \bTD 4 \eTD
+  \bTD \cenum{CL_RGBA} \eTD
+  \bTD
+\cenum{CL_UNORM_INT8}\par
+\cenum{CL_UNORM_INT16}\par
+
+\cenum{CL_SIGNED_INT8}\par
+\cenum{CL_SIGNED_INT16}\par
+\cenum{CL_SIGNED_INT32}\par
+
+\cenum{CL_UNSIGNED_INT8}\par
+\cenum{CL_UNSIGNED_INT16}\par
+\cenum{CL_UNSIGNED_INT32}\par
+
+\cenum{CL_HALF_FLOAT}\par
+\cenum{CL_FLOAT}
+  \eTD
+\eTR
+
+\eTABLEbody
+\eTABLE
+
+\stopcomponent
+

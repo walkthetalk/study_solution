@@ -1,0 +1,364 @@
+% isequal
+\startbuffer[funcproto:isequal]
+int isequal (float x, float y)
+intn isequal (floatn x, floatn y)
+int isequal (double x, double y)
+longn isequal (doublen x, doublen y)
+\stopbuffer
+\startbuffer[funcdesc:isequal]
+按組件逐一比較 \ccmm{x == y}。
+\stopbuffer
+
+% isequal_half
+\startbuffer[funcproto:isequal_half]
+int isequal (half x, half y)
+shortn isequal (halfn x, halfn y)
+\stopbuffer
+\startbuffer[funcdesc:isequal_half]
+按組件逐一比較 \ccmm{x == y}。
+\stopbuffer
+
+% isnotequal
+\startbuffer[funcproto:isnotequal]
+int isnotequal (float x, float y)
+intn isnotequal (floatn x, floatn y)
+int isnotequal (double x, double y)
+longn isnotequal (doublen x, doublen y)
+\stopbuffer
+\startbuffer[funcdesc:isnotequal]
+按組件逐一比較 \ccmm{x != y}。
+\stopbuffer
+
+% isnotequal_half
+\startbuffer[funcproto:isnotequal_half]
+int isnotequal (half x, half y)
+shortn isnotequal (halfn x, halfn y)
+\stopbuffer
+\startbuffer[funcdesc:isnotequal_half]
+按組件逐一比較 \ccmm{x != y}。
+\stopbuffer
+
+% isgreater
+\startbuffer[funcproto:isgreater]
+int isgreater (float x, float y)
+intn isgreater (floatn x, floatn y)
+int isgreater (double x, double y)
+longn isgreater (doublen x, doublen y)
+\stopbuffer
+\startbuffer[funcdesc:isgreater]
+按組件逐一比較 \ccmm{x > y}。
+\stopbuffer
+
+% isgreater_half
+\startbuffer[funcproto:isgreater_half]
+int isgreater (half x, half y)
+shortn isgreater (halfn x, halfn y)
+\stopbuffer
+\startbuffer[funcdesc:isgreater_half]
+按組件逐一比較 \ccmm{x > y}。
+\stopbuffer
+
+% isgreaterequal
+\startbuffer[funcproto:isgreaterequal]
+int isgreaterequal (float x, float y)
+intn isgreaterequal (floatn x, floatn y)
+int isgreaterequal (double x,
+		double y)
+longn isgreaterequal (doublen x,
+		doublen y)
+\stopbuffer
+\startbuffer[funcdesc:isgreaterequal]
+按組件逐一比較 \ccmm{x >= y}。
+\stopbuffer
+
+% isgreaterequal_half
+\startbuffer[funcproto:isgreaterequal_half]
+int isgreaterequal (half x, half y)
+shortn isgreaterequal (halfn x, halfn y)
+\stopbuffer
+\startbuffer[funcdesc:isgreaterequal_half]
+按組件逐一比較 \ccmm{x >= y}。
+\stopbuffer
+
+% isless
+\startbuffer[funcproto:isless]
+int isless (float x, float y)
+intn isless (floatn x, floatn y)
+int isless (double x, double y)
+longn isless (doublen x, doublen y)
+\stopbuffer
+\startbuffer[funcdesc:isless]
+按組件逐一比較 \ccmm{x < y}。
+\stopbuffer
+
+% isless_half
+\startbuffer[funcproto:isless_half]
+int isless (half x, half y)
+shortn isless (halfn x, halfn y)
+\stopbuffer
+\startbuffer[funcdesc:isless_half]
+按組件逐一比較 \ccmm{x < y}。
+\stopbuffer
+
+% islessequal
+\startbuffer[funcproto:islessequal]
+int islessequal (float x, float y)
+intn islessequal (floatn x, floatn y)
+int islessequal (double x, double y)
+longn islessequal (doublen x, doublen y)
+\stopbuffer
+\startbuffer[funcdesc:islessequal]
+按組件逐一比較 \ccmm{x <= y}。
+\stopbuffer
+
+% islessequal_half
+\startbuffer[funcproto:islessequal_half]
+int islessequal (half x, half y)
+shortn islessequal (halfn x, halfn y)
+\stopbuffer
+\startbuffer[funcdesc:islessequal_half]
+按組件逐一比較 \ccmm{x <= y}。
+\stopbuffer
+
+% islessgreater
+\startbuffer[funcproto:islessgreater]
+int islessgreater (float x, float y)
+intn islessgreater (floatn x, floatn y)
+int islessgreater (double x, double y)
+longn islessgreater (doublen x, doublen y)
+\stopbuffer
+\startbuffer[funcdesc:islessgreater]
+按組件逐一比較 \ccmm{(x < y) || (x > y)}。
+\stopbuffer
+
+% islessgreater_half
+\startbuffer[funcproto:islessgreater_half]
+int islessgreater (half x, half y)
+shortn islessgreater (halfn x, halfn y)
+\stopbuffer
+\startbuffer[funcdesc:islessgreater_half]
+按組件逐一比較 \ccmm{(x < y) || (x > y)}。
+\stopbuffer
+
+% isfinite
+\startbuffer[funcproto:isfinite]
+int isfinite (float)
+intn isfinite (floatn)
+int isfinite (double)
+longn isfinite (doublen)
+\stopbuffer
+\startbuffer[funcdesc:isfinite]
+測試引數是否為有限值。
+\stopbuffer
+
+% isfinite_half
+\startbuffer[funcproto:isfinite_half]
+int isfinite (half)
+shortn isfinite (halfn)
+\stopbuffer
+\startbuffer[funcdesc:isfinite_half]
+測試引數是否為有限值。
+\stopbuffer
+
+% isinf
+\startbuffer[funcproto:isinf]
+int isinf (float)
+intn isinf (floatn)
+int isinf (double)
+longn isinf (doublen)
+\stopbuffer
+\startbuffer[funcdesc:isinf]
+測試引數是否為無窮值（正數或負數）。
+\stopbuffer
+
+% isinf_half
+\startbuffer[funcproto:isinf_half]
+int isinf (half)
+shortn isinf (halfn)
+\stopbuffer
+\startbuffer[funcdesc:isinf_half]
+測試引數是否為無窮值（正數或負數）。
+\stopbuffer
+
+% isnan
+\startbuffer[funcproto:isnan]
+int isnan (float)
+intn isnan (floatn)
+int isnan (double)
+longn isnan (doublen)
+\stopbuffer
+\startbuffer[funcdesc:isnan]
+測試引數是否為 NaN。
+\stopbuffer
+
+% isnan_half
+\startbuffer[funcproto:isnan_half]
+int isnan (half)
+shortn isnan (halfn)
+\stopbuffer
+\startbuffer[funcdesc:isnan_half]
+測試引數是否為 NaN。
+\stopbuffer
+
+% isnormal
+\startbuffer[funcproto:isnormal]
+int isnormal (float)
+intn isnormal (floatn)
+int isnormal (double)
+longn isnormal (doublen)
+\stopbuffer
+\startbuffer[funcdesc:isnormal]
+測試引數是否為規格化值。
+\stopbuffer
+
+% isnormal_half
+\startbuffer[funcproto:isnormal_half]
+int isnormal (half)
+shortn isnormal (halfn)
+\stopbuffer
+\startbuffer[funcdesc:isnormal_half]
+測試引數是否為規格化值。
+\stopbuffer
+
+% isordered
+\startbuffer[funcproto:isordered]
+int isordered (float x, float y)
+intn isordered (floatn x, floatn y)
+int isordered (double x, double y)
+longn isordered (doublen x, doublen y)
+\stopbuffer
+\startbuffer[funcdesc:isordered]
+測試引數是否規則。
+相當於 \ccmm{isequal(x, x) && isequal(y, y)}。
+\stopbuffer
+
+% isordered_half
+\startbuffer[funcproto:isordered_half]
+int isordered (half x, half y)
+shortn isordered (halfn x, halfn y)
+\stopbuffer
+\startbuffer[funcdesc:isordered_half]
+測試引數是否規則。
+相當於 \ccmm{isequal(x, x) && isequal(y, y)}。
+\stopbuffer
+
+% isunordered
+\startbuffer[funcproto:isunordered]
+int isunordered (float x, float y)
+intn isunordered (floatn x, floatn y)
+int isunordered (double x, double y)
+longn isunordered (doublen x, doublen y)
+\stopbuffer
+\startbuffer[funcdesc:isunordered]
+測試引數是否不規則。
+如果引數 \carg{x} 或 \carg{y} 是 NaN，則返回非零值，否則返回零。
+\stopbuffer
+
+% isunordered_half
+\startbuffer[funcproto:isunordered_half]
+int isunordered (half x, half y)
+shortn isunordered (halfn x, halfn y)
+\stopbuffer
+\startbuffer[funcdesc:isunordered_half]
+測試引數是否不規則。
+如果引數 \carg{x} 或 \carg{y} 是 NaN，則返回非零值，否則返回零。
+\stopbuffer
+
+% signbit
+\startbuffer[funcproto:signbit]
+int signbit (float)
+intn signbit (floatn)
+int signbit (double)
+longn signbit (doublen)
+\stopbuffer
+\startbuffer[funcdesc:signbit]
+測試符號位。
+對於此函式的標量版本，如果設置了符號位，則返回 1，否則返回 0。
+而在此函式的標量版本中，對於矢量的每個組件，
+如果設置了符號位則返回 -1 （即所有位都是 1），否則返回 0。
+\stopbuffer
+
+% signbit_half
+\startbuffer[funcproto:signbit_half]
+int signbit (half)
+shortn signbit (halfn)
+\stopbuffer
+\startbuffer[funcdesc:signbit_half]
+測試符號位。
+對於此函式的標量版本，如果設置了符號位，則返回 1，否則返回 0。
+而在此函式的標量版本中，對於矢量的每個組件，
+如果設置了符號位則返回 -1 （即所有位都是 1），否則返回 0。
+\stopbuffer
+
+% any
+\startbuffer[funcproto:any]
+int any (igentype x)
+\stopbuffer
+\startbuffer[funcdesc:any]
+如果 \carg{x} 中任一組件的最高位是 1，則返回 1；否則返回 0。
+\stopbuffer
+
+% all
+\startbuffer[funcproto:all]
+int all (igentype x)
+\stopbuffer
+\startbuffer[funcdesc:all]
+如果 \carg{x} 中所有組件的最高位都是 1，則返回 1；否則返回 0。
+\stopbuffer
+
+% bitselect
+\startbuffer[funcproto:bitselect]
+gentype bitselect (gentype a,
+		gentype b,
+		gentype c)
+\stopbuffer
+\startbuffer[funcdesc:bitselect]
+如果 \carg{c} 中的某一位為 0，則選取 \carg{a} 中的對應位作為結果中對應位的值；
+否則選取 \carg{b} 中的對應位作為結果中對應位的值。
+\stopbuffer
+
+% bitselect_half
+\startbuffer[funcproto:bitselect_half]
+halfn bitselect (halfn a,
+		halfn b,
+		halfn c)
+\stopbuffer
+\startbuffer[funcdesc:bitselect_half]
+如果 \carg{c} 中的某一位為 0，則選取 \carg{a} 中的對應位作為結果中對應位的值；
+否則選取 \carg{b} 中的對應位作為結果中對應位的值。
+\stopbuffer
+
+% select
+\startbuffer[funcproto:select]
+gentype select (gentype a,
+		gentype b,
+		igentype c)
+gentype select (gentype a,
+		gentype b,
+		ugentype c)
+\stopbuffer
+\startbuffer[funcdesc:select]
+對於矢量型別中的每個組件，
+如果 \ccmm{c[i]} 的最高位為 1，則結果為 \ccmm{b[i]}，否則為 \ccmm{a[i]}。
+
+對於標量型別，\ccmm{result = c ? b : a}。
+
+\ctype{igentype} 和 \ctype{ugentype} 的元素數目以及元素的位數
+都必須與 \ctype{gentype} 相同。
+\stopbuffer
+
+% select_half
+\startbuffer[funcproto:select_half]
+halfn select (halfn a,
+		halfn b,
+		shortn c)
+halfn select (halfn a,
+		halfn b,
+		ushortn c)
+\stopbuffer
+\startbuffer[funcdesc:select_half]
+對於矢量型別中的每個組件，\ccmm{result[i] = 如果 c[i] 的最高位為 1 ? b[i] : a[i]}。
+
+\ctype{igentype} 和 \ctype{ugentype} 的元素數目以及元素的位數
+都必須與 \ctype{gentype} 相同。
+\stopbuffer

@@ -1,0 +1,175 @@
+
+\startreusableMPgraphic{memArch}
+picture picMain;
+pair pairUR, pairLL, pairC;
+pen penCmm;
+color memColor;
+
+u := 4mm;
+v := 3.5mm;
+ahangle := 30;
+ahlength := .5v;
+penCmm := pencircle scaled 2;
+memColor := (1,0.93,0.98);
+
+def drawGrid =
+begingroup
+fill fullcircle scaled u withcolor (0,255,255);
+
+%right
+for i=0 step u until (xpart pairUR):
+	draw ((i, (ypart pairUR))--(i, (ypart pairLL))) withcolor 0.1[white, black];
+	label(decimal(i/u), (0,0)) scaled 0.5 shifted (i, ypart pairUR) shifted (0,.5v);
+endfor;
+%left
+for i=0 step -u until (xpart pairLL):
+	draw ((i, (ypart pairUR))--(i, (ypart pairLL)))  withcolor 0.1[white, black];
+	label(decimal(i/u), (0,0)) scaled 0.5  shifted (i, (ypart pairUR)) shifted (0,.5v);
+endfor;
+
+%top
+for i=0 step 1 until ((ypart pairUR)/v):
+	draw ((xpart pairLL), i*v)--((xpart pairUR), i*v) withcolor 0.1[white, black];
+	label(decimal(i), (0,0)) shifted ((xpart pairLL),i*v) shifted (-.5u,0);
+endfor;
+%bottom
+for i=0 step -1 until ((ypart pairLL)/v):
+	draw ((xpart pairLL), i*v)--((xpart pairUR), i*v) withcolor 0.1[white, black];
+	label(decimal(i), (0,0)) shifted ((xpart pairLL),i*v) shifted (-.5u,0);
+endfor;
+endgroup
+enddef;
+
+def pathPE =
+unitsquare shifted(-0.5,-0.5) xscaled 4u yscaled v
+enddef;
+def pathPrvMem =
+unitsquare shifted(-0.5,-0.5) xscaled 4u yscaled 2v
+enddef;
+def pathLocalMem =
+unitsquare shifted(-0.5,-0.5) xscaled 4u yscaled 2v
+enddef;
+def pathGCMemCache =
+unitsquare shifted(-0.5,-0.5) xscaled 26u yscaled 2v
+enddef;
+def pathGlbMem =
+unitsquare shifted(-0.5,-0.5) xscaled 24u yscaled 2v
+enddef;
+def pathConstMem =
+unitsquare shifted(-0.5,-0.5) xscaled 24u yscaled 2v
+enddef;
+
+def picPE(expr lbl) =
+image(
+fill pathPE withcolor (0.78,0.9,0.91);
+draw pathPE;
+label(lbl,(0,0));
+)
+enddef;
+
+def picPrvMem(expr lbl) =
+image(
+fill pathPrvMem withcolor memColor;
+draw pathPrvMem;
+label(lbl,(0,0));
+)
+enddef;
+
+def picLocalMem(expr lbl) =
+image(
+fill pathLocalMem withcolor memColor;
+draw pathLocalMem;
+label(lbl,(0,0));
+)
+enddef;
+
+def picGlbMem =
+image(
+fill pathGlbMem withcolor memColor;
+draw pathGlbMem;
+label(btex \mplabel{\cnglo{glbmem}} etex,(0,0));
+)
+enddef;
+
+def picConstMem =
+image(
+fill pathConstMem withcolor memColor;
+draw pathConstMem;
+label(btex \mplabel{\cnglo{constmem}} etex,(0,0));
+)
+enddef;
+
+def picGCMemCache(expr lbl) =
+image(
+fill pathGCMemCache withcolor memColor;
+draw pathGCMemCache;
+label(lbl,(0,0));
+)
+enddef;
+
+def picPeWithMem(expr lblPE, lblMem) =
+image(
+draw picPE(lblPE) shifted (0,-1.5v);
+draw picPrvMem(lblMem) shifted (0,1v);
+draw (0,0)--(0,-1v) withpen penCmm;
+)
+enddef;
+
+def picDOTS =
+image(
+fill fullcircle scaled .5u;
+fill fullcircle scaled .5u shifted (-.75u,0);
+fill fullcircle scaled .5u shifted (.75u,0);
+)
+enddef;
+
+def picCU(expr lbl) =
+image(
+	draw unitsquare shifted (-0.5,-0.5) xscaled 12u yscaled 6v;
+	label(lbl, (0,0)) shifted (0,2.25v);
+	draw picPeWithMem(btex \mplabel{\cnglo{prcele} 1} etex, btex \mplabel{\cnglo{prvmem} 1} etex) shifted (-3.5u,-0.5v);
+	draw picDOTS;
+	draw picPeWithMem(btex \mplabel{\cnglo{prcele} M} etex, btex \mplabel{\cnglo{prvmem} M} etex) shifted (3.5u,-0.5v);
+)
+enddef;
+
+def picComputeDev =
+image(
+	draw unitsquare shifted (-0.5,-0.5) xscaled 28u yscaled 14v;
+	label (btex \mplabel{計算設備} etex, (0,0)) scaled 1.2 shifted (0, 6v);
+	draw picCU(btex \mplabel{\cnglo{computeunit} 1} etex) shifted (-7.5u, 2.5v);
+	draw picLocalMem(btex \mplabel{\cnglo{locmem} 1} etex) shifted (-11u, -3v);
+	drawdblarrow (-6u, -0.5v)--(-6u,-4.5v) withpen penCmm;
+	drawdblarrow (-11u, -0.5v)--(-11u,-2v) withpen penCmm;
+	draw picDOTS shifted (0,3v);
+	draw picCU(btex \mplabel{\cnglo{computeunit} N} etex) shifted (7.5u, 2.5v);
+	draw picLocalMem(btex \mplabel{\cnglo{locmem} N} etex) shifted (4u, -3v);
+	drawdblarrow (9u, -0.5v)--(9u,-4.5v) withpen penCmm;
+	drawdblarrow (4u, -0.5v)--(4u,-2v) withpen penCmm;
+	draw picGCMemCache(btex \mplabel{\cnglo{glbmem}/\cnglo{constmem}數據緩存} etex) shifted (0,-5.5v);
+)
+enddef;
+
+def picComputeDevMem =
+image(
+	draw unitsquare shifted (-0.5,-0.5) xscaled 26u yscaled 7v;
+	label (btex \mplabel{\cnglo{computedevmem}} etex, (0,0)) scaled 1.2 shifted (0, -2.5v);
+	draw picGlbMem shifted (0,2v);
+	draw picConstMem shifted (0,-0.5v);
+)
+enddef;
+
+picMain := image(
+	draw picComputeDev shifted (0,5v);
+	draw picComputeDevMem shifted (0,-6.5v);
+	drawdblarrow (-7u,-1.5v)--(-7u,-3.5v) withpen penCmm;
+	drawdblarrow (8u,-1.5v)--(8u,-6v) withpen penCmm;
+);
+pairUR := urcorner picMain;
+pairLL := llcorner picMain;
+pairC := center picMain;
+
+%drawGrid;
+
+draw picMain;
+\stopreusableMPgraphic

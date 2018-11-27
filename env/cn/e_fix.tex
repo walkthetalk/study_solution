@@ -9,6 +9,7 @@
 \def\footnote#1{%
 \stdfootnote{\setscript[hanzi]#1}%
 }
+%\setupfootnotes[style={\setscript[hanzi]}]
 % \postponenotes\footnote{...}
 
 % 3. 中文caption第一行字符中间有空格
@@ -18,6 +19,12 @@
 % 4. \underbar{\space} is invlaid
 % \underbar is fixed black
 \define\uerbarspace{\color[black]{\hl[.5]}}
+
+% 5. inmargin 断行问题
+\let\stdinmargin\inmargin
+\def\inmargin#1{
+\stdinmargin{\setscript[hanzi]#1}
+}
 
 \define[1]\todo{}
 %\define[1]\todo{\error}

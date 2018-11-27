@@ -1,0 +1,212 @@
+\section[section:conversionRule]{轉換規則}
+
+本節中我們將討論\cnglo{kernel}中讀寫圖像時所用的轉換規則。
+
+% Conversion rules for normalized integer channel data types
+\subsection{歸一化整數通道數據類型的轉換規則}
+
+本節我們將討論歸一化整數通道數據類型與浮點值之間的相互轉換。
+
+% Converting normalized integer channel data types to floating-point values
+\subsubsection[section:normIntToFloat]{將歸一化整數通道數據類型轉換為浮點值}
+
+如果通道數據類型為 \cenum{CL_UNORM_INT8} 和 \cenum{CL_UNORM_INT16}。
+\capi{read_imagef} 將把 8 位或 16 位無符號整數轉換為歸一化浮點值，
+其所在區間為 \math{[0.0f \cdots 1.0]}。
+
+如果通道數據類型為 \cenum{CL_SNORM_INT8} 和 \cenum{CL_SNORM_INT16}。
+\capi{read_imagef} 將把 8 位或 16 位帶符號整數轉換為歸一化浮點值，
+其所在區間為 \math{[-1.0 \cdots 1.0]}。
+
+轉換方式如下：
+
+\startclCmmDesc{\cenum{CL_UNORM_INT8} （8 位無符號整數）-> \ctype{float}}
+歸一化浮點值 = (float) c / 255.0f
+\stopclCmmDesc
+
+\startclCmmDesc{\cenum{CL_UNORM_INT_101010} （10 位無符號整數）-> \ctype{float}}
+歸一化浮點值 = (float) c / 1023.0f
+\stopclCmmDesc
+
+\startclCmmDesc{\cenum{CL_UNORM_INT16} （16 位無符號整數）-> \ctype{float}}
+歸一化浮點值 = (float) c / 65535.0f
+\stopclCmmDesc
+
+\startclCmmDesc{\cenum{CL_SNORM_INT8} （8 位帶符號整數）-> \ctype{float}}
+歸一化浮點值 = max(-1.0f, (float)c / 127.0f)
+\stopclCmmDesc
+
+\startclCmmDesc{\cenum{CL_SNORM_INT16} （16 位帶符號整數）-> \ctype{float}}
+歸一化浮點值 = max(-1.0f, (float)c / 32767.0f)
+\stopclCmmDesc
+
+除了下面所列情況，上述轉換的精度均 \math{\leq 1.5 ulp}：
+\startclCmmDesc{對於 \cenum{CL_UNORM_INT8}}
+0 必須轉換為 0.0f
+
+255 必須轉換為 1.0f
+\stopclCmmDesc
+
+\startclCmmDesc{對於 \cenum{CL_UNORM_INT_101010}}
+0 必須轉換為 0.0f
+
+1023 必須轉換為 1.0f
+\stopclCmmDesc
+
+\startclCmmDesc{對於 \cenum{CL_UNORM_INT16}}
+0 必須轉換為 0.0f
+
+65535 必須轉換為 1.0f
+\stopclCmmDesc
+
+\startclCmmDesc{對於 \cenum{CL_SNORM_INT8}}
+-128 和 -127 必須轉換為 -1.0f
+
+0 必須轉換為 0.0f
+
+127 必須轉換為 1.0f
+\stopclCmmDesc
+
+\startclCmmDesc{對於 \cenum{CL_SNORM_INT16}}
+-32768 和 -32767 必須轉換為 -1.0f
+
+0 必須轉換為 0.0f
+
+32767 必須轉換為 1.0f
+\stopclCmmDesc
+
+% Converting floating-point values to normalized integer channel data types
+\subsubsection{將浮點值轉換為歸一化整數通道數據類型}
+
+如果通道數據類型為 \cenum{CL_UNORM_INT8} 和 \cenum{CL_UNORM_INT16}。
+\capi{write_imagef} 將把浮點顏色值轉換為 8 位或 16 位無符號整數。
+
+如果通道數據類型為 \cenum{CL_SNORM_INT8} 和 \cenum{CL_SNORM_INT16}。
+\capi{write_imagef} 將把浮點顏色值轉換為 8 位或 16 位帶符號整數。
+
+建議按如下方式轉換：
+
+\startclCmmDesc{\ctype{float} -> \cenum{CL_UNORM_INT8} （8 位無符號整數）}
+convert_uchar_sat_rte(f * 255.0f)
+\stopclCmmDesc
+
+\startclCmmDesc{\ctype{float} -> \cenum{CL_UNORM_INT_101010} （10 位無符號整數）}
+min(convert_ushort_sat_rte(f * 1023.0f), 0x3ff)
+\stopclCmmDesc
+
+\startclCmmDesc{\ctype{float} -> \cenum{CL_UNORM_INT16} （16 位無符號整數）}
+convert_ushort_sat_rte(f * 65535.0f)
+\stopclCmmDesc
+
+\startclCmmDesc{\ctype{float} -> \cenum{CL_SNORM_INT8} （8 位帶符號整數）}
+convert_char_sat_rte(f * 127.0f)
+\stopclCmmDesc
+
+\startclCmmDesc{\ctype{float} -> \cenum{CL_SNORM_INT16} （16 位帶符號整數）}
+convert_short_sat_rte(f * 32767.0f)
+\stopclCmmDesc
+
+對於溢出時的行為以及飽和轉換規則請參考\refsection{oorbasc}。
+
+OpenCL 實作也可能採用其他捨入模式來逼近上述轉換結果。
+如果使用的捨入模式不是捨入為最近偶數（\ccmm{_rte}），
+則實作所產生的結果與捨入模式 \ccmm{_rte} 所產生結果的絕對誤差必須 \math{\leq 0.6}。
+
+\startclCmmDesc{float -> CL_UNORM_INT8 (8 位無符號整數)}
+設 f\low{preferred} = convert_uchar_sat_rte(f * 255.0f)
+
+設 f\low{approx} = convert_uchar_sat_<impl-rounding-mode>(f * 255.0f)
+
+fabs(f\low{preferred} – f\low{fapprox}) 必須 <= 0.6
+\stopclCmmDesc
+
+\startclCmmDesc{float -> CL_UNORM_INT_101010 (10 位無符號整數)}
+設 f\low{preferred} = convert_ushort_sat_rte(f * 1023.0f)
+
+設 f\low{approx} = convert_ushort_sat_<impl-rounding-mode>(f * 1023.0f)
+
+fabs(f\low{preferred} – f\low{approx}) 必須 <= 0.6
+\stopclCmmDesc
+
+\startclCmmDesc{float -> CL_UNORM_INT16 (16 位無符號整數)}
+設 f\low{preferred} = convert_ushort_sat_rte(f * 65535.0f)
+
+設 f\low{approx} = convert_ushort_sat_<impl-rounding-mode>(f * 65535.0f)
+
+fabs(f\low{preferred} – f\low{approx}) 必須 <= 0.6
+\stopclCmmDesc
+
+\startclCmmDesc{float -> CL_SNORM_INT8 (8 位帶符號整數)}
+設 f\low{preferred} = convert_char_sat_rte(f * 127.0f)
+
+設 f\low{approx} = convert_char_sat_<impl_rounding_mode>(f * 127.0f)
+
+fabs(f\low{preferred} – f\low{approx}) 必須 <= 0.6
+\stopclCmmDesc
+
+\startclCmmDesc{float -> CL_SNORM_INT16 (16 位帶符號整數)}
+設 f\low{preferred} = convert_short_sat_rte(f * 32767.0f)
+
+設 f\low{approx} = convert_short_sat_<impl-rounding-mode>(f * 32767.0f)
+
+fabs(f\low{preferred} – f\low{approx}) 必須 <= 0.6
+\stopclCmmDesc
+
+% Conversion rules for half precision floating-point channel data type
+\subsection{半精度浮點通道數據類型的轉換規則}
+
+如果圖像通道數據類型為 \cenum{CL_HALF_FLOAT}，
+則由 \ctype{half} 到 \ctype{float} 的轉換是無損的（參見\refsection{dataTypeHalf}）。
+由 \ctype{float} 到 \ctype{half} 的轉換中，
+捨入尾數所用的捨入模式為捨入為最近偶數或向零捨入。
+型別為 \ctype{half} 的去規格化數（可能是將 \ctype{float} 轉換為 \ctype{half} 時生成）
+可能會被刷成零。
+型別為 \ctype{float} 的 NaN 必須轉換為型別為 \ctype{half} 的 NaN。
+型別為 \ctype{float} 的 INF 必須轉換為型別為 \ctype{half} 的 INF。
+
+% Conversion rules for floating-point channel data type
+\subsection{浮點通道數據類型的轉換規則}
+
+如果圖像通道數據類型為 \cenum{CL_FLOAT}，則對其讀寫時要遵守下列規則：
+\startigBase
+\item NaN 必須轉換為 \cnglo{device} 所支持的 NaN 值。
+\item 可以將去規格化數刷成零。
+\item 所有其他值都必須保留。
+\stopigBase
+
+% Conversion rules for signed and unsigned 8-bit, 16-bit
+% and 32-bit integer channel data types
+\subsection{帶符號或無符號的 8/16/32 位整數通道數據類型的轉換規則}
+
+如果圖像通道數據類型為 \cenum{CL_SIGNED_INT8}、 \cenum{CL_SIGNED_INT16}
+或 \cenum{CL_SIGNED_INT32}，
+則 \capi{read_imagei} 會返回圖像中指定位置所存儲的原始整數值。
+
+如果圖像通道數據類型為 \cenum{CL_UNSIGNED_INT8}、 \cenum{CL_UNSIGNED_INT16}
+或 \cenum{CL_UNSIGNED_INT32}，
+則 \capi{read_imageui} 會返回圖像中指定位置所存儲的原始整數值。
+
+\capi{write_imagei} 會進行下列轉換：
+
+\startclCmmDesc{32 位帶符號整數 -> 8 位帶符號整數}
+convert_char_sat(i)
+\stopclCmmDesc
+\startclCmmDesc{32 位帶符號整數 -> 16 位帶符號整數}
+convert_short_sat(i)
+\stopclCmmDesc
+\startclCmmDesc{32 位帶符號整數 -> 32 位帶符號整數}
+不會實施任何轉換
+\stopclCmmDesc
+
+\capi{write_imageui} 會進行下列轉換：
+\startclCmmDesc{32 位無符號整數 -> 8 位無符號整數}
+convert_uchar_sat(i)
+\stopclCmmDesc
+\startclCmmDesc{32 位無符號整數 -> 16 位無符號整數}
+convert_ushort_sat(i)
+\stopclCmmDesc
+\startclCmmDesc{32 位無符號整數 -> 32 位無符號整數}
+不會實施任何轉換
+\stopclCmmDesc
+
+對於本節所描述的轉換，必須使其正確飽和。

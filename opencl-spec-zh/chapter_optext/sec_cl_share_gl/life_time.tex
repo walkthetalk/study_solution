@@ -1,0 +1,16 @@
+\subsection{共享對象的生命週期}
+
+只要對應的 GL 對象沒有被刪除，
+則由其創建的 OpenCL \cnglo{memobj}（下文中稱為“共享的 CL/GL 對象”）就會一直有效。
+如果通過 GL API （如 \capi{glDeleteBuffers}、 \capi{glDeleteTextures} 或 \capi{glDeleteRenderbuffers}）刪除了 GL 對象，
+則後續使用 CL \cnglo{bufobj}或\cnglo{imgobj}時會導致\cnglo{undef}的行為,
+包括但不限於 CL 錯誤和數據訛誤，但不會使\cnglo{program}終止。
+
+CL \cnglo{context}和對應的\cnglo{cmdq}依賴於 GL 共享組對象、
+或 GL \cnglo{context}（由其創建的 CL \cnglo{context}）所關聯的共享組的存在。
+如果銷毀了 GL 共享組對象或者共享組中的所有 GL \cnglo{context}，
+則使用 CL \cnglo{context}或\cnglo{cmdq}會導致\cnglo{undef}的行為，
+包括\cnglo{program}終止。
+在銷毀對應的 GL 共享組或\cnglo{context}之前，
+\cnglo{app}應當先銷毀 CL \cnglo{cmdq}和 CL \cnglo{context}。
+

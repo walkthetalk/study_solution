@@ -1,0 +1,91 @@
+\startCLOD[型別][描述]
+
+\clOD{\cldt{bool}
+\footnote{任意標量值轉換為 \cldt{bool} 時，如果原始值等於 0，則結果為 0；
+否則，結果為 1。}
+}{
+一種條件數據型別，值為 \ccmm{true} 或 \ccmm{false}。
+其中 \ccmm{true} 展開後為整形常量 1；而 \ccmm{false} 展開後為整形常量 0。
+}
+
+\clOD{\cldt{char}}{
+帶符號 8 位整數，為二的補碼。
+}
+
+\clOD{\cldt{unsigned char}\par\cldt{uchar}}{
+無符號 8 位整數。
+}
+
+\clOD{\cldt{short}}{
+帶符號 16 位整數，為二的補碼。
+}
+
+\clOD{\cldt{unsigned short}\par\cldt{ushort}}{
+無符號 16 位整數。
+}
+
+\clOD{\cldt{int}}{
+帶符號 32 位整數，為二的補碼。
+}
+
+\clOD{\cldt{unsigned int}\par\cldt{uint}}{
+無符號 32 位整數。
+}
+
+\clOD{\cldt{long}}{
+帶符號 64 位整數，為二的補碼。
+}
+
+\clOD{\cldt{unsigned long}\par\cldt{ulong}}{
+無符號 64 位整數。
+}
+
+\clOD{\cldt{float}}{
+32 位浮點數。必須符合 IEEE 754 中的單精度存儲格式。
+}
+
+\clOD{\cldt{double}
+\footnote{\cldt{double} 是可選型別，只有設備的 \cenum{CL_DEVICE_DOUBLE_FP_CONFIG}
+（參見\reftab{cldevquery}）不是零時才需要支持。}
+}{
+64 位浮點數。必須符合 IEEE 754 中的雙精度存儲格式。
+}
+
+\clOD{\cldt{half}}{
+16 位浮點數。必須符合 IEEE 754-2008 中的半精度存儲格式。
+}
+
+\clOD{\cldt{size_t}}{
+無符號整數，算子 \ccmm{sizeof} 的結果。
+如果 \cenum{CL_DEVICE_ADDRESS_BITS}（參見\reftab{cldevquery}）
+是 32 位，則此型別為 32 位無符號整數；
+如果 \cenum{CL_DEVICE_ADDRESS_BITS} 是 64 位，則此型別為 64 位無符號整數。
+}
+
+\clOD{\cldt{ptrdiff_t}}{
+帶符號整形，兩個指位器相減的結果。
+如果 \cenum{CL_DEVICE_ADDRESS_BITS}（參見\reftab{cldevquery}）
+是 32 位，則此型別為 32 位帶符號整數；
+如果 \cenum{CL_DEVICE_ADDRESS_BITS} 是 64 位，則此型別為 64 位帶符號整數。
+}
+
+\clOD{\cldt{intptr_t}}{
+帶符號整形，任意指向 \ccmm{void} 的有效指位器都能轉換為此型別，
+然後還可以轉換回指向 \ccmm{void} 的指位器，其結果與原始指位器相同。
+如果 \cenum{CL_DEVICE_ADDRESS_BITS}（參見\reftab{cldevquery}）
+是 32 位，則此型別為 32 位帶符號整數；
+如果 \cenum{CL_DEVICE_ADDRESS_BITS} 是 64 位，則此型別為 64 位帶符號整數。
+}
+
+\clOD{\cldt{uintptr_t}}{
+無符號整形，任意指向 \ccmm{void} 的有效指位器都能轉換為此型別，
+然後還可以轉換回指向 \ccmm{void} 的指位器，其結果與原始指位器相同。
+如果 \cenum{CL_DEVICE_ADDRESS_BITS}（參見\reftab{cldevquery}）
+是 32 位，則此型別為 32 位無符號整數；
+如果 \cenum{CL_DEVICE_ADDRESS_BITS} 是 64 位，則此型別為 64 位無符號整數。
+}
+
+\clOD{\cldt{void}}{
+此型別不包含任何值；他是一種不完全型別，不能被補全。
+}
+\stopCLOD

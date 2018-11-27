@@ -1,0 +1,76 @@
+\subsection{查詢所支持的圖像格式}
+
+\topclfunc{clGetSupportedImageFormats}
+
+\startCLFUNC
+cl_int clGetSupportedImageFormats (cl_context context,
+			cl_mem_flags flags,
+			cl_mem_object_type image_type,
+			cl_uint num_entries,
+			cl_image_format *image_formats,
+			cl_uint *num_image_formats)
+\stopCLFUNC
+
+此函式可用來查詢 OpenCL 實作所支持的圖像格式，對於\cnglo{imgobj}，需要指定如下資訊：
+\startigBase
+\item \cnglo{context}
+\item 圖像類型——1D、 2D 或 3D 圖像， 1D 圖像緩衝， 1D 或 2D 圖像陣列
+\item \cnglo{imgobj}的分配資訊
+\stopigBase
+
+\capi{clGetSupportedImageFormats} 會返回一個聯合體（union），
+其中的圖像格式是 \carg{contex} 中所有\cnglo{device}都支持的。
+
+\carg{context} 是 OpenCL \cnglo{context}，將在其上創建\cnglo{imgobj}。
+
+\carg{flags} 是位欄，
+用來描述將要創建的\cnglo{imgobj}的分配和用法資訊。參見\reftab{clmapflags}。
+
+\carg{image_type} 即圖像類型，其值可以是：
+\cenum{CL_MEM_OBJECT_IMAGE1D}、 \cenum{CL_MEM_OBJECT_IMAGE1D_BUFFER}、
+\cenum{CL_MEM_OBJECT_IMAGE2D}、 \cenum{CL_MEM_OBJECT_IMAGE3D}、
+\cenum{CL_MEM_OBJECT_IMAGE1D_ARRAY} 或 \cenum{CL_MEM_OBJECT_IMAGE2D_ARRAY}。
+
+\carg{num_entries} 即 \carg{image_formats} 所能容納的表項數目。
+
+\carg{image_formats} 用來存儲所返回的圖像格式。
+每一項都是 \ctype{cl_image_format} 結構體。
+如果 \carg{image_formats} 是 \cmacro{NULL}，則忽略。
+
+\carg{num_image_formats} 即所返回的圖像格式的實際數目。如果是 \cmacro{NULL}，則忽略。
+
+如果執行成功，則 \capi{clGetSupportedImageFormats} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，如果 \carg{context} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{flags} 或 \carg{image_type} 無效，
+或者 \carg{num_entries} 是 0 且 \carg{image_formats} 是 \cmacro{NULL}。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+如果 \cenum{CL_DEVICE_IMAGE_SUPPORT}
+（參見\reftab{cldevquery}）是 \cenum{CL_TRUE}，
+則 OpenCL 實作賦予下列變量的值必須大於或等於\reftab{cldevquery}中所規定的最小值：
+\startigBase
+\item \cenum{CL_DEVICE_MAX_READ_IMAGE_ARGS}
+\item \cenum{CL_DEVICE_MAX_WRITE_IMAGE_ARGS}
+\item \cenum{CL_DEVICE_IMAGE2D_MAX_WIDTH}
+\item \cenum{CL_DEVICE_IMAGE2D_MAX_HEIGHT}
+\item \cenum{CL_DEVICE_IMAGE3D_MAX_WIDTH}
+\item \cenum{CL_DEVICE_IMAGE3D_MAX_HEIGHT}
+\item \cenum{CL_DEVICE_IMAGE3D_MAX_DEPTH}
+\item \cenum{CL_DEVICE_MAX_SAMPLERS}
+\stopigBase
+
+\subsubsection{必須要支持的圖像格式}
+
+對於所有支持圖像的\cnglo{device}而言，
+必須要支持的 2D 和 3D \cnglo{imgobj}的格式（無論讀寫）如\reftab{minImgFmt}所示。
+
+\placetable[here][tab:minImgFmt]
+{必須要支持的圖像格式}
+{\input{chapter_rt/tbl/tbl_min_list_img_fmt.tex}}

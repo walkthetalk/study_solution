@@ -1,0 +1,249 @@
+\section[section:contexts]{上下文}
+
+\topclfunc{clCreateContext}
+
+\startCLFUNC
+cl_context clCreateContext(
+		const cl_context_properties *properties,
+		cl_uint num_devices,
+		const cl_device_id *devices,
+		void (CL_CALLBACK *pfn_notify)(
+			const char *errinfo,
+			const void *private_info,
+			size_t cb,
+			void *user_data),
+		void *user_data,
+		cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式可以創建一個 OpenCL \cnglo{context}。
+OpenCL \cnglo{context}是在一個或多個\cnglo{device}上創建的。
+OpenCL 運行時使用\cnglo{context}來管理對象
+（如\cnglo{cmdq}、\cnglo{memobj}、\cnglo{programobj}以及\cnglo{kernelobj}）；
+並在\cnglo{context}中所指定的\cnglo{device}上執行\cnglo{kernel}。
+
+\carg{properties} 指定了\cnglo{context}的一系列屬性名和對應的值。
+每個屬性名後面緊跟相應的期望值。
+此清單以 0 終止。
+\reftab{prptForclCreateContext}列出了所支持的屬性。
+如果 \carg{properties} 是 \cmacro{NULL}，選擇哪個\cnglo{platform}\cnglo{impdef}。
+
+\placetable[here][tab:prptForclCreateContext]
+{clCreateContext 所支持的屬性清單}
+{\input{chapter_plf/tbl/tbl_prpt_clCreateContext.tex}}
+
+\carg{num_devices} 是參數 \carg{devices} 中\cnglo{device}的數目。
+
+\carg{devices} 指向一個\cnglo{device}清單，其中的設備都是唯一的\footnote{%
+\carg{devices} 中重複的\cnglo{device}會被忽略。}，
+都是由 \capi{clGetDeviceIDs} 所返回的，
+或者是用 \capi{clCreateSubDevices} 創建的\cnglo{subdev}。
+
+\carg{pfn_notify} 是\cnglo{app}所註冊的回調函式。
+對於此\cnglo{context}，無論創建時還是運行時，
+只要發生了錯誤，OpenCL 的實作都會調用此函式，但調用可能是異步的。
+\cnglo{app}需要保證此函式是線程安全的。
+此函式的參數為：
+\startigBase
+\item \carg{errinfo} 指向一個錯誤字串。
+
+\item \carg{private_info} 指向一塊二進制數據，其大小為 \carg{cb}，
+這塊數據由 OpenCL 實作所返回，可用來記錄一些附加資訊來幫助調試錯誤。
+
+\item \carg{user_data} 指向用戶提供的數據。
+\stopigBase
+
+如果 \carg{pfn_notify} 是 \cmacro{NULL}，則表示不註冊回調函式。
+
+\startnotepar
+很多情況下，即使在\cnglo{context}外發生了錯誤，也需要發出錯誤通告。
+這種情況 \carg{pfn_notify} 就無能為力了，怎樣發出這種錯誤通告\cnglo{impdef}。
+\stopnotepar
+
+\carg{user_data} 會在調用 \carg{pfn_notify} 時作為引數 \carg{user_data} 使用。
+\carg{user_data} 可以是 \cmacro{NULL}。
+
+\carg{errcode_ret} 用來返回相應錯誤碼。
+如果 \carg{errcode_ret} 是 \cmacro{NULL}，則不會返回錯誤碼。
+
+如果成功創建了\cnglo{context}，\capi{clCreateContext} 會將其返回（非零），
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_PLATFORM}，
+如果 \carg{properties} 是 \cmacro{NULL} 且沒有可選的\cnglo{platform}，
+或者 \carg{properties} 中\cnglo{platform}的值無效。
+
+\item \cenum{CL_INVALID_PROPERTY}，
+如果 \carg{properties} 中的屬性名不受支持，
+或者支持此屬性但其值無效，或者同一屬性名出現多次。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{devices} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{num_devices} 等於零。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{pfn_notify} 是 \cmacro{NULL} 但 \carg{user_data} 不是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_DEVICE}，如果 \carg{devices} 中有無效的\cnglo{device}。
+
+\item \cenum{CL_DEVICE_NOT_AVAILABLE}，
+如果 \carg{devices} 中的某個\cnglo{device}當前不可用，
+即使此\cnglo{device}是由 \capi{clGetDeviceIDs} 返回的。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clCreateContextFromType}
+
+\startCLFUNC
+cl_context clCreateContextFromType(
+		const cl_context_properties *properties,
+		cl_device_type device_type,
+		void (CL_CALLBACK *pfn_notify)(
+			const char *errinfo,
+			const void *private_info,
+			size_t cb,
+			void *user_data),
+		void *user_data,
+		cl_int *errcode_ret)
+\stopCLFUNC
+
+函数 \capi{clCreateContextFromType}\footnote{%
+\capi{clCreateContextfromType} 可能返回平台中現有符合 \carg{device_type} 的所有實際物理設備，
+也可能只返回其中一個子集。}%
+會由特定類型的\cnglo{device}創建一個 OpenCL \cnglo{context}，
+此\cnglo{context}不會引用由這些\cnglo{device}所創建的\cnglo{subdev}。
+
+\carg{properties} 指定了\cnglo{context}的一系列屬性及其相應的值。
+每個屬性名後面緊跟其對應的期望值。
+\reftab{prptForclCreateContext}列出了所支持的屬性。
+如果 \carg{properties} 是 \cmacro{NULL}，選擇哪個\cnglo{platform}\cnglo{impdef}。
+
+\carg{device_type} 是位欄，用來識別\cnglo{device}類型，參見中的\reftab{cldevctgr}。
+
+\carg{pfn_notify} 和 \carg{user_data} 跟 \capi{clCreateContext} 中所描述的一樣。
+
+\carg{errcode_ret} 用來返回相應的錯誤碼，
+如果 \carg{errcode_ret} 是 \cmacro{NULL}，則不返回錯誤碼。
+
+如果成功創建了\cnglo{context}，\capi{clCreateContextFromType} 會將其返回，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則返回 \cmacro{NULL}，並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_PLATFORM}，
+如果 \carg{properties} 是 \cmacro{NULL} 並且沒有\cnglo{platform}可選，
+或者 \carg{properties} 中\cnglo{platform}的值無效。
+
+\item \cenum{CL_INVALID_PROPERTY}，
+如果 \carg{properties} 中的\cnglo{context}屬性名不受支持，
+或者支持此屬性但其值無效，或者同一屬性名出現多次。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{pfn_notify} 是 \cmacro{NULL} 但 \carg{user_data} 不是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_DEVICE_TYPE}，如果 \carg{device_type} 的值無效。
+
+\item \cenum{CL_DEVICE_NOT_AVAILABLE}，
+如果當前沒有同時符合 \carg{device_type} 以及 \carg{properties} 中屬性值的\cnglo{device}可用。
+
+\item \cenum{CL_DEVICE_NOT_FOUND}，
+如果沒有找到同時符合 \carg{device_type} 以及 \carg{properties} 中的屬性值的\cnglo{device}。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\topclfunc{clRetainContext}
+
+\startCLFUNC
+cl_int clRetainContext(cl_context context)
+\stopCLFUNC
+
+函式 \capi{clRetainContext} 會使 \carg{context} 的\cnglo{refcnt}增一。
+
+如果執行成功，\capi{clRetainContext} 會返回 \cenum{CL_SUCCESS}。
+否則返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，如果 \carg{context} 無效。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\capi{clCreateContext} 和 \capi{clCreateContextFromType} 會實施隱式的\cnglo{retain}。
+這對第三方庫非常有用，這樣\cnglo{app}就可以將\cnglo{context}傳給他們使用。
+然而，\cnglo{app}可能會在沒有通知他們的情況下刪除此\cnglo{context}。
+通過使用函式\cnglo{retain}或\cnglo{release}\cnglo{context}，
+在庫所使用的\cnglo{context}不再有效時就不會出問題。
+
+\topclfunc{clReleaseContext}
+
+\startCLFUNC
+cl_int clReleaseContext(cl_context context)
+\stopCLFUNC
+
+函式 \capi{clReleaseContext} 會使 \carg{context} 的\cnglo{refcnt}減一。
+
+如果執行成功，\capi{clReleaseContext} 會返回\cenum{CL_SUCCESS}。否則返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，如果 \carg{context} 無效。
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+如果 \carg{context} 的\cnglo{refcnt}變成了零，
+且所有附着其上的對象（如\cnglo{memobj}、\cnglo{cmdq}）都被釋放了的時候，
+\carg{context} 就會被刪除。
+
+\topclfunc{clGetContextInfo}
+
+\startCLFUNC
+cl_int clGetContextInfo(cl_context context,
+		cl_context_info param_name,
+		size_t param_value_size,
+		void *param_value,
+		size_t *param_value_size_ret)
+\stopCLFUNC
+
+函式 \capi{clGetContextInfo} 可用來查詢\cnglo{context}的相關資訊。
+
+\carg{context} 指定要查詢哪個 OpenCL \cnglo{context}。
+
+\carg{param_name} 是枚舉常量，指定要查詢什麼資訊。
+
+\carg{param_value} 指向的內存用來存儲查詢結果。
+如果 \carg{param_value} 是 \cmacro{NULL}，則忽略。
+
+\carg{param_value_size} 即 \carg{param_value} 所指內存塊的大小。
+必須大於等於\reftab{paramNameclGetContextInfo}中所列返回型別的大小。
+
+\carg{param_value_size_ret} 會返回 \carg{param_value} 所存查詢結果的實際字節數。
+如果 \carg{param_value_size_ret} 是 \cmacro{NULL}，則忽略。
+
+\reftab{paramNameclGetContextInfo}中列出了所支持的 \carg{param_name}
+和 \capi{clGetContextInfo} 返回的 \carg{param_value} 中的資訊。
+
+\placetable[here][tab:paramNameclGetContextInfo]
+{\capi{clGetContextInfo} 所支持的 \carg{param_names}}
+{\input{chapter_plf/tbl/tbl_clcontextinfo.tex}}
+
+如果執行成功，\capi{clGetContextInfo} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{context} 不是一個有效的 OpenCL \cnglo{context}。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{param_name} 的值不受支持，
+或者 \carg{param_value_size} 的值 < \reftab{paramNameclGetContextInfo}中返回型別的大小
+且 \carg{param_value} 不是 \cmacro{NULL}。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+

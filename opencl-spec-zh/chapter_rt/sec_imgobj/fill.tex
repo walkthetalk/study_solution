@@ -1,0 +1,109 @@
+\subsection{填充圖像對象}
+
+\topclfunc{clEnqueueFillImage}
+
+\startCLFUNC
+cl_int clEnqueueFillImage (cl_command_queue command_queue,
+			cl_mem image,
+			const void *fill_color,
+			const size_t *origin,
+			const size_t *region,
+			cl_uint num_events_in_wait_list,
+			const cl_event *event_wait_list,
+			cl_event *event)
+\stopCLFUNC
+
+此函式所入隊的\cnglo{cmd}可以將\cnglo{imgobj}填充成某種顏色。
+\carg{image} 的一些用法資訊（如是否可讀、是否可寫，
+以及創建 \carg{image} 時所指定的參數 \ctype{cl_mem_flags}）
+會被 \capi{clEnqueueFillImage} 忽略。
+
+\carg{command_queue} 即填充\cnglo{cmd}所要插入的隊列。
+\carg{command_queue} 和 \carg{image} 必須位於用一個 OpenCL \cnglo{context}中。
+
+\carg{image} 是一個\cnglo{imgobj}。
+
+\carg{fill_color} 即填充色。
+如果 \carg{image} 通道數據類型不是非歸一化帶符號或無符號整形，則他是四元 RGBA 浮點顏色值；
+如果 \carg{image} 通道數據類型是非歸一化帶符號整形，則他是四元帶符號整形值；
+如果 \carg{image} 通道數據類型是非歸一化無符號整形，則他是四元無符號整形值。
+填充時會根據 \carg{image} 的圖像通道格式以及順序對此顏色進行轉換，
+參見\refsection{imgRwFunc}和\refsection{conversionRule}。
+
+\carg{origin} 定義了所要填充區域的起始位置 \math{(x, y, z)}，單位像素；
+對於 2D 圖像陣列是 \math{(x, y)} 以及圖像索引；
+對於 1D 圖像陣列是 \math{(x)} 以及圖像索引。
+如果 \carg{image} 是 2D \cnglo{imgobj}， \math{\marg{origin}[2]} 必須是 0。
+如果 \carg{image} 是 1D \cnglo{imgobj} 或 1D 圖像緩衝對象，
+\math{\marg{origin}[1]} 和 \math{\marg{origin}[2]} 都必須是 0。
+如果 \carg{image} 是 1D 圖像陣列對象，
+則 \math{\marg{origin}[2]} 必須是 0， \math{\marg{origin}[1]} 是圖像在陣列中的索引。
+如果 \carg{image} 是 2D 圖像陣列對象，則 \math{\marg{origin}[2]} 是圖像在陣列中的索引。
+
+\carg{region} 定義了要填充區域的大小 \math{(width, height, depth)}，單位像素。
+對於 2D 圖像陣列對象， 即 \math{(width, height)} 以及圖像個數。
+對於 1D 圖像陣列對象， 即 \math{(width)} 以及圖像個數。
+如果 \carg{image} 是 2D 圖像對象 或 1D 圖像陣列對象， \math{\marg{region}[2]} 必須是 1。
+如果 \carg{image} 是 1D 圖像或 1D 圖像緩衝對象，
+\math{\marg{region}[1]} 和 \math{\marg{region}[2]} 都必須是 1。
+\carg{region} 中的值不能为 0。
+
+\carg{event_wait_list} 和 \carg{num_events_in_wait_list} 中
+列出了執行此\cnglo{cmd}前要等待的事件。
+如果 \carg{event_wait_list} 是 \cmacro{NULL}，
+則無須等待任何事件，並且 \carg{num_events_in_wait_list} 必須是 0。
+如果 \carg{event_wait_list} 不是 \cmacro{NULL}，
+則其中所有事件都必須是有效的，並且 \carg{num_events_in_wait_list} 必須大於 0。
+\carg{event_wait_list} 中的事件充當同步點，
+並且必須與 \carg{command_queue} 位於同一個\cnglo{context}中。
+此函式返回後，就可以回收並重用 \carg{event_wait_list} 所關聯的內存了。
+
+\carg{event} 會返回一個\cnglo{evtobj}，
+用來識別此\cnglo{cmd}，可用來查詢或等待此\cnglo{cmd}完成。
+而如果 \carg{event} 是 \cmacro{NULL}，就沒辦法查詢此\cnglo{cmd}的狀態或等待其完成了。
+不過可以用 \capi{clEnqueueBarrierWithWaitList} 代替。
+如果 \carg{event_wait_list} 和 \carg{event} 都不是 \cmacro{NULL}，
+\carg{event} 不能屬於 \carg{event_wait_list}。
+
+如果執行成功， \capi{clEnqueueFillImage} 會返回 \cenum{CL_SUCCESS}。
+否則，返回下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_COMMAND_QUEUE}，如果 \carg{command_queue} 無效。
+
+\item \cenum{CL_INVALID_CONTEXT}，
+如果 \carg{command_queue} 和 \carg{image} 位於不同的\cnglo{context}中，
+或者 \carg{command_queue} 和 \carg{event_wait_list} 中的事件位於不同的\cnglo{context}中。
+
+\item \cenum{CL_INVALID_MEM_OBJECT}，如果 \carg{image} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{fill_color} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \math{(\marg{origin}, \marg{region})} 所指定的區域越限或者 \carg{ptr} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_VALUE}，
+如果 \carg{origin} 和 \carg{region} 沒有遵守前面參數描述中所列規則。
+
+\startitem
+\cenum{CL_INVALID_EVENT_WAIT_LIST}，如果滿足下列條件中的任一項：
+\startigBase
+\item \carg{event_wait_list} 是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} > 0；
+\item 或者 \carg{event_wait_list} 不是 \cmacro{NULL}，但 \carg{num_events_in_wait_list} 是 0；
+\item 或者 \carg{event_wait_list} 中有無效的事件。
+\stopigBase
+\stopitem
+
+\item \cenum{CL_INVALID_IMAGE_SIZE}，
+如果圖像的大小（寬度、高度、指定的或自動計算的行間距或面間距）
+不被 \carg{queue} 所關聯\cnglo{device} 支持。
+
+\item \cenum{CL_IMAGE_FORMAT_NOT_SUPPORTED}，
+如果 \carg{image} 的圖像格式（圖像通道順序和數據型別）
+不被 \carg{queue} 所關聯\cnglo{device} 支持。
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，如果為 \carg{image} 分配內存失敗。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase

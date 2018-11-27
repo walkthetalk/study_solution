@@ -1,0 +1,121 @@
+\subsection{創建圖像對象}
+
+\topclfunc{clCreateImage}
+
+\startCLFUNC
+cl_mem clCreateImage (cl_context context,
+		cl_mem_flags flags,
+		const cl_image_format *image_format,
+		const cl_image_desc *image_desc,
+		void *host_ptr,
+		cl_int *errcode_ret)
+\stopCLFUNC
+
+此函式可用來創建 1D 圖像、 1D 圖像緩衝（image buffer）、 1D 圖像陣列（image array）、
+2D 圖像、 2D 圖像陣列以及 3D \cnglo{imgobj}。
+
+\carg{context} 即將要創建的\cnglo{imgobj}所處的 OpenCL \cnglo{context}。
+
+\carg{flags} 是位欄，
+用來指明如何分配以及怎樣使用將要創建的\cnglo{imgobj}，參見\reftab{clmemflags}。
+
+對於所有類型的\cnglo{imgobj}，除了 \cenum{CL_MEM_OBJECT_IMAGE1D_BUFFER}，
+如果 \carg{flags} 的值為 0，則使用缺省值 \cenum{CL_MEM_READ_WRITE}。
+
+對於類型為 \cenum{CL_MEM_OBJECT_IMAGE1D_BUFFER} 的圖像對象，
+如果 \carg{flags} 中沒有設置 \cenum{CL_MEM_READ_WRITE}、 \cenum{CL_MEM_READ_ONLY}
+或 \cenum{CL_MEM_WRITE_ONLY}，則會從 \carg{buffer} 中繼承這些屬性。
+而 \carg{flags} 中不能設置 \cenum{CL_MEM_USE_HOST_PTR}、
+\cenum{CL_MEM_ALLOC_HOST_PTR} 和 \cenum{CL_MEM_COPY_HOST_PTR}，
+這些也會由 \carg{buffer} 繼承。
+即使 \carg{buffer} 的內存存取限定符中有 \cenum{CL_MEM_COPY_HOST_PTR}，
+也並不意味着創建子\cnglo{bufobj}時會有額外的拷貝。
+如果 \carg{flags} 中沒有設置 \cenum{CL_MEM_HOST_WRITE_ONLY}、
+\cenum{CL_MEM_HOST_READ_ONLY} 或 \cenum{CL_MEM_HOST_NO_ACCESS}，
+則會從 \carg{buffer} 中繼承這些屬性。
+
+\carg{image_format} 指明圖像的格式。參見\refsection{imgFmtDsc}。
+
+\carg{image_desc} 指明圖像的類型以及維數。參見\refsection{imgDsc}。
+
+\carg{host_ptr} 指向圖像數據（可能已由\cnglo{app}分配好）。
+\reftab{hostPtrLimit}中列出了 \carg{host_ptr} 所指緩衝大小的一些限制。
+
+\placetable[here][tab:hostPtrLimit]
+{\carg{host_ptr} 的限制}
+{\input{chapter_rt/tbl/tbl_imgtypesize.tex}}
+
+對於 3D 圖像 或 2D 圖像陣列，
+\carg{host_ptr} 所指圖像數據分別按相鄰的 2D 圖像平面或 2D 圖像線性序列進行存儲。
+每個 2D 圖像都是相鄰掃描列（scanline）的線性序列。
+每個掃描列都是相鄰圖像元素的線性序列。
+
+對於 2D 圖像，
+\carg{host_ptr} 所指圖像數據按相鄰掃描列的線性序列進行存儲。
+每個掃描列都是相鄰圖像元素的線性序列。
+
+對於 1D 圖像陣列， \carg{host_ptr} 所指圖像數據按相鄰 1D 圖像的線性序列進行存儲。
+每個 1D 圖像或 1D 圖像緩衝就是一個掃描列，是相鄰圖像元素的線性序列。
+
+\carg{errcode_ret} 會返回相應的錯誤碼。
+如果 \carg{errcode_ret} 是 \cmacro{NULL}，不會返回錯誤碼。
+
+如果成功創建了\cnglo{imgobj}， \capi{clCreateImage} 會將其返回，
+並將 \carg{errcode_ret} 置為 \cenum{CL_SUCCESS}。
+否則，返回 \cmacro{NULL} 並將 \carg{errcode_ret} 置為下列錯誤碼之一：
+\startigBase
+\item \cenum{CL_INVALID_CONTEXT}，如果 \carg{context} 無效。
+
+\item \cenum{CL_INVALID_VALUE}，如果 \carg{flags} 的值無效。
+
+\item \cenum{CL_INVALID_IMAGE_FORMAT_DESCRIPTOR}，
+如果 \carg{image_format} 中的值無效，
+或者 \carg{image_format} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_IMAGE_DESCRIPTOR}，
+如果 \carg{image_desc} 中的值無效，
+或者 \carg{image_desc} 是 \cmacro{NULL}。
+
+\item \cenum{CL_INVALID_IMAGE_SIZE}，
+如果 \carg{image_desc} 中圖像任一維度的值
+超過了 \carg{context} 中任一\cnglo{device}在相應維度上的最大值
+（參見\reftab{cldevquery}）。
+
+\item \cenum{CL_INVALID_HOST_PTR}，
+如果 \carg{image_desc} 中 \carg{host_ptr} 是 \cmacro{NULL}，
+但 \carg{flags} 中設置了 \cenum{CL_MEM_USE_HOST_PTR} 或 \cenum{CL_MEM_COPY_HOST_PTR}；
+或者 \carg{host_ptr} 不是 \cmacro{NULL}，
+但 \carg{flags} 中設置了 \cenum{CL_MEM_COPY_HOST_PTR} 或 \cenum{CL_MEM_USE_HOST_PTR}。
+
+\item \cenum{CL_INVALID_VALUE}，如果要創建的是 1D 圖像緩衝，
+為其指定 \cenum{CL_MEM_WRITE_ONLY} 的同時
+\carg{flags} 中設置了 \cenum{CL_MEM_READ_WRITE} 或 \cenum{CL_MEM_READ_ONLY}；
+或者為其指定 \cenum{CL_MEM_READ_ONLY} 的同時
+\carg{flags} 中設置了 \cenum{CL_MEM_READ_WRITE} 或 \cenum{CL_MEM_WRITE_ONLY}；
+或者 \carg{flags} 中設置了 \cenum{CL_MEM_USE_HOST_PTR}、 \cenum{CL_MEM_ALLOC_HOST_PTR}、
+或 \cenum{CL_MEM_COPY_HOST_PTR}。
+
+\item \cenum{CL_INVALID_VALUE}，如果要創建的是 1D 圖像緩衝，
+為其指定 \cenum{CL_MEM_HOST_WRITE_ONLY} 的同時
+\carg{flags} 中設置了 \cenum{CL_MEM_HOST_READ_ONLY}；
+或者為其指定 \cenum{CL_MEM_HOST_READ_ONLY} 的同時
+\carg{flags} 中設置了 \cenum{CL_MEM_HOST_WRITE_ONLY}；
+或者為其指定 \cenum{CL_MEM_HOST_NO_ACCESS} 的同時
+\carg{flags} 中設置了 \cenum{CL_MEM_HOST_READ_ONLY} 或 \cenum{CL_MEM_HOST_WRITE_ONLY}。
+
+\item \cenum{CL_IMAGE_FORMAT_NOT_SUPPORTED}，如果 \carg{image_format} 的值不受支持。
+
+\item \cenum{CL_MEM_OBJECT_ALLOCATION_FAILURE}，如果為\cnglo{imgobj}分配內存失敗。
+
+\item \cenum{CL_INVALID_OPERATION}，
+如果 \carg{context} 中的所有\cnglo{device}都不支持圖像
+（即\reftab{cldevquery}中的 \cenum{CL_DEVICE_IMAGE_SUPPORT} 是 \cenum{CL_FALSE} ）。
+
+\item \cenum{CL_OUT_OF_RESOURCES}，如果\scdevfailres。
+
+\item \cenum{CL_OUT_OF_HOST_MEMORY}，如果\schostfailres。
+\stopigBase
+
+\input{chapter_rt/sec_imgobj/subsec_create/img_fmt_dsc.tex}
+\input{chapter_rt/sec_imgobj/subsec_create/img_dsc.tex}
+

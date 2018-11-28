@@ -5,7 +5,7 @@ pdf_name := ${prd_name}.pdf
 
 dir_self := $(shell dirname $(shell readlink -fe $(lastword ${MAKEFILE_LIST})))
 dir_main := $(shell readlink -fe ${dir_self})
-dir_env  := $(shell readlink -fe ${dir_self}/../env)
+dir_env  := $(shell readlink -fe ${dir_self}/../env/cn)
 
 tex_deps:=$(shell find . -type f -name \*.tex)
 tex_deps+=$(shell find . -type f -name \*.bib)

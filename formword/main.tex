@@ -43,40 +43,56 @@
   marking=on
 ]
 
-%\definefontsynonym [boyangliuti] [name:hakuyoliuti3500]
-\definefontsynonym [boyangliuti] [boyangkai7000]
-\definefont [booksubtitle] [boyangliuti at 22pt]
+\startluacode
+function commands.splitwords(str)
+	words = string.split(str, ' ')
+	groupsize = 4
+	for i=1,#words,groupsize do
+		tex.sprint('\\startxrow[frame=on]')
+		tex.sprint('\\startxcell')
+		for k = 0,3 do
+			idx = i + k
+			if (idx > #words) then
+				break
+			end
+			chars = utf.split(words[idx])
+			for j=1,#chars do
+				tex.sprint(chars[j])
+			end
+			if (i ~= #words) and (k ~= 3) then
+				tex.sprint('\\kern.5em')
+			end
+		end
+		tex.sprint('\\stopxcell')
+		tex.sprint('\\stopxrow')
+	end
+end
+\stopluacode
 
-% word line
-\define[4]\lword{
-\startxrow[topframe=on,bottomframe=on]
-  \startxcell[leftframe=on] #1 \stopxcell
-  \startxcell[background=color,backgroundcolor=.9white] #2 \stopxcell
-  \startxcell #3 \stopxcell
-  \startxcell[background=color,backgroundcolor=.9white,rightframe=on] #4 \stopxcell
-\stopxrow
+\define[1]\fword{
+\ctxlua{commands.splitwords('#1')}
 }
 
 % main text
 \starttext
-\booksubtitle
 
 \startxtable[
-  align={middle,lohi},
-  %bodyfont={tt,36pt},
+  align={lohi},
+  bodyfont={tt,22pt},
   %width=48pt,
-  %height=24pt,
+  height=26pt,
   split=yes,
   %strut=none,
-  loffset=2pt,
-  roffset=2pt,
-  toffset=0pt,
-  boffset=0pt,
+  loffset=0pt,
+  roffset=0pt,
+  toffset=1pt,
+  %boffset=1pt,
   frame=off,
 ]
-  \lword{可以}{可是}{认可}{许可}
-  \lword{东西}{房东}{东方}{做东}
-  \lword{东西}{西风}{西服}{西域}
+  \fword{可以 可是 认可 许可}
+  \fword{东西 房东 东方 做东}
+  \fword{东西 西风 西服 西域}
 \stopxtable
+
 
 \stoptext

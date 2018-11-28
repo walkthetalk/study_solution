@@ -1,4 +1,3 @@
-\definepapersize[CD][width=20cm,height=20cm]
 \setuppapersize[A4][A4]
 
 \setuppagenumbering[
@@ -9,7 +8,7 @@
   %left=the,
   %right=ok,
 ]
-% don't use TAB, and no space between *reg=val*, and no null line,
+% don't use TAB, and no space between *reg=val*, and no empty line,
 % or it will be ommitted
 \setuplayout[
   % vertical
@@ -25,14 +24,16 @@
   %bottomspace=22mm,%\dimexpr(\bottomheight + \bottomdistance),
   height=fit,
   % horizontal
-  leftedge=10mm,
-    leftedgedistance=2mm,
-      leftmargin=20mm,
-        leftmargindistance=2mm,
-        rightmargindistance=2mm,
-      rightmargin=20mm,
-    rightedgedistance=2mm,
-  rightedge=10mm,
+  backspace=36mm,
+    leftedge=10mm,
+      leftedgedistance=2mm,
+        leftmargin=20mm,
+          leftmargindistance=2mm,
+          rightmargindistance=2mm,
+        rightmargin=32mm,
+      rightedgedistance=2mm,
+    rightedge=10mm,
+  cutspace=36mm,
   %backspace=34mm,%\dimexpr(\leftedgewidth + \leftedgedistance + \leftmarginwidth + \leftmargindistance + 5mm),
   %cutspace=34mm,%\dimexpr(\rightedgewidth + \rightedgedistance + \rightmarginwidth + \rightmargindistance),
   width=fit,

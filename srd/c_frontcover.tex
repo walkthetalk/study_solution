@@ -1,0 +1,50 @@
+\startcomponent c_frontcover
+%\product opencl-spec-zh
+
+%% move here from environment
+\startuniqueMPgraphic{frontcoverBG}
+color ccc ;
+pair p, h[], v[] ;
+u := \overlaywidth ; v := \overlayheight ;
+hdelta := .15u ; vdelta := .03v ;
+drawoptions (withpen pensquare scaled 2pt) ;
+randomseed := day + time*epsilon ;
+show time * epsilon ;
+for i :=1 upto 128 :
+    ccc := (uniformdeviate (1), uniformdeviate (1), uniformdeviate (1)) ;
+    p := (uniformdeviate (u), uniformdeviate (v)) ;
+    h0 := (xpart (p) - uniformdeviate (hdelta) , ypart (p)) ;
+    h1 := (xpart (p) + uniformdeviate (hdelta) , ypart (p)) ;
+    v0 := (xpart (p), ypart (p) - uniformdeviate (vdelta)) ;
+    v1 := (xpart (p), ypart (p) + uniformdeviate (vdelta)) ;
+    draw h0 -- h1 withcolor transparent(1,.4,ccc) ;
+    draw v0 -- v1 withcolor transparent(1,.4,ccc) ;
+endfor ;
+\stopuniqueMPgraphic
+\defineoverlay[frontcoverBG][\uniqueMPgraphic{frontcoverBG}]
+
+
+\setupbackgrounds [page][background=frontcoverBG]
+\startmakeup[frontCover]
+  \blank[10cm]
+    \midaligned{\booksubtitle 结构化寄存器定义}
+  \blank[10cm]
+
+  \rightaligned{
+  \bTABLE
+  \setupTABLE[frame=off,style={\rm\ita},align={middle,lohi}]
+  \setupTABLE[column][1][align=flushright]
+  \setupTABLE[column][3][align=flushleft]
+  \bTR\bTD 編著 \eTD\bTD ： \eTD\bTD 倪慶亮 \eTD\eTR
+  \bTR\bTD 編譯日期 \eTD\bTD ： \eTD\bTD \COMPILEDATE \eTD\eTR
+  \bTR\bTD E-Mail \eTD\bTD ： \eTD\bTD \from[authorEmail] \eTD\eTR
+  \bTR\bTD 博客 \eTD\bTD ： \eTD\bTD \from[authorBlog] \eTD\eTR
+  \bTR\bTD 項目網址 \eTD\bTD ： \eTD\bTD \simpleurl{https://github.com/walkthetalk/study_solution} \eTD\eTR
+  \eTABLE
+  }
+
+  \blank[5cm]
+\stopmakeup
+\setupbackgrounds [page][background=]
+
+\stopcomponent

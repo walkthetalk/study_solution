@@ -1,0 +1,49 @@
+\startmodule[srd]
+% C 代码高亮抄录模块
+% \usemodule[pretty-c]
+%\usemodule[bib]
+%\usemodule[bibltx]
+%\setupbibtex[database=xampl]
+%\setuppublications[numbering=yes]
+
+\define\prdname{结构化寄存器定义}
+
+\setupinteraction[
+  state=start,
+  color=darkblue,
+  contrastcolor=darkblue,
+  focus=standard,
+]
+
+
+%%%%%%%%%%%%%%%   字体
+\definetype[code][
+  style=\tt\tf,
+]
+
+%%%%%%%%%%%%%%   代码
+\definetextbackground
+  [verb]
+  [frame=on,location=paragraph,
+   before=,after=,
+   leftoffset=0.1em,rightoffset=0.1em,
+   topoffset=0.1em,bottomoffset=0.1em,
+   rulethickness=0.75pt]
+\defineframedtext[framedtextsec][
+  width=\textwidth,offset=0pt,background=color,backgroundcolor=lightgray,
+  before=,
+  after=,
+]
+
+\definetyping[ccode][%option=c,
+  bodyfont=8pt,
+%  before={\startframecode},
+  before={\blank[1em]\setupwhitespace[none]\starttextbackground[verb]},
+%  after={\stopframecode},
+  after={\stoptextbackground},
+  margin=no,
+  tab=8,
+  numbering=line,
+]
+
+\stopmodule

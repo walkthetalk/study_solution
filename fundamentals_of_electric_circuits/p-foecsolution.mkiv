@@ -31,19 +31,28 @@
 % use \unit with space
 \def\sunit{\dosingleempty\dosunit}
 \unexpanded\def\dosunit[#1]#2{%
-  \doifelse{#1}{lr}{
-    {\;}\unit{#2}{\;}
-  }{
-    \doifelse{#1}{l}{
-      {\;}\unit{#2}
-    }{
-      \doifelse{#1}{r}{
-        \unit{#2}{\;}
-      }{
-        \unit{#2}
-      }
-    }
-  }
+  \doifelse{#1}{lr}{%
+    {\;}\unit{#2}{\;}%
+  }{%
+    \doifelse{#1}{l}{%
+      {\;}\unit{#2}%
+    }{%
+      \doifelse{#1}{r}{%
+        \unit{#2}{\;}%
+      }{%
+        \unit{#2}%
+      }%
+    }%
+  }%
+}
+
+\def\munit{\dosingleempty\domunit}
+\unexpanded\def\domunit[#1]#2{%
+\ifmmode%
+  \iffirstargument\sunit[#1]{#2}\else\sunit{#2}\fi%
+\else%
+  \math{\iffirstargument\sunit[#1]{#2}\else\sunit{#2}\fi}%
+\fi%
 }
 
 \startMPinclusions
@@ -55,6 +64,104 @@ enddef;
 % math label
 vardef mlabel@#(expr strname, pos) text p =
 	label@#(textext("$" & strname & "$"), pos) p
+enddef;
+
+vardef defcoord(expr _ux, _uy, _ox, _oy, _ah) =
+	numeric ux, uy, ox, oy, ah;
+	ux := _ux;	% scale x
+	uy := _uy;	% scale y
+	ah := _ah;	% mark
+	ox := _ox;	% offset x
+	oy := _oy;	% offset y
+
+	string defloc.x;
+	defloc.x := "bot";
+	string defloc.y;
+	defloc.y := "lft";
+enddef;
+
+vardef defdim@#(expr name)(text pl) =
+	string dname@#;
+	numeric plist@#[];
+	numeric pmid@#;
+	string ploc@#[];
+
+	dname@# := name;
+	pmid@# := -1;
+	for _p = pl:
+		pmid@# := pmid@# + 1;
+		plist@#[pmid@#] := _p;
+		ploc@#[pmid@#] := defloc@#;
+	endfor;
+enddef;
+
+vardef setloc@#(expr loc)(text pl) =
+	for _p = pl:
+		for i := 0 step 1 until pmid@#:
+			if (plist@#[i] = _p):
+				ploc@#[i] := loc;
+			fi;
+		endfor;
+	endfor;
+enddef;
+
+vardef coordsys =
+image(
+	% draw x
+	numeric lftx, rtx;
+	if plist.x[0] < 0:
+		lftx := plist.x[0] * ux - ox;
+	else:
+		lftx := 0;
+	fi;
+	if plist.x[pmid.x] > 0:
+		rtx := plist.x[pmid.x] * ux + ox;
+	else:
+		rtx := 0;
+	fi;
+	drawarrow (lftx,0)--(rtx,0);
+	for i := 0 step 1 until pmid.x:
+		draw (plist.x[i]*ux, 0)--(plist.x[i]*ux, ah);
+		mlabel. scantokens(ploc.x[i]) (decimal(plist.x[i]), (plist.x[i]*ux, 0));
+	endfor;
+	mlabel.lrt(dname.x, (rtx, 0));
+
+	% draw y
+	numeric lowy, upy;
+	if plist.y[0] < 0:
+		lowy := plist.y[0] * uy - oy;
+	else:
+		lowy := 0;
+	fi;
+	if plist.y[pmid.y] > 0:
+		upy := plist.y[pmid.y] * uy + oy;
+	else:
+		upy := 0;
+	fi;
+	drawarrow (0,lowy)--(0,upy);
+	for i := 0 step 1 until pmid.y:
+		draw (0,plist.y[i]*uy)--(ah,plist.y[i]*uy);
+		mlabel. scantokens(ploc.y[i]) (decimal(plist.y[i]), (0,plist.y[i]*uy));
+	endfor;
+	mlabel.lft(dname.y, (0, upy));
+
+	if lowy < 0:
+		if lftx < 0:
+			mlabel.llft(decimal(0), (0,0));
+		else:
+			mlabel.lft(decimal(0), (0,0));
+		fi;
+	else:
+		mlabel.bot(decimal(0), (0,0));
+	fi;
+)
+enddef;
+
+vardef drawemp(expr pa) =
+	draw pa xyscaled(ux,uy) withcolor darkred withpen pencircle scaled 1.2
+enddef;
+vardef drawaux(expr pa) =
+	draw pa xyscaled(ux,uy) dashed evenly
 enddef;
 \stopMPinclusions
 
@@ -106,7 +213,7 @@ enddef;
 \defineitemgroup[IG][levels=2]
 \setupitemgroup[IG]
 [1]
-[a, packed,joinedup,intext]
+[a, packed,joinedup,broad]
 %standard broad serried packed unpacked stopper joinedup atmargin inmargin autointro loose repeat section paragraph intext random columns
 %standard: default setup
 %n*broad:  extra horizontal white space after symbol

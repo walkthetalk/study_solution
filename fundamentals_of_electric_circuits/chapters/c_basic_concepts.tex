@@ -237,14 +237,186 @@ i(t)=\startmathcases
 \stopmathcases
 \stopformula
 Plot the charge stored in the element over $0 < t < \munit{20 second}$.
-\stopQ
-\startA
+
 \startMPcode
 	defcoord(5,2,15,15,1.5);
 	defdim.x("(t) s")(6,10,15);
+	setloc.x("lrt")(10,15);
 	defdim.y("i(t) A")(-12,18);
 	draw coordsys;
 	drawemp((0,0)--(6,18)--(10,18)--(10,-12)--(15,-12)--(15,0)--(17,0));
+\stopMPcode
+\stopQ
+
+\startA
+\startformula
+q(t)=\startmathcases
+\NC 1.5t^2 \munit[l]{coulomb},  \MC 0 \le t < \munit{6 second} \NR
+\NC 18t-54 \munit[l]{ampere},   \MC 6 \le t < \munit{10 second} \NR
+\NC -12t+246 \munit[l]{ampere}, \MC 10\le t < \munit{15 second} \NR
+\NC 66 \munit[l]{ampere},       \MC t \ge \munit{15 second} \NR
+\stopmathcases
+\stopformula
+
+\startMPcode
+	defcoord(7,0.7,15,15,1.5);
+	defdim.x("(t) s")(6,10,15);
+	setloc.x("lrt")(10,15);
+	defdim.y("q(t) C")(18,54,66,126);
+	draw coordsys;
+
+	%drawref((0,0)--(6,18)--(10,18)--(10,-12)--(15,-12)--(15,0)--(16,0));
+
+	polydef.main(0,6,1,20)(0,0,1.5);
+	drawauxp.p((6,54),(10,126),(15,66));
+	drawemp(polycurve.main--(10,126)--(15,66)--(16,66));
+\stopMPcode
+\stopA
+
+% 1.13
+\startQ
+The charge entering the positive terminal of an element is
+$q = 5 \sin 4 π t \sunit[l]{milli coulomb}$,
+while the voltage across the element (plus to minus) is
+$v = 3 \cos 4 π t \sunit[l]{volt}$,
+\startIG
+\item Find the power delivered to the element at $t = \sunit{0.3 second}$.
+\item Calculate the energy delivered to the element between 0 and \sunit{0.6 second}.
+\stopIG
+\stopQ
+
+\startA
+\startIG
+\item $i = \frac{dq}{dt} = 20π\cos 4π t \sunit[l]{milli ampere}$,
+$p = vi = 60π\cos^2 4π t \sunit[l]{milli watt}$,
+at $t = \sunit{0.3 second}$:
+\startformula
+p(0.3) = 60π\cos^2 (4π \times 0.3) = 123.37 \sunit[l]{milli watt}
+\stopformula
+
+\item $E = \int p d t = \int 60π\cos^2 4π t dt = 60π\int \cos^2 4π t dt
+	 = 60π \int (1 + \cos 8π t) dt \sunit[l]{milli joule}$
+\startformula
+E = 60π (\left.t + \frac{\sin 8π t}{8π}\right|_0^{0.6}) = 117.5 \sunit[l]{milli joule}
+\stopformula
+\stopIG
+\stopA
+
+% 1.14
+\startQ
+The voltage v(t) across a device and the current i(t) through it are
+$v(t) = 20 \sin (4t) \sunit[l]{volt}$ and $i(t) = 10(1 + e^{−2t}) \sunit[l]{milli ampere}$,
+Calculate:
+\startIG
+\item the total charge in the device at $t = \sunit{1 second}$, $q(0) = 0$.
+\item the power consumed by the device at $t = \sunit{1 second}$.
+\stopIG
+\stopQ
+
+\startA
+\startIG
+\item $q = \int i(t) dt
+         = \int 10(1+e^{-2t}) dt
+         = \left.(10t - 5 e^{-2t})\right|_0^1
+         = 5-5e^{-2}
+         = 4.323 \sunit{milli ampere}$
+\item $p = v(t)i(t)
+         = 20\sin(4t) \times 10 (1 + e^{-2t})
+         = 200\sin(4t) \times (1 + e^{-2t})$, $p(1) = -171.845 \sunit[l]{milli watt}$
+\stopIG
+\stopA
+
+% 1.15
+\startQ
+The current entering the positive terminal of a device is
+$i(t) = 6e^{−2t} \sunit[l]{milli ampere}$
+and the voltage across the device is
+$v(t) = 10\frac{di}{dt}\sunit[l]{volt}$.
+\startIG
+\item Find the charge delivered to the device between
+$t = 0$ and $t = \sunit{2 second}$.
+\item Calculate the power absorbed.
+\item Determine the energy absorbed in \sunit{3 second}.
+\stopIG
+\stopQ
+
+\startA
+\startIG
+\item $q = \int i(t) dt
+         = \left.-3e^{-2t}\right|_0^2
+         = 3 - 3 e^{-4}
+         = 2.945 \sunit[l]{milli coulomb}$
+\item $v(t) = 10\frac{di}{dt} = -120e^{-2t}\sunit[l]{volt}$,
+$p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
+\item $E = \int p dt = -0.99889 \sunit[l]{milli joule}$
+\stopIG
+\stopA
+
+% 1.16
+\startQ[Q:1.16]
+\reffig{1.27} shows the current through and the voltage across an element.
+\startIG
+\item Sketch the power delivered to the element for $t>0$.
+\item Fnd the total energy absorbed by the element for the period of $0 < t < \sunit{4 second}$.
+\stopIG
+\placefigure[here][fig:1.27]{for \refq{1.16}}{
+\startcombination[2*1]
+{\startMPcode
+	defcoord(20,1,15,15,1.5);
+	defdim.x("t(s)")(2,4);
+	defdim.y("i(mA)")(60);
+	draw coordsys;
+
+	drawemp((0,0)--(2,60)--(4,0));
+\stopMPcode}{a}{\startMPcode
+	defcoord(20,5,15,15,1.5);
+	defdim.x("t(s)")(2,4);
+	setloc.x("lrt")(2,4);
+	defdim.y("v(V)")(-5,5);
+	draw coordsys;
+
+	drawemp((0,5)--(2,5)--(2,-5)--(4,-5)--(4,0));
+\stopMPcode}{b}
+\stopcombination
+}
+\stopQ
+
+\startA
+\startformula\startmathalignment[align={left}]
+\NC
+  i(t) = \startmathcases
+         \NC 30t \sunit[l]{milli ampere} \MC 0 < t < 2 \NR
+         \NC 120-30t \sunit[l]{milli ampere} \MC 2 < t < 4 \NR
+         \stopmathcases
+\NC
+  v(t) = \startmathcases
+         \NC 5 \sunit[l]{volt} \MC 0 < t < 2 \NR
+         \NC -5\sunit[l]{volt} \MC 2 < t < 4 \NR
+         \stopmathcases
+\NR
+
+\NC
+  p(t) = \startmathcases
+         \NC 150t    \sunit[l]{milli watt} \MC 0 < t < 2 \NR
+         \NC 150t-600\sunit[l]{milli watt} \MC 2 < t < 4 \NR
+         \stopmathcases
+\NC
+  E = \int p(t) dt = \startmathmatrix[left={\left(},right={\right)}]
+                     \NC \left.75t^2\right|_0^2 \NR
+                     \NC + \NR
+                     \NC \left.75t^2-600t\right|_2^4 \NR
+                     \stopmathmatrix
+                   = \sunit{0 joule}
+\NR
+\stopmathalignment\stopformula
+
+\startMPcode
+	defcoord(20,0.1,15,15,1.5);
+	defdim.x("t(s)")(2,4);
+	defdim.y("p(mW)")(-300,300);
+	draw coordsys;
+
+	drawemp((0,0)--(2,300)--(2,-300)--(4,0));
 \stopMPcode
 \stopA
 

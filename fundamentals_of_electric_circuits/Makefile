@@ -3,6 +3,7 @@ tex_name=main
 pdf_name=fundamentals_of_electric_circuits
 
 dir_self := $(shell dirname $(shell readlink -fe $(lastword ${MAKEFILE_LIST})))
+dir_mp   := ${dir_self}:$(shell kpsepath mp)
 dir_main := $(shell readlink -fe ${dir_self})
 
 dir_env  := $(shell readlink -fe ${dir_self}/../env/en)
@@ -43,7 +44,8 @@ clean:
 
 $(pdf_name).pdf: $(tex_deps)
 	@echo [gen] $@
-	@context --jit --purge \
+	@export MPINPUTS=${dir_mp}; \
+	context --jit --purge \
 	  --nocompression \
 	  --environment=env_cmm \
 	  --path=$(dir_env) \

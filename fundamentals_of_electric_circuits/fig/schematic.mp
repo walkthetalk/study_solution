@@ -191,16 +191,16 @@ def drawR(suffix n) =
 enddef;
 
 
-beginfig(1);
-	draw (0,0)--(1,0);
-	draw (0,0)--(0,1);
-
-	newR.r1("hehe") "angle(20)";
-	r1.ic = (10,20);
-	ObjLabel.r1(btex $+$ etex) "labcard(rse)";
-	ObjLabel.r1(btex $8V$ etex) "labpoint(rse)","labdir(llft)";
-	drawObj(r1);
-
-endfig;
-
-end;
+%beginfig(1);
+%	draw (0,0)--(1,0);
+%	draw (0,0)--(0,1);
+%
+%	newR.r1("hehe") "angle(20)";
+%	r1.ic = (10,20);
+%	ObjLabel.r1(btex $+$ etex) "labcard(rse)";
+%	ObjLabel.r1(btex $8V$ etex) "labpoint(rse)","labdir(llft)";
+%	drawObj(r1);
+%
+%endfig;
+%
+%end;

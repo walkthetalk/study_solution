@@ -420,5 +420,28 @@ $p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
 \stopMPcode
 \stopA
 
+% 1.17
+\startQ[Q:1.17]
+\reffig{1.28} shows a circuit with four elements,
+$p_1 = \sunit{60 watt}$ absorbed, $p_3 = \sunit{−145 watt}$ absorbed,
+and $p_4 = \sunit{75 watt}$ absorbed.
+How many watts does element $2$ absorb?
+\stopQ
+
+\startA
+\placefigure[here][fig:1.28]{for \refq{1.17}}{
+\startMPcode
+		newCircle.a(btex A etex);
+		newCircle.b(btex B etex);
+		a.c=origin;
+		b.c=a.c+(1cm,2cm);
+		ncline.b(a)(b) "name(ab)";
+		ObjLabel.b(btex $a\rightarrow b$ etex) "labpathname(ab)",
+			"labangle(0)";
+		drawObj(a,b);
+\stopMPcode
+}
+\stopA
+
 \stopchapter
 \stopcomponent

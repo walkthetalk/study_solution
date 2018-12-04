@@ -160,16 +160,17 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Resistor %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("R")("angle")(0);
-setObjectDefaultOption("R")("dx")(40);
+setObjectDefaultOption("R")("dx")(25);
 setObjectDefaultOption("R")("dy")(10);
 setObjectDefaultOption("R")("linecolor")(FireBrick);
 setObjectDefaultOption("R")("pathfillcolor")(Khaki);
-vardef newR@#(expr _o) text options =
+vardef newR@# text options =
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "R");
 
 	StandardInterface;
 	ObjPoint RotatedPoints;
+	ObjPointArray(p)(2);
 
 	ObjCode StandardEquations,
 		PureRotatedEquations,
@@ -178,7 +179,9 @@ vardef newR@#(expr _o) text options =
 		"@#rne-@#rse=(0," & decimal OptionValue@#("dy") & ") rotated "
 			& decimal OptionValue@#("angle"),
 		"xpart(@#se-@#sw)=xpart(@#rse-@#rnw)",
-		"ypart(@#ne-@#se)=ypart(@#rne-@#rsw)";
+		"ypart(@#ne-@#se)=ypart(@#rne-@#rsw)",
+		"@#p1=@#rw",
+		"@#p2=@#re";
 
 	ObjPath(@#rsw--@#rse--@#rne--@#rnw--cycle)
 		"arrows(-)",
@@ -186,21 +189,11 @@ vardef newR@#(expr _o) text options =
 		"pathfilled(true)",
 		"pathfillcolor(" & stringify_color(OptionValue@#("pathfillcolor")) &")";
 enddef;
+def BpathR(suffix n)=
+	(n.rnw--n.rsw--n.rse--n.rne--cycle)
+	%StandardBpath(n)
+enddef;
 def drawR(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
-
-%beginfig(1);
-%	draw (0,0)--(1,0);
-%	draw (0,0)--(0,1);
-%
-%	newR.r1("hehe") "angle(20)";
-%	r1.ic = (10,20);
-%	ObjLabel.r1(btex $+$ etex) "labcard(rse)";
-%	ObjLabel.r1(btex $8V$ etex) "labpoint(rse)","labdir(llft)";
-%	drawObj(r1);
-%
-%endfig;
-%
-%end;

@@ -25,11 +25,6 @@ fig_srcs+=$(shell cd fig; find . -type f -name p\*.mp | cut -d '/' -f 2)
 fig_incs:=$(shell cd fig; find . -type f -name "*.mp" | cut -d '/' -f 2 | grep -v "^[e|p]")
 #$(warning figincs is ${fig_incs})
 
-fig_pdfs:=$(patsubst %.mp,$(dir_output)/%-1.pdf,$(fig_srcs))
-fig_deps:=$(patsubst %.mp,${dir_main}/fig/%.mp,$(fig_incs))
-
-#$(warning fig srcs is ${fig_pdfs})
-
 ifneq ($(MAKECMDGOALS),clean)
 #$(warning MAKECMDGOALS is $(MAKECMDGOALS))
 #$(warning asy_dirs is $(asy_dirs))
@@ -46,10 +41,7 @@ clean:
 	@$(call clean_misc)
 	@rm -f ${dir_output}/*
 
-.PHONY: fig_pdfs
-fig_pdfs: ${fig_pdfs}
-
-$(pdf_name).pdf: $(tex_deps) ${fig_pdfs}
+$(pdf_name).pdf: $(tex_deps)
 	@echo [gen] $@
 	@context --jit --purge \
 	  --nocompression \
@@ -58,13 +50,3 @@ $(pdf_name).pdf: $(tex_deps) ${fig_pdfs}
 	  --result=$(pdf_name).pdf \
 	  $(tex_name).tex; \
 	$(call clean_misc)
-
-$(dir_output)/%-1.pdf : ${dir_main}/fig/%.mp ${fig_deps}
-	@set -e; \
-	COMPILE_DIR=$$(mktemp -d /tmp/FOECMP.XXXXXXXX); \
-	echo [compile] $* at $${COMPILE_DIR}; \
-	cp $^ $${COMPILE_DIR}/; \
-	cd $${COMPILE_DIR}; \
-	mptopdf $*.mp > /dev/null; \
-	cp *.pdf ${dir_output}/; \
-	rm -r $${COMPILE_DIR}

@@ -4432,17 +4432,17 @@ def objlabel_(suffix $)(expr p) text options =
   settodefaultifnotknown_("labpoint")(string)("ic");
   settodefaultifnotknown_("laberase")(boolean)(false);
   % picture:
-  $ipic_[$ipic_.n_]=p;
+  $ipic_[$ipic_.n_]:=p;
   $ipic_[$ipic_.n_]:=$ipic_[$ipic_.n_]
     shifted -.5[urcorner(p),llcorner(p)] rotated o_labrotate_val;
   % transformation
   $ipic_.transf_.n_:=$ipic_.transf_.n_+1;
-  $ipic_.transf_[$ipic_.transf_.n_]=identity;
+  $ipic_.transf_[$ipic_.transf_.n_]:=identity;
   % we also store the color:
   $ipic_.col_.n_:=$ipic_.col_.n_+1;
-  $ipic_.col_[$ipic_.col_.n_]=o_labcolor_val;
+  $ipic_.col_[$ipic_.col_.n_]:=o_labcolor_val;
   $ipic_.erase_.n_:=$ipic_.erase_.n_+1;
-  $ipic_.erase_[$ipic_.erase_.n_]=o_laberase_val;
+  $ipic_.erase_[$ipic_.erase_.n_]:=o_laberase_val;
 enddef;
 
 % This is used in |ObjLabel|
@@ -4509,7 +4509,7 @@ vardef ObjLabel@#(expr p) text options =
   if unknown o_labpathname_val and unknown o_labpathid_val:
     if unknown o_labcard_val:
       settodefaultifnotknown_("labshift")(pair)((0,0));
-      tmpoff=@#sc_(o_labpoint_val)+o_labshift_val;
+      tmpoff:=@#sc_(o_labpoint_val)+o_labshift_val;
     else:
       % The |labcard| option is handled like the |labdir| option,
       % but from the |labcard| point of the object. For instance,
@@ -4517,20 +4517,20 @@ vardef ObjLabel@#(expr p) text options =
       % of the object. We use |cardtodir_| to transform a cardinal point
       % into a direction.
       settodefaultifnotknown_("labdir")(string)(cardtodir_(o_labcard_val));
-      tmpoff=@#sc_(o_labcard_val);
+      tmpoff:=@#sc_(o_labcard_val);
     fi;
   else:
     settodefaultifnotknown_("labshift")(pair)((0,0)); % added June 1, 2004
-    tmpoff=objpathlabel_(@#)+@#c+o_labshift_val; % o_labshift_val added June 1, 2004
+    tmpoff:=objpathlabel_(@#)+@#c+o_labshift_val; % o_labshift_val added June 1, 2004
                                                  % and @#c on May 1, 2006
     if known o_labangle_val:
       @#ipic_[@#ipic_.n_]:=@#ipic_[@#ipic_.n_] rotated o_labangle_val;
     fi;
   fi;
   if known o_labdir_val:
-    @#ipic_.off_[@#ipic_.off_.n_]=tmpoff+labshift_(@#)*CLOV_("labdist");
+    @#ipic_.off_[@#ipic_.off_.n_]:=tmpoff+labshift_(@#)*CLOV_("labdist");
   else:
-    @#ipic_.off_[@#ipic_.off_.n_]=tmpoff;
+    @#ipic_.off_[@#ipic_.off_.n_]:=tmpoff;
   fi;
 enddef;
 

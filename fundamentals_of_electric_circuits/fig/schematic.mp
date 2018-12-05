@@ -1,4 +1,4 @@
-input metaobj;
+input smetaobj;
 
 %https://www.sioe.cn/yingyong/yanse-rgb-16/
 if unknown LightPink           : color LightPink           ; LightPink            := (255,182,193)/255 fi;
@@ -165,6 +165,9 @@ setObjectDefaultOption("R")("dy")(10);
 setObjectDefaultOption("R")("linecolor")(FireBrick);
 setObjectDefaultOption("R")("pathfillcolor")(Khaki);
 vardef newR@# text options =
+  % only create object in 1st running
+  % please reference https://wiki.contextgarden.net/MetaObj_and_Labels.
+  if unknown @#code_:
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "R");
 
@@ -175,7 +178,7 @@ vardef newR@# text options =
 	ObjCode StandardEquations,
 		PureRotatedEquations,
 		"@#rse-@#rsw=(" & decimal OptionValue@#("dx") & ",0) rotated "
-			& decimal OptionValue@#("angle"), 
+			& decimal OptionValue@#("angle"),
 		"@#rne-@#rse=(0," & decimal OptionValue@#("dy") & ") rotated "
 			& decimal OptionValue@#("angle"),
 		"xpart(@#se-@#sw)=xpart(@#rse-@#rnw)",
@@ -188,6 +191,17 @@ vardef newR@# text options =
 		"linecolor(" & stringify_color(OptionValue@#("linecolor")) & ")",
 		"pathfilled(true)",
 		"pathfillcolor(" & stringify_color(OptionValue@#("pathfillcolor")) &")";
+  else:
+	if known @#ipic_1:
+		% clear objlabel in 2nd running
+		% please reference https://wiki.contextgarden.net/MetaObj_and_Labels.
+		@#ipic_.n_:=0;
+		@#ipic_.off_.n_:=0;
+		@#ipic_.transf_.n_:=0;
+		@#ipic_.col_.n_:=0;
+		@#ipic_.erase_.n_:=0;
+	fi;
+  fi;
 enddef;
 def BpathR(suffix n)=
 	(n.rnw--n.rsw--n.rse--n.rne--cycle)

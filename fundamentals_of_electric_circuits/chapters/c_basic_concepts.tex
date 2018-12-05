@@ -431,14 +431,24 @@ How many watts does element $2$ absorb?
 \startA
 \placefigure[here][fig:1.28]{for \refq{1.17}}{
 \startMPcode
-		newCircle.a(btex A etex);
-		newCircle.b(btex B etex);
-		a.c=origin;
-		b.c=a.c+(1cm,2cm);
-		ncline.b(a)(b) "name(ab)";
-		ObjLabel.b(btex $a\rightarrow b$ etex) "labpathname(ab)",
-			"labangle(0)";
-		drawObj(a,b);
+	newR.r1(origin) "angle(90)";
+	ObjLabel.r1(textext("1"));
+
+	newR.r2(r1.c+(30,0)) "angle(90)";
+	ObjLabel.r2(textext("2"));
+
+	newR.r4(r2.c+(60,0)) "angle(90)";
+	ObjLabel.r4(textext("4"));
+
+	newR.r3((r2.c+r4.c)/2 + (0,30)) "angle( 0)";
+	ObjLabel.r3(textext("3"));
+
+	drawObj(r1,r2,r3,r4);
+	ncdiag(r3.p2)(r4.p2)
+		"angleA(0)",
+		"angleB(-90)",
+		"arrows(-)",
+		"linecolor(blue)";
 \stopMPcode
 }
 \stopA

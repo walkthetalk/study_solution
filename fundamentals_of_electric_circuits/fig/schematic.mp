@@ -145,19 +145,41 @@ vardef stringify_color(expr _c) =
 	    & decimal(bluepart(_c)) & ")"
 enddef;
 
-def RotatedPoints=
-  rne,rnw,rsw,rse,rn,rs,re,rw,rc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% schematic aux %%%%%%%%%%%%%%%%%%%%%%%%%%%
+def ORPoints=
+  one,onw,osw,ose,on,os,oe,ow,oc,rne,rnw,rsw,rse,rn,rs,re,rw,rc
 enddef;
-def PureRotatedEquations=
-  ("@#rse-@#rsw=@#rne-@#rnw;" & % parallelogram equation
-   "@#rn=.5[@#rne,@#rnw];" &    % North
-   "@#rs=.5[@#rse,@#rsw];" &    % South
-   "@#re=.5[@#rne,@#rse];" &    % East
-   "@#rw=.5[@#rnw,@#rsw];" &    % West
-   "@#rc=.5[@#rn,@#rs];" &
-   "@#rc=@#c;")      % Center
+vardef defORPoints@#=
+	@#ose-@#osw=@#one-@#onw;
+	@#on=.5[@#one,@#onw];
+	@#os=.5[@#ose,@#osw];
+	@#oe=.5[@#one,@#ose];
+	@#ow=.5[@#onw,@#osw];
+	@#oc=.5[@#on,@#os];
+	@#oc=@#c;
+	@#ose-@#osw=(OptionValue@#("dx"), 0);
+	@#one-@#ose=(0, OptionValue@#("dy"));
+
+	forsuffixes $=ne,nw,sw,se,n,s,e,w,c:
+		@# sc_("r" & str $) - @#oc = (@# sc_("o" & str $) - @#oc) rotated OptionValue@#("angle");
+	endfor;
+
+	xpart(@#se-@#sw)=xpart(@#rse-@#rnw);
+	ypart(@#ne-@#se)=ypart(@#rne-@#rsw);
 enddef;
 
+def SchematicInterface(expr _pin_num) =
+	ObjPoint ORPoints;
+	ObjPointArray(p)(_pin_num); % the pin array
+	ObjNumericArray(pa)(_pin_num); % the pin angle array;
+enddef;
+
+vardef defPin@#(expr _pinid, _pos, _angle) =
+	@#p[_pinid]=_pos;
+	@#pa[_pinid]=_angle + OptionValue@#("angle");
+enddef;
+
+%%%%%%%%%%%%%%%%%%%%%% workaround for twice run problem %%%%%%%%%%%%%%%%
 def isexist(suffix $) =
 	known $code_
 enddef;
@@ -186,11 +208,13 @@ vardef defineSafeNew(expr _type)=
   sc_ tmp;
 enddef;
 
+defineSafeNew("Box");
+defineSafeNew("EmptyBox");
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% default options %%%%%%%%%%%%%%%%%%%%%%
 setCurveDefaultOption("arrows")("draw");
 setCurveDefaultOption("linecolor")(SteelBlue);
 
-defineSafeNew("Box");
-defineSafeNew("EmptyBox");
 %%%%%%%%%%%%%%%%%% Resistor %%%%%%%%%%%%%%%%%%
 defineSafeNew("R");
 setObjectDefaultOption("R")("angle")(0);
@@ -198,24 +222,18 @@ setObjectDefaultOption("R")("dx")(25);
 setObjectDefaultOption("R")("dy")(10);
 setObjectDefaultOption("R")("linecolor")(FireBrick);
 setObjectDefaultOption("R")("pathfillcolor")(Khaki);
+
 vardef newR@# text options =
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "R");
 
 	StandardInterface;
-	ObjPoint RotatedPoints;
-	ObjPointArray(p)(2);
+	SchematicInterface(2);
 
 	ObjCode StandardEquations,
-		PureRotatedEquations,
-		"@#rse-@#rsw=(" & decimal OptionValue@#("dx") & ",0) rotated "
-			& decimal OptionValue@#("angle"),
-		"@#rne-@#rse=(0," & decimal OptionValue@#("dy") & ") rotated "
-			& decimal OptionValue@#("angle"),
-		"xpart(@#se-@#sw)=xpart(@#rse-@#rnw)",
-		"ypart(@#ne-@#se)=ypart(@#rne-@#rsw)",
-		"@#p1=@#rw",
-		"@#p2=@#re";
+		"defORPoints@#",
+		"defPin@#(1,@#rw,180)",
+		"defPin@#(2,@#re,0)";
 
 	ObjPath(@#rsw--@#rse--@#rne--@#rnw--cycle)
 		"linecolor(" & stringify_color(OptionValue@#("linecolor")) & ")",
@@ -239,11 +257,12 @@ enddef;
 vardef ncdiaga@#(text n)(text m) text options =
   ncshort_@#("nc","ncdiaga")(n)(m)(options);
 enddef;
-
-% ``reverse'' |ncdiag|
-vardef rncdiaga@#(text n)(text m) text options =
-  ncshort_@#("nc","ncdiaga")(m)(n)(options);
+vardef ncpdiaga@#(text n)(text pn)(text m)(text pm) text options =
+  ncdiaga@#(n.p[pn])(m.p[pm]) options,
+	"angleA(" & decimal(n.pa[pn]) & ")",
+	"angleB(" & decimal(m.pa[pm]) & ")";
 enddef;
+
 
 vardef ncdiaga_(suffix $)(suffix n,m)(suffix p)=
   % we have to find one additional points; we must be careful

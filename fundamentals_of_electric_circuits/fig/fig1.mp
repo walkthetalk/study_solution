@@ -26,15 +26,9 @@ beginfig(1);
 	r3.c = (r2.c+r4.c)/2 + (0,30);
 	drawObj(r1,r2,r3,r4);
 
-	ncdiaga(r3.p2)(r4.p2)
-		"angleA(0)",
-		"angleB(-90)";
-	ncdiaga(r3.p1)(r2.p2)
-		"angleA(180)",
-		"angleB(90)";
-	ncdiaga(r1.p2)(r3.p1)
-		"angleA(90)",
-		"angleB(180)";
+	ncpdiaga(r3)(2)(r4)(2);
+	ncpdiaga(r3)(1)(r2)(2);
+	ncpdiaga(r1)(2)(r3)(1);
 	ncbar(r2.p1)(r4.p1)
 		"angleA(-90)",
 		"armA(ypart(r3.c-r2.n))";

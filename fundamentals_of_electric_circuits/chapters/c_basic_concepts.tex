@@ -432,16 +432,16 @@ How many watts does element $2$ absorb?
 \placefigure[here][fig:1.28]{for \refq{1.17}}{
 \startMPcode
 	snewR.r1 "angle(90)";
-	ObjLabel.r1(textext("1"));
+	ObjLabel.r1(textext("1")) "labcolor(FireBrick)";
 
 	snewR.r2 "angle(90)";
-	ObjLabel.r2(textext("2"));
+	ObjLabel.r2(textext("2")) "labcolor(FireBrick)";
 
 	snewR.r4 "angle(90)";
-	ObjLabel.r4(textext("4"));
+	ObjLabel.r4(textext("4")) "labcolor(FireBrick)";
 
 	snewR.r3 "angle( 0)";
-	ObjLabel.r3(textext("3"));
+	ObjLabel.r3(textext("3")) "labcolor(FireBrick)";
 
 	r1.c = origin;
 	r2.c = r1.c+(30,0);
@@ -449,11 +449,22 @@ How many watts does element $2$ absorb?
 	r3.c = (r2.c+r4.c)/2 + (0,30);
 
 	drawObj(r1,r2,r3,r4);
-	ncdiag(r3.p2)(r4.p2)
+
+	ncdiaga(r3.p2)(r4.p2)
 		"angleA(0)",
-		"angleB(-90)",
-		"arrows(-)",
-		"linecolor(blue)";
+		"angleB(-90)";
+	ncdiaga(r3.p1)(r2.p2)
+		"angleA(180)",
+		"angleB(90)";
+	ncdiaga(r1.p2)(r3.p1)
+		"angleA(90)",
+		"angleB(180)";
+	ncbar(r2.p1)(r4.p1)
+		"angleA(-90)",
+		"armA(ypart(r3.c-r2.n))";
+	ncbar(r2.p1)(r1.p1)
+		"angleA(-90)",
+		"armA(ypart(r3.c-r2.n))";
 \stopMPcode
 }
 \stopA

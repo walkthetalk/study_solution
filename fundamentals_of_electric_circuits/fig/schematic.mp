@@ -186,6 +186,9 @@ vardef defineSafeNew(expr _type)=
   sc_ tmp;
 enddef;
 
+setCurveDefaultOption("arrows")("draw");
+setCurveDefaultOption("linecolor")(SteelBlue);
+
 defineSafeNew("Box");
 defineSafeNew("EmptyBox");
 %%%%%%%%%%%%%%%%%% Resistor %%%%%%%%%%%%%%%%%%
@@ -215,7 +218,6 @@ vardef newR@# text options =
 		"@#p2=@#re";
 
 	ObjPath(@#rsw--@#rse--@#rne--@#rnw--cycle)
-		"arrows(-)",
 		"linecolor(" & stringify_color(OptionValue@#("linecolor")) & ")",
 		"pathfilled(true)",
 		"pathfillcolor(" & stringify_color(OptionValue@#("pathfillcolor")) &")";
@@ -226,4 +228,34 @@ def BpathR(suffix n)=
 enddef;
 def drawR(suffix n) =
 	drawMemorizedPaths_(n);
+enddef;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncdiaga %%%%%%%%%%%%%%%%%%%%%%%%%
+% ncdiaga: ncdiag without armlength, auto intersect two directions
+% |@#| is the object to which a line is added
+% |n| is the source subobject, |m| is the target.
+% We also distinguish the case when |n| and |m| are objects
+% and when they are points (numerics vs pairs).
+vardef ncdiaga@#(text n)(text m) text options =
+  ncshort_@#("nc","ncdiaga")(n)(m)(options);
+enddef;
+
+% ``reverse'' |ncdiag|
+vardef rncdiaga@#(text n)(text m) text options =
+  ncshort_@#("nc","ncdiaga")(m)(n)(options);
+enddef;
+
+vardef ncdiaga_(suffix $)(suffix n,m)(suffix p)=
+  % we have to find one additional points; we must be careful
+  % not to use assignments, because |n.c| and |m.c|
+  % may be floating:
+  save ap;pair ap;
+  setupobjectfunction(n);
+  ap-f(n)("A")=whatever*dir(CLOV_("angleA"));
+  f(m)("B")-ap=whatever*dir(CLOV_("angleB"));
+  nc_core_$(n)(p)
+    (smoothen(object_(n)("A")--ap--object_(m)("B")
+       cutbefore BpathObj(n) cutafter BpathObj(m))(CLOV_("linearc")))
+    (smoothen(objectpoint_(n)("A")--ap--objectpoint_(m)("B"))
+       (CLOV_("linearc")));
 enddef;

@@ -25,11 +25,22 @@ beginfig(1);
 	r4.c = r2.c+(60,0);
 	r3.c = (r2.c+r4.c)/2 + (0,30);
 	drawObj(r1,r2,r3,r4);
-	ncdiag(r3.p2)(r4.p2)
+
+	ncdiaga(r3.p2)(r4.p2)
 		"angleA(0)",
-		"angleB(-90)",
-		"arrows(-)",
-		"linecolor(blue)";
+		"angleB(-90)";
+	ncdiaga(r3.p1)(r2.p2)
+		"angleA(180)",
+		"angleB(90)";
+	ncdiaga(r1.p2)(r3.p1)
+		"angleA(90)",
+		"angleB(180)";
+	ncbar(r2.p1)(r4.p1)
+		"angleA(-90)",
+		"armA(ypart(r3.c-r2.n))";
+	ncbar(r2.p1)(r1.p1)
+		"angleA(-90)",
+		"armA(ypart(r3.c-r2.n))";
 endfig;
 
 beginfig(2);
@@ -55,9 +66,7 @@ beginfig(2);
 	drawObj(r1,r2,r3,r4);
 	ncdiag(r3.p2)(r4.p2)
 		"angleA(0)",
-		"angleB(-90)",
-		"arrows(-)",
-		"linecolor(blue)";
+		"angleB(-90)";
 endfig;
 
 end;

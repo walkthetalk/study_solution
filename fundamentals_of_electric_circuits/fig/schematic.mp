@@ -158,16 +158,44 @@ def PureRotatedEquations=
    "@#rc=@#c;")      % Center
 enddef;
 
+def isexist(suffix $) =
+	known $code_
+enddef;
+def clear(suffix $) =
+	if known $ipic_1:
+		% clear objlabel in 2nd running
+		% please reference https://wiki.contextgarden.net/MetaObj_and_Labels.
+		$ipic_.n_:=0;
+		$ipic_.off_.n_:=0;
+		$ipic_.transf_.n_:=0;
+		$ipic_.col_.n_:=0;
+		$ipic_.erase_.n_:=0;
+	fi;
+enddef;
+
+% define safe version for new object
+vardef defineSafeNew(expr _type)=
+  save tmp;string tmp;
+  tmp="vardef snew" & _type & "@#" & " text _pars =" &
+        "if isexist(@#):" &
+            "clear(@#);" &
+        "else:" &
+            "new" & _type & "@# _pars;" &
+        "fi;" &
+      "enddef;";
+  sc_ tmp;
+enddef;
+
+defineSafeNew("Box");
+defineSafeNew("EmptyBox");
 %%%%%%%%%%%%%%%%%% Resistor %%%%%%%%%%%%%%%%%%
+defineSafeNew("R");
 setObjectDefaultOption("R")("angle")(0);
 setObjectDefaultOption("R")("dx")(25);
 setObjectDefaultOption("R")("dy")(10);
 setObjectDefaultOption("R")("linecolor")(FireBrick);
 setObjectDefaultOption("R")("pathfillcolor")(Khaki);
 vardef newR@# text options =
-  % only create object in 1st running
-  % please reference https://wiki.contextgarden.net/MetaObj_and_Labels.
-  if unknown @#code_:
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "R");
 
@@ -191,17 +219,6 @@ vardef newR@# text options =
 		"linecolor(" & stringify_color(OptionValue@#("linecolor")) & ")",
 		"pathfilled(true)",
 		"pathfillcolor(" & stringify_color(OptionValue@#("pathfillcolor")) &")";
-  else:
-	if known @#ipic_1:
-		% clear objlabel in 2nd running
-		% please reference https://wiki.contextgarden.net/MetaObj_and_Labels.
-		@#ipic_.n_:=0;
-		@#ipic_.off_.n_:=0;
-		@#ipic_.transf_.n_:=0;
-		@#ipic_.col_.n_:=0;
-		@#ipic_.erase_.n_:=0;
-	fi;
-  fi;
 enddef;
 def BpathR(suffix n)=
 	(n.rnw--n.rsw--n.rse--n.rne--cycle)
@@ -210,4 +227,3 @@ enddef;
 def drawR(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
-

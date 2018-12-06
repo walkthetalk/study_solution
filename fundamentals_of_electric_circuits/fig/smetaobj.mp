@@ -4505,8 +4505,6 @@ vardef ObjLabel@#(expr p) text options =
   objlabel_(@#)(p) options;
   % offset:
   addPointToPointArray@#(ipic_.off_);
-% WARNING: add check for tex twice run problem.
-if unknown @#ipic_.off_[@#ipic_.off_.n_]:
   save tmpoff;pair tmpoff;
   if unknown o_labpathname_val and unknown o_labpathid_val:
     if unknown o_labcard_val:
@@ -4529,6 +4527,8 @@ if unknown @#ipic_.off_[@#ipic_.off_.n_]:
       @#ipic_[@#ipic_.n_]:=@#ipic_[@#ipic_.n_] rotated o_labangle_val;
     fi;
   fi;
+% WARNING: add check for tex twice run problem.
+if unknown @#ipic_.off_[@#ipic_.off_.n_]:
   if known o_labdir_val:
     @#ipic_.off_[@#ipic_.off_.n_]=tmpoff+labshift_(@#)*CLOV_("labdist");
   else:

@@ -426,48 +426,58 @@ $p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
 $p_1 = \sunit{60 watt}$ absorbed, $p_3 = \sunit{−145 watt}$ absorbed,
 and $p_4 = \sunit{75 watt}$ absorbed.
 How many watts does element $2$ absorb?
+\placefigure[here][fig:1.28]{for \refq{1.17}}{
+\startMPcode
+	setX("fig128");
+
+	snewR.X(r1) "angle(90)";
+	ObjLabel.X(r1)(textext("1")) "labcolor(FireBrick)";
+
+	snewR.X(r2) "angle(90)";
+	ObjLabel.X(r2)(textext("2")) "labcolor(FireBrick)";
+
+	snewR.X(r4) "angle(90)";
+	ObjLabel.X(r4)(textext("4")) "labcolor(FireBrick)";
+
+	snewR.X(r3) "angle( 0)";
+	ObjLabel.X(r3)(textext("3")) "labcolor(FireBrick)";
+
+	X(r1).c = origin;
+	X(r2).c = X(r1).c+(30,0);
+	X(r4).c = X(r2).c+(60,0);
+	X(r3).c = (X(r2).c+X(r4).c)/2 + (0,30);
+
+	drawObj(X(r1),X(r2),X(r3),X(r4));
+
+	pcsimple(X(r3))(2)(X(r4))(2);
+	pcsimple(X(r3))(1)(X(r2))(2);
+	pcsimple(X(r1))(2)(X(r3))(1);
+	pcsimple(X(r2))(1)(X(r4))(1)
+		"armA(ypart(X(r3).c-X(r2).n))";
+	pcsimple(X(r2))(1)(X(r1))(1)
+		"armA(ypart(X(r3).c-X(r2).n))";
+\stopMPcode
+}
 \stopQ
 
 \startA
-\placefigure[here][fig:1.28]{for \refq{1.17}}{
+\stopA
+
+% 1.18
+\startQ[Q:1.18]
+Find the power absorbed by each of the elements in \reffig{1.29}.
+
+\placefigure[here][fig:1.29]{for \refq{1.18}}{
 \startMPcode
-	snewR.r1 "angle(90)";
-	ObjLabel.r1(textext("1")) "labcolor(FireBrick)";
-
-	snewR.r2 "angle(90)";
-	ObjLabel.r2(textext("2")) "labcolor(FireBrick)";
-
-	snewR.r4 "angle(90)";
-	ObjLabel.r4(textext("4")) "labcolor(FireBrick)";
-
-	snewR.r3 "angle( 0)";
-	ObjLabel.r3(textext("3")) "labcolor(FireBrick)";
-
-	r1.c = origin;
-	r2.c = r1.c+(30,0);
-	r4.c = r2.c+(60,0);
-	r3.c = (r2.c+r4.c)/2 + (0,30);
-
-	drawObj(r1,r2,r3,r4);
-
-	ncdiaga(r3.p2)(r4.p2)
-		"angleA(0)",
-		"angleB(-90)";
-	ncdiaga(r3.p1)(r2.p2)
-		"angleA(180)",
-		"angleB(90)";
-	ncdiaga(r1.p2)(r3.p1)
-		"angleA(90)",
-		"angleB(180)";
-	ncbar(r2.p1)(r4.p1)
-		"angleA(-90)",
-		"armA(ypart(r3.c-r2.n))";
-	ncbar(r2.p1)(r1.p1)
-		"angleA(-90)",
-		"armA(ypart(r3.c-r2.n))";
+	setX("fig129");
 \stopMPcode
 }
+\stopQ
+
+\startA
 \stopA
+
+
 
 \stopchapter
 \stopcomponent

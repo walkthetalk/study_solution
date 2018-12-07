@@ -317,7 +317,7 @@ vardef addShortCut_(expr oname,ovalue)=
   endfor;
   if not found:
     nshortcuts_:=nshortcuts_+1;
-    oname_[nshortcuts_]=oname;
+    oname_[nshortcuts_]:=oname;
     ovalue_[nshortcuts_]:=ovalue;
   fi;
 enddef;
@@ -354,17 +354,17 @@ vardef addclass_(expr n,clname)=
       exitif clname=Classes_[i];
     endfor;
     if clname=Classes_[j]:
-      ClassName_[n]=j;
+      ClassName_[n]:=j;
     else: % it is a new class name
       %createClassTest(clname); % we call it elsewhere
-      ClassName_[n]=nClasses_;
-      Classes_[nClasses_]=clname;
+      ClassName_[n]:=nClasses_;
+      Classes_[nClasses_]:=clname;
       nClasses_:=nClasses_+1;
     fi;
   else: % it is the first class name
     %createClassTest(clname); % we call it elsewhere
-    ClassName_[n]=nClasses_;
-    Classes_[nClasses_]=clname;
+    ClassName_[n]:=nClasses_;
+    Classes_[nClasses_]:=clname;
     nClasses_:=nClasses_+1;
   fi;
 enddef;
@@ -560,10 +560,55 @@ def TypeOf(expr v)=
   fi
 enddef;
 
+%%%%%%%%%%%%%%%%%%%%%% workaround for twice run problem %%%%%%%%%%%%%%%%
+def isObjExist(suffix $) =
+	known $code_
+enddef;
+
+vardef _clearObj_(suffix n) =
+	% clear objlabel in 2nd running
+	% please reference https://wiki.contextgarden.net/MetaObj_and_Labels.
+	save _j;
+	forsuffixes $=
+		pointlist_,
+		pairlist_,
+		pointarraylist_,
+		subarraylist_,
+		stringarraylist_,
+		colorarraylist_,
+		picturearraylist_,
+		transformarraylist_,
+		booleanarraylist_,
+		numericarraylist_,
+		pairarraylist_,
+		points_in_arrayslist_,
+		picturelist_,
+		numericlist_,
+		booleanlist_,
+		colorlist_,
+		stringlist_,
+		transformlist_,
+		sublist_
+		:
+		if known n.$:
+			forsuffixes _j=scantokens(n.$):
+				%message "     ----------- " & str _j;
+				if known n._j.n_:
+					%message "       known " & str n._j.n_;
+					n._j.n_ := 0;
+				fi;
+			endfor;
+		fi;
+	endfor;
+enddef;
+
 % |n| is the object and |s| its class
 def assignObj(suffix n)(expr s)=
-  n=incr(nObj_);   % new object number
-  iname_[n]=str n; % the number and the associated string are recorded
+  if isObjExist(n):
+    _clearObj_(n);
+  fi;
+  n:=incr(nObj_);   % new object number
+  iname_[n]:=str n; % the number and the associated string are recorded
                    % so that we can go from the number to the name
                    % (and hence to the object)
   addclass_(n,s);   % |n|'s class is memorized too
@@ -609,6 +654,8 @@ def assignObj(suffix n)(expr s)=
                % number of subobjties
     expandafter transform sc_(gen_n_).ctransform_;
                % current transform of that object
+    expandafter boolean sc_(gen_n_).is_code_runned_;
+               % current run state of code of that object
   fi;
   % initialize the lists:
   forsuffixes $=pointlist_,pairlist_,pointarraylist_,subarraylist_,
@@ -618,7 +665,7 @@ def assignObj(suffix n)(expr s)=
     transformlist_,sublist_,code_,extra_code_:
     n$:="";
   endfor;
-  n.nsubobjties_=0;
+  n.nsubobjties_:=0;
   n.ctransform_:=identity;
   setcurrentobjname_(str n);
 enddef;
@@ -670,7 +717,7 @@ enddef;
 % and everytime we draw one (see |drawPicture|), we transform it.
 % Pictures cannot be floating.
 def setPicture(text v)(expr val)=
-  sco_("." & str v)=val;
+  sco_("." & str v):=val;
   sco_("." & str v):=
     sco_("." & str v) shifted -.5[urcorner(val),llcorner(val)];
 enddef;
@@ -1171,6 +1218,8 @@ defineArrayFunction("Boolean")("boolean")("booleanarraylist_");
 % |t| is a list of strings, representing the object code,
 % including equations (see examples)
 vardef ObjCode text l=
+if unknown sco_(".is_code_runned_"):
+  sco_(".is_code_runned_") := true;
   save s_,mac_,i_; % notice that we don't have to say that |s_| is a string!
   string mac_;mac_="";
   % The problem with object code and the equations it contains
@@ -1196,6 +1245,7 @@ vardef ObjCode text l=
     % we call it with
     sc_ ("code_function_." & currentObjname);
   endgroup;
+fi;
 enddef;
 
 % This function adds equations to an already existing object.
@@ -3030,7 +3080,9 @@ vardef addPath@#(suffix n)(expr i)(text p)=
       ObjPointArray(n.ip_)(0);
     fi;    
   fi;
-  xpart(@#n[i])=@#n.ip_.n_+1; % path number
+  if unknown xpart(@#n[i]):
+    xpart(@#n[i])=@#n.ip_.n_+1; % path number
+  fi;
   % we add each point of the path |p_| to the |ip_| array:
   for j:=0 upto length p_-1:
     addPointToArray@#(point j of p_)(n.ip_);
@@ -3038,7 +3090,9 @@ vardef addPath@#(suffix n)(expr i)(text p)=
     addPointToArray@#(precontrol (j+1) of p_)(n.ip_);
   endfor;
   addPointToArray@#(point (length(p_)) of p_)(n.ip_);
-  ypart(@#n[i])=length p_;
+  if unknown ypart(@#n[i]):
+    ypart(@#n[i])=length p_;
+  fi;
   % if the object was initially untied, we untie it
   if untied:untieObj(@#);fi;
 enddef;

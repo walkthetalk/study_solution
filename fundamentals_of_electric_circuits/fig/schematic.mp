@@ -146,64 +146,69 @@ vardef stringify_color(expr _c) =
 enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% schematic aux %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% WARNING: if no underbar, the name will be conflict with context internal
 def ORPoints=
-  one,onw,osw,ose,on,os,oe,ow,oc,rne,rnw,rsw,rse,rn,rs,re,rw,rc
+  o_ne,o_nw,o_sw,o_se,o_n,o_s,o_e,o_w,o_c,
+  r_ne,r_nw,r_sw,r_se,r_n,r_s,r_e,r_w,r_c
 enddef;
 vardef defORPoints@#=
-	@#ose-@#osw=@#one-@#onw;
-	@#on=.5[@#one,@#onw];
-	@#os=.5[@#ose,@#osw];
-	@#oe=.5[@#one,@#ose];
-	@#ow=.5[@#onw,@#osw];
-	@#oc=.5[@#on,@#os];
-	@#oc=@#c;
-	@#ose-@#osw=(OptionValue@#("dx"), 0);
-	@#one-@#ose=(0, OptionValue@#("dy"));
+	@#o_se-@#o_sw=@#o_ne-@#o_nw;
+	@#o_n=.5[@#o_ne,@#o_nw];
+	@#o_s=.5[@#o_se,@#o_sw];
+	@#o_e=.5[@#o_ne,@#o_se];
+	@#o_w=.5[@#o_nw,@#o_sw];
+	@#o_c=.5[@#o_n, @#o_s];
+	@#o_c=@#c;
+	@#o_se-@#o_sw=(OptionValue@#("dx"), 0);
+	@#o_ne-@#o_se=(0, OptionValue@#("dy"));
 
 	forsuffixes $=ne,nw,sw,se,n,s,e,w,c:
-		@# sc_("r" & str $) - @#oc = (@# sc_("o" & str $) - @#oc) rotated OptionValue@#("angle");
+		@# sc_("r_" & str $) - @#o_c
+			= (@# sc_("o_" & str $) - @#o_c)
+				rotated OptionValue@#("angle");
 	endfor;
 
-	xpart(@#se-@#sw)=xpart(@#rse-@#rnw);
-	ypart(@#ne-@#se)=ypart(@#rne-@#rsw);
+	xpart(@#se-@#sw)=xpart(@#r_se-@#r_nw);
+	ypart(@#ne-@#se)=ypart(@#r_ne-@#r_sw);
 enddef;
 
 def SchematicInterface(expr _pin_num) =
 	ObjPoint ORPoints;
-	ObjPointArray(p)(_pin_num); % the pin array
-	ObjNumericArray(pa)(_pin_num); % the pin angle array;
+	ObjPointArray(pin)(_pin_num); % the pin array
+	ObjNumericArray(pin_angle)(_pin_num); % the pin angle array;
 enddef;
 
 vardef defPin@#(expr _pinid, _pos, _angle) =
-	@#p[_pinid]=_pos;
-	@#pa[_pinid]=_angle + OptionValue@#("angle");
+	@#pin[_pinid]=_pos;
+	@#pin_angle[_pinid]=_angle + OptionValue@#("angle");
 enddef;
 
-%%%%%%%%%%%%%%%%%%%%%% workaround for twice run problem %%%%%%%%%%%%%%%%
-def isexist(suffix $) =
-	known $code_
+% WARNING: workaround for tex twice run problem, use it before every startMPcode
+def clearObjs =
+	nObj_ := 0;
+	% ClassName_;
+	% iname_;
+	nClasses_ := 0;
+	% Classes_;
+	nshortcuts_ := 0;
+	% oname_;
+	% ovalue_;
 enddef;
-def clear(suffix $) =
-	if known $ipic_1:
-		% clear objlabel in 2nd running
-		% please reference https://wiki.contextgarden.net/MetaObj_and_Labels.
-		$ipic_.n_:=0;
-		$ipic_.off_.n_:=0;
-		$ipic_.transf_.n_:=0;
-		$ipic_.col_.n_:=0;
-		$ipic_.erase_.n_:=0;
-	fi;
-enddef;
+
+% WARNING: only for constructing different objects in different beginfig
+%   setX("test0");
+%   newEmptyBox.X(eb0)();
+string ObjPrefix_;
+ObjPrefix_:="";
+def setX(expr s)= ObjPrefix_:=s enddef;
+def X(suffix s)= sc_(ObjPrefix_).s enddef;
 
 % define safe version for new object
 vardef defineSafeNew(expr _type)=
   save tmp;string tmp;
   tmp="vardef snew" & _type & "@#" & " text _pars =" &
-        "if isexist(@#):" &
-            "clear(@#);" &
-        "else:" &
             "new" & _type & "@# _pars;" &
-        "fi;" &
+        %"fi;" &
       "enddef;";
   sc_ tmp;
 enddef;
@@ -232,49 +237,97 @@ vardef newR@# text options =
 
 	ObjCode StandardEquations,
 		"defORPoints@#",
-		"defPin@#(1,@#rw,180)",
-		"defPin@#(2,@#re,0)";
+		"defPin@#(1,@#r_w,180)",
+		"defPin@#(2,@#r_e,0)";
 
-	ObjPath(@#rsw--@#rse--@#rne--@#rnw--cycle)
+	ObjPath(@#r_sw--@#r_se--@#r_ne--@#r_nw--cycle)
 		"linecolor(" & stringify_color(OptionValue@#("linecolor")) & ")",
 		"pathfilled(true)",
 		"pathfillcolor(" & stringify_color(OptionValue@#("pathfillcolor")) &")";
 enddef;
 def BpathR(suffix n)=
-	(n.rnw--n.rsw--n.rse--n.rne--cycle)
+	(n.r_nw--n.r_sw--n.r_se--n.r_ne--cycle)
 	%StandardBpath(n)
 enddef;
 def drawR(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
+%%%%%%%%%%%%%%%%%% Dependent Current Source %%%%%%%%%%%%%%%%%%
+defineSafeNew("DCS");
+setObjectDefaultOption("DCS")("angle")(0);
+setObjectDefaultOption("DCS")("dx")(20);
+setObjectDefaultOption("DCS")("dy")(20);
+setObjectDefaultOption("DCS")("linecolor")(FireBrick);
+setObjectDefaultOption("DCS")("pathfillcolor")(Khaki);
+
+vardef newDCS@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "DCS");
+
+	StandardInterface;
+	SchematicInterface(2);
+
+	ObjCode StandardEquations,
+		"defORPoints@#",
+		"defPin@#(1,@#r_w,180)",
+		"defPin@#(2,@#r_e,0)";
+
+	ObjPath(BpathDCS(@#))
+		"linecolor(" & stringify_color(OptionValue@#("linecolor")) & ")",
+		"pathfilled(true)",
+		"pathfillcolor(" & stringify_color(OptionValue@#("pathfillcolor")) &")";
+	ObjPath(.25[@#.r_w,@#.r_e]--.75[@#.r_w,@#.r_e])
+		"linecolor(" & stringify_color(OptionValue@#("linecolor")) & ")",
+		"arrows(drawarrow)";
+enddef;
+def BpathDCS(suffix n)=
+	(n.r_n--n.r_w--n.r_s--n.r_e--cycle)
+	%StandardBpath(n)
+enddef;
+def drawDCS(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncdiaga %%%%%%%%%%%%%%%%%%%%%%%%%
 % ncdiaga: ncdiag without armlength, auto intersect two directions
 % |@#| is the object to which a line is added
 % |n| is the source subobject, |m| is the target.
 % We also distinguish the case when |n| and |m| are objects
 % and when they are points (numerics vs pairs).
-vardef ncdiaga@#(text n)(text m) text options =
-  ncshort_@#("nc","ncdiaga")(n)(m)(options);
-enddef;
-vardef ncpdiaga@#(text n)(text pn)(text m)(text pm) text options =
-  ncdiaga@#(n.p[pn])(m.p[pm]) options,
-	"angleA(" & decimal(n.pa[pn]) & ")",
-	"angleB(" & decimal(m.pa[pm]) & ")";
+vardef pcsimple@#(text n)(text pn)(text m)(text pm) text options =
+  ncshort_@#("nc","pcsimple")(n.pin[pn])(m.pin[pm])(options,
+	"angleA(" & decimal(n.pin_angle[pn]) & ")",
+	"angleB(" & decimal(m.pin_angle[pm]) & ")");
 enddef;
 
 
-vardef ncdiaga_(suffix $)(suffix n,m)(suffix p)=
+vardef pcsimple_(suffix $)(suffix n,m)(suffix p)=
   % we have to find one additional points; we must be careful
   % not to use assignments, because |n.c| and |m.c|
   % may be floating:
-  save ap;pair ap;
+  save ap;pair ap[];
+  save aA,aB;numeric aA, aB;
+  aA := CLOV_("angleA");
+  aB := CLOV_("angleB");
+
   setupobjectfunction(n);
-  ap-f(n)("A")=whatever*dir(CLOV_("angleA"));
-  f(m)("B")-ap=whatever*dir(CLOV_("angleB"));
-  nc_core_$(n)(p)
-    (smoothen(object_(n)("A")--ap--object_(m)("B")
-       cutbefore BpathObj(n) cutafter BpathObj(m))(CLOV_("linearc")))
-    (smoothen(objectpoint_(n)("A")--ap--objectpoint_(m)("B"))
-       (CLOV_("linearc")));
+
+  if ((aA-aB) mod 180 <> 0): % intersect
+    ap1-f(n)("A")=whatever*dir(aA);
+    f(m)("B")-ap1=whatever*dir(aB);
+    nc_core_$(n)(p)
+      (smoothen(object_(n)("A")--ap1--object_(m)("B")
+         cutbefore BpathObj(n) cutafter BpathObj(m))(CLOV_("linearc")))
+      (smoothen(objectpoint_(n)("A")--ap1--objectpoint_(m)("B"))
+         (CLOV_("linearc")));
+  else: % same direction
+    ap1-f(n)("A")=CLOV_("armA")*dir(aA);
+    f(m)("B")-ap2=whatever*dir(aB);
+    ap2-ap1=whatever*dir(aA-90);
+    nc_core_$(n)(p)
+      (smoothen(object_(n)("A")--ap1--ap2--object_(m)("B")
+         cutbefore BpathObj(n) cutafter BpathObj(m))(CLOV_("linearc")))
+      (smoothen(objectpoint_(n)("A")--ap1--ap2--objectpoint_(m)("B"))
+         (CLOV_("linearc")));
+  fi;
 enddef;

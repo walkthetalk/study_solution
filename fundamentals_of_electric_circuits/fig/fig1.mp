@@ -1,66 +1,88 @@
 input schematic;
 
 beginfig(1);
+	clearObjs;
+	setX("fig128");
 	draw (0,0)--(1,0);
 	draw (0,0)--(0,1);
 
-	snewR.r1 "angle(90)";
-	ObjLabel.r1(btex $1$ etex);
+	snewR.X(r1) "angle(90)";
+	ObjLabel.X(r1)(btex $1$ etex);
 
-	snewR.r2 "angle(90)";
-	ObjLabel.r2(btex $2$ etex);
+	snewR.X(r2) "angle(90)";
+	ObjLabel.X(r2)(btex $2$ etex);
 
-	snewR.r4 "angle(90)";
-	ObjLabel.r4(btex $4$ etex);
+	snewR.X(r4) "angle(90)";
+	ObjLabel.X(r4)(btex $4$ etex);
 
-	snewR.r3 "angle( 0)";
-	ObjLabel.r3(btex $3$ etex) "labrotate(30)";
+	snewR.X(r3) "angle( 0)";
+	ObjLabel.X(r3)(btex $3$ etex) "labrotate(30)";
 
 	snewBox.eb0(btex Box etex);
 	eb0.c = (300,200);
 	drawObj(eb0);
 
-	r1.c = origin;
-	r2.c = r1.c+(30,0);
-	r4.c = r2.c+(60,0);
-	r3.c = (r2.c+r4.c)/2 + (0,30);
-	drawObj(r1,r2,r3,r4);
+	X(r1).c = origin;
+	X(r2).c = X(r1).c+(30,0);
+	X(r4).c = X(r2).c+(60,0);
+	X(r3).c = (X(r2).c+X(r4).c)/2 + (0,30);
+	drawObj(X(r1),X(r2),X(r3),X(r4));
 
-	ncpdiaga(r3)(2)(r4)(2);
-	ncpdiaga(r3)(1)(r2)(2);
-	ncpdiaga(r1)(2)(r3)(1);
-	ncbar(r2.p1)(r4.p1)
-		"angleA(-90)",
-		"armA(ypart(r3.c-r2.n))";
-	ncbar(r2.p1)(r1.p1)
-		"angleA(-90)",
-		"armA(ypart(r3.c-r2.n))";
+	pcsimple(X(r3))(2)(X(r4))(2);
+	pcsimple(X(r3))(1)(X(r2))(2);
+	pcsimple(X(r1))(2)(X(r3))(1);
+	pcsimple(X(r2))(1)(X(r4))(1)
+		"armA(ypart(X(r3).c-X(r2).n))";
+	pcsimple(X(r2))(1)(X(r1))(1)
+		"armA(ypart(X(r3).c-X(r2).n))";
 endfig;
 
 beginfig(2);
+	clearObjs;
+	setX("fig129");
 	draw (0,0)--(1,0);
 	draw (0,0)--(0,1);
+	snewR.X(r1) "angle(90)";
+	ObjLabel.X(r1)(btex $p_1$ etex)
+		"labpoint(r_s)", "labdir(rt)";
 
-	snewR.r1 "angle(90)";
-	ObjLabel.r1(btex $1$ etex);
+	snewR.X(r2);
+	ObjLabel.X(r2)(btex $p_2$ etex)
+		"labpoint(r_s)", "labdir(bot)";
 
-	snewR.r2 "angle(90)";
-	ObjLabel.r2(btex $2$ etex);
+	snewR.X(r3) "angle(90)";
+	ObjLabel.X(r3)(btex $p_3$ etex)
+		"labpoint(r_s)", "labdir(rt)";
 
-	snewR.r4 "angle(90)";
-	ObjLabel.r4(btex $4$ etex);
+	snewR.X(r4);
+	ObjLabel.X(r4)(btex $p_4$ etex)
+		"labpoint(r_s)", "labdir(bot)";
 
-	snewR.r3 "angle( 0)";
-	ObjLabel.r3(btex $3$ etex) "labrotate(30)";
+	newDCS.X(u1) "angle(90)";
+	ObjLabel.X(u1)(btex $p_5$ etex)
+		"labpoint(r_s)", "labdir(urt)";
+	ObjLabel.X(u1)(btex $0.4I$ etex)
+		"labpoint(r_s)", "labdir(lrt)";
+		
 
-	r1.c = origin;
-	r2.c = r1.c+(30,0);
-	r4.c = r2.c+(60,0);
-	r3.c = (r2.c+r4.c)/2 + (0,30);
-	drawObj(r1,r2,r3,r4);
-	ncdiag(r3.p2)(r4.p2)
-		"angleA(0)",
-		"angleB(-90)";
+	snewBox.eb0(btex Box etex);
+	eb0.c = (300,200);
+	drawObj(eb0);
+
+	X(r1).c = origin;
+	X(r2).c = X(r1).c+(30,30);
+	X(r3).c = X(r1).c+(60,0);
+	X(r4).c = X(r2).c+(60,0);
+	X(u1).c = X(r3).c + (60,0);
+	drawObj(X(r1),X(r2),X(r3),X(r4),X(u1));
+
+	pcsimple(X(u1))(2)(X(r4))(2);
+	pcsimple(X(u1))(1)(X(r3))(1);
+	pcsimple(X(r3))(2)(X(r4))(1);
+	pcsimple(X(r3))(2)(X(r2))(2);
+	pcsimple(X(r1))(2)(X(r2))(1);
+	pcsimple(X(r3))(1)(X(r1))(1);
+
 endfig;
 
 end;

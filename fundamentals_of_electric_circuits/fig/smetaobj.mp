@@ -2990,6 +2990,22 @@ def CLOV_(expr opname)=
        quote(opname) & ",curve_" & opname & "_default)")
 enddef;
 
+vardef CLOV__@#(expr _inobj)(expr opname)=
+  (if known (sc_("o_" & opname & "_val")):
+    (sc_("o_" & opname & "_val"))
+   elseif _inobj:
+     if known (@#sc_("option_" & opname & "_")):
+       (@#sc_("option_" & opname & "_"))
+     elseif known (sc_(objClassName_(@#) & "_" & opname)):
+       (sc_(objClassName_(@#) & "_" & opname))
+     else:
+       (sc_("curve_" & opname & "_default"))
+     fi
+  else:
+    (sc_("curve_" & opname & "_default"))
+  fi)
+enddef;
+
 % This function defines default global values for classes.
 % This works for numerical, string or color values.
 % |setObjectDefaultOption("HBox")("hsep")(5mm)|
@@ -3152,21 +3168,29 @@ vardef addPathVariables@#(suffix p)=
   ObjColorArray(p.bordercolor)(0);
 enddef;
 
-def increment_pathparameters_(suffix p)(suffix $)=
+vardef increment_pathparameters_@#(expr _inobj)(suffix p)(suffix $)=
   $p.n_:=$p.n_+1;
   $p._draw_[$p.n_]:=LocalOptionValue("cdraw","cdraw_default");
-  $p.visible[$p.n_]:=CLOV_("visible");
-  $p.pathfilled[$p.n_]:=CLOV_("pathfilled");
-  $p.pathfillcolor[$p.n_]:=CLOV_("pathfillcolor");
-  $p.border[$p.n_]:=CLOV_("border");
-  $p.bordercolor[$p.n_]:=CLOV_("bordercolor");
-  $p.linewidth[$p.n_]:=CLOV_("linewidth");
-  $p.linecolor[$p.n_]:=CLOV_("linecolor");
-  $p.nodesepA[$p.n_]:=CLOV_("nodesepA");
-  $p.nodesepB[$p.n_]:=CLOV_("nodesepA");
-  $p.arrows[$p.n_]:=CLOV_("arrows");
-  $p.linestyle[$p.n_]:=CLOV_("linestyle");
-  $p.doubleline[$p.n_]:=CLOV_("doubleline");
+  $p.visible[$p.n_]:=CLOV__@#(_inobj)("visible");
+  if known o_pathfilled_val:
+	message "o_pathfilled_val";
+	if (o_pathfilled_val):
+		message "                 true";
+	else:
+		message "                false";
+	fi;
+  fi;
+  $p.pathfilled[$p.n_]:=CLOV__@#(_inobj)("pathfilled");
+  $p.pathfillcolor[$p.n_]:=CLOV__@#(_inobj)("pathfillcolor");
+  $p.border[$p.n_]:=CLOV__@#(_inobj)("border");
+  $p.bordercolor[$p.n_]:=CLOV__@#(_inobj)("bordercolor");
+  $p.linewidth[$p.n_]:=CLOV__@#(_inobj)("linewidth");
+  $p.linecolor[$p.n_]:=CLOV__@#(_inobj)("linecolor");
+  $p.nodesepA[$p.n_]:=CLOV__@#(_inobj)("nodesepA");
+  $p.nodesepB[$p.n_]:=CLOV__@#(_inobj)("nodesepA");
+  $p.arrows[$p.n_]:=CLOV__@#(_inobj)("arrows");
+  $p.linestyle[$p.n_]:=CLOV__@#(_inobj)("linestyle");
+  $p.doubleline[$p.n_]:=CLOV__@#(_inobj)("doubleline");
   forsuffixes $$=_draw_,visible,border,bordercolor,linewidth,linecolor,
     arrows,linestyle,nodesepA,nodesepB,doubleline,pathfilled,pathfillcolor:
     $p$$n_:=$p.n_;
@@ -3174,26 +3198,34 @@ def increment_pathparameters_(suffix p)(suffix $)=
 enddef;
   
 % This is a function simplifying the use of |addPath|
-vardef addUserPath@#(text p) text options=
+vardef addUserPath_@#(expr _inobj)(text p) text options=
   ExecuteOptions()(options);
   if unknown @#_upath_.n_:
     addPathVariables@#(_upath_);
   fi;
-  increment_pathparameters_(_upath_)(@#);
+  increment_pathparameters_@#(_inobj)(_upath_)(@#);
   addPath@#(_upath_,@#_upath_.n_,p);
 enddef;
 
-vardef addStandardPath@#(text p) text options=
+vardef addUserPath@#(text p) text options=
+  addUserPath_@#(false)(p) options;
+enddef;
+
+vardef addStandardPath_@#(expr _inobj)(text p) text options=
   ExecuteOptions()(options);
   if unknown @#_spath_.n_:
     addPathVariables@#(_spath_);
   fi;
-  increment_pathparameters_(_spath_)(@#);
+  increment_pathparameters_@#(_inobj)(_spath_)(@#);
   addPath@#(_spath_,@#_spath_.n_,p);
 enddef;
 
+vardef addStandardPath@#(text p) text options=
+  addStandardPath_@#(false)(p) options;
+enddef;
+
 def ObjPath(text p) text options=
-  addStandardPath.sc_(currentObjname)(p) options;
+  addStandardPath_.sc_(currentObjname)(true)(p) options;
 enddef;
   
 % The |Path| function reconstructs a path from a path |p[j]|

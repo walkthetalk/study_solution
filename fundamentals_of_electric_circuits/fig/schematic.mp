@@ -240,10 +240,7 @@ vardef newR@# text options =
 		"defPin@#(1,@#r_w,180)",
 		"defPin@#(2,@#r_e,0)";
 
-	ObjPath(@#r_sw--@#r_se--@#r_ne--@#r_nw--cycle)
-		"linecolor(" & stringify_color(OptionValue@#("linecolor")) & ")",
-		"pathfilled(true)",
-		"pathfillcolor(" & stringify_color(OptionValue@#("pathfillcolor")) &")";
+	ObjPath(@#r_sw--@#r_se--@#r_ne--@#r_nw--cycle) "pathfilled(true)";
 enddef;
 def BpathR(suffix n)=
 	(n.r_nw--n.r_sw--n.r_se--n.r_ne--cycle)
@@ -273,13 +270,8 @@ vardef newDCS@# text options =
 		"defPin@#(1,@#r_w,180)",
 		"defPin@#(2,@#r_e,0)";
 
-	ObjPath(BpathDCS(@#))
-		"linecolor(" & stringify_color(OptionValue@#("linecolor")) & ")",
-		"pathfilled(true)",
-		"pathfillcolor(" & stringify_color(OptionValue@#("pathfillcolor")) &")";
-	ObjPath(.25[@#.r_w,@#.r_e]--.75[@#.r_w,@#.r_e])
-		"linecolor(" & stringify_color(OptionValue@#("linecolor")) & ")",
-		"arrows(drawarrow)";
+	ObjPath(BpathDCS(@#)) "pathfilled(true)";
+	ObjPath(.25[@#.r_w,@#.r_e]--.75[@#.r_w,@#.r_e]) "arrows(drawarrow)";
 enddef;
 def BpathDCS(suffix n)=
 	(n.r_n--n.r_w--n.r_s--n.r_e--cycle)

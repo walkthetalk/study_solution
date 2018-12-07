@@ -280,6 +280,47 @@ enddef;
 def drawDCS(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
+
+%%%%%%%%%%%%%%%%%% Dependent Voltage Source %%%%%%%%%%%%%%%%%%
+defineSafeNew("DVS");
+setObjectDefaultOption("DVS")("angle")(0);
+setObjectDefaultOption("DVS")("dx")(20);
+setObjectDefaultOption("DVS")("dy")(20);
+setObjectDefaultOption("DVS")("linecolor")(FireBrick);
+setObjectDefaultOption("DVS")("pathfillcolor")(Khaki);
+
+vardef newDVS@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "DVS");
+
+	StandardInterface;
+	SchematicInterface(2);
+
+	ObjCode StandardEquations,
+		"defORPoints@#",
+		"defPin@#(1,@#r_w,180)",
+		"defPin@#(2,@#r_e,0)";
+
+	ObjPath(BpathDVS(@#)) "pathfilled(true)";
+
+	begingroup;
+	save xxx;
+	vardef xxx(suffix n)(expr _pos, _llur)=
+		save lpos;pair lpos; lpos=_pos[n.r_w,n.r_e];
+		((lpos-.5_llur)--(lpos+.5_llur))
+	enddef;
+	ObjPath(xxx(@#)(.3, (OptionValue@#("dx")/4,0)));
+	ObjPath(xxx(@#)(.7, (OptionValue@#("dx")/4,0)));
+	ObjPath(xxx(@#)(.7, (0,OptionValue@#("dy")/4)));
+	endgroup;
+enddef;
+def BpathDVS(suffix n)=
+	(n.r_n--n.r_w--n.r_s--n.r_e--cycle)
+	%StandardBpath(n)
+enddef;
+def drawDVS(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncdiaga %%%%%%%%%%%%%%%%%%%%%%%%%
 % ncdiaga: ncdiag without armlength, auto intersect two directions
 % |@#| is the object to which a line is added

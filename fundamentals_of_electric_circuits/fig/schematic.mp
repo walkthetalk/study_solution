@@ -147,40 +147,141 @@ enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% schematic aux %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % WARNING: if no underbar, the name will be conflict with context internal
-def ORPoints=
-  o_ne,o_nw,o_sw,o_se,o_n,o_s,o_e,o_w,o_c,
-  r_ne,r_nw,r_sw,r_se,r_n,r_s,r_e,r_w,r_c
-enddef;
-vardef defORPoints@#=
-	@#o_se-@#o_sw=@#o_ne-@#o_nw;
-	@#o_n=.5[@#o_ne,@#o_nw];
-	@#o_s=.5[@#o_se,@#o_sw];
-	@#o_e=.5[@#o_ne,@#o_se];
-	@#o_w=.5[@#o_nw,@#o_sw];
-	@#o_c=.5[@#o_n, @#o_s];
-	@#o_c=@#c;
-	@#o_se-@#o_sw=(OptionValue@#("dx"), 0);
-	@#o_ne-@#o_se=(0, OptionValue@#("dy"));
-
-	forsuffixes $=ne,nw,sw,se,n,s,e,w,c:
-		@# sc_("r_" & str $) - @#o_c
-			= (@# sc_("o_" & str $) - @#o_c)
-				rotated OptionValue@#("angle");
+vardef stringifyFrame@#(expr _p)=
+	message "   :"
+	forsuffixes $=nw,n,ne:
+		& "    "
+		& "("
+		& decimal(xpart (@# sc_(_p & str $)))
+		& ","
+		& decimal(ypart (@# sc_(_p & str $)))
+		& ")"
 	endfor;
-
-	xpart(@#se-@#sw)=xpart(@#r_se-@#r_nw);
-	ypart(@#ne-@#se)=ypart(@#r_ne-@#r_sw);
+	message "   :"
+	forsuffixes $=w,e:
+		& "    "
+		& "("
+		& decimal(xpart (@# sc_(_p & str $)))
+		& ","
+		& decimal(ypart (@# sc_(_p & str $)))
+		& ")"
+	endfor;
+	message "   :"
+	forsuffixes $=sw,s,se:
+		& "    "
+		& "("
+		& decimal(xpart (@# sc_(_p & str $)))
+		& ","
+		& decimal(ypart (@# sc_(_p & str $)))
+		& ")"
+	endfor;
 enddef;
 
+vardef ShowOctAng(suffix n)=
+	draw n.nnw--n.wnw--n.wsw--n.ssw--n.sse--n.ese--n.ene--n.nne--cycle;
+enddef;
+vardef ShowFrame(suffix n)=
+	draw n.nw--n.sw--n.se--n.ne--cycle;
+enddef;
+vardef ShowIFrame(suffix n)=
+	draw n.inw--n.isw--n.ise--n.ine--cycle;
+enddef;
+%%%%%%%%%%%%%%%%%%%%%%%%%% schematic equation #######################
+vardef EqBPoints@#(expr _p)(expr _dx, _dy)=
+	save tmp;
+	def tmp(expr _a)=
+		sc_(str @# & "." & _p & _a)
+	enddef;
+	%tmp("se")-tmp("sw")=tmp("ne")-tmp("nw");
+	%tmp("n")=.5[tmp("ne"),tmp("nw")];
+	%tmp("s")=.5[tmp("se"),tmp("sw")];
+	%tmp("e")=.5[tmp("ne"),tmp("se")];
+	%tmp("w")=.5[tmp("nw"),tmp("sw")];
+	%tmp("c")=.5[tmp("n"), tmp("s")];
+	%tmp("e")-tmp("w")=(tmp("dx"), 0);
+	%tmp("n")-tmp("s")=(0, tmp("dy"));
+	tmp("w") =(-_dx/2,      0) rotated @#ang shifted @#c;
+	tmp("e") =( _dx/2,      0) rotated @#ang shifted @#c;
+	tmp("n") =(     0,  _dy/2) rotated @#ang shifted @#c;
+	tmp("s") =(     0, -_dy/2) rotated @#ang shifted @#c;
+	tmp("nw")=(-_dx/2,  _dy/2) rotated @#ang shifted @#c;
+	tmp("ne")=( _dx/2,  _dy/2) rotated @#ang shifted @#c;
+	tmp("sw")=(-_dx/2, -_dy/2) rotated @#ang shifted @#c;
+	tmp("se")=( _dx/2, -_dy/2) rotated @#ang shifted @#c;
+enddef;
+
+vardef SchematicEq@#=
+	@#ang:= OptionValue@#("angle");
+	@#dx := OptionValue@#("dx");
+	@#dy := OptionValue@#("dy");
+
+	save DX,DY; numeric DX,DY;
+	DX := @#dx + 10;
+	DY := @#dy + 10;
+
+	EqBPoints@#("i")(@#dx, @#dy);
+	EqBPoints@#("")(DX, DY);
+
+	@#ic = @#c;
+
+	@#nnw = (-@#dx/2, DY/2) rotated @#ang shifted @#c;
+	@#nne = ( @#dx/2, DY/2) rotated @#ang shifted @#c;
+	@#ssw = (-@#dx/2,-DY/2) rotated @#ang shifted @#c;
+	@#sse = ( @#dx/2,-DY/2) rotated @#ang shifted @#c;
+	@#wnw = (-DX/2, @#dy/2) rotated @#ang shifted @#c;
+	@#wsw = (-DX/2,-@#dy/2) rotated @#ang shifted @#c;
+	@#ene = ( DX/2, @#dy/2) rotated @#ang shifted @#c;
+	@#ese = ( DX/2,-@#dy/2) rotated @#ang shifted @#c;
+enddef;
+
+%%%%%%%%%%%%%%%%%%%%%%%% schematic path ###########################
+def SchematicBpath(suffix n)=
+	(n.inw--n.isw--n.ise--n.ine--cycle);
+enddef;
+
+%%%%%%%%%%%%%%%%%%%%%%%% schematic interface #######################
+vardef FramePoints(expr _p)=
+	ObjPoint sc_(_p & "ne");
+	ObjPoint sc_(_p & "nw");
+	ObjPoint sc_(_p & "se");
+	ObjPoint sc_(_p & "sw");
+	ObjPoint sc_(_p & "n");
+	ObjPoint sc_(_p & "s");
+	ObjPoint sc_(_p & "e");
+	ObjPoint sc_(_p & "w");
+enddef;
 def SchematicInterface(expr _pin_num) =
-	ObjPoint ORPoints;
+	ObjNumeric dx,dy,ang;
+	% NOTE: the ic is only for default label position.
+	%       the ic is always same as c.
+	ObjPoint c, ic;
+	ObjPoint nnw,nne,wnw,wsw,ssw,sse,ese,ene;
+	FramePoints("i");
+	FramePoints("");
 	ObjPointArray(pin)(_pin_num); % the pin array
 	ObjNumericArray(pin_angle)(_pin_num); % the pin angle array;
 enddef;
 
+% |_edge| w,e,n,s
+vardef StdPos@#(suffix _edge)(expr _offset)=
+	save _edgestr; string _edgestr; _edgestr:=str _edge;
+	save _pu; numeric _pu; _pu:=5;
+(
+	if _edgestr = "n":
+		(0, -@#dy/2) shifted (_offset * _pu, 0)
+	elseif _edgestr = "s":
+		(0, @#dy/2) shifted (_offset * _pu, 0)
+	elseif _edgestr = "w":
+		(-@#dx/2, 0) shifted (0, _offset * _pu)
+	elseif _edgestr = "e":
+		(@#dx/2, 0) shifted (0, _offset * _pu)
+	fi
+)
+enddef;
+% NOTE: |_pos| must use i or b_ serias points
 vardef defPin@#(expr _pinid, _pos, _angle) =
-	@#pin[_pinid]=_pos;
-	@#pin_angle[_pinid]=_angle + OptionValue@#("angle");
+	@#pin[_pinid]=_pos rotated @#ang shifted @#c;
+	@#pin_angle[_pinid]=_angle + @#ang;
 enddef;
 
 % WARNING: workaround for tex twice run problem, use it before every startMPcode
@@ -227,24 +328,22 @@ setObjectDefaultOption("R")("dx")(25);
 setObjectDefaultOption("R")("dy")(10);
 setObjectDefaultOption("R")("linecolor")(FireBrick);
 setObjectDefaultOption("R")("pathfillcolor")(Khaki);
+setObjectDefaultOption("R")("framed")(true);
 
 vardef newR@# text options =
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "R");
 
-	StandardInterface;
 	SchematicInterface(2);
 
-	ObjCode StandardEquations,
-		"defORPoints@#",
-		"defPin@#(1,@#r_w,180)",
-		"defPin@#(2,@#r_e,0)";
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 0),0)";
 
-	ObjPath(@#r_sw--@#r_se--@#r_ne--@#r_nw--cycle) "pathfilled(true)";
+	ObjPath(BpathR(@#)) "pathfilled(true)";
 enddef;
 def BpathR(suffix n)=
-	(n.r_nw--n.r_sw--n.r_se--n.r_ne--cycle)
-	%StandardBpath(n)
+	SchematicBpath(n)
 enddef;
 def drawR(suffix n) =
 	drawMemorizedPaths_(n);
@@ -262,20 +361,18 @@ vardef newDCS@# text options =
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "DCS");
 
-	StandardInterface;
 	SchematicInterface(2);
 
-	ObjCode StandardEquations,
-		"defORPoints@#",
-		"defPin@#(1,@#r_w,180)",
-		"defPin@#(2,@#r_e,0)";
-
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 0),0)";
+	
 	ObjPath(BpathDCS(@#)) "pathfilled(true)";
-	ObjPath(.25[@#.r_w,@#.r_e]--.75[@#.r_w,@#.r_e]) "arrows(drawarrow)";
+	ObjPath((.25[@#iw,@#.ie]--.75[@#.iw,@#.ie]))
+		"arrows(drawarrow)";
 enddef;
 def BpathDCS(suffix n)=
-	(n.r_n--n.r_w--n.r_s--n.r_e--cycle)
-	%StandardBpath(n)
+	(n.in--n.iw--n.is--n.ie--cycle)
 enddef;
 def drawDCS(suffix n) =
 	drawMemorizedPaths_(n);
@@ -293,32 +390,94 @@ vardef newDVS@# text options =
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "DVS");
 
-	StandardInterface;
 	SchematicInterface(2);
 
-	ObjCode StandardEquations,
-		"defORPoints@#",
-		"defPin@#(1,@#r_w,180)",
-		"defPin@#(2,@#r_e,0)";
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 0),0)";
 
 	ObjPath(BpathDVS(@#)) "pathfilled(true)";
 
 	begingroup;
 	save xxx;
 	vardef xxx(suffix n)(expr _pos, _llur)=
-		save lpos;pair lpos; lpos=_pos[n.r_w,n.r_e];
+		save lpos;pair lpos; lpos=_pos[n.iw,n.ie];
 		((lpos-.5_llur)--(lpos+.5_llur))
 	enddef;
-	ObjPath(xxx(@#)(.3, (OptionValue@#("dx")/4,0)));
-	ObjPath(xxx(@#)(.7, (OptionValue@#("dx")/4,0)));
-	ObjPath(xxx(@#)(.7, (0,OptionValue@#("dy")/4)));
+	ObjPath(xxx(@#)(.3, (@#dx/4,0)));
+	ObjPath(xxx(@#)(.7, (@#dx/4,0)));
+	ObjPath(xxx(@#)(.7, (0,@#dy/4)));
 	endgroup;
 enddef;
 def BpathDVS(suffix n)=
-	(n.r_n--n.r_w--n.r_s--n.r_e--cycle)
-	%StandardBpath(n)
+	(n.in--n.iw--n.is--n.ie--cycle)
 enddef;
 def drawDVS(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
+%%%%%%%%%%%%%%%%%% Inependent Voltage Source %%%%%%%%%%%%%%%%%%
+defineSafeNew("IVS");
+setObjectDefaultOption("IVS")("angle")(0);
+setObjectDefaultOption("IVS")("dx")(20);
+setObjectDefaultOption("IVS")("dy")(20);
+setObjectDefaultOption("IVS")("linecolor")(FireBrick);
+setObjectDefaultOption("IVS")("pathfillcolor")(Khaki);
+
+vardef newIVS@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "IVS");
+
+	SchematicInterface(2);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 0),0)";
+
+	ObjPath(BpathIVS(@#)) "pathfilled(true)";
+
+	begingroup;
+	save xxx;
+	vardef xxx(suffix n)(expr _pos, _llur)=
+		save lpos;pair lpos; lpos=_pos[n.iw,n.ie];
+		((lpos-.5_llur)--(lpos+.5_llur))
+	enddef;
+	ObjPath(xxx(@#)(.3, (@#dx/4,0)));
+	ObjPath(xxx(@#)(.7, (@#dx/4,0)));
+	ObjPath(xxx(@#)(.7, (0,@#dy/4)));
+	endgroup;
+enddef;
+def BpathIVS(suffix n)=
+	(fullcircle scaled n.dx shifted n.c)
+enddef;
+def drawIVS(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
+%%%%%%%%%%%%%%%%%% Current Direction Mark %%%%%%%%%%%%%%%%%%
+defineSafeNew("CDM");
+setObjectDefaultOption("CDM")("angle")(0);
+setObjectDefaultOption("CDM")("dx")(20);
+setObjectDefaultOption("CDM")("dy")(5);
+setObjectDefaultOption("CDM")("linecolor")(FireBrick);
+setObjectDefaultOption("CDM")("pathfillcolor")(Khaki);
+
+vardef newCDM@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "CDM");
+
+	SchematicInterface(2);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 0),0)";
+
+	ObjPath(BpathCDM(@#)) "arrows(->)";
+enddef;
+def BpathCDM(suffix n)=
+	(n.iw--n.ie)
+enddef;
+def drawCDM(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncdiaga %%%%%%%%%%%%%%%%%%%%%%%%%

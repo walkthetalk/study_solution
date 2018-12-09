@@ -3172,14 +3172,6 @@ vardef increment_pathparameters_@#(expr _inobj)(suffix p)(suffix $)=
   $p.n_:=$p.n_+1;
   $p._draw_[$p.n_]:=LocalOptionValue("cdraw","cdraw_default");
   $p.visible[$p.n_]:=CLOV__@#(_inobj)("visible");
-  if known o_pathfilled_val:
-	message "o_pathfilled_val";
-	if (o_pathfilled_val):
-		message "                 true";
-	else:
-		message "                false";
-	fi;
-  fi;
   $p.pathfilled[$p.n_]:=CLOV__@#(_inobj)("pathfilled");
   $p.pathfillcolor[$p.n_]:=CLOV__@#(_inobj)("pathfillcolor");
   $p.border[$p.n_]:=CLOV__@#(_inobj)("border");

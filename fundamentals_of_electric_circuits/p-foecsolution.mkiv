@@ -58,6 +58,11 @@
 \startMPinclusions
 input coord;
 input schematic;
+
+vardef ObjMLabel@#(text p) text options=
+	ObjLabel@#(textext("$" & p & "$")) options;
+enddef;
+
 clearObjs;
 \stopMPinclusions
 

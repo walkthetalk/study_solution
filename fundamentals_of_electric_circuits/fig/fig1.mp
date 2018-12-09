@@ -1,8 +1,24 @@
 input schematic;
 input latexmp;
 
+labeloffset := 0;
+laboff     :=(  0,  0); labxf     :=.5;  labyf     :=.5;
+laboff.lft :=( -1,  0); labxf.lft :=1 ;  labyf.lft :=.5;
+laboff.rt  :=(  1,  0); labxf.rt  :=0 ;  labyf.rt  :=.5;
+laboff.bot :=(  0, -1); labxf.bot :=.5;  labyf.bot :=1 ;
+laboff.top :=(  0,  1); labxf.top :=.5;  labyf.top :=0 ;
+laboff.ulft:=(-.7, .7); labxf.ulft:=1 ;  labyf.ulft:=0 ;
+laboff.urt :=( .7, .7); labxf.urt :=0 ;  labyf.urt :=0 ;
+laboff.llft:=(-.7,-.7); labxf.llft:=1 ;  labyf.llft:=1 ;
+laboff.lrt :=( .7,-.7); labxf.lrt :=0 ;  labyf.lrt :=1 ;
+
 vardef ObjMLabel@#(text p) text options=
-	ObjLabel@#(textext("$" & p & "$")) options;
+	save _pic; picture _pic; _pic = textext("$" & p & "$");
+	save _ppp; picture _ppp; _ppp = image (
+		draw _pic;
+		draw bbox(_pic);
+	);
+	ObjLabel@#(_ppp) options;
 enddef;
 
 beginfig(1);
@@ -126,6 +142,13 @@ beginfig(2);
 	pcsimple(X(r3))(2)(X(r4))(1);
 	pcsimple(X(r3))(2)(X(r2))(2);
 	pcsimple(X(u1))(2)(X(r2))(1);
+
+	ShowIFrame(X(u1));
+	ShowFrame(X(u1));
+	ShowIFrame(X(cdm2));
+	ShowFrame(X(cdm2));
+	ShowIFrame(X(cdm0));
+	ShowFrame(X(cdm0));
 endfig;
 
 end;

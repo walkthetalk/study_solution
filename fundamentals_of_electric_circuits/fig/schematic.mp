@@ -216,8 +216,8 @@ vardef SchematicEq@#=
 	@#dy := OptionValue@#("dy");
 
 	save DX,DY; numeric DX,DY;
-	DX := @#dx + 10;
-	DY := @#dy + 10;
+	DX := @#dx + 5;
+	DY := @#dy + 5;
 
 	EqBPoints@#("i")(@#dx, @#dy);
 	EqBPoints@#("")(DX, DY);
@@ -373,7 +373,7 @@ setCurveDefaultOption("linecolor")(SteelBlue);
 
 %%%%%%%%%%%%%%%%%% Resistor %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("R")("angle")(0);
-setObjectDefaultOption("R")("dx")(25);
+setObjectDefaultOption("R")("dx")(30);
 setObjectDefaultOption("R")("dy")(10);
 setObjectDefaultOption("R")("linecolor")(FireBrick);
 setObjectDefaultOption("R")("pathfillcolor")(Khaki);
@@ -400,8 +400,8 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Dependent Current Source %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("DCS")("angle")(0);
-setObjectDefaultOption("DCS")("dx")(20);
-setObjectDefaultOption("DCS")("dy")(20);
+setObjectDefaultOption("DCS")("dx")(25);
+setObjectDefaultOption("DCS")("dy")(25);
 setObjectDefaultOption("DCS")("linecolor")(FireBrick);
 setObjectDefaultOption("DCS")("pathfillcolor")(Khaki);
 
@@ -502,7 +502,7 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Current Direction Mark %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("CDM")("angle")(0);
-setObjectDefaultOption("CDM")("dx")(20);
+setObjectDefaultOption("CDM")("dx")(15);
 setObjectDefaultOption("CDM")("dy")(5);
 setObjectDefaultOption("CDM")("linecolor")(FireBrick);
 setObjectDefaultOption("CDM")("pathfillcolor")(Khaki);

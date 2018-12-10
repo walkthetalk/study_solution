@@ -423,7 +423,7 @@ $p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
 % 1.17
 \startQ[Q:1.17]
 \reffig{1.28} shows a circuit with four elements,
-$p_1 = \sunit{60 watt}$ absorbed, $p_3 = \sunit{−145 watt}$ absorbed,
+$p_1 = \sunit{60 watt}$ absorbed, $p_3 = -145\sunit[l]{watt}$ absorbed,
 and $p_4 = \sunit{75 watt}$ absorbed.
 How many watts does element $2$ absorb?
 \placefigure[here][fig:1.28]{for \refq{1.17}}{
@@ -443,25 +443,34 @@ How many watts does element $2$ absorb?
 	newR.X(r3) "angle( 0)";
 	ObjLabel.X(r3)(textext("3")) "labcolor(FireBrick)";
 
-	X(r1).c = origin;
-	X(r2).c = X(r1).c+(30,0);
-	X(r4).c = X(r2).c+(60,0);
-	X(r3).c = (X(r2).c+X(r4).c)/2 + (0,30);
+	numeric uc;
+	uc := 10;
+	X(r2).c = origin;
+	X(r1).c = X(r2).c+(-6uc,0);
+	X(r4).c = X(r2).c+( 6uc,0);
+	X(r3).c = (X(r2).c+X(r4).c)/2 + (0,3uc);
 
 	drawObj(X(r1),X(r2),X(r3),X(r4));
 
+	string armL; armL:= "armA(ypart(X(r3).c-X(r2).ie))";
 	pcsimple(X(r3))(2)(X(r4))(2);
-	pcsimple(X(r3))(1)(X(r2))(2);
-	pcsimple(X(r1))(2)(X(r3))(1);
-	pcsimple(X(r2))(1)(X(r4))(1)
-		"armA(ypart(X(r3).c-X(r2).n))";
-	pcsimple(X(r2))(1)(X(r1))(1)
-		"armA(ypart(X(r3).c-X(r2).n))";
+	pcsimple(X(r2))(2)(X(r3))(1);
+	pcsimple(X(r2))(2)(X(r1))(2) armL;
+	pcsimple(X(r2))(1)(X(r4))(1) armL;
+	pcsimple(X(r2))(1)(X(r1))(1) armL;
 \stopMPcode
 }
 \stopQ
 
 \startA
+because:
+\startformula
+\sum p = p_1 + p_2 + p_3 + p_4 = 0
+\stopformula
+so:
+\startformula
+p_2 = 0 - p_1 - p_3 - p_4 = 0 - 60 - (-145) - 75 = 10 \sunit[l]{watt}
+\stopformula
 \stopA
 
 % 1.18
@@ -487,7 +496,7 @@ Find the power absorbed by each of the elements in \reffig{1.29}.
 	ObjMLabel.X(r2)("-")
 		"labpoint(ine)", "labdir(top)";
 	ObjMLabel.X(r2)("10V")
-		"labpoint(in)", "labdir(top)";
+		"labpoint(in)", "labdir(top)", "labshift((0,10))";
 
 	newR.X(r3) "angle(90)";
 	ObjMLabel.X(r3)("p_3")
@@ -507,7 +516,7 @@ Find the power absorbed by each of the elements in \reffig{1.29}.
 	ObjMLabel.X(r4)("-")
 		"labpoint(ine)", "labdir(top)";
 	ObjMLabel.X(r4)("8V")
-		"labpoint(in)", "labdir(top)";
+		"labpoint(in)", "labdir(top)", "labshift((0,10))";
 
 	newDCS.X(u2) "angle(90)";
 	ObjMLabel.X(u2)("p_5")
@@ -532,19 +541,16 @@ Find the power absorbed by each of the elements in \reffig{1.29}.
 		"labpoint(in)", "labdir(rt)";
 
 	numeric uc;
-	uc := 45;
-	X(u1).c = origin;
-	X(r2).c = X(u1).c+(uc,uc);
-	X(r3).c = X(u1).c+(2uc,0);
-	X(r4).c = X(r2).c+(2uc,0);
-	X(u2).c = X(r3).c + (2uc,0);
+	uc := 10;
+	X(r3).c = origin;
+	X(u1).c = X(r3).c+(-9uc,0);
+	X(u2).c = X(r3).c+( 9uc,0);
+	X(r2).c = X(r3).c+(-3uc,5uc);
+	X(r4).c = X(r3).c+( 3uc,5uc);
 
-	X(cdm0).inw = (xpart(X(u2).c), ypart(X(r4).c));
-	X(cdm1).isw = (xpart(X(u1).c), ypart(X(r2).c));
-	X(cdm2).ese = X(r3).ie;
-
-	drawObj(X(u1),X(r2),X(r3),X(r4),X(u2));
-	drawObj(X(cdm0),X(cdm1),X(cdm2));
+	X(cdm0).nnw = (xpart(X(u2).c), ypart(X(r4).c));
+	X(cdm1).ssw = (xpart(X(u1).c), ypart(X(r2).c));
+	X(cdm2).se = X(r3).ie;
 
 	pcsimple(X(u2))(2)(X(r4))(2);
 	pcsimple(X(r3))(1)(X(u2))(1) "armA(ypart(X(r4).iw-X(r3).ie))";
@@ -553,17 +559,20 @@ Find the power absorbed by each of the elements in \reffig{1.29}.
 	pcsimple(X(r3))(2)(X(r2))(2);
 	pcsimple(X(u1))(2)(X(r2))(1);
 
-	ShowIFrame(X(u1));
-	ShowFrame(X(u1));
-	ShowIFrame(X(cdm2));
-	ShowFrame(X(cdm2));
-	ShowIFrame(X(cdm0));
-	ShowFrame(X(cdm0));
+	drawObj(X(u1),X(r2),X(r3),X(r4),X(u2));
+	drawObj(X(cdm0),X(cdm1),X(cdm2));
 \stopMPcode
 }
 \stopQ
 
 \startA
+\startformula\startmathalignment
+\NC p_1 \NC = \sunit{30 volt} \times (-10)\sunit[l]{ampere} = -300 \sunit[l]{watt} \NR
+\NC p_2 \NC = \sunit{10 volt} \times 10\sunit[l]{ampere} = 100 \sunit[l]{watt} \NR
+\NC p_3 \NC = \sunit{20 volt} \times 14\sunit[l]{ampere} = 280 \sunit[l]{watt} \NR
+\NC p_4 \NC = \sunit{8 volt} \times (-4)\sunit[l]{ampere} = -32 \sunit[l]{watt} \NR
+\NC p_5 \NC = \sunit{12 volt} \times (-4)\sunit[l]{ampere} = -48 \sunit[l]{watt} \NR
+\stopmathalignment\stopformula
 \stopA
 
 

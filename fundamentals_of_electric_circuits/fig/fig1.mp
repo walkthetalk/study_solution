@@ -67,7 +67,7 @@ beginfig(2);
 	ObjMLabel.X(r2)("-")
 		"labpoint(ine)", "labdir(top)";
 	ObjMLabel.X(r2)("10V")
-		"labpoint(in)", "labdir(top)";
+		"labpoint(in)", "labdir(top)", "labshift((0,10))";
 
 	newR.X(r3) "angle(90)";
 	ObjMLabel.X(r3)("p_3")
@@ -87,7 +87,7 @@ beginfig(2);
 	ObjMLabel.X(r4)("-")
 		"labpoint(ine)", "labdir(top)";
 	ObjMLabel.X(r4)("8V")
-		"labpoint(in)", "labdir(top)";
+		"labpoint(in)", "labdir(top)", "labshift((0,10))";
 
 	newDCS.X(u2) "angle(90)";
 	ObjMLabel.X(u2)("p_5")
@@ -112,19 +112,16 @@ beginfig(2);
 		"labpoint(in)", "labdir(rt)";
 
 	numeric uc;
-	uc := 45;
-	X(u1).c = origin;
-	X(r2).c = X(u1).c+(uc,uc);
-	X(r3).c = X(u1).c+(2uc,0);
-	X(r4).c = X(r2).c+(2uc,0);
-	X(u2).c = X(r3).c + (2uc,0);
+	uc := 10;
+	X(r3).c = origin;
+	X(u1).c = X(r3).c+(-9uc,0);
+	X(u2).c = X(r3).c+( 9uc,0);
+	X(r2).c = X(r3).c+(-3uc,5uc);
+	X(r4).c = X(r3).c+( 3uc,5uc);
 
-	X(cdm0).inw = (xpart(X(u2).c), ypart(X(r4).c));
-	X(cdm1).isw = (xpart(X(u1).c), ypart(X(r2).c));
-	X(cdm2).ese = X(r3).ie;
-
-	drawObj(X(u1),X(r2),X(r3),X(r4),X(u2));
-	drawObj(X(cdm0),X(cdm1),X(cdm2));
+	X(cdm0).nnw = (xpart(X(u2).c), ypart(X(r4).c));
+	X(cdm1).ssw = (xpart(X(u1).c), ypart(X(r2).c));
+	X(cdm2).se = X(r3).ie;
 
 	pcsimple(X(u2))(2)(X(r4))(2);
 	pcsimple(X(r3))(1)(X(u2))(1) "armA(ypart(X(r4).iw-X(r3).ie))";
@@ -132,6 +129,9 @@ beginfig(2);
 	pcsimple(X(r3))(2)(X(r4))(1);
 	pcsimple(X(r3))(2)(X(r2))(2);
 	pcsimple(X(u1))(2)(X(r2))(1);
+
+	drawObj(X(u1),X(r2),X(r3),X(r4),X(u2));
+	drawObj(X(cdm0),X(cdm1),X(cdm2));
 endfig;
 
 end;

@@ -426,6 +426,34 @@ def drawDCS(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
+%%%%%%%%%%%%%%%%%% Independent Current Source %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("ICS")("angle")(0);
+setObjectDefaultOption("ICS")("dx")(20);
+setObjectDefaultOption("ICS")("dy")(20);
+setObjectDefaultOption("ICS")("linecolor")(FireBrick);
+setObjectDefaultOption("ICS")("pathfillcolor")(Khaki);
+
+vardef newICS@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "ICS");
+
+	SchematicInterface(2);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 0),0)";
+
+	ObjPath(BpathICS(@#)) "pathfilled(true)";
+	ObjPath((.25[@#iw,@#.ie]--.75[@#.iw,@#.ie]))
+		"arrows(drawarrow)";
+enddef;
+def BpathICS(suffix n)=
+	(n.in..n.iw..n.is..n.ie..cycle)
+enddef;
+def drawICS(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
 %%%%%%%%%%%%%%%%%% Dependent Voltage Source %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("DVS")("angle")(0);
 setObjectDefaultOption("DVS")("dx")(20);

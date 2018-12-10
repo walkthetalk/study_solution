@@ -59,27 +59,12 @@
 input coord;
 input schematic;
 
-labeloffset := 0;
-laboff     :=(  0,  0); labxf     :=.5;  labyf     :=.5;
-laboff.lft :=( -1,  0); labxf.lft :=1 ;  labyf.lft :=.5;
-laboff.rt  :=(  1,  0); labxf.rt  :=0 ;  labyf.rt  :=.5;
-laboff.bot :=(  0, -1); labxf.bot :=.5;  labyf.bot :=1 ;
-laboff.top :=(  0,  1); labxf.top :=.5;  labyf.top :=0 ;
-laboff.ulft:=(-.7, .7); labxf.ulft:=1 ;  labyf.ulft:=0 ;
-laboff.urt :=( .7, .7); labxf.urt :=0 ;  labyf.urt :=0 ;
-laboff.llft:=(-.7,-.7); labxf.llft:=1 ;  labyf.llft:=1 ;
-laboff.lrt :=( .7,-.7); labxf.lrt :=0 ;  labyf.lrt :=1 ;
+labeloffset := 1;
 
 vardef ObjMLabel@#(text p) text options=
-	save _pic; picture _pic; _pic = textext("$" & p & "$");
-	save _ppp; picture _ppp; _ppp = image (
-		draw _pic;
-		draw bbox(_pic);
-	);
-	ObjLabel@#(_ppp) options;
+	ObjLabel@#(textext("$" & p & "$")) options;
 enddef;
 
-clearObjs;
 \stopMPinclusions
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for enum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,16 +1,7 @@
 input schematic;
 input latexmp;
 
-labeloffset := 0;
-laboff     :=(  0,  0); labxf     :=.5;  labyf     :=.5;
-laboff.lft :=( -1,  0); labxf.lft :=1 ;  labyf.lft :=.5;
-laboff.rt  :=(  1,  0); labxf.rt  :=0 ;  labyf.rt  :=.5;
-laboff.bot :=(  0, -1); labxf.bot :=.5;  labyf.bot :=1 ;
-laboff.top :=(  0,  1); labxf.top :=.5;  labyf.top :=0 ;
-laboff.ulft:=(-.7, .7); labxf.ulft:=1 ;  labyf.ulft:=0 ;
-laboff.urt :=( .7, .7); labxf.urt :=0 ;  labyf.urt :=0 ;
-laboff.llft:=(-.7,-.7); labxf.llft:=1 ;  labyf.llft:=1 ;
-laboff.lrt :=( .7,-.7); labxf.lrt :=0 ;  labyf.lrt :=1 ;
+labeloffset := 1;
 
 vardef ObjMLabel@#(text p) text options=
 	save _pic; picture _pic; _pic = textext("$" & p & "$");
@@ -22,24 +13,24 @@ vardef ObjMLabel@#(text p) text options=
 enddef;
 
 beginfig(1);
-	clearObjs;
+	clearObjsForTwiceRun;
 	setX("fig128");
 	draw (0,0)--(1,0);
 	draw (0,0)--(0,1);
 
-	snewR.X(r1) "angle(90)";
+	newR.X(r1) "angle(90)";
 	ObjMLabel.X(r1)("1");
 
-	snewR.X(r2) "angle(90)";
+	newR.X(r2) "angle(90)";
 	ObjMLabel.X(r2)("2");
 
-	snewR.X(r4) "angle(90)";
+	newR.X(r4) "angle(90)";
 	ObjMLabel.X(r4)("4");
 
-	snewR.X(r3) "angle( 0)";
+	newR.X(r3) "angle( 0)";
 	ObjMLabel.X(r3)("3") "labrotate(30)";
 
-	snewBox.eb0(btex Box etex);
+	newBox.eb0(btex Box etex);
 	eb0.c = (300,200);
 	drawObj(eb0);
 
@@ -59,17 +50,16 @@ beginfig(1);
 endfig;
 
 beginfig(2);
-	clearObjs;
+	clearObjsForTwiceRun;
 	setX("fig129");
-	draw (0,0)--(1,0);
-	draw (0,0)--(0,1);
-	snewIVS.X(u1) "angle(90)";
+
+	newIVS.X(u1) "angle(90)";
 	ObjMLabel.X(u1)("p_1")
 		"labpoint(is)", "labdir(rt)";
 	ObjMLabel.X(u1)("30V")
 		"labpoint(in)", "labdir(lft)";
 
-	snewR.X(r2);
+	newR.X(r2);
 	ObjMLabel.X(r2)("p_2")
 		"labpoint(is)", "labdir(bot)";
 	ObjMLabel.X(r2)("+")
@@ -79,7 +69,7 @@ beginfig(2);
 	ObjMLabel.X(r2)("10V")
 		"labpoint(in)", "labdir(top)";
 
-	snewR.X(r3) "angle(90)";
+	newR.X(r3) "angle(90)";
 	ObjMLabel.X(r3)("p_3")
 		"labpoint(is)", "labdir(rt)";
 	ObjMLabel.X(r3)("+")
@@ -89,7 +79,7 @@ beginfig(2);
 	ObjMLabel.X(r3)("20V")
 		"labpoint(in)", "labdir(lft)";
 
-	snewR.X(r4);
+	newR.X(r4);
 	ObjMLabel.X(r4)("p_4")
 		"labpoint(is)", "labdir(bot)";
 	ObjMLabel.X(r4)("+")
@@ -142,13 +132,6 @@ beginfig(2);
 	pcsimple(X(r3))(2)(X(r4))(1);
 	pcsimple(X(r3))(2)(X(r2))(2);
 	pcsimple(X(u1))(2)(X(r2))(1);
-
-	ShowIFrame(X(u1));
-	ShowFrame(X(u1));
-	ShowIFrame(X(cdm2));
-	ShowFrame(X(cdm2));
-	ShowIFrame(X(cdm0));
-	ShowFrame(X(cdm0));
 endfig;
 
 end;

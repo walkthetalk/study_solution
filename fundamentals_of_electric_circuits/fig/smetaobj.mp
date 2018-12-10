@@ -560,53 +560,9 @@ def TypeOf(expr v)=
   fi
 enddef;
 
-%%%%%%%%%%%%%%%%%%%%%% workaround for twice run problem %%%%%%%%%%%%%%%%
-def isObjExist(suffix $) =
-	known $code_
-enddef;
-
-vardef _clearObj_(suffix n) =
-	% clear objlabel in 2nd running
-	% please reference https://wiki.contextgarden.net/MetaObj_and_Labels.
-	save _j;
-	forsuffixes $=
-		pointlist_,
-		pairlist_,
-		pointarraylist_,
-		subarraylist_,
-		stringarraylist_,
-		colorarraylist_,
-		picturearraylist_,
-		transformarraylist_,
-		booleanarraylist_,
-		numericarraylist_,
-		pairarraylist_,
-		points_in_arrayslist_,
-		picturelist_,
-		numericlist_,
-		booleanlist_,
-		colorlist_,
-		stringlist_,
-		transformlist_,
-		sublist_
-		:
-		if known n.$:
-			forsuffixes _j=scantokens(n.$):
-				%message "     ----------- " & str _j;
-				if known n._j.n_:
-					%message "       known " & str n._j.n_;
-					n._j.n_ := 0;
-				fi;
-			endfor;
-		fi;
-	endfor;
-enddef;
 
 % |n| is the object and |s| its class
 def assignObj(suffix n)(expr s)=
-  if isObjExist(n):
-    _clearObj_(n);
-  fi;
   n:=incr(nObj_);   % new object number
   iname_[n]:=str n; % the number and the associated string are recorded
                    % so that we can go from the number to the name
@@ -654,8 +610,6 @@ def assignObj(suffix n)(expr s)=
                % number of subobjties
     expandafter transform sc_(gen_n_).ctransform_;
                % current transform of that object
-    expandafter boolean sc_(gen_n_).is_code_runned_;
-               % current run state of code of that object
   fi;
   % initialize the lists:
   forsuffixes $=pointlist_,pairlist_,pointarraylist_,subarraylist_,
@@ -1218,8 +1172,6 @@ defineArrayFunction("Boolean")("boolean")("booleanarraylist_");
 % |t| is a list of strings, representing the object code,
 % including equations (see examples)
 vardef ObjCode text l=
-if unknown sco_(".is_code_runned_"):
-  sco_(".is_code_runned_") := true;
   save s_,mac_,i_; % notice that we don't have to say that |s_| is a string!
   string mac_;mac_="";
   % The problem with object code and the equations it contains
@@ -1245,7 +1197,6 @@ if unknown sco_(".is_code_runned_"):
     % we call it with
     sc_ ("code_function_." & currentObjname);
   endgroup;
-fi;
 enddef;
 
 % This function adds equations to an already existing object.
@@ -3096,9 +3047,7 @@ vardef addPath@#(suffix n)(expr i)(text p)=
       ObjPointArray(n.ip_)(0);
     fi;    
   fi;
-  if unknown xpart(@#n[i]):
-    xpart(@#n[i])=@#n.ip_.n_+1; % path number
-  fi;
+  xpart(@#n[i])=@#n.ip_.n_+1; % path number
   % we add each point of the path |p_| to the |ip_| array:
   for j:=0 upto length p_-1:
     addPointToArray@#(point j of p_)(n.ip_);
@@ -3106,9 +3055,7 @@ vardef addPath@#(suffix n)(expr i)(text p)=
     addPointToArray@#(precontrol (j+1) of p_)(n.ip_);
   endfor;
   addPointToArray@#(point (length(p_)) of p_)(n.ip_);
-  if unknown ypart(@#n[i]):
-    ypart(@#n[i])=length p_;
-  fi;
+  ypart(@#n[i])=length p_;
   % if the object was initially untied, we untie it
   if untied:untieObj(@#);fi;
 enddef;
@@ -3216,6 +3163,7 @@ vardef addStandardPath@#(text p) text options=
   addStandardPath_@#(false)(p) options;
 enddef;
 
+% NOTE: use object/class options for path in object if no local option provided
 def ObjPath(text p) text options=
   addStandardPath_.sc_(currentObjname)(true)(p) options;
 enddef;
@@ -4605,14 +4553,11 @@ vardef ObjLabel@#(expr p) text options =
       @#ipic_[@#ipic_.n_]:=@#ipic_[@#ipic_.n_] rotated o_labangle_val;
     fi;
   fi;
-% WARNING: add check for tex twice run problem.
-if unknown @#ipic_.off_[@#ipic_.off_.n_]:
   if known o_labdir_val:
     @#ipic_.off_[@#ipic_.off_.n_]=tmpoff+labshift_(@#)*CLOV_("labdist");
   else:
     @#ipic_.off_[@#ipic_.off_.n_]=tmpoff;
   fi;
-fi;
 enddef;
 
 % This function places a label at a place

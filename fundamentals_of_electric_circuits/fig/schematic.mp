@@ -284,18 +284,81 @@ vardef defPin@#(expr _pinid, _pos, _angle) =
 	@#pin_angle[_pinid]=_angle + @#ang;
 enddef;
 
+%%%%%%%%%%%%%%%%%%%%%% workaround for twice run problem %%%%%%%%%%%%%%%%
 % WARNING: workaround for tex twice run problem, use it before every startMPcode
-def clearObjs =
+def clearObjsForTwiceRun =
+	for i:= 0 upto nObj_:
+		if known (iname_[i]):
+			_clearObj_(sc_(iname_[i]));
+		fi;
+		_refresh_(ClassName_[i]);
+		_refresh_(iname_[i]);
+	endfor;
 	nObj_ := 0;
-	% ClassName_;
-	% iname_;
-	nClasses_ := 0;
-	% Classes_;
-	nshortcuts_ := 0;
-	% oname_;
-	% ovalue_;
-enddef;
 
+	for i:= 0 upto nClasses_:
+		_refresh_(Classes_[i]);
+	endfor;
+	nClasses_ := 0;
+
+	for i:= 0 upto nshortcuts_:
+		_refresh_(oname_[i]);
+		_refresh_(ovalue_[i]);
+	endfor;
+	nshortcuts_ := 0;
+enddef;
+vardef _refresh_(text _v) =
+	if known (_v):
+		if numeric _v:
+			_v := whatever;
+		%else if string _v:
+		%	_v := whateverstring;
+		elseif pair _v:
+			_v := whateverpair;
+		fi;
+	fi;
+enddef;
+vardef _clearObj_(suffix n) =
+	% clear objlabel in 2nd running
+	% please reference https://wiki.contextgarden.net/MetaObj_and_Labels.
+	save _j;
+	forsuffixes $=
+		pointlist_,
+		pairlist_,
+		pointarraylist_,
+		subarraylist_,
+		stringarraylist_,
+		colorarraylist_,
+		picturearraylist_,
+		transformarraylist_,
+		booleanarraylist_,
+		numericarraylist_,
+		pairarraylist_,
+		points_in_arrayslist_,
+		picturelist_,
+		numericlist_,
+		booleanlist_,
+		colorlist_,
+		stringlist_,
+		transformlist_,
+		sublist_
+		:
+		if known n.$:
+			forsuffixes _j=scantokens(n.$):
+				if known n._j.n_:
+					for i:=0 upto n._j.n_:
+						_refresh_(n._j[i]);
+					endfor;
+					n._j.n_ := 0;
+				else:
+					_refresh_(n._j);
+				fi;
+			endfor;
+			n.$:=whateverstring;
+		fi;
+	endfor;
+enddef;
+%%%%%%%%%%%%%%%%%%%%%%%%%%% workaround for same name in different fig %%%%%%
 % WARNING: only for constructing different objects in different beginfig
 %   setX("test0");
 %   newEmptyBox.X(eb0)();
@@ -304,25 +367,11 @@ ObjPrefix_:="";
 def setX(expr s)= ObjPrefix_:=s enddef;
 def X(suffix s)= sc_(ObjPrefix_).s enddef;
 
-% define safe version for new object
-vardef defineSafeNew(expr _type)=
-  save tmp;string tmp;
-  tmp="vardef snew" & _type & "@#" & " text _pars =" &
-            "new" & _type & "@# _pars;" &
-        %"fi;" &
-      "enddef;";
-  sc_ tmp;
-enddef;
-
-defineSafeNew("Box");
-defineSafeNew("EmptyBox");
-
 %%%%%%%%%%%%%%%%%%%%%%%%%% default options %%%%%%%%%%%%%%%%%%%%%%
 setCurveDefaultOption("arrows")("draw");
 setCurveDefaultOption("linecolor")(SteelBlue);
 
 %%%%%%%%%%%%%%%%%% Resistor %%%%%%%%%%%%%%%%%%
-defineSafeNew("R");
 setObjectDefaultOption("R")("angle")(0);
 setObjectDefaultOption("R")("dx")(25);
 setObjectDefaultOption("R")("dy")(10);
@@ -350,7 +399,6 @@ def drawR(suffix n) =
 enddef;
 
 %%%%%%%%%%%%%%%%%% Dependent Current Source %%%%%%%%%%%%%%%%%%
-defineSafeNew("DCS");
 setObjectDefaultOption("DCS")("angle")(0);
 setObjectDefaultOption("DCS")("dx")(20);
 setObjectDefaultOption("DCS")("dy")(20);
@@ -379,7 +427,6 @@ def drawDCS(suffix n) =
 enddef;
 
 %%%%%%%%%%%%%%%%%% Dependent Voltage Source %%%%%%%%%%%%%%%%%%
-defineSafeNew("DVS");
 setObjectDefaultOption("DVS")("angle")(0);
 setObjectDefaultOption("DVS")("dx")(20);
 setObjectDefaultOption("DVS")("dy")(20);
@@ -417,7 +464,6 @@ def drawDVS(suffix n) =
 enddef;
 
 %%%%%%%%%%%%%%%%%% Inependent Voltage Source %%%%%%%%%%%%%%%%%%
-defineSafeNew("IVS");
 setObjectDefaultOption("IVS")("angle")(0);
 setObjectDefaultOption("IVS")("dx")(20);
 setObjectDefaultOption("IVS")("dy")(20);
@@ -455,7 +501,6 @@ def drawIVS(suffix n) =
 enddef;
 
 %%%%%%%%%%%%%%%%%% Current Direction Mark %%%%%%%%%%%%%%%%%%
-defineSafeNew("CDM");
 setObjectDefaultOption("CDM")("angle")(0);
 setObjectDefaultOption("CDM")("dx")(20);
 setObjectDefaultOption("CDM")("dy")(5);

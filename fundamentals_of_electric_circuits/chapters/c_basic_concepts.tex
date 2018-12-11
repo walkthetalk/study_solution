@@ -413,6 +413,7 @@ $p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
 \startMPcode
 	defcoord(20,0.1,15,15,1.5);
 	defdim.x("t(s)")(2,4);
+	setloc.x("lrt")(2);
 	defdim.y("p(mW)")(-300,300);
 	draw coordsys;
 
@@ -664,12 +665,278 @@ because $\sunit{10 ampere} + I = \sunit{4 ampere}$, so $I = -6\sunit[l]{ampere}$
 Find $V_0$ and the power absorbed by each element in the circuit of \reffig{1.31}.
 \placefigure[here][fig:1.31]{for \refq{1.20}}{
 \startMPcode
+	clearObjsForTwiceRun;
+	setX("fig131");
+
+	newR.X(r0);
+	ObjMLabel.X(r0)("-")
+		"labpoint(ine)", "labdir(ulft)";
+	ObjMLabel.X(r0)("+")
+		"labpoint(inw)", "labdir(urt)";
+	ObjMLabel.X(r0)("12V")
+		"labpoint(n)", "labdir(top)", "labshift((0,10))";
+	ObjMLabel.X(r0)("p_2")
+		"labpoint(is)", "labdir(bot)";
+
+	newR.X(r1) "angle(90)";
+	ObjMLabel.X(r1)("+")
+		"labpoint(ine)", "labdir(lft)";
+	ObjMLabel.X(r1)("-")
+		"labpoint(inw)", "labdir(lft)";
+	ObjMLabel.X(r1)("V_0")
+		"labpoint(n)", "labdir(lft)";
+	ObjMLabel.X(r1)("p_3")
+		"labpoint(is)", "labdir(rt)";
+
+	newR.X(r2);
+	ObjMLabel.X(r2)("-")
+		"labpoint(ise)", "labdir(llft)";
+	ObjMLabel.X(r2)("+")
+		"labpoint(isw)", "labdir(lrt)";
+	ObjMLabel.X(r2)("28V")
+		"labpoint(is)", "labdir(bot)", "labshift((0,-10))";
+	ObjMLabel.X(r2)("p_4")
+		"labpoint(ie)", "labdir(urt)";
+
+	newR.X(r3);
+	ObjMLabel.X(r3)("-")
+		"labpoint(ise)", "labdir(llft)";
+	ObjMLabel.X(r3)("+")
+		"labpoint(isw)", "labdir(lrt)";
+	ObjMLabel.X(r3)("28V")
+		"labpoint(is)", "labdir(bot)", "labshift((0,-10))";
+	ObjMLabel.X(r3)("p_5")
+		"labpoint(ie)", "labdir(urt)";
+
+	newDVS.X(u2) "angle(-90)";
+	ObjMLabel.X(u2)("5I_0")
+		"labpoint(in)", "labdir(rt)";
+	ObjMLabel.X(u2)("p_6")
+		"labpoint(is)", "labdir(lft)";
+
+	newIVS.X(u1) "angle(90)";
+	ObjMLabel.X(u1)("30V")
+		"labpoint(in)", "labdir(lft)";
+	ObjMLabel.X(u1)("p_1")
+		"labpoint(is)", "labdir(rt)";
+
+	newCDM.X(cdm0) "angle(90)";
+	ObjMLabel.X(cdm0)("6A")
+		"labpoint(in)", "labdir(lft)";
+	newCDM.X(cdm1);
+	ObjMLabel.X(cdm1)("6A")
+		"labpoint(in)", "labdir(top)";
+	newCDM.X(cdm2) "angle(-90)";
+	ObjMLabel.X(cdm2)("3A")
+		"labpoint(is)", "labdir(lft)";
+	newCDM.X(cdm3);
+	ObjMLabel.X(cdm3)("1A")
+		"labpoint(in)", "labdir(top)";
+	newCDM.X(cdm4);
+	ObjMLabel.X(cdm4)("I_0=2A")
+		"labpoint(in)", "labdir(top)";
+	newCDM.X(cdm5) "angle(-90)";
+	ObjMLabel.X(cdm5)("3A")
+		"labpoint(in)", "labdir(rt)";
+
+	numeric uc;
+	uc := 10;
+	X(r1).c = origin;
+	X(r0).c = X(r1).c + (-5uc, 4uc);
+	X(r2).c = X(r1).c + ( 5uc, 4uc);
+	X(r3).c = X(r2).c + (   0, 5uc);
+	X(u1).c = X(r1).c + (-10uc,0);
+	X(u2).c = X(r1).c + ( 10uc,0);
+	X(cdm0).ssw = (xpart X(u1).c, ypart X(r1).c - 4uc);
+	X(cdm1).ssw = (xpart X(u1).c, ypart X(r1).c + 4uc);
+	X(cdm2).ne  = X(r1).e;
+	X(cdm3).sw  = (xpart X(r1).c, ypart X(r2).c);
+	X(cdm4).sw  = (xpart X(r1).c, ypart X(r3).c);
+	X(cdm5).sse = (xpart X(u2).c, ypart X(r1).c - 4uc);
+
+	drawObj(X(r0),X(r1),X(r2),X(r3),X(u1),X(u2));
+
+	save _sl; string _sl; _sl := "armA(4uc - ypart(X(r1).c - X(r1).iw))";
+	pcsimple(X(u1))(2)(X(r0))(1);
+	pcsimple(X(r0))(2)(X(r1))(2);
+	pcsimple(X(r1))(2)(X(r2))(1);
+	pcsimple(X(r1))(2)(X(r3))(1);
+	pcsimple(X(r2))(2)(X(u2))(1);
+	pcsimple(X(r3))(2)(X(u2))(1);
+	pcsimple(X(r1))(1)(X(u2))(2) _sl;
+	pcsimple(X(r1))(1)(X(u1))(1) _sl;
+	drawObj(X(cdm0), X(cdm1), X(cdm2), X(cdm3), X(cdm4), X(cdm5));
 \stopMPcode
 }
 \stopQ
 
 \startA
+because $-30\sunit[l]{volt} + 12\sunit[l]{volt} + V_0 = 0\sunit[l]{volt}$, so $V_0 = 18\sunit[l]{volt}$.
+
+\startformula\startmathalignment
+\NC p_1 \NC = \sunit{30 volt} \times (-6)\sunit[l]{ampere} = -180 \sunit[l]{watt} \NR
+\NC p_2 \NC = \sunit{12 volt} \times 6\sunit[l]{ampere} = 72 \sunit[l]{watt} \NR
+\NC p_3 \NC = \sunit{18 volt} \times 3\sunit[l]{ampere} = 54 \sunit[l]{watt} \NR
+\NC p_4 \NC = \sunit{28 volt} \times 1\sunit[l]{ampere} = 28 \sunit[l]{watt} \NR
+\NC p_5 \NC = \sunit{28 volt} \times 2\sunit[l]{ampere} = 56 \sunit[l]{watt} \NR
+\NC p_6 \NC = \sunit{10 volt} \times (-3)\sunit[l]{ampere} = -30 \sunit[l]{watt} \NR
+\stopmathalignment\stopformula
 \stopA
+
+% 1.21
+\startQ
+A \sunit{60 watt} incandescent bulb operates at \sunit{120 volt}.
+How many electrons and coulombs flow through the bulb in one day?
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC p \NC = v i \rightarrow i = \frac{p}{v} = \frac{60}{120} = 0.5 \sunit[l]{ampere} \NR
+\NC q \NC = i t = 0.5 \times 60 \times 60 \times 24 = 43200 \sunit[l]{coulomb} \NR
+\NC N_e \NC = \sunit{6.24e18} \times 43200 = \sunit{2.696e23} \NR
+\stopmathalignment\stopformula
+\stopA
+
+% 1.22
+\startQ
+A lightning bolt strikes an airplane with \sunit{40 kilo ampere} for \sunit{1.7 milli second}.
+How many coulombs of charge are deposited on the plane?
+\stopQ
+
+\startA
+$q=it=\sunit{40e3} \times \sunit{1.7e-3} = 68 \sunit[l]{coulomb}$
+\stopA
+
+% 1.23
+\startQ
+A \sunit{1.8 kilo watt} electric heater takes \sunit{15 minute} to boil a quantity of water.
+If this is done once a day and power costs \sunit{10 cent per kilo watt hour},
+what is the cost of its operation for 30 days?
+\stopQ
+
+\startA
+\startformula
+1.8 \times \frac{15}{60} \times 30 \times \frac{10}{100} = \$1.35
+\stopformula
+\stopA
+
+% 1.24
+\startQ
+A utility company charges 8.2 cents/kWh.
+If a consumer operates a 60-W light bulb continuously for one day,
+how much is the consumer charged?
+\stopQ
+
+\startA
+\startformula
+\sunit{60e-3} \times 24 \times 8.2 = 11.808 \sunit[l]{cent}
+\stopformula
+\stopA
+
+% 1.25
+\startQ
+A \sunit{1.2 kilo watt} toaster takes roughly \sunit{4 minute} to heat four slices of bread.
+Find the cost of operating the toaster twice per day for 2 weeks (14 days).
+Assume energy costs 9 cents/kWh.
+\stopQ
+
+\startA
+\startformula
+1.2 \times \frac{4}{60} \times 2 \times 14 \times 9 = 20.16 \sunit[l]{cent}
+\stopformula
+\stopA
+
+% 1.26
+\startQ
+A cell phone battery is rated at \sunit{3.85 volt} and can store 10.78 watt-hours of energy.
+\startIG
+\item How much average current can it deliver over a period of 3 hours
+if it is fully discharged at the end of that time?
+\item How much average power is delivered in part (a)?
+\item What is the ampere-hour rating of the battery?
+\stopIG
+\stopQ
+
+\startA
+\startIG
+\item $10.78 / 3 / 3.85 = \frac{14}{15} = 0.93 \sunit[l]{ampere}$
+\item $10.78 / 3 = 3.59 \sunit[l]{watt}$
+\item $10.78 / 3.85 = 2.8 \sunit[l]{ampere hour}$
+\stopIG
+\stopA
+
+% 1.27
+\startQ
+A constant current of \sunit{3 ampere} for 4 hours is required to charge an automotive battery.
+If the terminal voltage is $10 + \frac{t}{2} \sunit[l]{volt}$, where $t$ is in hours,
+\startIG
+\item how much charge is transported as a result of the charging?
+\item how much energy is expended?
+\item how much does the charging cost? Assume electricity costs 9 cents/kWh.
+\stopIG
+\stopQ
+
+\startA
+\startIG
+\startitem
+Let $T = 4 \sunit[l]{hour} = 4 \times 3600 \sunit[l]{second}$,
+\startformula
+q = \int i dt = \int_0^T 3 dt = 3 \times 4 \times 3600 = 43.2 \sunit[l]{kilo coulomb}
+\stopformula
+\stopitem
+
+\startitem
+\startformula
+W = \int p dt = \int v i dt
+  = \int_0^T 3 \times (10 + \frac{t/3600}{2}) dt
+  = \left.(30t+\frac{t^2}{4800})\right|_0^{4\times 3600}
+  = 475.2 \sunit[l]{kilo joule}
+\stopformula
+\stopitem
+
+\startitem
+$\sunit{joule} = \sunit[l]{watt second}$, so
+\startformula
+\frac{475.2}{3600} \sunit[l]{kilo watt hour} \times 9 \sunit[l]{cent} = 1.188 \sunit[l]{cent}
+\stopformula
+\stopitem
+\stopIG
+\stopA
+
+% 1.28
+\startQ
+A \sunit{150 watt} incandescent outdoor lamp is connected to
+a \sunit{120 volt} source and is left burning continuously for
+an average of 12 hours per day. Determine:
+\startIG
+\item the current through the lamp when it is lit.
+\item the cost of operating the light for one non-leap year
+if electricity costs 9.5 cents per \sunit{kilo watt hour}.
+\stopIG
+\stopQ
+
+\startA
+\startIG
+\item $150 / 120 = 1.25 \sunit[l]{ampere}$
+\item $150 / 1000 \times 12 \time 365 \times 9.5 / 100 = \$62.415$
+\stopIG
+\stopA
+
+% 1.29
+\startQ
+An electric stove with four burners and an oven is
+used in preparing a meal as follows.
+\startIG
+\item Burner 1: 20 minutes
+\item Burner 2: 40 minutes
+\item Burner 3: 15 minutes
+\item Burner 4: 45 minutes
+\item Oven: 30 minutes
+\stopIG
+If each burner is rated at \sunit{1.2 kilo watt} and the oven at \sunit{1.8 kilo watt},
+and electricity costs 12 cents per \sunit{kilo watt hour},
+calculate the cost of electricity used in preparing the meal.
+\stopQ
 
 \stopchapter
 \stopcomponent

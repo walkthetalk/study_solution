@@ -371,7 +371,7 @@ def X(suffix s)= sc_(ObjPrefix_).s enddef;
 setCurveDefaultOption("arrows")("draw");
 setCurveDefaultOption("linecolor")(SteelBlue);
 
-%%%%%%%%%%%%%%%%%% Resistor %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% Resistor DIN %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("R")("angle")(0);
 setObjectDefaultOption("R")("dx")(30);
 setObjectDefaultOption("R")("dy")(10);
@@ -395,6 +395,50 @@ def BpathR(suffix n)=
 	SchematicBpath(n)
 enddef;
 def drawR(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
+%%%%%%%%%%%%%%%%%% Resistor ANSI %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("Ra")("angle")(0);
+setObjectDefaultOption("Ra")("dx")(30);
+setObjectDefaultOption("Ra")("dy")(10);
+setObjectDefaultOption("Ra")("linecolor")(Green);
+setObjectDefaultOption("Ra")("pathfillcolor")(Khaki);
+setObjectDefaultOption("Ra")("framed")(true);
+
+vardef newRa@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "Ra");
+
+	SchematicInterface(2);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 0),0)";
+
+	save _rwire, _rwn; path _rwire; numeric _rwn;
+	_rwn := 4;
+	save _x;
+	vardef _x(expr _i, _p)=
+		((4 * (_i - 1) + _p)/(4 * _rwn))
+	enddef;
+	_rwire := (0,0);
+	for i:=1 step 1 until _rwn:
+		_rwire := _rwire
+			-- (_x(i, 1), 0.5)
+			-- (_x(i, 3),-0.5)
+			-- (_x(i, 4),  0);
+	endfor;
+	ObjPath(_rwire shifted (-0.5,0)
+		xscaled OptionValue@#("dx")
+		yscaled OptionValue@#("dy")
+		rotated OptionValue@#("angle")
+		shifted @#.c);
+enddef;
+def BpathRa(suffix n)=
+	SchematicBpath(n)
+enddef;
+def drawRa(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
@@ -551,6 +595,34 @@ def BpathCDM(suffix n)=
 	(n.iw--n.ie)
 enddef;
 def drawCDM(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
+%%%%%%%%%%%%%%%%%% Node %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("Node")("angle")(0);
+setObjectDefaultOption("Node")("dx")(3);
+setObjectDefaultOption("Node")("dy")(3);
+setObjectDefaultOption("Node")("linecolor")(FireBrick);
+setObjectDefaultOption("Node")("pathfillcolor")(FireBrick);
+
+vardef newNode@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "Node");
+
+	SchematicInterface(4);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(n, 0),90)",
+		"defPin@#(3,StdPos@#(e, 0),0)",
+		"defPin@#(4,StdPos@#(s, 0),-90)";
+
+	ObjPath(BpathNode(@#)) "pathfilled(true)";
+enddef;
+def BpathNode(suffix n)=
+	(n.in..n.iw..n.is..n.ie..cycle)
+enddef;
+def drawNode(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncdiaga %%%%%%%%%%%%%%%%%%%%%%%%%

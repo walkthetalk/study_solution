@@ -98,7 +98,7 @@ The charge entering a certain element is shown in \reffig{1.23}. Find the curren
 \placefigure[here][fig:1.23]{for \refq{1.6}}{
 \startMPcode
 	defcoord(10,2,15,15,1.5);
-	defdim.x("t(ms)")(2,4,6,8,10,12);
+	defdim.x("t(ms)")(0,2,4,6,8,10,12);
 	defdim.y("q(t)(mC)")(30);
 	draw coordsys;
 	drawemp((0,0)--(2,30)--(8,30)--(12,0));
@@ -123,7 +123,7 @@ The charge flowing in a wire is plotted in \reffig{1.24}. Sketch the correspondi
 \startMPcode
 	defcoord(20,2,15,15,1.5);
 	defdim.x("t(s)")(1,2,3,4);
-	defdim.y("q(C)")(-10,10);
+	defdim.y("q(C)")(-10,0,10);
 	draw coordsys;
 	drawemp((0,0)--(1,10)--(2,-10)--(3,-10)--(4,0));
 \stopMPcode
@@ -135,7 +135,7 @@ The charge flowing in a wire is plotted in \reffig{1.24}. Sketch the correspondi
 	defcoord(20,2,15,15,1.5);
 	defdim.x("t(s)")(1,2,3,4);
 	setloc.x("lrt")(1,2);
-	defdim.y("q(C)")(-20,-10,10);
+	defdim.y("q(C)")(-20,-10,0,10);
 	draw coordsys;
 	drawemp((0,10)--(1,10)--(1,-20)--(2,-20)--(2,0)--(3,0)--(3,10)--(4,10));
 \stopMPcode
@@ -148,7 +148,7 @@ The charge flowing in a wire is plotted in \reffig{1.24}. Sketch the correspondi
 \placefigure[here][fig:1.25]{for \refq{1.8}}{
 \startMPcode
 	defcoord(30,3,15,15,1.5);
-	defdim.x("t(ms)")(1,2);
+	defdim.x("t(ms)")(0,1,2);
 	defdim.y("i(mA)")(10);
 	draw coordsys;
 	drawemp((0,0)--(1,10)--(2,10)--(2,0));
@@ -176,7 +176,7 @@ Determine the total charge that passed through the element at:
 \placefigure[here][fig:1.26]{for \refq{1.9}}{
 \startMPcode
 	defcoord(15,3,15,15,1.5);
-	defdim.x("t(s)")(1,2,3,4,5);
+	defdim.x("t(s)")(0,1,2,3,4,5);
 	defdim.y("i(A)")(5,10);
 	draw coordsys;
 	drawemp((0,10)--(1,10)--(2,5)--(4,5)--(5,0));
@@ -242,7 +242,7 @@ Plot the charge stored in the element over $0 < t < \munit{20 second}$.
 	defcoord(5,2,15,15,1.5);
 	defdim.x("(t) s")(6,10,15);
 	setloc.x("lrt")(10,15);
-	defdim.y("i(t) A")(-12,18);
+	defdim.y("i(t) A")(-12,0,18);
 	draw coordsys;
 	drawemp((0,0)--(6,18)--(10,18)--(10,-12)--(15,-12)--(15,0)--(17,0));
 \stopMPcode
@@ -260,12 +260,10 @@ q(t)=\startmathcases
 
 \startMPcode
 	defcoord(7,0.7,15,15,1.5);
-	defdim.x("(t) s")(6,10,15);
+	defdim.x("(t) s")(0,6,10,15);
 	setloc.x("lrt")(10,15);
 	defdim.y("q(t) C")(18,54,66,126);
 	draw coordsys;
-
-	%drawref((0,0)--(6,18)--(10,18)--(10,-12)--(15,-12)--(15,0)--(16,0));
 
 	polydef.main(0,6,1,20)(0,0,1.5);
 	drawauxp.p((6,54),(10,126),(15,66));
@@ -363,7 +361,7 @@ $p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
 \startcombination[2*1]
 {\startMPcode
 	defcoord(20,1,15,15,1.5);
-	defdim.x("t(s)")(2,4);
+	defdim.x("t(s)")(0,2,4);
 	defdim.y("i(mA)")(60);
 	draw coordsys;
 
@@ -372,7 +370,7 @@ $p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
 	defcoord(20,5,15,15,1.5);
 	defdim.x("t(s)")(2,4);
 	setloc.x("lrt")(2,4);
-	defdim.y("v(V)")(-5,5);
+	defdim.y("v(V)")(-5,0,5);
 	draw coordsys;
 
 	drawemp((0,5)--(2,5)--(2,-5)--(4,-5)--(4,0));
@@ -414,7 +412,7 @@ $p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
 	defcoord(20,0.1,15,15,1.5);
 	defdim.x("t(s)")(2,4);
 	setloc.x("lrt")(2);
-	defdim.y("p(mW)")(-300,300);
+	defdim.y("p(mW)")(-300,0,300);
 	draw coordsys;
 
 	drawemp((0,0)--(2,300)--(2,-300)--(4,0));
@@ -937,6 +935,194 @@ If each burner is rated at \sunit{1.2 kilo watt} and the oven at \sunit{1.8 kilo
 and electricity costs 12 cents per \sunit{kilo watt hour},
 calculate the cost of electricity used in preparing the meal.
 \stopQ
+
+\startA
+\startformula\startmathalignment
+\NC w \NC = pt = 1.2 \sunit[l]{kilo watt} \times \frac{20 + 40 + 15 + 45}{60} \sunit[l]{hour}
+     + 1.8\sunit[l]{kilo watt} \times \frac{30}{60}\sunit[l]{hour}
+     = 3.3 \sunit[l]{kilo watt hour} \NR
+\NC \text{Cost} \NC = 12 \times 3.3 = 39.6 \text{cents} \NR
+\stopmathalignment\stopformula
+\stopA
+
+% 1.30
+\startQ
+Reliant Energy (the electric company in Houston, Texas) charges customers as follows:
+\startIG
+\item Monthly charge \$6
+\item First 250 kWh @ \$0.02/kWh
+\item All additional kWh @ \$0.07/kWh
+\stopIG
+If a customer uses 2,436 kWh in one month,
+how much will Reliant Energy charge?
+\stopQ
+
+\startA
+\startformula
+6 + 0.02 \times 250 + 0.07 \times (2436-250) = \$164.02
+\stopformula
+\stopA
+
+% 1.31
+\startQ
+In a household, a business is run for an average of 6 h/day.
+The total power consumed by the computer and its printer is \sunit{230 watt}.
+In addition, a 75-W light runs during the same 6 h.
+If their utility charges 11.75 cents per kWh,
+how much do the owners pay every 30 days?
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC p \NC = \frac{230 + 75}{1000}\sunit[l]{kilo watt} = 0.305\sunit[l]{kilo watt} \NR
+\NC \text{Cost} \NC = 11.75 \times (0.305 \times 6 \times 30) = 645.075 \text{cents}
+\stopmathalignment\stopformula
+\stopA
+
+% 1.32
+\startQ
+A telephone wire has a current of \sunit{20 micro ampere} flowing through it.
+How long does it take for a charge of \sunit{15 coulomb} to pass through the wire?
+\stopQ
+
+\startA
+\startformula
+\frac{15}{\sunit{20e-6}} = \sunit{7.5e5 second}
+\stopformula
+\stopA
+
+% 1.33
+\startQ
+A lightning bolt carried a current of \sunit{2 kilo ampere} and lasted for \sunit{3 milli second}.
+How many coulombs of charge were contained in the lightning bolt?
+\stopQ
+
+\startA
+\startformula
+i = \frac{d q}{d t} \rightarrow q = \int i dt = 2000 \times 3 \times 10^{-3} = \sunit{6 coulomb}
+\stopformula
+\stopA
+
+% 1.34
+\startQ[Q:1.34]
+\reffig{1.32} shows the power consumption of a certain household in 1 day.
+Calculate:
+\startIG
+\item the total energy consumed in \sunit{kilo watt hour},
+\item the average power over the total 24 hour period.
+\stopIG
+\placefigure[here][fig:1.32]{for \refq{1.34}}{
+\startMPcode
+	defcoord(8,0.05,15,15,1.5);
+	defdim.x("t(h)")(0,2,4,6,8,10,12,14,16,18,20,22,24);
+	defdim.y("p")(200,800,1200);
+	draw coordsys;
+	drawemp((0,200)--(6,200)--(6,800)--(8,800)--(8,200)
+		--(18,200)--(18,1200)--(22,1200)--(22,200)--(24,200));
+	coordmlabel.top("800 W", (7, 800));
+	coordmlabel.top("200 W", (13, 200));
+	coordmlabel.top("1200 W", (20, 1200));
+\stopMPcode
+}
+\stopQ
+
+\startA
+\startIG
+\item $\frac{200}{1000} \times (6 + 10 + 2)
+  + \frac{800}{1000} \times 2
+  + \frac{1200}{1000} \times 4
+  = 10 \sunit[l]{kilo watt hour}$
+\item $10 \times 1000 / 24 = 416.7 \sunit[l]{watt}$
+\stopIG
+\stopA
+
+% 1.35
+\startQ[Q:1.35]
+The graph in \reffig{1.33} represents the power drawn
+by an industrial plant between 8:00 and 8:30 a.m.
+Calculate the total energy in MWh consumed by the plant.
+\placefigure[here][fig:1.33]{for \refq{1.35}}{
+\startMPcode
+	defcoord(4.5,8,15,15,1.5);
+	defdim.x("t")(0,5,10,15,20,25,30);
+	defdim.y("p(MW)")(3,4,5,8);
+	setlabel.x("8.00")( 0);
+	setlabel.x("8.05")( 5);
+	setlabel.x("8.10")(10);
+	setlabel.x("8.15")(15);
+	setlabel.x("8.20")(20);
+	setlabel.x("8.25")(25);
+	setlabel.x("8.30")(30);
+	draw coordsys;
+	drawemp((0,5)--(5,5)--(5,4)--(10,4)--(10,3)--(15,3)--(15,8)--(20,8)--(20,4)--(30,4));
+\stopMPcode
+}
+\stopQ
+
+\startA
+\startformula
+8 \times \frac{5}{60} + 5 \times \frac{5}{60}
++ 4 \times\frac{15}{60} + 3 \times \frac{5}{60}
+= 2.333 \sunit[l]{mega watt hour}
+\stopformula
+\stopA
+
+% 1.36
+\startQ
+A battery can be rated in ampere-hours (Ah) or watt-hours (Wh).
+The ampere hours can be obtained from the watt hours
+by dividing watt hours by a nominal voltage of 12 V.
+If an automobile battery is rated at 20 Ah:
+\startIG
+\item What is the maximum current that can be supplied for 15 minutes?
+\item How many days will it last if it is discharged at a rate of \sunit{2 milli ampere}?
+\stopIG
+\stopQ
+
+\startA
+\startIG
+\item $20 / \frac{15}{60} = 80\sunit[l]{ampere}$
+\item $\frac{20}{2\times 10^{-3}} / 24 = 416.7\sunit[l]{day}$
+\stopIG
+\stopA
+
+% 1.37
+\startQ
+A total of \sunit{2 mega joule} are delivered to an automobile
+battery (assume \sunit{12 volt}) giving it an additional charge.
+How much is that additional charge?
+Express your answer in ampere-hours.
+\stopQ
+
+\startA
+$\sunit{joule}=\sunit{watt second}$:
+\startformula
+2 \times 10^6 / 12 / 3600 = 46.3\sunit[l]{ampere hour}
+\stopformula
+\stopA
+
+% 1.38
+\startQ
+How much energy does a 10-hp motor deliver in 30 minutes?
+Assume that 1 horsepower = 746 W.
+\stopQ
+
+\startA
+$746\times 10 \times 30 \times 60 = \sunit{1.3428e7 joule}$
+\stopA
+
+% 1.39
+\startQ
+A 600-W TV receiver is turned on for 4 h with nobody watching it.
+If electricity costs 10 cents/kWh,
+how much money is wasted?
+\stopQ
+
+\startA
+$E = \frac{600}{1000}\times 4 = 2.4\sunit[l]{kilo watt hour}$
+
+$\text{Cost} = 10 \times 2.4 = 24 \text{cents}$
+\stopA
 
 \stopchapter
 \stopcomponent

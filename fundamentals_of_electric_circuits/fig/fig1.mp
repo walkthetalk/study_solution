@@ -238,4 +238,26 @@ beginfig(3);
 	drawObj(X(cdm0), X(cdm1), X(cdm2), X(cdm3), X(cdm4), X(cdm5));
 endfig;
 
+beginfig(4);
+	clearObjsForTwiceRun;
+	setX("fig268");
+
+	newIVS.X(v0)"angle(90)";
+	newRa.X(r0) "angle(90)";
+	newRa.X(r1) "angle(90)";
+	newNode.X(n0);
+	newNode.X(n1);
+
+	numeric uc;
+	uc := 10;
+	X(v0).c = origin;
+	X(r0).c = X(v0).ie + (-6uc, 0);
+	X(r1).c = X(v0).ie + ( 6uc, 0);
+	X(n0).c = X(v0).ie + (-3uc, 5uc);
+	X(n1).c = X(v0).ie + ( 3uc, 5uc);
+
+	drawObj(X(v0),X(r0),X(r1),X(n0),X(n1));
+	pcsimple(X(r0))(2)(X(n0))(1);
+	pcsimple(X(r1))(2)(X(n1))(3);
+endfig;
 end;

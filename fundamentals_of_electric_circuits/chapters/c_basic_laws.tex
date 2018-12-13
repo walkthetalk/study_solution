@@ -1,0 +1,64 @@
+\startcomponent c_basic_concepts
+\startchapter[
+  title={Basic Concepts},
+]
+
+% 2.1
+\startQ
+Design a problem, complete with a solution,
+to help students to better understand Ohm’s law.
+Use at least two resistors and one voltage source.
+Hint, you could use both resistors at once or one at a time,
+it is up to you. Be creative.
+\stopQ
+
+\startA
+...
+\stopA
+
+% 2.2
+\startQ
+Find the hot resistance of a light bulb rated \sunit{60 watt}, \sunit{120 volt}.
+\stopQ
+
+\startA
+$\frac{v^2}{R} = p \rightarrow
+R = \frac{v^2}{p}
+  = \frac{60^2}{120}
+  = 30 \sunit{ohm}$
+\stopA
+
+% 2.3
+\startQ
+A bar of silicon is 4 cm long with a circular cross section.
+If the resistance of the bar is 240 Ω at room temperature,
+what is the cross-sectional radius of the bar?
+\stopQ
+
+\startA
+For silicon, $\rho = \sunit{6.4e2 ohm meter}$. $A=\pi r^2$.
+Hence:
+\startformula\startmathalignment
+\NC R \NC =\frac{\rho L}{A}=\frac{\rho L}{\pi r^2} \NR
+\NC r \NC = \sqrt{\frac{\rho L}{\pi R}} \NR
+\NC   \NC = \sqrt{\frac{6.4\times 10^2 \times \frac{4}{100}}
+                       {\pi\times 240}} \NR
+\NC   \NC = \sqrt{0.033953} \NR
+\NC   \NC = 0.1843\sunit[l]{meter} \NR
+\stopmathalignment\stopformula
+\stopA
+
+% 2.4
+\startQ[Q:2.4]
+\startIG
+\item Calculate current $i$ in \reffig{2.68} when the switch is in position 1.
+\item Find the current when the switch is in position 2.
+\stopIG
+\placefigure[here][fig:2.68]{for \refq{2.4}}{
+\startMPcode
+\stopMPcode
+}
+\stopQ
+
+\stopchapter
+\stopcomponent

@@ -9,6 +9,11 @@ vardef mlabel@#(expr strname, pos) text p =
 	label@#(textext("$" & strname & "$"), pos) p
 enddef;
 
+% math label
+vardef coordmlabel@#(expr strname, pos) text p =
+	mlabel@#(strname, (pos xscaled ux yscaled uy)) p
+enddef;
+
 vardef defcoord(expr _ux, _uy, _ox, _oy, _ah) =
 	numeric ux, uy, ox, oy, ah;
 	ux := _ux;	% scale x
@@ -28,6 +33,7 @@ vardef defdim@#(expr name)(text pl) =
 	numeric plist@#[];
 	numeric pmid@#;
 	string ploc@#[];
+	string pmlabel@#[];
 
 	dname@# := name;
 	pmid@# := -1;
@@ -35,6 +41,7 @@ vardef defdim@#(expr name)(text pl) =
 		pmid@# := pmid@# + 1;
 		plist@#[pmid@#] := _p;
 		ploc@#[pmid@#] := defloc@#;
+		pmlabel@#[pmid@#] := decimal(_p);
 	endfor;
 enddef;
 
@@ -43,6 +50,15 @@ vardef setloc@#(expr loc)(text pl) =
 		for i := 0 step 1 until pmid@#:
 			if (plist@#[i] = _p):
 				ploc@#[i] := loc;
+			fi;
+		endfor;
+	endfor;
+enddef;
+vardef setlabel@#(expr _mark)(text pl) =
+	for _p = pl:
+		for i := 0 step 1 until pmid@#:
+			if (plist@#[i] = _p):
+				pmlabel@#[i] := _mark;
 			fi;
 		endfor;
 	endfor;
@@ -65,7 +81,7 @@ image(
 	drawarrow (lftx,0)--(rtx,0);
 	for i := 0 step 1 until pmid.x:
 		draw (plist.x[i]*ux, 0)--(plist.x[i]*ux, ah);
-		mlabel. scantokens(ploc.x[i]) (decimal(plist.x[i]), (plist.x[i]*ux, 0));
+		mlabel. scantokens(ploc.x[i]) (pmlabel.x[i], (plist.x[i]*ux, 0));
 	endfor;
 	mlabel.lrt(dname.x, (rtx, 0));
 
@@ -84,19 +100,9 @@ image(
 	drawarrow (0,lowy)--(0,upy);
 	for i := 0 step 1 until pmid.y:
 		draw (0,plist.y[i]*uy)--(ah,plist.y[i]*uy);
-		mlabel. scantokens(ploc.y[i]) (decimal(plist.y[i]), (0,plist.y[i]*uy));
+		mlabel. scantokens(ploc.y[i]) (pmlabel.y[i], (0,plist.y[i]*uy));
 	endfor;
 	mlabel.lft(dname.y, (0, upy));
-
-	if lowy < 0:
-		if lftx < 0:
-			mlabel.llft(decimal(0), (0,0));
-		else:
-			mlabel.lft(decimal(0), (0,0));
-		fi;
-	else:
-		mlabel.bot(decimal(0), (0,0));
-	fi;
 )
 enddef;
 
@@ -200,13 +206,13 @@ vardef polycurve@# =
 enddef;
 
 vardef drawemp(expr pa) =
-	draw pa xyscaled(ux,uy) withcolor darkred withpen pencircle scaled 1.2
+	draw pa xscaled ux yscaled uy withcolor DarkRed withpen pencircle scaled 1.2
 enddef;
 vardef drawref(expr pa) =
-	draw pa xyscaled(ux,uy) withcolor blue withpen pencircle scaled 1.2
+	draw pa xscaled ux yscaled uy withcolor blue withpen pencircle scaled 1.2
 enddef;
 vardef drawaux(expr pa) =
-	draw pa xyscaled(ux,uy) dashed evenly
+	draw pa xscaled ux yscaled uy dashed evenly
 enddef;
 vardef drawauxp.v(text _pl) =
 	for _p = _pl:

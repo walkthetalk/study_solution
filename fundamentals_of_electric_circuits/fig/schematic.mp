@@ -278,7 +278,13 @@ vardef StdPos@#(suffix _edge)(expr _offset)=
 	fi
 )
 enddef;
+vardef CirclePos@#(expr _angle)=
+(
+	(1,0) rotated _angle xscaled (@#dx/2) yscaled (@#dy/2)
+)
+enddef;
 % NOTE: |_pos| must use i or b_ serias points
+%       |_angle|: the angle for output direction
 vardef defPin@#(expr _pinid, _pos, _angle) =
 	@#pin[_pinid]=_pos rotated @#ang shifted @#c;
 	@#pin_angle[_pinid]=_angle + @#ang;
@@ -625,16 +631,51 @@ enddef;
 def drawNode(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ncdiaga %%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%% Switch %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("Switch")("angle")(0);
+setObjectDefaultOption("Switch")("dx")(25);
+setObjectDefaultOption("Switch")("dy")(25);
+setObjectDefaultOption("Switch")("linecolor")(FireBrick);
+setObjectDefaultOption("Switch")("pathfillcolor")(FireBrick);
+
+vardef newSwitch@#(expr _defcp) text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "Switch");
+
+	SchematicInterface(4);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(3,CirclePos@#(180),180)",
+		"defPin@#(1,CirclePos@#(60),0)",
+		"defPin@#(2,CirclePos@#(-60),0)";
+
+	ObjPath(BpathSwitch(@#));% "pathfilled(true)";
+	%for i:=1 upto 3:
+	%	ObjPath(fullcircle scaled 1 shifted @#.pin[i])
+	%		"linecolor(blue)", "pathfillcolor(blue)", "pathfilled(true)";
+	%endfor;
+	ObjPath(@#.pin[3]--@#.pin[_defcp]) "arrows(->)";
+enddef;
+def BpathSwitch(suffix n)=
+	(n.in..n.iw..n.is..n.ie..cycle)
+enddef;
+def drawSwitch(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+%%%%%%%%%%%%%%%%%%%%%%%% pin connection simple %%%%%%%%%%%%%%%%%%%
 % ncdiaga: ncdiag without armlength, auto intersect two directions
 % |@#| is the object to which a line is added
 % |n| is the source subobject, |m| is the target.
 % We also distinguish the case when |n| and |m| are objects
 % and when they are points (numerics vs pairs).
 vardef pcsimple@#(text n)(text pn)(text m)(text pm) text options =
+	save aA,aB; numeric aA, aB;
+	aA := n.pin_angle[pn];
+	aB := m.pin_angle[pm] + 180;
   ncshort_@#("nc","pcsimple")(n.pin[pn])(m.pin[pm])(options,
-	"angleA(" & decimal(n.pin_angle[pn]) & ")",
-	"angleB(" & decimal(m.pin_angle[pm]) & ")");
+	"angleA(" & decimal(aA) & ")",
+	"angleB(" & decimal(aB) & ")");
 enddef;
 
 
@@ -667,4 +708,20 @@ vardef pcsimple_(suffix $)(suffix n,m)(suffix p)=
       (smoothen(objectpoint_(n)("A")--ap1--ap2--objectpoint_(m)("B"))
          (CLOV_("linearc")));
   fi;
+enddef;
+
+%%%%%%%%%%%%%%%%%%%%% pin connection line %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% |@#| is the object to which a line is added
+% |n| is the source subobject, |m| is the target.
+% We also distinguish the case when |n| and |m| are objects
+% and when they are points (numerics vs pairs)
+vardef pcline@#(text n)(text m) text options =
+  ncshort_@#("nc","pcline")(n)(m)(options);
+enddef;
+
+vardef pcline_(suffix $)(suffix n,m)(suffix p)=
+  nc_core_$(n)(p)
+    (object_(n)("A")..object_(m)("B")
+        cutbefore BpathObj(n) cutafter BpathObj(m))
+    (objectpoint_(n)("A")..objectpoint_(m)("B"));
 enddef;

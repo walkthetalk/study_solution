@@ -240,24 +240,35 @@ endfig;
 
 beginfig(4);
 	clearObjsForTwiceRun;
-	setX("fig268");
+	setX("fig269");
 
-	newIVS.X(v0)"angle(90)";
-	newRa.X(r0) "angle(90)";
-	newRa.X(r1) "angle(90)";
-	newNode.X(n0);
-	newNode.X(n1);
+	save _n_;
+	def _n_(expr i)=
+		%X(n)[i]
+		X(sc_("n" & decimal(i)))
+	enddef;
+	for i:=1 upto 12:
+		newNode._n_(i);
+	endfor;
 
 	numeric uc;
-	uc := 10;
-	X(v0).c = origin;
-	X(r0).c = X(v0).ie + (-6uc, 0);
-	X(r1).c = X(v0).ie + ( 6uc, 0);
-	X(n0).c = X(v0).ie + (-3uc, 5uc);
-	X(n1).c = X(v0).ie + ( 3uc, 5uc);
+	uc := 20;
+	for i:= 1 upto 6:
+		_n_(i).c   = (uc,0) rotated ((i-1)*60);
+		_n_(i+6).c = _n_(2).c shifted (uc,0) rotated ((i-1)*60);
+	endfor;
 
-	drawObj(X(v0),X(r0),X(r1),X(n0),X(n1));
-	pcsimple(X(r0))(2)(X(n0))(1);
-	pcsimple(X(r1))(2)(X(n1))(3);
+	for i:=1 upto 12:
+		drawObj(_n_(i));
+	endfor;
+
+	for i:=1 upto 6:
+		save _next;numeric _next; _next := i mod 6 + 1;
+		ncline(_n_(i))(_n_(_next));
+		ncline(_n_(i))(_n_(i+6));
+		ncline(_n_(i+6))(_n_(_next));
+	endfor;
+	ncbar(_n_(8))(_n_(11)) "angleA(180)", "armA(2uc)";
 endfig;
+
 end;

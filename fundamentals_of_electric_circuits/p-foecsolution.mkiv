@@ -60,16 +60,31 @@
 }
 
 \startMPinclusions
-input coord;
-input schematic;
+ahangle:=30;
+\stopMPinclusions
 
+\define[2]\placeschemq{
+\placefigure[here][fig:#1]{for \refq{#2}}{
+\startMPcode
+input schematic;
 labeloffset := 1;
 
-vardef ObjMLabel@#(text p) text options=
-	ObjLabel@#(textext("$" & p & "$")) options;
-enddef;
+clearObjsForTwiceRun;
+setX("fig" & str #1);
 
-\stopMPinclusions
+input #1
+\stopMPcode
+}
+}
+
+\define[2]\placecoordq{
+\placefigure[here][fig:#1]{for \refq{#2}}{
+\startMPcode
+input coord;
+input #1
+\stopMPcode
+}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for enum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % NOTE: if you want to use specific font:

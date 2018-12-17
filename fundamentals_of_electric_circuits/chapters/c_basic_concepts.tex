@@ -95,17 +95,7 @@ The charge entering a certain element is shown in \reffig{1.23}. Find the curren
 \item $t = \munit{_6 milli second}$
 \item $t = \munit{10 milli second}$
 \stopIG
-\placefigure[here][fig:1.23]{for \refq{1.6}}{
-\startMPcode
-	defcoord(10,2,15,15,1.5);
-	defdim.x("t(ms)")(0,2,4,6,8,10,12);
-	defdim.y("q(t)(mC)")(30);
-	draw coordsys;
-	drawemp((0,0)--(2,30)--(8,30)--(12,0));
-	drawaux((2,0)--(2,30));
-	drawaux((8,0)--(8,30));
-\stopMPcode
-}
+\placecoordq{1.23}{1.6}
 \stopQ
 
 \startA
@@ -118,20 +108,14 @@ The charge entering a certain element is shown in \reffig{1.23}. Find the curren
 
 % 1.7
 \startQ[Q:1.7]
-The charge flowing in a wire is plotted in \reffig{1.24}. Sketch the corresponding current.
-\placefigure[here][fig:1.24]{for \refq{1.7}}{
-\startMPcode
-	defcoord(20,2,15,15,1.5);
-	defdim.x("t(s)")(1,2,3,4);
-	defdim.y("q(C)")(-10,0,10);
-	draw coordsys;
-	drawemp((0,0)--(1,10)--(2,-10)--(3,-10)--(4,0));
-\stopMPcode
-}
+The charge flowing in a wire is plotted in \reffig{1.24}.
+Sketch the corresponding current.
+\placecoordq{1.24}{1.7}
 \stopQ
 
 \startA
 \startMPcode
+	input coord;
 	defcoord(20,2,15,15,1.5);
 	defdim.x("t(s)")(1,2,3,4);
 	setloc.x("lrt")(1,2);
@@ -143,17 +127,9 @@ The charge flowing in a wire is plotted in \reffig{1.24}. Sketch the correspondi
 
 % 1.8
 \startQ[Q:1.8]
- The current flowing past a point in a device is shown in \reffig{1.25}.
- Calculate the total charge through the point.
-\placefigure[here][fig:1.25]{for \refq{1.8}}{
-\startMPcode
-	defcoord(30,3,15,15,1.5);
-	defdim.x("t(ms)")(0,1,2);
-	defdim.y("i(mA)")(10);
-	draw coordsys;
-	drawemp((0,0)--(1,10)--(2,10)--(2,0));
-\stopMPcode
-}
+The current flowing past a point in a device is shown in \reffig{1.25}.
+Calculate the total charge through the point.
+\placecoordq{1.25}{1.8}
 \stopQ
 
 \startA
@@ -173,15 +149,7 @@ Determine the total charge that passed through the element at:
 \item $t=\munit{5 second}$
 \stopIG
 \stopcolumns
-\placefigure[here][fig:1.26]{for \refq{1.9}}{
-\startMPcode
-	defcoord(15,3,15,15,1.5);
-	defdim.x("t(s)")(0,1,2,3,4,5);
-	defdim.y("i(A)")(5,10);
-	draw coordsys;
-	drawemp((0,10)--(1,10)--(2,5)--(4,5)--(5,0));
-\stopMPcode
-}
+\placecoordq{1.26}{1.9}
 \stopQ
 
 \startA
@@ -239,6 +207,7 @@ i(t)=\startmathcases
 Plot the charge stored in the element over $0 < t < \munit{20 second}$.
 
 \startMPcode
+	input coord;
 	defcoord(5,2,15,15,1.5);
 	defdim.x("(t) s")(6,10,15);
 	setloc.x("lrt")(10,15);
@@ -259,6 +228,7 @@ q(t)=\startmathcases
 \stopformula
 
 \startMPcode
+	input coord;
 	defcoord(7,0.7,15,15,1.5);
 	defdim.x("(t) s")(0,6,10,15);
 	setloc.x("lrt")(10,15);
@@ -360,6 +330,7 @@ $p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
 \placefigure[here][fig:1.27]{for \refq{1.16}}{
 \startcombination[2*1]
 {\startMPcode
+	input coord;
 	defcoord(20,1,15,15,1.5);
 	defdim.x("t(s)")(0,2,4);
 	defdim.y("i(mA)")(60);
@@ -367,6 +338,7 @@ $p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
 
 	drawemp((0,0)--(2,60)--(4,0));
 \stopMPcode}{a}{\startMPcode
+	input coord;
 	defcoord(20,5,15,15,1.5);
 	defdim.x("t(s)")(2,4);
 	setloc.x("lrt")(2,4);
@@ -409,6 +381,7 @@ $p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
 \stopmathalignment\stopformula
 
 \startMPcode
+	input coord;
 	defcoord(20,0.1,15,15,1.5);
 	defdim.x("t(s)")(2,4);
 	setloc.x("lrt")(2);
@@ -425,40 +398,7 @@ $p = v(t) i(t) = -720e^{-4t} \sunit[l]{milli watt}$
 $p_1 = \sunit{60 watt}$ absorbed, $p_3 = -145\sunit[l]{watt}$ absorbed,
 and $p_4 = \sunit{75 watt}$ absorbed.
 How many watts does element $2$ absorb?
-\placefigure[here][fig:1.28]{for \refq{1.17}}{
-\startMPcode
-	clearObjsForTwiceRun;
-	setX("fig128");
-
-	newR.X(r1) "angle(90)";
-	ObjLabel.X(r1)(textext("1")) "labcolor(FireBrick)";
-
-	newR.X(r2) "angle(90)";
-	ObjLabel.X(r2)(textext("2")) "labcolor(FireBrick)";
-
-	newR.X(r4) "angle(90)";
-	ObjLabel.X(r4)(textext("4")) "labcolor(FireBrick)";
-
-	newR.X(r3) "angle( 0)";
-	ObjLabel.X(r3)(textext("3")) "labcolor(FireBrick)";
-
-	numeric uc;
-	uc := 10;
-	X(r2).c = origin;
-	X(r1).c = X(r2).c+(-6uc,0);
-	X(r4).c = X(r2).c+( 6uc,0);
-	X(r3).c = (X(r2).c+X(r4).c)/2 + (0,3uc);
-
-	drawObj(X(r1),X(r2),X(r3),X(r4));
-
-	string armL; armL:= "armA(ypart(X(r3).c-X(r2).ie))";
-	pcsimple(X(r3))(2)(X(r4))(2);
-	pcsimple(X(r2))(2)(X(r3))(1);
-	pcsimple(X(r2))(2)(X(r1))(2) armL;
-	pcsimple(X(r2))(1)(X(r4))(1) armL;
-	pcsimple(X(r2))(1)(X(r1))(1) armL;
-\stopMPcode
-}
+\placeschemq{1.28}{1.17}
 \stopQ
 
 \startA
@@ -475,93 +415,7 @@ p_2 = 0 - p_1 - p_3 - p_4 = 0 - 60 - (-145) - 75 = 10 \sunit[l]{watt}
 % 1.18
 \startQ[Q:1.18]
 Find the power absorbed by each of the elements in \reffig{1.29}.
-
-\placefigure[here][fig:1.29]{for \refq{1.18}}{
-\startMPcode
-	clearObjsForTwiceRun;
-	setX("fig129");
-
-	newIVS.X(u1) "angle(90)";
-	ObjMLabel.X(u1)("p_1")
-		"labpoint(is)", "labdir(rt)";
-	ObjMLabel.X(u1)("30V")
-		"labpoint(in)", "labdir(lft)";
-
-	newR.X(r2);
-	ObjMLabel.X(r2)("p_2")
-		"labpoint(is)", "labdir(bot)";
-	ObjMLabel.X(r2)("+")
-		"labpoint(inw)", "labdir(top)";
-	ObjMLabel.X(r2)("-")
-		"labpoint(ine)", "labdir(top)";
-	ObjMLabel.X(r2)("10V")
-		"labpoint(in)", "labdir(top)", "labshift((0,10))";
-
-	newR.X(r3) "angle(90)";
-	ObjMLabel.X(r3)("p_3")
-		"labpoint(is)", "labdir(rt)";
-	ObjMLabel.X(r3)("+")
-		"labpoint(ine)", "labdir(lft)";
-	ObjMLabel.X(r3)("-")
-		"labpoint(inw)", "labdir(lft)";
-	ObjMLabel.X(r3)("20V")
-		"labpoint(in)", "labdir(lft)";
-
-	newR.X(r4);
-	ObjMLabel.X(r4)("p_4")
-		"labpoint(is)", "labdir(bot)";
-	ObjMLabel.X(r4)("+")
-		"labpoint(inw)", "labdir(top)";
-	ObjMLabel.X(r4)("-")
-		"labpoint(ine)", "labdir(top)";
-	ObjMLabel.X(r4)("8V")
-		"labpoint(in)", "labdir(top)", "labshift((0,10))";
-
-	newDCS.X(u2) "angle(90)";
-	ObjMLabel.X(u2)("p_5")
-		"labpoint(is)", "labdir(urt)";
-	ObjMLabel.X(u2)("0.4I")
-		"labpoint(is)", "labdir(lrt)";
-	ObjMLabel.X(u2)("12V")
-		"labpoint(in)", "labdir(lft)";
-	ObjMLabel.X(u2)("+")
-		"labpoint(ie)", "labdir(ulft)";
-	ObjMLabel.X(u2)("-")
-		"labpoint(iw)", "labdir(llft)";
-
-	newCDM.X(cdm0) "angle(180)";
-	ObjMLabel.X(cdm0)("4A")
-		"labpoint(is)", "labdir(top)";
-	newCDM.X(cdm1);
-	ObjMLabel.X(cdm1)("I=10A")
-		"labpoint(in)", "labdir(top)";
-	newCDM.X(cdm2) "angle(-90)";
-	ObjMLabel.X(cdm2)("14A")
-		"labpoint(in)", "labdir(rt)";
-
-	numeric uc;
-	uc := 10;
-	X(r3).c = origin;
-	X(u1).c = X(r3).c+(-9uc,0);
-	X(u2).c = X(r3).c+( 9uc,0);
-	X(r2).c = X(r3).c+(-3uc,5uc);
-	X(r4).c = X(r3).c+( 3uc,5uc);
-
-	X(cdm0).nnw = (xpart(X(u2).c), ypart(X(r4).c));
-	X(cdm1).ssw = (xpart(X(u1).c), ypart(X(r2).c));
-	X(cdm2).se = X(r3).ie;
-
-	pcsimple(X(u2))(2)(X(r4))(2);
-	pcsimple(X(r3))(1)(X(u2))(1) "armA(ypart(X(r4).iw-X(r3).ie))";
-	pcsimple(X(r3))(1)(X(u1))(1) "armA(ypart(X(r4).iw-X(r3).ie))";
-	pcsimple(X(r3))(2)(X(r4))(1);
-	pcsimple(X(r3))(2)(X(r2))(2);
-	pcsimple(X(u1))(2)(X(r2))(1);
-
-	drawObj(X(u1),X(r2),X(r3),X(r4),X(u2));
-	drawObj(X(cdm0),X(cdm1),X(cdm2));
-\stopMPcode
-}
+\placeschemq{1.29}{1.18}
 \stopQ
 
 \startA
@@ -577,74 +431,7 @@ Find the power absorbed by each of the elements in \reffig{1.29}.
 % 1.19
 \startQ[Q:1.19]
 Find $I$ and the power absorbed by each element in the network of \reffig{1.30}.
-\placefigure[here][fig:1.30]{for \refq{1.19}}{
-\startMPcode
-	clearObjsForTwiceRun;
-	setX("fig130");
-
-	newR.X(r0) "angle(90)";
-	ObjMLabel.X(r0)("-")
-		"labpoint(ise)", "labdir(rt)";
-	ObjMLabel.X(r0)("+")
-		"labpoint(isw)", "labdir(rt)";
-	ObjMLabel.X(r0)("15V")
-		"labpoint(is)", "labdir(rt)";
-	ObjMLabel.X(r0)("p_2")
-		"labpoint(ine)", "labdir(ulft)";
-
-	newR.X(r1) "angle(90)";
-	ObjMLabel.X(r1)("-")
-		"labpoint(ise)", "labdir(rt)";
-	ObjMLabel.X(r1)("+")
-		"labpoint(isw)", "labdir(rt)";
-	ObjMLabel.X(r1)("9V")
-		"labpoint(is)", "labdir(rt)";
-	ObjMLabel.X(r1)("p_3")
-		"labpoint(ine)", "labdir(lft)";
-
-	newIVS.X(u2) "angle(-90)";
-	ObjMLabel.X(u2)("6V")
-		"labpoint(in)", "labdir(rt)";
-	ObjMLabel.X(u2)("p_4")
-		"labpoint(ise)", "labdir(llft)";
-
-	newICS.X(u1) "angle(-90)";
-	ObjMLabel.X(u1)("15V")
-		"labpoint(in)", "labdir(rt)";
-	ObjMLabel.X(u1)("10A")
-		"labpoint(is)", "labdir(lft)";
-	ObjMLabel.X(u1)("-")
-		"labpoint(inw)", "labdir(rt)";
-	ObjMLabel.X(u1)("+")
-		"labpoint(ine)", "labdir(rt)";
-	ObjMLabel.X(u1)("p_1")
-		"labpoint(isw)", "labdir(ulft)";
-
-	newCDM.X(cdm0) "angle(-90)";
-	ObjMLabel.X(cdm0)("I")
-		"labpoint(in)", "labdir(rt)";
-	newCDM.X(cdm1) "angle(90)";
-	ObjMLabel.X(cdm1)("4A")
-		"labpoint(is)", "labdir(rt)";
-
-	numeric uc;
-	uc := 10;
-	X(r0).c = origin;
-	X(r1).c = X(r0).c + (5uc,2uc);
-	X(u2).c = X(r0).c + (5uc,-2uc);
-	X(u1).c = X(r0).c + (-5uc,0);
-	X(cdm0).ssw = (xpart X(r1).c, ypart X(r0).ie + 5uc);
-	X(cdm1).ne  = X(r0).ie + (0,5uc);
-
-	drawObj(X(r0),X(r1),X(u1),X(u2));
-	pcsimple(X(r0))(2)(X(r1))(2) "armA(5uc)";
-	pcsimple(X(r0))(2)(X(u1))(1) "armA(5uc)";
-	pcsimple(X(r0))(1)(X(u1))(2) "armA(3uc)";
-	pcsimple(X(r0))(1)(X(u2))(2) "armA(3uc)";
-	pcsimple(X(r1))(1)(X(u2))(1);
-	drawObj(X(cdm0),X(cdm1));
-\stopMPcode
-}
+\placeschemq{1.30}{1.19}
 \stopQ
 
 \startA
@@ -661,111 +448,7 @@ because $\sunit{10 ampere} + I = \sunit{4 ampere}$, so $I = -6\sunit[l]{ampere}$
 % 1.20
 \startQ[Q:1.20]
 Find $V_0$ and the power absorbed by each element in the circuit of \reffig{1.31}.
-\placefigure[here][fig:1.31]{for \refq{1.20}}{
-\startMPcode
-	clearObjsForTwiceRun;
-	setX("fig131");
-
-	newR.X(r0);
-	ObjMLabel.X(r0)("-")
-		"labpoint(ine)", "labdir(ulft)";
-	ObjMLabel.X(r0)("+")
-		"labpoint(inw)", "labdir(urt)";
-	ObjMLabel.X(r0)("12V")
-		"labpoint(n)", "labdir(top)", "labshift((0,10))";
-	ObjMLabel.X(r0)("p_2")
-		"labpoint(is)", "labdir(bot)";
-
-	newR.X(r1) "angle(90)";
-	ObjMLabel.X(r1)("+")
-		"labpoint(ine)", "labdir(lft)";
-	ObjMLabel.X(r1)("-")
-		"labpoint(inw)", "labdir(lft)";
-	ObjMLabel.X(r1)("V_0")
-		"labpoint(n)", "labdir(lft)";
-	ObjMLabel.X(r1)("p_3")
-		"labpoint(is)", "labdir(rt)";
-
-	newR.X(r2);
-	ObjMLabel.X(r2)("-")
-		"labpoint(ise)", "labdir(llft)";
-	ObjMLabel.X(r2)("+")
-		"labpoint(isw)", "labdir(lrt)";
-	ObjMLabel.X(r2)("28V")
-		"labpoint(is)", "labdir(bot)", "labshift((0,-10))";
-	ObjMLabel.X(r2)("p_4")
-		"labpoint(ie)", "labdir(urt)";
-
-	newR.X(r3);
-	ObjMLabel.X(r3)("-")
-		"labpoint(ise)", "labdir(llft)";
-	ObjMLabel.X(r3)("+")
-		"labpoint(isw)", "labdir(lrt)";
-	ObjMLabel.X(r3)("28V")
-		"labpoint(is)", "labdir(bot)", "labshift((0,-10))";
-	ObjMLabel.X(r3)("p_5")
-		"labpoint(ie)", "labdir(urt)";
-
-	newDVS.X(u2) "angle(-90)";
-	ObjMLabel.X(u2)("5I_0")
-		"labpoint(in)", "labdir(rt)";
-	ObjMLabel.X(u2)("p_6")
-		"labpoint(is)", "labdir(lft)";
-
-	newIVS.X(u1) "angle(90)";
-	ObjMLabel.X(u1)("30V")
-		"labpoint(in)", "labdir(lft)";
-	ObjMLabel.X(u1)("p_1")
-		"labpoint(is)", "labdir(rt)";
-
-	newCDM.X(cdm0) "angle(90)";
-	ObjMLabel.X(cdm0)("6A")
-		"labpoint(in)", "labdir(lft)";
-	newCDM.X(cdm1);
-	ObjMLabel.X(cdm1)("6A")
-		"labpoint(in)", "labdir(top)";
-	newCDM.X(cdm2) "angle(-90)";
-	ObjMLabel.X(cdm2)("3A")
-		"labpoint(is)", "labdir(lft)";
-	newCDM.X(cdm3);
-	ObjMLabel.X(cdm3)("1A")
-		"labpoint(in)", "labdir(top)";
-	newCDM.X(cdm4);
-	ObjMLabel.X(cdm4)("I_0=2A")
-		"labpoint(in)", "labdir(top)";
-	newCDM.X(cdm5) "angle(-90)";
-	ObjMLabel.X(cdm5)("3A")
-		"labpoint(in)", "labdir(rt)";
-
-	numeric uc;
-	uc := 10;
-	X(r1).c = origin;
-	X(r0).c = X(r1).c + (-5uc, 4uc);
-	X(r2).c = X(r1).c + ( 5uc, 4uc);
-	X(r3).c = X(r2).c + (   0, 5uc);
-	X(u1).c = X(r1).c + (-10uc,0);
-	X(u2).c = X(r1).c + ( 10uc,0);
-	X(cdm0).ssw = (xpart X(u1).c, ypart X(r1).c - 4uc);
-	X(cdm1).ssw = (xpart X(u1).c, ypart X(r1).c + 4uc);
-	X(cdm2).ne  = X(r1).e;
-	X(cdm3).sw  = (xpart X(r1).c, ypart X(r2).c);
-	X(cdm4).sw  = (xpart X(r1).c, ypart X(r3).c);
-	X(cdm5).sse = (xpart X(u2).c, ypart X(r1).c - 4uc);
-
-	drawObj(X(r0),X(r1),X(r2),X(r3),X(u1),X(u2));
-
-	save _sl; string _sl; _sl := "armA(4uc - ypart(X(r1).c - X(r1).iw))";
-	pcsimple(X(u1))(2)(X(r0))(1);
-	pcsimple(X(r0))(2)(X(r1))(2);
-	pcsimple(X(r1))(2)(X(r2))(1);
-	pcsimple(X(r1))(2)(X(r3))(1);
-	pcsimple(X(r2))(2)(X(u2))(1);
-	pcsimple(X(r3))(2)(X(u2))(1);
-	pcsimple(X(r1))(1)(X(u2))(2) _sl;
-	pcsimple(X(r1))(1)(X(u1))(1) _sl;
-	drawObj(X(cdm0), X(cdm1), X(cdm2), X(cdm3), X(cdm4), X(cdm5));
-\stopMPcode
-}
+\placeschemq{1.31}{1.20}
 \stopQ
 
 \startA
@@ -1011,19 +694,7 @@ Calculate:
 \item the total energy consumed in \sunit{kilo watt hour},
 \item the average power over the total 24 hour period.
 \stopIG
-\placefigure[here][fig:1.32]{for \refq{1.34}}{
-\startMPcode
-	defcoord(8,0.05,15,15,1.5);
-	defdim.x("t(h)")(0,2,4,6,8,10,12,14,16,18,20,22,24);
-	defdim.y("p")(200,800,1200);
-	draw coordsys;
-	drawemp((0,200)--(6,200)--(6,800)--(8,800)--(8,200)
-		--(18,200)--(18,1200)--(22,1200)--(22,200)--(24,200));
-	coordmlabel.top("800 W", (7, 800));
-	coordmlabel.top("200 W", (13, 200));
-	coordmlabel.top("1200 W", (20, 1200));
-\stopMPcode
-}
+\placecoordq{1.32}{1.34}
 \stopQ
 
 \startA
@@ -1041,22 +712,7 @@ Calculate:
 The graph in \reffig{1.33} represents the power drawn
 by an industrial plant between 8:00 and 8:30 a.m.
 Calculate the total energy in MWh consumed by the plant.
-\placefigure[here][fig:1.33]{for \refq{1.35}}{
-\startMPcode
-	defcoord(4.5,8,15,15,1.5);
-	defdim.x("t")(0,5,10,15,20,25,30);
-	defdim.y("p(MW)")(3,4,5,8);
-	setlabel.x("8.00")( 0);
-	setlabel.x("8.05")( 5);
-	setlabel.x("8.10")(10);
-	setlabel.x("8.15")(15);
-	setlabel.x("8.20")(20);
-	setlabel.x("8.25")(25);
-	setlabel.x("8.30")(30);
-	draw coordsys;
-	drawemp((0,5)--(5,5)--(5,4)--(10,4)--(10,3)--(15,3)--(15,8)--(20,8)--(20,4)--(30,4));
-\stopMPcode
-}
+\placecoordq{1.33}{1.35}
 \stopQ
 
 \startA

@@ -54,45 +54,7 @@ Hence:
 \item Calculate current $i$ in \reffig{2.68} when the switch is in position 1.
 \item Find the current when the switch is in position 2.
 \stopIG
-\placefigure[here][fig:2.68]{for \refq{2.4}}{
-\startMPcode
-	clearObjsForTwiceRun;
-	setX("fig268");
-
-	newIVS.X(v0)"angle(90)";
-	ObjMLabel.X(v0)("40V")
-		"labpoint(is)", "labdir(rt)";
-	newRa.X(r0) "angle(90)";
-	ObjMLabel.X(r0)("100\Omega")
-		"labpoint(is)", "labdir(rt)";
-	newRa.X(r1) "angle(90)";
-	ObjMLabel.X(r1)("250\Omega")
-		"labpoint(is)", "labdir(rt)";
-	newSwitch.X(s0)(1) "angle(90)";
-	ObjMLabel.X(s0)("1")
-		"labpoint(pin[1])", "labdir(lft)";
-	ObjMLabel.X(s0)("2")
-		"labpoint(pin[2])", "labdir(rt)";
-	newCDM.X(cdm0) "angle(90)";
-	ObjMLabel.X(cdm0)("i")
-		"labpoint(is)", "labdir(rt)";
-
-	numeric uc;
-	uc := 10;
-	X(v0).c = origin;
-	X(s0).c = X(v0).c  + (0, 5uc);
-	X(r0).c = X(v0).ie + (-6uc, 0);
-	X(r1).c = X(v0).ie + ( 6uc, 0);
-	X(cdm0).nw = X(v0).ie;
-
-	drawObj(X(v0),X(r0),X(r1),X(s0),X(cdm0));
-	pcsimple(X(s0))(1)(X(r0))(2);
-	pcsimple(X(s0))(2)(X(r1))(2);
-	pcsimple(X(s0))(3)(X(v0))(2);
-	pcsimple(X(v0))(1)(X(r0))(1);
-	pcsimple(X(v0))(1)(X(r1))(1);
-\stopMPcode
-}
+\placeschemq{2.68}{2.4}
 \stopQ
 
 \startA
@@ -106,52 +68,7 @@ Hence:
 \startQ[Q:2.5]
 For the network graph in \reffig{2.69},
 find the number of nodes, branches, and loops.
-\placefigure[here][fig:2.69]{for \refq{2.5}}{
-\startMPcode
-	clearObjsForTwiceRun;
-	setX("fig269");
-
-	newNode.X(n0);
-	newNode.X(n1);
-	newNode.X(n2);
-	newNode.X(n3);
-	newNode.X(n4);
-	newNode.X(n5);
-	newNode.X(n6);
-	newNode.X(n7);
-	newNode.X(n8);
-
-	numeric uc;
-	uc := 20;
-	X(n0).c = origin;
-	X(n2).c = X(n0).c + (uc, 0);
-	X(n4).c = X(n2).c + (uc, 0);
-	X(n7).c = X(n4).c + (uc, 0);
-	X(n1).c = X(n0).c + (0, uc);
-	X(n3).c = X(n1).c + (uc, 0);
-	X(n5).c = X(n3).c + (uc, 0);
-	X(n8).c = X(n5).c + (uc, 0);
-	X(n6).c = X(n5).c + (0, uc);
-
-	drawObj(X(n0),X(n1),X(n2),X(n3),X(n4),X(n5),X(n6),X(n7),X(n8));
-
-	pcline(X(n0))(X(n1));
-	pcline(X(n0))(X(n2));
-	pcline(X(n1))(X(n2));
-	pcline(X(n1))(X(n3));
-	pcline(X(n2))(X(n3));
-	pcline(X(n2))(X(n4));
-	pcline(X(n3))(X(n5));
-	pcline(X(n4))(X(n5));
-	pcline(X(n4))(X(n7));
-	pcline(X(n5))(X(n8));
-	pcline(X(n7))(X(n8));
-	pcline(X(n5))(X(n7));
-	pcline(X(n3))(X(n6));
-	pcline(X(n5))(X(n6));
-	pcline(X(n8))(X(n6));
-\stopMPcode
-}
+\placefigure{2.69}{2.5}
 \stopQ
 
 \startA
@@ -162,44 +79,82 @@ $n=9$, $l=7$; $b=n+l-1=15$.
 \startQ[Q:2.6]
 In the network graph shown in \reffig{2.70},
 determine the number of branches and nodes.
-\placefigure[here][fig:2.70]{for \refq{2.6}}{
-\startMPcode
-	clearObjsForTwiceRun;
-	setX("fig270");
-
-	save _n_;
-	def _n_(expr i)=
-		%X(n)[i]
-		X(sc_("n" & decimal(i)))
-	enddef;
-	for i:=1 upto 12:
-		newNode._n_(i);
-	endfor;
-
-	numeric uc;
-	uc := 20;
-	for i:= 1 upto 6:
-		_n_(i).c   = (uc,0) rotated ((i-1)*60);
-		_n_(i+6).c = _n_(2).c shifted (uc,0) rotated ((i-1)*60);
-	endfor;
-
-	for i:=1 upto 12:
-		drawObj(_n_(i));
-	endfor;
-
-	for i:=1 upto 6:
-		save _next;numeric _next; _next := i mod 6 + 1;
-		ncline(_n_(i))(_n_(_next));
-		ncline(_n_(i))(_n_(i+6));
-		ncline(_n_(i+6))(_n_(_next));
-	endfor;
-	ncbar(_n_(8))(_n_(11)) "angleA(180)", "armA(2uc)";
-\stopMPcode
-}
+\placeschemq{2.70}{2.6}
 \stopQ
 
 \startA
 $n=12$; $l=8$; $b=n+l-1=19$.
+\stopA
+
+% 2.7
+\startQ[Q:2.7]
+Determine the number of branches and nodes in the circuit of \reffig{2.71}.
+\placeschemq{2.71}{2.7}
+\stopQ
+
+\startA
+$n=4$,$l=3$,$b=n+l-1=6$.
+\stopA
+
+% 2.8
+\startQ[Q:2.8]
+Design a problem, complete with a solution,
+to help other students better understand Kirchhoff’s Current Law.
+Design the problem by specifying values of $i_a$, $i_b$, and $i_c$,
+shown in \reffig{2.72},
+and asking them to solve for values of $i_1$, $i_2$, and $i_3$.
+Be careful to specify realistic currents.
+\placeschemq{2.72}{2.8}
+\stopQ
+
+\startA
+\stopA
+
+% 2.9
+\startQ[Q:2.9]
+Find $i_1$, $i_2$ and $i_3$ in \reffig{2.73}.
+\placeschemq{2.73}{2.9}
+\stopQ
+
+\startA
+$i_1 + (-2) + (-3) = 0 \rightarrow i_1 = 5\sunit[l]{ampere}$.
+
+$2 = (-2) + i_3 \rightarrow i_3 = 4\sunit[l]{ampere}$.
+
+$i_2 + i_3 = (-4) \rightarrow i_2 = -8\sunit[l]{ampere}$.
+\stopA
+
+% 2.10
+\startQ[Q:2.10]
+Determine $i_1$ and $i_2$ in the circuit of \reffig{2.74}.
+\placeschemq{2.74}{2.10}
+\stopQ
+
+\startA
+$ i_1 = (-8) + (-6) = -14\sunit[l]{ampere}$.
+
+$i_2 = 4 - (-6) = 10\sunit[l]{ampere}$.
+\stopA
+
+% 2.11
+\startQ[Q:2.11]
+In the circuit of \reffig{2.75}, calculate $V_1$ and $V_2$.
+\placeschemq{2.75}{2.11}
+\stopQ
+
+\startA
+$V_1 = 1 + 5 = 6\sunit[l]{volt}$.
+
+$V_2 = 5 - 2 = 3\sunit[l]{volt}$.
+\stopA
+
+% 2.12
+\startQ[Q:2.12]
+In the circuit in \reffig{2.76}, obtain $v_1$, $v_2$, and $v_3$.
+\placeschemq{2.76}{2.12}
+\stopQ
+
+\startA
 \stopA
 
 \stopchapter

@@ -1,3 +1,4 @@
+input colordef;
 
 % text label
 vardef tlabel@#(expr strname, pos) text p =

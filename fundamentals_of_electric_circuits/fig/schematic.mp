@@ -72,6 +72,30 @@ vardef EqBPoints@#(expr _p)(expr _dx, _dy)=
 	tmp("se")=( _dx/2, -_dy/2) rotated @#ang shifted @#c;
 enddef;
 
+vardef EqFPoints@#(expr _f)(expr _b)=
+	save _d, _s;
+	def _d(suffix $)=
+		sc_(str @# & "." & _f & str $)
+	enddef;
+	def _s(suffix $)=
+		sc_(str @# & "." & _b & str $)
+	enddef;
+	save lx,rx,uy,ly;
+	numeric lx,rx,uy,ly;
+	lx = min(xpart _s(nw), xpart _s(ne), xpart _s(sw), xpart _s(se));
+	rx = max(xpart _s(nw), xpart _s(ne), xpart _s(sw), xpart _s(se));
+	ly = min(ypart _s(nw), ypart _s(ne), ypart _s(sw), ypart _s(se));
+	uy = max(ypart _s(nw), ypart _s(ne), ypart _s(sw), ypart _s(se));
+	_d(nw) = (lx, uy);
+	_d(ne) = (rx, uy);
+	_d(sw) = (lx, ly);
+	_d(se) = (rx, ly);
+	_d(n)  = (_d(nw) + _d(ne))/2;
+	_d(s)  = (_d(sw) + _d(se))/2;
+	_d(w)  = (_d(nw) + _d(sw))/2;
+	_d(e)  = (_d(ne) + _d(se))/2;
+enddef;
+
 vardef SchematicEq@#=
 	@#ang:= OptionValue@#("angle");
 	@#dx := OptionValue@#("dx");
@@ -94,6 +118,8 @@ vardef SchematicEq@#=
 	@#wsw = (-DX/2,-@#dy/2) rotated @#ang shifted @#c;
 	@#ene = ( DX/2, @#dy/2) rotated @#ang shifted @#c;
 	@#ese = ( DX/2,-@#dy/2) rotated @#ang shifted @#c;
+
+	EqFPoints@#("f")("i");
 enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%% schematic path ###########################
@@ -120,8 +146,11 @@ def SchematicInterface(expr _pin_num) =
 	ObjPoint nnw,nne,wnw,wsw,ssw,sse,ese,ene;
 	FramePoints("i");
 	FramePoints("");
-	ObjPointArray(pin)(_pin_num); % the pin array
-	ObjNumericArray(pin_angle)(_pin_num); % the pin angle array;
+	FramePoints("f");
+	if (_pin_num > 0):
+		ObjPointArray(pin)(_pin_num); % the pin array
+		ObjNumericArray(pin_angle)(_pin_num); % the pin angle array;
+	fi;
 enddef;
 
 % |_edge| w,e,n,s
@@ -482,13 +511,9 @@ vardef newNode@# text options =
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "Node");
 
-	SchematicInterface(4);
+	SchematicInterface(0);
 
-	ObjCode "SchematicEq@#",
-		"defPin@#(1,StdPos@#(w, 0),180)",
-		"defPin@#(2,StdPos@#(n, 0),90)",
-		"defPin@#(3,StdPos@#(e, 0),0)",
-		"defPin@#(4,StdPos@#(s, 0),-90)";
+	ObjCode "SchematicEq@#";
 
 	ObjPath(BpathNode(@#)) "pathfilled(true)";
 enddef;
@@ -537,19 +562,21 @@ enddef;
 % We also distinguish the case when |n| and |m| are objects
 % and when they are points (numerics vs pairs).
 vardef pcsimple@#(text n)(text pn)(text m)(text pm) text options =
-	save aA,aB; numeric aA, aB;
-	aA := n.pin_angle[pn];
-	aB := m.pin_angle[pm] + 180;
-  ncshort_@#("nc","pcsimple")(n.pin[pn])(m.pin[pm])(options,
-	"angleA(" & decimal(aA) & ")",
-	"angleB(" & decimal(aB) & ")");
+	save knp,kmp; boolean knp,kmp;
+	knp:= known n.pin.n_;
+	kmp:= known m.pin.n_;
+  ncshort_@#("nc","pcsimple")
+	(if knp: n.pin[pn] else: n.c fi)
+	(if kmp: m.pin[pm] else: m.c fi)
+	(options
+	 , "angleA(" & decimal(
+		if knp: n.pin_angle[pn] else: pn fi
+	   ) & ")"
+	 , "angleB(" & decimal(
+		if kmp: m.pin_angle[pm] + 180 else: pm fi
+	   ) & ")"
+	);
 enddef;
-vardef ncsimple@#(text n)(text aA)(text m)(text aB) text options =
-  ncshort_@#("nc","pcsimple")(n)(m)(options,
-	"angleA(" & decimal(aA) & ")",
-	"angleB(" & decimal(aB) & ")");
-enddef;
-
 
 vardef pcsimple_(suffix $)(suffix n,m)(suffix p)=
   % we have to find one additional points; we must be careful

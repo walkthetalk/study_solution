@@ -155,6 +155,162 @@ In the circuit in \reffig{2.76}, obtain $v_1$, $v_2$, and $v_3$.
 \stopQ
 
 \startA
+$40 = 50 + 20 + v_1 \rightarrow v_1 = -30\sunit[l]{volt}$.
+
+$30 = 20 + v_2 \rightarrow v_2 = 10\sunit[l]{volt}$.
+
+$v_1 = v_2 + v_3 \rightarrow v_3 = v_1 - v_2 = -40\sunit[l]{volt}$.
+\stopA
+
+% 2.13
+\startQ[Q:2.13]
+For the circuit in \reffig{2.77},
+use KCL to find the branch currents $I_1$ to $I_4$.
+\placeschemq{2.77}{2.13}
+\stopQ
+
+\startA
+$2 = i_4 + 4 \rightarrow i_4 = -2\sunit[l]{ampere}$.
+
+$i_3 = 7 + i4 = 5\sunit[l]{ampere}$.
+
+$i_2 + 7 + 3 = 0 \rightarrow i_2 = -10\sunit[l]{ampere}$.
+
+$i_1 + i_2 = 2 \rightarrow i_1 = 12\sunit[l]{ampere}$.
+\stopA
+
+% 2.14
+\startQ[Q:2.14]
+Given the circuit in \reffig{2.78},
+use KVL to find the branch voltages $V_1$ to $V_4$.
+\placeschemq{2.78}{2.14}
+\stopQ
+
+\startA
+$V_4 = 5 + 2 = 7\sunit[l]{volt}$.
+
+$V_3 = -4 - V_4 = -11\sunit[l]{volt}$.
+
+$V_1 = 3 + V_3 = -8\sunit[l]{volt}$.
+
+$V_2 = -2 - V_1 = 6\sunit[l]{volt}$.
+\stopA
+
+% 2.15
+\startQ[Q:2.15]
+Calculate $v$ and $i_x$ in the circuit of \reffig{2.79}.
+\placeschemq{2.79}{2.15}
+\stopQ
+
+\startA
+$v = 10 - 4 = 6\sunit[l]{volt}$.
+
+$16 + 3i_x = 4 \rightarrow i_x = -4\sunit[l]{ampere}$.
+\stopA
+
+% 2.16
+\startQ[Q:2.16]
+Determine $V_0$ in the circuit in \reffig{2.80}.
+\placeschemq{2.80}{2.16}
+\stopQ
+
+\startA
+\startformula
+(25 - 10) \times \frac{16}{16+14} + 10 = 18\sunit[l]{volt}
+\stopformula
+\stopA
+
+% 2.17
+\startQ[Q:2.17]
+Obtain $v_1$ through $v_3$ in the circuit of \reffig{2.81}.
+\placeschemq{2.81}{2.17}
+\stopQ
+
+\startA
+$v_3 = 10\sunit[l]{volt}$.
+
+$v_2 = -12-v_3 = -22\sunit[l]{volt}$.
+
+$v_1 = 24+v_2 = 2\sunit[l]{volt}$.
+\stopA
+
+% 2.18
+\startQ[Q:2.18]
+Find $I$ and $V$ in the circuit of \reffig{2.82}.
+\placeschemq{2.82}{2.18}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC \NC 3 - \frac{V}{20} - \frac{V}{10} = I \NR
+\NC \NC I - 4 + (-2) = \frac{V}{20} \NR
+\stopmathalignment\stopformula
+
+$I=5\frac{1}{4}\sunit[l]{ampere}$, $V=-15\sunit[l]{volt}$.
+\stopA
+
+% 2.19
+\startQ[Q:2.19]
+From the circuit in \reffig{2.83}, find $I$,
+the power dissipated by the resistor,
+and the power supplied by each source.
+\placeschemq{2.83}{2.19}
+\stopQ
+
+\startA
+Applying KVL around the loop, we obtain:
+\startformula
+-12+10-(-8)+3I=0 \rightarrow I = -2\sunit[l]{ampere}
+\stopformula
+
+Power dissipated by the resistor: $p_4=I^2R=12\sunit[l]{watt}$.
+
+Power supplied by the sources:
+\startformula\startmathalignment
+\NC p_1 \NC = 10\times (-(-2)) = 20\sunit[l]{watt} \NR
+\NC p_2 \NC = 12\times (-2) = -24\sunit[l]{watt} \NR
+\NC p_3 \NC = (-8)\times (-2) = 16\sunit[l]{watt} \NR
+\stopmathalignment\stopformula
+\stopA
+
+% 2.20
+\startQ[Q:2.20]
+Determine $i_0$ in the circuit of \reffig{2.84}.
+\placeschemq{2.84}{2.20}
+\stopQ
+
+\startA
+$i_0\times 22 + 5i_0 = 54$, $i_0 = 2\sunit[l]{ampere}$.
+\stopA
+
+% 2.21
+\startQ[Q:2.21]
+Find $V_x$ in the circuit of \reffig{2.85}.
+\placeschemq{2.85}{2.21}
+\stopQ
+
+\startA
+assume current is $I$, then:
+\startformula
+-15 + (1+5+2)I + 2V_x = 0
+\stopformula
+
+because $V_x=5I$, then $I=\frac{5}{6}\sunit[l]{ampere}$,
+$V_x=\frac{25}{6}\approx4.167\sunit[l]{volt}$.
+\stopA
+
+% 2.22
+\startQ[Q:2.22]
+Find $V_0$ in the circuit in \reffig{2.86}
+and the power absorbed by the dependent source.
+\placeschemq{2.86}{2.22}
+\stopQ
+
+\startA
+$25 + 2V_0 + \frac{V_0}{10} = 0$,
+so $V_0 = -\frac{25}{21} \approx -1.19\sunit[l]{volt}$.
+
+$p=2V_0 \times 2V_0 \approx 5.67\sunit[l]{watt}$.
 \stopA
 
 \stopchapter

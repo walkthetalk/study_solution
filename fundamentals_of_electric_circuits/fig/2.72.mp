@@ -36,10 +36,10 @@ X(b4).c = X(n2).c + (   0,-1.5uc);
 X(b5).c = X(n3).c + (-3uc,  0);
 
 drawObj(X(n0),X(n1),X(n2),X(n3));
-ncsimple(X(n2))(180)(X(n0))(90) "armA(3uc)";
-ncsimple(X(n1))(-90)(X(n2))(180) "armA(3uc)";
-ncsimple(X(n1))(180)(X(n0))(180);
-ncsimple(X(n1))(0)(X(n3))(180) "armA(3uc)";
-ncsimple(X(n3))(180)(X(n0))(0) "armA(6uc)";
-ncsimple(X(n2))(-90)(X(n3))(-90);
+pcsimple(X(n2))(180)(X(n0))(90) "armA(3uc)";
+pcsimple(X(n1))(-90)(X(n2))(180) "armA(3uc)";
+pcsimple(X(n1))(180)(X(n0))(180);
+pcsimple(X(n1))(0)(X(n3))(180) "armA(3uc)";
+pcsimple(X(n3))(180)(X(n0))(0) "armA(6uc)";
+pcsimple(X(n2))(-90)(X(n3))(-90);
 drawObj(X(b0),X(b1),X(b2),X(b3),X(b4),X(b5)); 

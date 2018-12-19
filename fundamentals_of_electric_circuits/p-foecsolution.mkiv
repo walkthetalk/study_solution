@@ -63,7 +63,20 @@
 ahangle:=30;
 \stopMPinclusions
 
+
+\startluacode
+function commands.fixCounter(dst)
+	local dstN = string.match(dst, '.*[^0-9]([0-9]*)')
+	tex.sprint(tex.ctxcatcodes, tostring(tonumber(dstN)-1))
+end
+\stopluacode
+\define[1]\fixFigureCounter{
+\setcounter[figure][%
+\ctxlua{commands.fixCounter([==[#1]==])}%
+]}%
+
 \define[2]\placeschemq{
+\fixFigureCounter{#1}
 \placefigure[here][fig:#1]{for \refq{#2}}{
 \startMPcode
 input schematic;
@@ -78,6 +91,7 @@ input #1
 }
 
 \define[2]\placecoordq{
+\fixFigureCounter{#1}
 \placefigure[here][fig:#1]{for \refq{#2}}{
 \startMPcode
 input coord;

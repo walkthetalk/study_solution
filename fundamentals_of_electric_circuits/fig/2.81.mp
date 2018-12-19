@@ -1,0 +1,44 @@
+newRa.X(r1);
+ObjMLabel.X(r1)("+") "labpoint(inw)", "labdir(top)";
+ObjMLabel.X(r1)("-") "labpoint(ine)", "labdir(top)";
+ObjMLabel.X(r1)("v_1") "labpoint(in)", "labdir(top)", "labshift((0,10))";
+newRa.X(r2) "angle(45)";
+ObjMLabel.X(r2)("+") "labpoint(inw)", "labdir(lft)";
+ObjMLabel.X(r2)("-") "labpoint(ine)", "labdir(top)";
+ObjMLabel.X(r2)("v_2") "labpoint(in)", "labdir(ulft)";
+newRa.X(r3) "angle(90)";
+ObjMLabel.X(r3)("+") "labpoint(ise)", "labdir(rt)";
+ObjMLabel.X(r3)("-") "labpoint(isw)", "labdir(rt)";
+ObjMLabel.X(r3)("v_3") "labpoint(is)", "labdir(rt)";
+newIVS.X(u1) "angle(90)";
+ObjMLabel.X(u1)("24V") "labpoint(in)", "labdir(lft)";
+newIVS.X(u2);
+ObjMLabel.X(u2)("12V") "labpoint(is)", "labdir(bot)";
+newIVS.X(u3) "angle(90)";
+ObjMLabel.X(u3)("10V") "labpoint(is)", "labdir(rt)";
+
+newNode.X(n1);
+newNode.X(n2);
+
+numeric uc;
+uc := 15;
+X(r2).c = origin;
+X(r1).c = X(r2).c + (0,3uc);
+X(r3).c = X(r2).c + (3uc,0);
+X(u1).c = X(r2).c + (-3uc,0);
+X(u2).c = X(r2).c + (0,-3uc);
+X(u3).c = X(r3).c + (3uc, 0);
+X(n1).c = X(r3).c + (0,3uc);
+X(n2).c = X(u1).c + (0,-3uc);
+
+drawObj(X(r1),X(r2),X(r3),X(u1),X(u2),X(u3));
+pcsimple(X(u1))(2)(X(r1))(1);
+pcsimple(X(u1))(1)(X(n2))(-90);
+pcsimple(X(n2))(45)(X(r2))(1);
+pcsimple(X(n2))(0)(X(u2))(1);
+pcsimple(X(r1))(2)(X(n1))(0);
+pcsimple(X(r2))(2)(X(n1))(45);
+pcsimple(X(r3))(2)(X(n1))(90);
+pcsimple(X(n1))(0)(X(u3))(2);
+pcsimple(X(u2))(2)(X(r3))(1);
+pcsimple(X(u2))(2)(X(u3))(1);

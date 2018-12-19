@@ -68,7 +68,7 @@ Hence:
 \startQ[Q:2.5]
 For the network graph in \reffig{2.69},
 find the number of nodes, branches, and loops.
-\placefigure{2.69}{2.5}
+\placeschemq{2.69}{2.5}
 \stopQ
 
 \startA
@@ -311,6 +311,255 @@ $25 + 2V_0 + \frac{V_0}{10} = 0$,
 so $V_0 = -\frac{25}{21} \approx -1.19\sunit[l]{volt}$.
 
 $p=2V_0 \times 2V_0 \approx 5.67\sunit[l]{watt}$.
+\stopA
+
+% 2.23
+\startQ[Q:2.23]
+In the circuit shown in \reffig{2.87},
+determine $V_x$ and the power absorbed by the 60-Ω resistor.
+\placeschemq{2.87}{2.23}
+\stopQ
+
+\startA
+$R_{15||30} = 10\sunit[l]{ohm}$, $R_{40||60} = 24\sunit[l]{ohm}$.
+
+$R_{20+10} = 30\sunit[l]{ohm}$, $R_{6+24} = 30\sunit[l]{ohm}$.
+
+$R_{30||30} = 15\sunit[l]{ohm}$.
+
+$R_{5+15} = 20\sunit[l]{ohm}$.
+
+$I_{10} \times 10 = I_{5} \times 20$, $I_{10} + I_{5} = 60$, so $I_{5} = 20\sunit[l]{ampere}$.
+
+$v_x = 5 \times -20 = -100\sunit[l]{volt}$.
+
+$I_{6} = I_{20}$, so $I_{6} = 10\sunit[l]{ampere}$.
+
+$I_{40} \times 40 = I_{60} \times 60$, so $I_{60} = 4\sunit[l]{ampere}$.
+
+$p_{60} = I^2R = 4\times 4\times 60 = 960\sunit[l]{watt}$.
+\stopA
+
+% 2.24
+\startQ[Q:2.24]
+For the circuit in \reffig{2.88},
+find $V_o / V_s$ in terms of $\alpha$,​ $R_1$, $R_2$, $R_3$, and $R_4$.
+If $R_1 = R_2 = R_3 = R_4$,
+what value of $\alpha$ will produce $|V_o / V_s| =​10$?
+\placeschemq{2.88}{2.24}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC V_s \NC = I_o (R_1 + R_2) \NR
+\NC V_o \NC = \alpha I_o \frac{R_3 R_4}{R_3 + R_4} \NR
+\NC \frac{V_o}{V_s} \NC = \frac{\alpha R_3 R_4}{(R_1+R_2)(R_3+R_4)} \NR
+\stopmathalignment\stopformula
+
+If $R_1 = R_2 = R_3 = R_4$, then $V_o/V_s = \alpha/4$.
+$\alpha = 40$ will produce $|V_o / V_s| =​10$.
+\stopA
+
+% 2.25
+\startQ[Q:2.25]
+For the network in \reffig{2.89}, find the current, voltage,
+and power associated with the 20-kΩ resistor.
+\placeschemq{2.89}{2.25}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC V_o    \NC = (5\times 10^{-3})\times(10\times 10^{3}) = 50\sunit[l]{volt} \NR
+\NC I_{20} \NC = \frac{5}{5+20} \times 0.01V_o = 0.1\sunit[l]{ampere} \NR
+\NC V_{20} \NC = I_{20} \times 20\times 10^3 = 2000\sunit[l]{volt} \NR
+\NC P_{20} \NC = V_{20} I_{20} = 200\sunit[l]{watt} \NR
+\stopmathalignment\stopformula
+\stopA
+
+% 2.26
+\startQ[Q:2.26]
+For the circuit in \reffig{2.90}, $i_o = 3\sunit[l]{ampere}$.
+Calculate $i_x$ and the total power absorbed by the entire circuit.
+\placeschemq{2.90}{2.26}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC v_o \NC = i_o \times 40 = 120\sunit[l]{volt} \NR
+\NC i_x \NC = \frac{v_o}{20} + \frac{v_o}{10}
+              + \frac{v_o}{5} + i_o = 45\sunit[l]{ampere} \NR
+\NC p \NC = v_o i_x + i_x^2\times 25 = 56025\sunit[l]{watt} \NR
+\stopmathalignment\stopformula
+\stopA
+
+% 2.27
+\startQ[Q:2.27]
+Calculate $I_o$ in the circuit of \reffig{2.91}.
+\placeschemq{2.91}{2.27}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC R \NC = 8 + \frac{3\times 6}{3+6} = 10\sunit[l]{ohm} \NR
+\NC I_o \NC = \frac{10}{R} = 1\sunit[l]{ampere} \NR
+\stopmathalignment\stopformula
+\stopA
+
+% 2.28
+\startQ[Q:2.28]
+Design a problem, using \reffig{2.92},
+to help other students better understand series and parallel circuits.
+\placeschemq{2.92}{2.28}
+\stopQ
+
+\startA
+\stopA
+
+% 2.29
+\startQ[Q:2.29]
+All resistors (R) in \reffig{2.93} are \sunit{10 ohm} each.
+Find $R_{eq}$.
+\placeschemq{2.93}{2.29}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC R_{eq} \NC = (R||R)||((R||R)+(R||(R+R))) \NR
+\NC        \NC = \frac{R}{2} || (\frac{R}{2} + \frac{2R}{3}) \NR
+\NC        \NC = \frac{R}{2} || \frac{2R}{7} \NR
+\NC        \NC = \frac{2}{11}R \NR
+\stopmathalignment\stopformula
+\stopA
+
+% 2.30
+\startQ[Q:2.30]
+Find $R_{eq}$ for the circuit in \reffig{2.94}.
+\placeschemq{2.94}{2.30}.
+\stopQ
+
+\startA
+$R_{eq}=25+48=73\sunit[l]{ohm}$.
+\stopA
+
+% 2.31
+\startQ[Q:2.31]
+For the circuit in \reffig{2.95},
+determine $i_1$ to $i_5$.
+\placeschemq{2.95}{2.31}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC i_1 \NC = i_2 + i_3 \NR
+\NC i_3 \NC = i_4 + i_5 \NR
+\NC i_4\times 1 \NC = i_5 \times 2 = i_2\times 4 \NR
+\NC i_1\times 3 + i_2\times 4 \NC = 200 \NR
+\stopmathalignment\stopformula
+
+$i_1=7i_2 = 56\sunit[l]{ampere}$
+
+$i_2=8\sunit[l]{ampere}$
+
+$i_3=6i_2 = 48\sunit[l]{ampere}$
+
+$i_4=4i_2 = 32\sunit[l]{ampere}$
+
+$i_5=2i_2 = 16\sunit[l]{ampere}$
+\stopA
+
+% 2.32
+\startQ[Q:2.32]
+Find $i_1$ through $i_4$ in the circuit in \reffig{2.96}.
+\placeschemq{2.96}{2.32}
+\stopQ
+
+\startA
+$R = (60||40) || (200||50) = 24 || 40 = 15\sunit[l]{ohm}$,
+$V = 16R = 240\sunit[l]{volt}$.
+
+$i_1=240/50=4.8\sunit[l]{ampere}$,
+$i_2=240/200=1.2\sunit[l]{ampere}$,
+$i_3=240/40=6\sunit[l]{ampere}$,
+$i_4=240/60=4\sunit[l]{ampere}$.
+\stopA
+
+% 2.33
+\startQ[Q:2.33]
+Obtain $v$ and $i$ in the circuit of \reffig{2.97}.
+\placeschemq{2.97}{2.33}
+\stopQ
+
+\startA
+$R=\frac{62}{73}S$,
+$i=\frac{99}{73}\approx 1.356\sunit[l]{ampere}$,
+$v=\frac{62}{73}S\times 9 \approx 7.64S$.
+\stopA
+
+% 2.34
+\startQ[Q:2.34]
+Using series/parallel resistance combination,
+find the equivalent resistance seen by the source in the circuit of \reffig{2.98}.
+Find the overall absorbed power by the resistor network.
+\placeschemq{2.98}{2.34}
+\stopQ
+
+\startA
+$R=250\sunit[l]{ohm}$, $P=U^2/R=1440\sunit[l]{watt}$.
+\stopA
+
+% 2.35
+\startQ[Q:2.35]
+Calculate $V_o$ 和 $I_o$ in the circuit of \reffig{2.99}.
+\placeschemq{2.99}{2.35}
+\stopQ
+
+\startA
+$70||30=21$, $20||5=4$, $V_o=200\times \frac{4}{21+4}=32\sunit[l]{volt}$.
+
+$I_o = \frac{32}{5} - \frac{200-32}{30} = 0.8\sunit[l]{ampere}$.
+\stopA
+
+% 2.36
+\startQ[Q:2.36]
+Find $i$ and $V_o$ in the circuit of \reffig{2.100}.
+\placeschemq{2.100}{2.36}
+\stopQ
+
+\startA
+$R=100\sunit[l]{ohm}$, $i=\frac{20}{100}=0.2\sunit[l]{ampere}$.
+
+$V_o = 0.02\times 30 = 0.6\sunit[l]{volt}$.
+\stopA
+
+% 2.37
+\startQ[Q:2.37]
+Given the circuit in \reffig{2.101} and that the resistance, $R_{eq}$,
+looking into the circuit from the left is equal to \sunit{100 ohm},
+determine the value of $R_1$.
+\placeschemq{2.101}{2.37}
+\stopQ
+
+\startA
+$R_{eq}=\frac{5}{3}R_1$, $R_q=\frac{3}{5}R_{eq}=60\sunit[l]{ohm}$.
+\stopA
+
+% 2.38
+\startQ[Q:2.38]
+Find $R_{eq}$ and $i_o$ in the circuit of \reffig{2.102}.
+\placeschemq{2.102}{2.38}
+\stopQ
+
+\startA
+$R=\sunit{10 ohm}$, $i_o=3.5\sunit[l]{ampere}$, $R_{eq}=7.5\sunit[l]{ohm}$.
+\stopA
+
+% 2.39
+\startQ[Q:2.39]
+Evaluate $R_{eq}$ looking into each set of terminals for
+each of the circuits shown in \reffig{2.103}.
+\stopQ
+
+\startA
 \stopA
 
 \stopchapter

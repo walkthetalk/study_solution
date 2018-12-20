@@ -506,6 +506,7 @@ setObjectDefaultOption("Node")("dx")(3);
 setObjectDefaultOption("Node")("dy")(3);
 setObjectDefaultOption("Node")("linecolor")(FireBrick);
 setObjectDefaultOption("Node")("pathfillcolor")(FireBrick);
+setObjectDefaultOption("Node")("pathfilled")(true);
 
 vardef newNode@# text options =
 	ExecuteOptions(@#)(options);
@@ -515,7 +516,7 @@ vardef newNode@# text options =
 
 	ObjCode "SchematicEq@#";
 
-	ObjPath(BpathNode(@#)) "pathfilled(true)";
+	ObjPath(BpathNode(@#));
 enddef;
 def BpathNode(suffix n)=
 	(n.in..n.iw..n.is..n.ie..cycle)

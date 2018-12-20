@@ -59,6 +59,7 @@
 \fi%
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for figure %%%%%%%%%%%%%%%%%%%%%%%%%%
 \startMPinclusions
 ahangle:=30;
 \stopMPinclusions
@@ -75,29 +76,63 @@ end
 \ctxlua{commands.fixCounter([==[#1]==])}%
 ]}%
 
-\define[2]\placeschemq{
-\fixFigureCounter{#1}
-\placefigure[here][fig:#1]{for \refq{#2}}{
-\startMPcode
-input schematic;
-labeloffset := 1;
-
-clearObjsForTwiceRun;
-setX("fig" & str #1);
-
-input #1
-\stopMPcode
-}
+\define[1]\schemfig{
+  \startMPcode
+  input schematic;
+  labeloffset := 1;
+  clearObjsForTwiceRun;
+  setX("fig" & str #1);
+  input #1
+  \stopMPcode
 }
 
-\define[2]\placecoordq{
-\fixFigureCounter{#1}
-\placefigure[here][fig:#1]{for \refq{#2}}{
-\startMPcode
-input coord;
-input #1
-\stopMPcode
+\define[1]\coordfig{
+  \startMPcode
+  input coord;
+  input #1
+  \stopMPcode
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%% figure combination %%%%%%%%%%%%%%%%%%%%%%%
+% NOTE: because we can't use \processcommalist or \dorecurse in
+%       combination, we implement it with a loop in lua code.
+\definecombination[figcomb][%
+  alternative=label%
+]
+\setuplabel[combination:figcomb][
+    headstyle=\tfx,
+    text=,
+    numberconversion=character,
+    stopper={)},
+]
+\startluacode
+function commands.figComb(figfunc, cp, postlist, figname)
+	if postlist ~= "" then
+		tex.sprint(tex.ctxcatcodes, "\\startcombination[figcomb]["..cp.."]")
+		for w in string.gmatch(postlist, "%a+") do
+			tex.sprint(tex.ctxcatcodes, "{".."\\"..figfunc.."{"..figname.."."..w.."}}")
+		end
+		tex.sprint(tex.ctxcatcodes, "\\stopcombination")
+	else
+		tex.sprint(tex.ctxcatcodes, "\\"..figfunc.."{"..figname.."}")
+	end
+end
+\stopluacode
+
+\def\placeschemq{\dodoubleempty\doplaceschemq}
+\def\doplaceschemq[#1][#2]#3#4{%
+  \fixFigureCounter{#3}
+  \placefigure[here][fig:#3]{for \refq{#4}}{%
+    \ctxlua{commands.figComb([==[schemfig]==],[==[#1]==],[==[#2]==],[==[#3]==],[==[#4]==])}
+  }%
+}
+
+\def\placecoordq{\dodoubleempty\doplacecoordq}
+\def\doplacecoordq[#1][#2]#3#4{
+  \fixFigureCounter{#3}
+  \placefigure[here][fig:#3]{for \refq{#4}}{
+    \ctxlua{commands.figComb([==[coordfig]==],[==[#1]==],[==[#2]==],[==[#3]==],[==[#4]==])}
+  }
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for enum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

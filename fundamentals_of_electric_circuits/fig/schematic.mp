@@ -1,6 +1,9 @@
 input smetaobj;
 input colordef;
 
+numeric elesize_ratio;
+elesize_ratio := 3;
+
 vardef stringify_color(expr _c) =
 	"(" & decimal(redpart(_c)) & ", "
 	    & decimal(greenpart(_c)) & ", "
@@ -98,12 +101,12 @@ enddef;
 
 vardef SchematicEq@#=
 	@#ang:= OptionValue@#("angle");
-	@#dx := OptionValue@#("dx");
-	@#dy := OptionValue@#("dy");
+	@#dx = OptionValue@#("dx") * elesize_ratio;
+	@#dy = OptionValue@#("dy") * elesize_ratio;
 
 	save DX,DY; numeric DX,DY;
-	DX := @#dx + 5;
-	DY := @#dy + 5;
+	DX = @#dx + 5;
+	DY = @#dy + 5;
 
 	EqBPoints@#("i")(@#dx, @#dy);
 	EqBPoints@#("")(DX, DY);
@@ -260,7 +263,7 @@ enddef;
 %   setX("test0");
 %   newEmptyBox.X(eb0)();
 string ObjPrefix_;
-ObjPrefix_:="";
+ObjPrefix_:="foec";
 def setX(expr s)= ObjPrefix_:=s enddef;
 def X(suffix s)= sc_(ObjPrefix_).s enddef;
 
@@ -275,8 +278,8 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Resistor DIN %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("R")("angle")(0);
-setObjectDefaultOption("R")("dx")(30);
-setObjectDefaultOption("R")("dy")(10);
+setObjectDefaultOption("R")("dx")(6);
+setObjectDefaultOption("R")("dy")(2);
 setObjectDefaultOption("R")("linecolor")(FireBrick);
 setObjectDefaultOption("R")("pathfillcolor")(Khaki);
 setObjectDefaultOption("R")("framed")(true);
@@ -302,8 +305,8 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Resistor ANSI %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("Ra")("angle")(0);
-setObjectDefaultOption("Ra")("dx")(30);
-setObjectDefaultOption("Ra")("dy")(10);
+setObjectDefaultOption("Ra")("dx")(6);
+setObjectDefaultOption("Ra")("dy")(2);
 setObjectDefaultOption("Ra")("linecolor")(Green);
 setObjectDefaultOption("Ra")("pathfillcolor")(Khaki);
 setObjectDefaultOption("Ra")("framed")(true);
@@ -332,9 +335,9 @@ vardef newRa@# text options =
 			-- (_x(i, 4),  0);
 	endfor;
 	ObjPath(_rwire shifted (-0.5,0)
-		xscaled OptionValue@#("dx")
-		yscaled OptionValue@#("dy")
-		rotated OptionValue@#("angle")
+		xscaled @#dx
+		yscaled @#dy
+		rotated @#ang
 		shifted @#.c);
 enddef;
 def BpathRa(suffix n)=
@@ -346,8 +349,8 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Dependent Current Source %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("DCS")("angle")(0);
-setObjectDefaultOption("DCS")("dx")(25);
-setObjectDefaultOption("DCS")("dy")(25);
+setObjectDefaultOption("DCS")("dx")(5);
+setObjectDefaultOption("DCS")("dy")(5);
 setObjectDefaultOption("DCS")("linecolor")(FireBrick);
 setObjectDefaultOption("DCS")("pathfillcolor")(Khaki);
 
@@ -374,8 +377,8 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Independent Current Source %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("ICS")("angle")(0);
-setObjectDefaultOption("ICS")("dx")(20);
-setObjectDefaultOption("ICS")("dy")(20);
+setObjectDefaultOption("ICS")("dx")(4);
+setObjectDefaultOption("ICS")("dy")(4);
 setObjectDefaultOption("ICS")("linecolor")(FireBrick);
 setObjectDefaultOption("ICS")("pathfillcolor")(Khaki);
 
@@ -402,8 +405,8 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Dependent Voltage Source %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("DVS")("angle")(0);
-setObjectDefaultOption("DVS")("dx")(20);
-setObjectDefaultOption("DVS")("dy")(20);
+setObjectDefaultOption("DVS")("dx")(4);
+setObjectDefaultOption("DVS")("dy")(4);
 setObjectDefaultOption("DVS")("linecolor")(FireBrick);
 setObjectDefaultOption("DVS")("pathfillcolor")(Khaki);
 
@@ -439,8 +442,8 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Inependent Voltage Source %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("IVS")("angle")(0);
-setObjectDefaultOption("IVS")("dx")(20);
-setObjectDefaultOption("IVS")("dy")(20);
+setObjectDefaultOption("IVS")("dx")(4);
+setObjectDefaultOption("IVS")("dy")(4);
 setObjectDefaultOption("IVS")("linecolor")(FireBrick);
 setObjectDefaultOption("IVS")("pathfillcolor")(Khaki);
 
@@ -476,8 +479,8 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Current Direction Mark %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("CDM")("angle")(0);
-setObjectDefaultOption("CDM")("dx")(15);
-setObjectDefaultOption("CDM")("dy")(5);
+setObjectDefaultOption("CDM")("dx")(3);
+setObjectDefaultOption("CDM")("dy")(1);
 setObjectDefaultOption("CDM")("linecolor")(FireBrick);
 setObjectDefaultOption("CDM")("pathfillcolor")(Khaki);
 
@@ -502,8 +505,8 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Node %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("Node")("angle")(0);
-setObjectDefaultOption("Node")("dx")(3);
-setObjectDefaultOption("Node")("dy")(3);
+setObjectDefaultOption("Node")("dx")(1);
+setObjectDefaultOption("Node")("dy")(1);
 setObjectDefaultOption("Node")("linecolor")(FireBrick);
 setObjectDefaultOption("Node")("pathfillcolor")(FireBrick);
 setObjectDefaultOption("Node")("pathfilled")(true);
@@ -527,8 +530,8 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Switch %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("Switch")("angle")(0);
-setObjectDefaultOption("Switch")("dx")(25);
-setObjectDefaultOption("Switch")("dy")(25);
+setObjectDefaultOption("Switch")("dx")(5);
+setObjectDefaultOption("Switch")("dy")(5);
 setObjectDefaultOption("Switch")("linecolor")(FireBrick);
 setObjectDefaultOption("Switch")("pathfillcolor")(FireBrick);
 

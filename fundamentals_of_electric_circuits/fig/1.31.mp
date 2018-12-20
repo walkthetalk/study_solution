@@ -1,8 +1,8 @@
 newR.X(r0);
 ObjMLabel.X(r0)("-")
-	"labpoint(ine)", "labdir(ulft)";
+	"labpoint(ine)", "labdir(top)";
 ObjMLabel.X(r0)("+")
-	"labpoint(inw)", "labdir(urt)";
+	"labpoint(inw)", "labdir(top)";
 ObjMLabel.X(r0)("12V")
 	"labpoint(n)", "labdir(top)", "labshift((0,10))";
 ObjMLabel.X(r0)("p_2")
@@ -20,9 +20,9 @@ ObjMLabel.X(r1)("p_3")
 
 newR.X(r2);
 ObjMLabel.X(r2)("-")
-	"labpoint(ise)", "labdir(llft)";
+	"labpoint(ise)", "labdir(bot)";
 ObjMLabel.X(r2)("+")
-	"labpoint(isw)", "labdir(lrt)";
+	"labpoint(isw)", "labdir(bot)";
 ObjMLabel.X(r2)("28V")
 	"labpoint(is)", "labdir(bot)", "labshift((0,-10))";
 ObjMLabel.X(r2)("p_4")
@@ -30,9 +30,9 @@ ObjMLabel.X(r2)("p_4")
 
 newR.X(r3);
 ObjMLabel.X(r3)("-")
-	"labpoint(ise)", "labdir(llft)";
+	"labpoint(ise)", "labdir(bot)";
 ObjMLabel.X(r3)("+")
-	"labpoint(isw)", "labdir(lrt)";
+	"labpoint(isw)", "labdir(bot)";
 ObjMLabel.X(r3)("28V")
 	"labpoint(is)", "labdir(bot)", "labshift((0,-10))";
 ObjMLabel.X(r3)("p_5")

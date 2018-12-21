@@ -1,76 +1,56 @@
 newIVS.X(u1) "angle(90)";
-ObjMLabel.X(u1)("p_1")
-	"labpoint(is)", "labdir(rt)";
-ObjMLabel.X(u1)("30V")
-	"labpoint(in)", "labdir(lft)";
+ObjMLP.X(u1)("p_1")(is)(rt);
+ObjMLP.X(u1)("30V")(in)(lft);
 
 newR.X(r2);
-ObjMLabel.X(r2)("p_2")
-	"labpoint(is)", "labdir(bot)";
-ObjMLabel.X(r2)("+")
-	"labpoint(inw)", "labdir(top)";
-ObjMLabel.X(r2)("-")
-	"labpoint(ine)", "labdir(top)";
-ObjMLabel.X(r2)("10V")
-	"labpoint(in)", "labdir(top)", "labshift((0,10))";
+ObjMLP.X(r2)("p_2")(is)(bot);
+ObjMLP.X(r2)("+")(inw)(top);
+ObjMLP.X(r2)("-")(ine)(top);
+ObjMLP.X(r2)("10V")(in)(top) "labshift(UD(0,1))";
 
 newR.X(r3) "angle(90)";
-ObjMLabel.X(r3)("p_3")
-	"labpoint(is)", "labdir(rt)";
-ObjMLabel.X(r3)("+")
-	"labpoint(ine)", "labdir(lft)";
-ObjMLabel.X(r3)("-")
-	"labpoint(inw)", "labdir(lft)";
-ObjMLabel.X(r3)("20V")
-	"labpoint(in)", "labdir(lft)";
+ObjMLP.X(r3)("p_3")(is)(rt);
+ObjMLP.X(r3)("+")(ine)(lft);
+ObjMLP.X(r3)("-")(inw)(lft);
+ObjMLP.X(r3)("20V")(in)(lft);
 
 newR.X(r4);
-ObjMLabel.X(r4)("p_4")
-	"labpoint(is)", "labdir(bot)";
-ObjMLabel.X(r4)("+")
-	"labpoint(inw)", "labdir(top)";
-ObjMLabel.X(r4)("-")
-	"labpoint(ine)", "labdir(top)";
-ObjMLabel.X(r4)("8V")
-	"labpoint(in)", "labdir(top)", "labshift((0,10))";
+ObjMLP.X(r4)("p_4")(is)(bot);
+ObjMLP.X(r4)("+")(inw)(top);
+ObjMLP.X(r4)("-")(ine)(top);
+ObjMLP.X(r4)("8V")(in)(top) "labshift(UD(0,1))";
 
 newDCS.X(u2) "angle(90)";
-ObjMLabel.X(u2)("p_5")
-	"labpoint(is)", "labdir(urt)";
-ObjMLabel.X(u2)("0.4I")
-	"labpoint(is)", "labdir(lrt)";
-ObjMLabel.X(u2)("12V")
-	"labpoint(in)", "labdir(lft)";
-ObjMLabel.X(u2)("+")
-	"labpoint(ie)", "labdir(ulft)";
-ObjMLabel.X(u2)("-")
-	"labpoint(iw)", "labdir(llft)";
+ObjMLP.X(u2)("p_5")(is)(urt);
+ObjMLP.X(u2)("0.4I")(is)(lrt);
+ObjMLP.X(u2)("12V")(in)(lft);
+ObjMLP.X(u2)("+")(ie)(ulft);
+ObjMLP.X(u2)("-")(iw)(llft);
 
 newCDM.X(cdm0) "angle(180)";
-ObjMLabel.X(cdm0)("4A")
-	"labpoint(is)", "labdir(top)";
+ObjMLP.X(cdm0)("4A")(is)(top);
 newCDM.X(cdm1);
-ObjMLabel.X(cdm1)("I=10A")
-	"labpoint(in)", "labdir(top)";
+ObjMLP.X(cdm1)("I=10A")(in)(top);
 newCDM.X(cdm2) "angle(-90)";
-ObjMLabel.X(cdm2)("14A")
-	"labpoint(in)", "labdir(rt)";
+ObjMLP.X(cdm2)("14A")(in)(rt);
 
-numeric uc;
-uc := 10;
+newNode.X(n1);
+
 X(r3).c = origin;
-X(u1).c = X(r3).c+(-9uc,0);
-X(u2).c = X(r3).c+( 9uc,0);
-X(r2).c = X(r3).c+(-3uc,5uc);
-X(r4).c = X(r3).c+( 3uc,5uc);
+X(u1).c = X(r3).c+UD(-9,0);
+X(u2).c = X(r3).c+UD( 9,0);
+X(r2).c = X(r3).c+UD(-3,6);
+X(r4).c = X(r3).c+UD( 3,6);
+X(n1).c = X(r3).c+UD(0,-4);
 
 X(cdm0).nnw = (xpart(X(u2).c), ypart(X(r4).c));
 X(cdm1).ssw = (xpart(X(u1).c), ypart(X(r2).c));
 X(cdm2).se = X(r3).ie;
 
 pcsimple(X(u2))(2)(X(r4))(2);
-pcsimple(X(r3))(1)(X(u2))(1) "armA(ypart(X(r4).iw-X(r3).ie))";
-pcsimple(X(r3))(1)(X(u1))(1) "armA(ypart(X(r4).iw-X(r3).ie))";
+pcsimple(X(r3))(1)(X(n1))(-90);
+pcsimple(X(n1))(0)(X(u2))(1);
+pcsimple(X(n1))(180)(X(u1))(1);
 pcsimple(X(r3))(2)(X(r4))(1);
 pcsimple(X(r3))(2)(X(r2))(2);
 pcsimple(X(u1))(2)(X(r2))(1);

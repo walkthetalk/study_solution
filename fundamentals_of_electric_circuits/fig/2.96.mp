@@ -1,23 +1,23 @@
 newRa.X(r1);
-ObjMLabel.X(r1)("50\Omega") "labpoint(is)", "labdir(bot)";
+ObjMLP.X(r1)("50\Omega")(is)(bot);
 newRa.X(r2);
-ObjMLabel.X(r2)("200\Omega") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r2)("200\Omega")(in)(top);
 newRa.X(r3);
-ObjMLabel.X(r3)("40\Omega") "labpoint(is)", "labdir(bot)";
+ObjMLP.X(r3)("40\Omega")(is)(bot);
 newRa.X(r4);
-ObjMLabel.X(r4)("60\Omega") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r4)("60\Omega")(in)(top);
 
 newCDM.X(m1);
-ObjMLabel.X(m1)("i_1") "labpoint(is)", "labdir(bot)";
+ObjMLP.X(m1)("i_1")(is)(bot);
 newCDM.X(m2);
-ObjMLabel.X(m2)("i_2") "labpoint(in)", "labdir(top)";
+ObjMLP.X(m2)("i_2")(in)(top);
 newCDM.X(m3) "angle(180)";
-ObjMLabel.X(m3)("i_3") "labpoint(in)", "labdir(bot)";
+ObjMLP.X(m3)("i_3")(in)(bot);
 newCDM.X(m4) "angle(180)";
-ObjMLabel.X(m4)("i_4") "labpoint(is)", "labdir(top)";
+ObjMLP.X(m4)("i_4")(is)(top);
 
 newICS.X(u1) "angle(-90)";
-ObjMLabel.X(u1)("16A") "labpoint(in)", "labdir(rt)";
+ObjMLP.X(u1)("16A")(in)(rt);
 
 
 newNode.X(n1);
@@ -27,20 +27,17 @@ newNode.X(n4);
 newNode.X(n5);
 newNode.X(n6);
 
-numeric uc;
-uc := 10;
 X(u1).c = origin;
-X(n1).c = X(u1).c + (3uc, 5uc);
-X(n2).c = X(n1).c + (6uc,0);
-X(n3).c = X(u1).c + (-3uc,5uc);
-X(n4).c = X(n3).c + (-6uc,0);
-X(n5).c = X(u1).c + (10uc,-3uc);
-X(n6).c = X(u1).c + (-10uc,-3uc);
-
-X(r1).c = X(n1).c + (3uc,-2uc);
-X(r2).c = X(n1).c + (3uc, 2uc);
-X(r3).c = X(n3).c + (-3uc,-2uc);
-X(r4).c = X(n3).c + (-3uc,2uc);
+X(n1).c = X(u1).c + UD(3, 5);
+X(n2).c = X(n1).c + UD(6,0);
+X(n3).c = X(u1).c + UD(-3,5);
+X(n4).c = X(n3).c + UD(-6,0);
+X(n5).c = X(u1).c + UD(10,-3);
+X(n6).c = X(u1).c + UD(-10,-3);
+X(r1).c = X(n1).c + UD(3,-2);
+X(r2).c = X(n1).c + UD(3, 2);
+X(r3).c = X(n3).c + UD(-3,-2);
+X(r4).c = X(n3).c + UD(-3,2);
 
 X(m1).ne = X(r1).w;
 X(m2).se = X(r2).w;

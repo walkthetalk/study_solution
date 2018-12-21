@@ -1,25 +1,23 @@
 newR.X(r1);
-ObjMLabel.X(r1)("16\Omega") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r1)("16\Omega")(in)(top);
 newR.X(r2);
-ObjMLabel.X(r2)("14\Omega") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r2)("14\Omega")(in)(top);
 newIVS.X(u1) "angle(90)";
-ObjMLabel.X(u1)("10V") "labpoint(in)", "labdir(lft)";
+ObjMLP.X(u1)("10V")(in)(lft);
 newIVS.X(u2) "angle(90)";
-ObjMLabel.X(u2)("25V") "labpoint(is)", "labdir(rt)";
+ObjMLP.X(u2)("25V")(is)(rt);
 
 newNode.X(n1);
-ObjMLabel.X(n1)("+") "labpoint(is)", "labdir(bot)";
+ObjMLP.X(n1)("+")(is)(bot);
 newNode.X(n2);
-ObjMLabel.X(n2)("-") "labpoint(in)", "labdir(top)";
+ObjMLP.X(n2)("-")(in)(top);
 
-numeric uc;
-uc := 10;
-X(n1).c = (0, 3uc);
-X(n2).c = (0,-3uc);
-X(r1).c = X(n1).c + (-3uc, 0);
-X(r2).c = X(n1).c + ( 3uc, 0);
-X(u1).c = (-6uc, 0);
-X(u2).c = ( 6uc, 0);
+X(n1).c = UD(0, 3);
+X(n2).c = UD(0,-3);
+X(r1).c = X(n1).c + UD(-3, 0);
+X(r2).c = X(n1).c + UD( 3, 0);
+X(u1).c = UD(-6, 0);
+X(u2).c = UD( 6, 0);
 
 ObjMLabel.X(n2)("V_0") "labshift((X(n1).c - X(n2).c) / 2)";
 

@@ -1,51 +1,48 @@
 newRa.X(r1);
-ObjMLabel.X(r1)("80\Omega") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r1)("80\Omega")(in)(top);
 newRa.X(r2);
-ObjMLabel.X(r2)("24\Omega") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r2)("24\Omega")(in)(top);
 newRa.X(r3);
-ObjMLabel.X(r3)("50\Omega") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r3)("50\Omega")(in)(top);
 
 newRa.X(r4) "angle(90)";
-ObjMLabel.X(r4)("25\Omega") "labpoint(is)", "labdir(rt)";
+ObjMLP.X(r4)("25\Omega")(is)(rt);
 newRa.X(r5) "angle(90)";
-ObjMLabel.X(r5)("20\Omega") "labpoint(is)", "labdir(rt)";
+ObjMLP.X(r5)("20\Omega")(is)(rt);
 newRa.X(r6) "angle(90)";
-ObjMLabel.X(r6)("30\Omega") "labpoint(in)", "labdir(lft)";
-ObjMLabel.X(r6)("+") "labpoint(ise)", "labdir(rt)";
-ObjMLabel.X(r6)("-") "labpoint(isw)", "labdir(rt)";
-ObjMLabel.X(r6)("V_o")"labpoint(is)", "labdir(rt)";
+ObjMLP.X(r6)("30\Omega")(in)(lft);
+ObjMLP.X(r6)("+")(ise)(rt);
+ObjMLP.X(r6)("-")(isw)(rt);
+ObjMLP.X(r6)("V_o")(is)(rt);
 newRa.X(r7) "angle(90)";
-ObjMLabel.X(r7)("60\Omega") "labpoint(in)", "labdir(lft)";
+ObjMLP.X(r7)("60\Omega")(in)(lft);
 newRa.X(r8) "angle(90)";
-ObjMLabel.X(r8)("20\Omega") "labpoint(is)", "labdir(rt)";
+ObjMLP.X(r8)("20\Omega")(is)(rt);
 
 newIVS.X(u1) "angle(90)";
-ObjMLabel.X(u1)("20V") "labpoint(in)", "labdir(lft)";
+ObjMLP.X(u1)("20V")(in)(lft);
 
 newCDM.X(m1);
-ObjMLabel.X(m1)("i") "labpoint(in)", "labdir(top)";
+ObjMLP.X(m1)("i")(in)(top);
 
 
 newNode.X(n1);
 newNode.X(n2);
 newNode.X(n3);
 
-numeric uc;
-uc := 10;
 X(n3).c = origin;
 
-X(u1).c = X(n3).c + (-6uc,0);
-X(n1).c = X(u1).c + (0,6uc);
-X(n2).c = X(u1).c + (0,-6uc);
-
-X(r1).c = X(n1).c + (3uc,0);
-X(r2).c = X(r1).c + (6uc,0);
-X(r3).c = X(r2).c + (6uc,0);
-X(r4).c = X(n3).c + (0,3uc);
-X(r5).c = X(n3).c + (6uc,0);
-X(r6).c = X(r5).c + (6uc,0);
-X(r7).c = X(n3).c + (-2uc,-3uc);
-X(r8).c = X(n3).c + (2uc,-3uc);
+X(u1).c = X(n3).c + UD(-6,0);
+X(n1).c = X(u1).c + UD(0,6);
+X(n2).c = X(u1).c + UD(0,-6);
+X(r1).c = X(n1).c + UD(3,0);
+X(r2).c = X(r1).c + UD(6,0);
+X(r3).c = X(r2).c + UD(6,0);
+X(r4).c = X(n3).c + UD(0,3);
+X(r5).c = X(n3).c + UD(6,0);
+X(r6).c = X(r5).c + UD(6,0);
+X(r7).c = X(n3).c + UD(-2,-3);
+X(r8).c = X(n3).c + UD(2,-3);
 
 X(m1).se = X(r1).iw;
 

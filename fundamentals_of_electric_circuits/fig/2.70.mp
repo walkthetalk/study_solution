@@ -3,16 +3,15 @@ def _n_(expr i)=
 	%X(n)[i]
 	X(sc_("n" & decimal(i)))
 enddef;
-for i:=1 upto 12:
+for i:=0 upto 12:
 	newNode._n_(i);
 endfor;
 
-numeric uc;
-uc := 20;
 for i:= 1 upto 6:
-	_n_(i).c   = (uc,0) rotated ((i-1)*60);
-	_n_(i+6).c = _n_(2).c shifted (uc,0) rotated ((i-1)*60);
+	_n_(i).c   = UD(4,0) rotated ((i-1)*60);
+	_n_(i+6).c = _n_(2).c shifted (_n_(1).c - origin) rotated ((i-1)*60);
 endfor;
+_n_(0).c = _n_(8).c + (_n_(9).c - _n_(2).c);
 
 for i:=1 upto 12:
 	drawObj(_n_(i));
@@ -24,4 +23,5 @@ for i:=1 upto 6:
 	ncline(_n_(i))(_n_(i+6));
 	ncline(_n_(i+6))(_n_(_next));
 endfor;
-ncbar(_n_(8))(_n_(11)) "angleA(180)", "armA(2uc)"; 
+pcsimple(_n_(8))(180)(_n_(0))(180);
+pcsimple(_n_(11))(180)(_n_(0))(90);

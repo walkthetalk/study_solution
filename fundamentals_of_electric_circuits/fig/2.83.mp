@@ -1,25 +1,23 @@
 newRa.X(r1) "angle(90)";
-ObjMLabel.X(r1)("3\Omega") "labpoint(is)", "labdir(rt)";
-ObjMLabel.X(r1)("p_4") "labpoint(in)", "labdir(lft)";
+ObjMLP.X(r1)("3\Omega")(is)(rt);
+ObjMLP.X(r1)("p_4")(in)(lft);
 newIVS.X(u1) "angle(180)";
-ObjMLabel.X(u1)("10V") "labpoint(is)", "labdir(top)";
-ObjMLabel.X(u1)("p_1") "labpoint(in)", "labdir(bot)";
+ObjMLP.X(u1)("10V")(is)(top);
+ObjMLP.X(u1)("p_1")(in)(bot);
 newIVS.X(u2) "angle(90)";
-ObjMLabel.X(u2)("12V") "labpoint(in)", "labdir(lft)";
-ObjMLabel.X(u2)("p_2") "labpoint(is)", "labdir(rt)";
+ObjMLP.X(u2)("12V")(in)(lft);
+ObjMLP.X(u2)("p_2")(is)(rt);
 newIVS.X(u3) "angle(180)";
-ObjMLabel.X(u3)("-8V") "labpoint(in)", "labdir(bot)";
-ObjMLabel.X(u3)("p_3") "labpoint(is)", "labdir(top)";
+ObjMLP.X(u3)("-8V")(in)(bot);
+ObjMLP.X(u3)("p_3")(is)(top);
 
 newCDM.X(m0) "angle(-90)";
-ObjMLabel.X(m0)("I") "labpoint(in)", "labdir(rt)";
+ObjMLP.X(m0)("I")(in)(rt);
 
-numeric uc;
-uc := 30;
-X(r1).c = (uc,0);
-X(u1).c = (0,uc);
-X(u2).c = (-uc,0);
-X(u3).c = (0,-uc);
+X(r1).c = UD(3,0);
+X(u1).c = UD(0,3);
+X(u2).c = UD(-3,0);
+X(u3).c = UD(0,-3);
 X(m0).se = X(r1).ie;
 
 drawObj(X(r1),X(u1),X(u2),X(u3),X(m0));

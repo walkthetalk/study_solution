@@ -1,34 +1,32 @@
 newRa.X(r1);
-ObjMLabel.X(r1)("5\Omega") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r1)("5\Omega")(in)(top);
 newRa.X(r2);
-ObjMLabel.X(r2)("8\Omega") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r2)("8\Omega")(in)(top);
 newRa.X(r3);
-ObjMLabel.X(r3)("20\Omega") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r3)("20\Omega")(in)(top);
 newRa.X(r4);
-ObjMLabel.X(r4)("30\Omega") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r4)("30\Omega")(in)(top);
 
 newNode.X(na) "pathfilled(false)";
-ObjMLabel.X(na)("a") "labpoint(iw)", "labdir(lft)";
+ObjMLP.X(na)("a")(iw)(lft);
 newNode.X(nb) "pathfilled(false)";
-ObjMLabel.X(nb)("b") "labpoint(ie)", "labdir(rt)";
+ObjMLP.X(nb)("b")(ie)(rt);
 newNode.X(n1);
 newNode.X(n2);
 newNode.X(n3);
 newNode.X(n4);
 
-numeric uc;
-uc := 10;
 X(na).c = origin;
-X(n1).c = X(na).c + (2uc, 0);
-X(n3).c = X(n1).c + (6uc, -2uc);
-X(n4).c = X(n3).c + (6uc,0);
-X(n2).c = X(n4).c + (uc, 3uc);
-X(nb).c = X(n2).c + (2uc, 0);
+X(n1).c = X(na).c + UD(2, 0);
+X(n3).c = X(n1).c + UD(6, -2);
+X(n4).c = X(n3).c + UD(6,0);
+X(n2).c = X(n4).c + UD(1, 3);
+X(nb).c = X(n2).c + UD(2, 0);
 
-X(r1).c = X(n1).c + (5uc,1uc);
-X(r2).c = X(n3).c + (-3uc,0);
+X(r1).c = X(n1).c + UD(5,1);
+X(r2).c = X(n3).c + UD(-3,0);
 X(r3).c = (X(n3).c + X(n4).c)/2;
-X(r4).c = X(r3).c + (0,-3uc);
+X(r4).c = X(r3).c + UD(0,-3);
 
 drawObj(X(r1),X(r2),X(r3),X(r4),X(na),X(nb));
 pcsimple(X(na))(0)(X(n1))(0);

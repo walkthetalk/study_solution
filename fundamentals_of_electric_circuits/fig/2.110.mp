@@ -1,0 +1,72 @@
+newRa.X(r1);
+ObjMLP.X(r1)("72\Omega")(in)(top);
+newRa.X(r2);
+ObjMLP.X(r2)("24\Omega")(in)(top);
+newRa.X(r3);
+ObjMLP.X(r3)("80\Omega")(in)(top);
+newRa.X(r4);
+ObjMLP.X(r4)("20\Omega")(in)(top);
+newRa.X(r5);
+ObjMLP.X(r5)("14\Omega")(in)(top);
+newRa.X(r6);
+ObjMLP.X(r6)("36\Omega")(in)(top);
+newRa.X(r7);
+ObjMLP.X(r7)("36\Omega")(in)(top);
+newRa.X(r8);
+ObjMLP.X(r8)("36\Omega")(in)(top);
+newRa.X(r9) "angle(90)";
+ObjMLP.X(r9)("10\Omega")(is)(rt);
+
+newIVS.X(u1) "angle(90)";
+ObjMLP.X(u1)("140V")(in)(lft);
+
+newCDM.X(m1);
+ObjMLP.X(m1)("I")(in)(top);
+
+newNode.X(n1);
+newNode.X(n2);
+newNode.X(n3);
+newNode.X(n4);
+newNode.X(n5);
+newNode.X(n6);
+
+X(u1).c = origin;
+X(m1).s = X(u1).c + UD(3,4);
+X(n1).c = X(m1).s + UD(3,0);
+X(n2).c = X(n1).c + UD(6,0);
+X(r1).c = (X(n1).c + X(n2).c)/2 + UD(0,1.5);
+X(r2).c = (X(n1).c + X(n2).c)/2 + UD(0,-1.5);
+X(n3).c = X(n2).c + UD(3,0);
+X(n4).c = X(n3).c + UD(6,0);
+X(r3).c = (X(n3).c + X(n4).c)/2 + UD(0,1.5);
+X(r4).c = (X(n3).c + X(n4).c)/2 + UD(0,-1.5);
+
+X(r5).c = X(u1).c + UD(3,-4);
+X(r7).c = (xpart (X(n2).c+X(n3).c)/2, ypart X(r5).c);
+X(n6).c = X(r7).c + UD(3,0);
+X(n5).c = X(r7).c + UD(-3,0);
+X(r6).c = X(r7).c + UD(0,3);
+X(r8).c = X(r7).c + UD(0,-3);
+X(r9).c = X(n4).c + UD(2,-3);
+
+drawObj(X(r1),X(r2),X(r3),X(r4),X(r5),X(r6),X(r7),X(r8),X(r9),X(u1),X(m1));
+pcsimple(X(u1))(2)(X(n1))(0);
+pcsimple(X(n1))(90)(X(r1))(1);
+pcsimple(X(n1))(-90)(X(r2))(1);
+pcsimple(X(r1))(2)(X(n2))(-90);
+pcsimple(X(r2))(2)(X(n2))(90);
+pcsimple(X(n2))(0)(X(n3))(0);
+pcsimple(X(n3))(90)(X(r3))(1);
+pcsimple(X(n3))(-90)(X(r4))(1);
+pcsimple(X(r3))(2)(X(n4))(-90);
+pcsimple(X(r4))(2)(X(n4))(90);
+pcsimple(X(n4))(0)(X(r9))(2);
+pcsimple(X(u1))(1)(X(r5))(1);
+pcsimple(X(r5))(2)(X(n5))(0);
+pcsimple(X(n5))(90)(X(r6))(1);
+pcsimple(X(n5))(0)(X(r7))(1);
+pcsimple(X(n5))(-90)(X(r8))(1);
+pcsimple(X(r6))(2)(X(n6))(-90);
+pcsimple(X(r7))(2)(X(n6))(0);
+pcsimple(X(r8))(2)(X(n6))(90);
+pcsimple(X(n6))(0)(X(r9))(1);

@@ -2,7 +2,12 @@ input smetaobj;
 input colordef;
 
 numeric elesize_ratio;
-elesize_ratio := 3;
+elesize_ratio := 5;
+numeric eleconn_ratio;
+eleconn_ratio := 10;
+def UD(text _nop_)=
+	((_nop_) * eleconn_ratio)
+enddef;
 
 vardef stringify_color(expr _c) =
 	"(" & decimal(redpart(_c)) & ", "
@@ -105,8 +110,8 @@ vardef SchematicEq@#=
 	@#dy = OptionValue@#("dy") * elesize_ratio;
 
 	save DX,DY; numeric DX,DY;
-	DX = @#dx + 5;
-	DY = @#dy + 5;
+	DX = @#dx + 1*elesize_ratio;
+	DY = @#dy + 1*elesize_ratio;
 
 	EqBPoints@#("i")(@#dx, @#dy);
 	EqBPoints@#("")(DX, DY);
@@ -274,6 +279,13 @@ setCurveDefaultOption("linecolor")(SteelBlue);
 %%%%%%%%%%%%%%%%%%%%%%%%%% object math label %%%%%%%%%%%%%%%%%%%%
 vardef ObjMLabel@#(text p) text options=
 	ObjLabel@#(textext("$" & p & "$")) options;
+enddef;
+
+vardef ObjMLP@#(text p)(suffix _labpoint_)(suffix _labdir_) text options=
+	ObjMLabel@#(p)
+		"labpoint(" & (str _labpoint_) & ")",
+		"labdir(" & (str _labdir_) & ")",
+		options;
 enddef;
 
 %%%%%%%%%%%%%%%%%% Resistor DIN %%%%%%%%%%%%%%%%%%
@@ -587,11 +599,12 @@ vardef pcsimple_(suffix $)(suffix n,m)(suffix p)=
   % not to use assignments, because |n.c| and |m.c|
   % may be floating:
   save ap;pair ap[];
-  save aA,aB;numeric aA, aB;
+  save aA,aB,aC;numeric aA, aB, aC;
   aA := CLOV_("angleA");
   aB := CLOV_("angleB");
 
   setupobjectfunction(n);
+  aC := angle(f(n)("A")-f(m)("B"));
 
   if ((aA-aB) mod 180 <> 0): % intersect
     ap1-f(n)("A")=whatever*dir(aA);
@@ -600,6 +613,12 @@ vardef pcsimple_(suffix $)(suffix n,m)(suffix p)=
       (smoothen(object_(n)("A")--ap1--object_(m)("B")
          cutbefore BpathObj(n) cutafter BpathObj(m))(CLOV_("linearc")))
       (smoothen(objectpoint_(n)("A")--ap1--objectpoint_(m)("B"))
+         (CLOV_("linearc")));
+  elseif ((aC-aA) mod 180 = 0): % should be direct line
+    nc_core_$(n)(p)
+      (smoothen(object_(n)("A")--object_(m)("B")
+         cutbefore BpathObj(n) cutafter BpathObj(m))(CLOV_("linearc")))
+      (smoothen(objectpoint_(n)("A")--objectpoint_(m)("B"))
          (CLOV_("linearc")));
   else: % same direction
     ap1-f(n)("A")=CLOV_("armA")*dir(aA);

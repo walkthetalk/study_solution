@@ -64,6 +64,10 @@
 ahangle:=30;
 \stopMPinclusions
 
+\defineMPinstance
+  [schematic]
+  [metafun] % needs to be inherited from the global metafun instance
+  [textstyle={\switchtobodyfont[6pt]}]
 
 \startluacode
 function commands.fixCounter(dst)
@@ -77,8 +81,10 @@ end
 ]}%
 
 \define[1]\schemfig{
-  \startMPcode
+  \startMPcode{schematic}
   input schematic;
+  elesize_ratio := 3;
+  eleconn_ratio := 6;
   labeloffset := 1;
   clearObjsForTwiceRun;
   setX("fig" & str #1);

@@ -1,35 +1,33 @@
 newRa.X(r1) "angle(90)";
-ObjMLabel.X(r1)("10 k\Omega") "labpoint(in)", "labdir(lft)";
-ObjMLabel.X(r1)("+") "labpoint(ise)", "labdir(rt)";
-ObjMLabel.X(r1)("-") "labpoint(isw)", "labdir(rt)";
-ObjMLabel.X(r1)("V_o") "labpoint(is)", "labdir(rt)";
+ObjMLP.X(r1)("10 k\Omega")(in)(lft);
+ObjMLP.X(r1)("+")(ise)(rt);
+ObjMLP.X(r1)("-")(isw)(rt);
+ObjMLP.X(r1)("V_o")(is)(rt);
 newRa.X(r2) "angle(90)";
-ObjMLabel.X(r2)("5 k\Omega") "labpoint(is)", "labdir(rt)";
+ObjMLP.X(r2)("5 k\Omega")(is)(rt);
 newRa.X(r3) "angle(90)";
-ObjMLabel.X(r3)("20 k\Omega") "labpoint(is)", "labdir(rt)";
+ObjMLP.X(r3)("20 k\Omega")(is)(rt);
 
 newIVS.X(u1) "angle(90)";
-ObjMLabel.X(u1)("5 mA") "labpoint(in)", "labdir(lft)";
+ObjMLP.X(u1)("5 mA")(in)(lft);
 newDVS.X(u2) "angle(90)";
-ObjMLabel.X(u2)("0.01 V_o") "labpoint(is)", "labdir(rt)";
+ObjMLP.X(u2)("0.01 V_o")(is)(rt);
 
 newNode.X(n1);
 newNode.X(n2);
 newNode.X(n3);
 newNode.X(n4);
 
-numeric uc;
-uc := 10;
 X(u1).c = origin;
-X(r1).c = X(u1).c + (5uc,0);
-X(u2).c = X(r1).c + (5uc,0);
-X(r2).c = X(u2).c + (5uc,0);
-X(r3).c = X(r2).c + (5uc,0);
+X(r1).c = X(u1).c + UD(5,0);
+X(u2).c = X(r1).c + UD(5,0);
+X(r2).c = X(u2).c + UD(5,0);
+X(r3).c = X(r2).c + UD(5,0);
 
-X(n1).c = X(u1).c + (0,3uc);
-X(n2).c = X(u1).c + (0,-3uc);
-X(n3).c = X(u2).c + (0,3uc);
-X(n4).c = X(u2).c + (0,-3uc);
+X(n1).c = X(u1).c + UD(0,3);
+X(n2).c = X(u1).c + UD(0,-3);
+X(n3).c = X(u2).c + UD(0,3);
+X(n4).c = X(u2).c + UD(0,-3);
 
 drawObj(X(r1),X(r2),X(r3),X(u1),X(u2));
 pcsimple(X(u1))(2)(X(n1))(90);

@@ -1,36 +1,34 @@
 newRa.X(r1);
-ObjMLabel.X(r1)("R_1") "labpoint(in)", "labdir(top)";
+ObjMLP.X(r1)("R_1")(in)(top);
 newRa.X(r2) "angle(90)";
-ObjMLabel.X(r2)("R_2") "labpoint(in)", "labdir(lft)";
+ObjMLP.X(r2)("R_2")(in)(lft);
 newRa.X(r3) "angle(90)";
-ObjMLabel.X(r3)("R_3") "labpoint(in)", "labdir(lft)";
+ObjMLP.X(r3)("R_3")(in)(lft);
 newRa.X(r4) "angle(90)";
-ObjMLabel.X(r4)("R_4") "labpoint(in)", "labdir(lft)";
-ObjMLabel.X(r4)("+") "labpoint(isw)", "labdir(rt)";
-ObjMLabel.X(r4)("-") "labpoint(ise)", "labdir(rt)";
-ObjMLabel.X(r4)("V_o") "labpoint(is)", "labdir(rt)";
+ObjMLP.X(r4)("R_4")(in)(lft);
+ObjMLP.X(r4)("+")(isw)(rt);
+ObjMLP.X(r4)("-")(ise)(rt);
+ObjMLP.X(r4)("V_o")(is)(rt);
 
 newIVS.X(u1) "angle(90)";
-ObjMLabel.X(u1)("V_s") "labpoint(in)", "labdir(lft)";
+ObjMLP.X(u1)("V_s")(in)(lft);
 newDCS.X(u2) "angle(-90)";
-ObjMLabel.X(u2)("\alpha I_o") "labpoint(is)", "labdir(lft)";
+ObjMLP.X(u2)("\alpha I_o")(is)(lft);
 
 newCDM.X(m0);
-ObjMLabel.X(m0)("I_o") "labpoint(in)", "labdir(top)";
+ObjMLP.X(m0)("I_o")(in)(top);
 
 newNode.X(n1);
 newNode.X(n2);
 
-numeric uc;
-uc := 10;
 X(u1).c = origin;
-X(n1).c = (0,-3uc);
-X(r1).c = (5uc,3uc);
-X(r2).c = X(u1).c + (8uc,0);
-X(u2).c = X(r2).c + (5uc,0);
-X(r3).c = X(u2).c + (4uc,0);
-X(r4).c = X(r3).c + (4uc,0);
-X(n2).c = X(u2).c + (0,3uc);
+X(n1).c = UD(0,-3);
+X(r1).c = UD(5,3);
+X(r2).c = X(u1).c + UD(8,0);
+X(u2).c = X(r2).c + UD(5,0);
+X(r3).c = X(u2).c + UD(4,0);
+X(r4).c = X(r3).c + UD(4,0);
+X(n2).c = X(u2).c + UD(0,3);
 X(m0).sw = (xpart X(u1).c, ypart X(r1).c);
 
 drawObj(X(r1),X(r2),X(r3),X(r4),X(u1),X(u2),X(m0));

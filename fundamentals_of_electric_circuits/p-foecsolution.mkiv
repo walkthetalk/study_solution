@@ -60,6 +60,16 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for figure %%%%%%%%%%%%%%%%%%%%%%%%%%
+\definefloat[afigure][afigures]
+\setuplabeltext[en][afigure={Answer Figure\;,}]
+\setupcaption[afigure][
+  headstyle=\rmx\bf,
+  style=\rmx\bf,
+  conversion=numbers,
+  way=bychapter,
+  prefixsegments=chapter,
+]
+
 \startMPinclusions
 ahangle:=30;
 \stopMPinclusions
@@ -75,9 +85,9 @@ function commands.fixCounter(dst)
 	tex.sprint(tex.ctxcatcodes, tostring(tonumber(dstN)-1))
 end
 \stopluacode
-\define[1]\fixFigureCounter{
-\setcounter[figure][%
-\ctxlua{commands.fixCounter([==[#1]==])}%
+\define[2]\fixCounter{
+\setcounter[#1][%
+\ctxlua{commands.fixCounter([==[#2]==])}%
 ]}%
 
 \define[1]\schemfig{
@@ -125,19 +135,28 @@ function commands.figComb(figfunc, cp, postlist, figname)
 end
 \stopluacode
 
+% schematic figure for question
 \def\placeschemq{\dodoubleempty\doplaceschemq}
 \def\doplaceschemq[#1][#2]#3#4{%
-  \fixFigureCounter{#3}
+  \fixCounter{figure}{#3}
   \placefigure[here][fig:#3]{for \refq{#4}}{%
-    \ctxlua{commands.figComb([==[schemfig]==],[==[#1]==],[==[#2]==],[==[#3]==],[==[#4]==])}
+    \ctxlua{commands.figComb([==[schemfig]==],[==[#1]==],[==[#2]==],[==[#3]==])}
+  }%
+}
+
+% schematic figure for answer
+\def\placeschema{\dodoubleempty\doplaceschema}
+\def\doplaceschema[#1][#2]#3{%
+  \placeafigure[here][afig:#3]{for \refq{#3}}{%
+    \ctxlua{commands.figComb([==[schemfig]==],[==[#1]==],[==[#2]==],[==[a#3]==])}
   }%
 }
 
 \def\placecoordq{\dodoubleempty\doplacecoordq}
 \def\doplacecoordq[#1][#2]#3#4{
-  \fixFigureCounter{#3}
+  \fixCounter{figure}{#3}
   \placefigure[here][fig:#3]{for \refq{#4}}{
-    \ctxlua{commands.figComb([==[coordfig]==],[==[#1]==],[==[#2]==],[==[#3]==],[==[#4]==])}
+    \ctxlua{commands.figComb([==[coordfig]==],[==[#1]==],[==[#2]==],[==[#3]==])}
   }
 }
 

@@ -1,34 +1,34 @@
-newRa.X(r1);
-ObjMLP.X(r1)("72\Omega")(in)(top);
-newRa.X(r2);
-ObjMLP.X(r2)("24\Omega")(in)(top);
-newRa.X(r3);
-ObjMLP.X(r3)("80\Omega")(in)(top);
-newRa.X(r4);
-ObjMLP.X(r4)("20\Omega")(in)(top);
-newRa.X(r5);
-ObjMLP.X(r5)("14\Omega")(in)(top);
-newRa.X(r6);
-ObjMLP.X(r6)("36\Omega")(in)(top);
-newRa.X(r7);
-ObjMLP.X(r7)("36\Omega")(in)(top);
-newRa.X(r8);
-ObjMLP.X(r8)("36\Omega")(in)(top);
-newRa.X(r9) "angle(90)";
-ObjMLP.X(r9)("10\Omega")(is)(rt);
+XnewRa.r1;
+XObjMLP.r1("72\Omega")(in)(top);
+XnewRa.r2;
+XObjMLP.r2("24\Omega")(in)(top);
+XnewRa.r3;
+XObjMLP.r3("80\Omega")(in)(top);
+XnewRa.r4;
+XObjMLP.r4("20\Omega")(in)(top);
+XnewRa.r5;
+XObjMLP.r5("14\Omega")(in)(top);
+XnewRa.r6;
+XObjMLP.r6("36\Omega")(in)(top);
+XnewRa.r7;
+XObjMLP.r7("36\Omega")(in)(top);
+XnewRa.r8;
+XObjMLP.r8("36\Omega")(in)(top);
+XnewRa.r9 "angle(90)";
+XObjMLP.r9("10\Omega")(is)(rt);
 
-newIVS.X(u1) "angle(90)";
-ObjMLP.X(u1)("140V")(in)(lft);
+XnewIVS.u1 "angle(90)";
+XObjMLP.u1("140V")(in)(lft);
 
-newCDM.X(m1);
-ObjMLP.X(m1)("I")(in)(top);
+XnewCDM.m1;
+XObjMLP.m1("I")(in)(top);
 
-newNode.X(n1);
-newNode.X(n2);
-newNode.X(n3);
-newNode.X(n4);
-newNode.X(n5);
-newNode.X(n6);
+XnewNode.n1;
+XnewNode.n2;
+XnewNode.n3;
+XnewNode.n4;
+XnewNode.n5;
+XnewNode.n6;
 
 X(u1).c = origin;
 X(m1).s = X(u1).c + UD(3,4);
@@ -49,24 +49,26 @@ X(r6).c = X(r7).c + UD(0,3);
 X(r8).c = X(r7).c + UD(0,-3);
 X(r9).c = X(n4).c + UD(2,-3);
 
-drawObj(X(r1),X(r2),X(r3),X(r4),X(r5),X(r6),X(r7),X(r8),X(r9),X(u1),X(m1));
-pcsimple(X(u1))(2)(X(n1))(0);
-pcsimple(X(n1))(90)(X(r1))(1);
-pcsimple(X(n1))(-90)(X(r2))(1);
-pcsimple(X(r1))(2)(X(n2))(-90);
-pcsimple(X(r2))(2)(X(n2))(90);
-pcsimple(X(n2))(0)(X(n3))(0);
-pcsimple(X(n3))(90)(X(r3))(1);
-pcsimple(X(n3))(-90)(X(r4))(1);
-pcsimple(X(r3))(2)(X(n4))(-90);
-pcsimple(X(r4))(2)(X(n4))(90);
-pcsimple(X(n4))(0)(X(r9))(2);
-pcsimple(X(u1))(1)(X(r5))(1);
-pcsimple(X(r5))(2)(X(n5))(0);
-pcsimple(X(n5))(90)(X(r6))(1);
-pcsimple(X(n5))(0)(X(r7))(1);
-pcsimple(X(n5))(-90)(X(r8))(1);
-pcsimple(X(r6))(2)(X(n6))(-90);
-pcsimple(X(r7))(2)(X(n6))(0);
-pcsimple(X(r8))(2)(X(n6))(90);
-pcsimple(X(n6))(0)(X(r9))(1);
+XdrawObj(r1,r2,r3,r4,r5,r6,r7,r8,r9,u1,m1);
+Xpclist(
+	"u1,2,n1,0",
+	"n1,90,r1,1",
+	"n1,-90,r2,1",
+	"r1,2,n2,-90",
+	"r2,2,n2,90",
+	"n2,0,n3,0",
+	"n3,90,r3,1",
+	"n3,-90,r4,1",
+	"r3,2,n4,-90",
+	"r4,2,n4,90",
+	"n4,0,r9,2",
+	"u1,1,r5,1",
+	"r5,2,n5,0",
+	"n5,90,r6,1",
+	"n5,0,r7,1",
+	"n5,-90,r8,1",
+	"r6,2,n6,-90",
+	"r7,2,n6,0",
+	"r8,2,n6,90",
+	"n6,0,r9,1"
+);

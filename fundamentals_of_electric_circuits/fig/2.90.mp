@@ -1,21 +1,21 @@
-newRa.X(r1);
-ObjMLP.X(r1)("25\Omega")(in)(top);
-newRa.X(r2) "angle(90)";
-ObjMLP.X(r2)("20\Omega")(is)(rt);
-newRa.X(r3) "angle(90)";
-ObjMLP.X(r3)("10\Omega")(is)(rt);
-newRa.X(r4) "angle(90)";
-ObjMLP.X(r4)("50\Omega")(is)(rt);
-newRa.X(r5) "angle(90)";
-ObjMLP.X(r5)("40\Omega")(is)(rt);
+XnewRa.r1;
+XObjMLP.r1("25\Omega")(in)(top);
+XnewRa.r2 "angle(90)";
+XObjMLP.r2("20\Omega")(is)(rt);
+XnewRa.r3 "angle(90)";
+XObjMLP.r3("10\Omega")(is)(rt);
+XnewRa.r4 "angle(90)";
+XObjMLP.r4("50\Omega")(is)(rt);
+XnewRa.r5 "angle(90)";
+XObjMLP.r5("40\Omega")(is)(rt);
 
-newCDM.X(m1);
-ObjMLP.X(m1)("i_x")(in)(top);
-newCDM.X(m2);
-ObjMLP.X(m2)("i_o")(in)(top);
+XnewCDM.m1;
+XObjMLP.m1("i_x")(in)(top);
+XnewCDM.m2;
+XObjMLP.m2("i_o")(in)(top);
 
-newNode.X(n1);
-newNode.X(n2);
+XnewNode.n1;
+XnewNode.n2;
 
 X(n1).c = UD(0,3);
 X(n2).c = UD(0,-3);
@@ -28,13 +28,15 @@ X(r5).c = X(r4).c + UD(4,0);
 X(m1).sw = X(n1).c;
 X(m2).s = (xpart (X(r4).c + X(r5).c)/2, ypart X(n1).c);
 
-drawObj(X(r1),X(r2),X(r3),X(r4),X(r5),X(m1),X(m2));
-pcsimple(X(n1))(0)(X(r1))(1);
-pcsimple(X(r1))(2)(X(r2))(2);
-pcsimple(X(r1))(2)(X(r3))(2);
-pcsimple(X(r1))(2)(X(r4))(2);
-pcsimple(X(r1))(2)(X(r5))(2);
-pcsimple(X(n2))(0)(X(r2))(1);
-pcsimple(X(n2))(0)(X(r3))(1);
-pcsimple(X(n2))(0)(X(r4))(1);
-pcsimple(X(n2))(0)(X(r5))(1);
+XdrawObj(r1,r2,r3,r4,r5,m1,m2);
+Xpclist(
+	"n1,0,r1,1",
+	"r1,2,r2,2",
+	"r1,2,r3,2",
+	"r1,2,r4,2",
+	"r1,2,r5,2",
+	"n2,0,r2,1",
+	"n2,0,r3,1",
+	"n2,0,r4,1",
+	"n2,0,r5,1"
+);

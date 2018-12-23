@@ -1,24 +1,24 @@
-newRa.X(r1);
-ObjMLP.X(r1)("R")(in)(top);
-newRa.X(r2);
-ObjMLP.X(r2)("R")(in)(top);
-newRa.X(r3);
-ObjMLP.X(r3)("R")(in)(top);
-newRa.X(r4) "angle(90)";
-ObjMLP.X(r4)("R")(is)(rt);
-newRa.X(r5) "angle(90)";
-ObjMLP.X(r5)("R")(is)(rt);
-newRa.X(r6) "angle(90)";
-ObjMLP.X(r6)("R")(is)(rt);
-newRa.X(r7) "angle(90)";
-ObjMLP.X(r7)("R")(is)(rt);
+XnewRa.r1;
+XObjMLP.r1("R")(in)(top);
+XnewRa.r2;
+XObjMLP.r2("R")(in)(top);
+XnewRa.r3;
+XObjMLP.r3("R")(in)(top);
+XnewRa.r4 "angle(90)";
+XObjMLP.r4("R")(is)(rt);
+XnewRa.r5 "angle(90)";
+XObjMLP.r5("R")(is)(rt);
+XnewRa.r6 "angle(90)";
+XObjMLP.r6("R")(is)(rt);
+XnewRa.r7 "angle(90)";
+XObjMLP.r7("R")(is)(rt);
 
-newCDM.X(m1);
-ObjMLP.X(m1)("R_{eq}")(in)(top);
+XnewCDM.m1;
+XObjMLP.m1("R_{eq}")(in)(top);
 
 
-newNode.X(n1);
-newNode.X(n2);
+XnewNode.n1;
+XnewNode.n2;
 
 X(n1).c = X(n2).c + UD(0, 9);
 X(n2).c = UD(0, -6);
@@ -31,16 +31,18 @@ X(r2).c = (X(r6).c+X(r5).c)/2 + UD(0,3);
 X(r1).c = (xpart X(r2).c, ypart X(n1).c);
 X(m1).e = (xpart X(r4).c, ypart X(r2).c);
 
-drawObj(X(r1),X(r2),X(r3),X(r4),X(r5),X(r6),X(r7),X(m1));
-pcsimple(X(n1))(0)(X(r1))(1);
-pcsimple(X(n1))(0)(X(r4))(2);
-pcsimple(X(r1))(2)(X(r7))(2);
-pcsimple(X(r2))(1)(X(r4))(2);
-pcsimple(X(r2))(1)(X(r5))(2);
-pcsimple(X(r2))(2)(X(r6))(2);
-pcsimple(X(r2))(2)(X(r7))(2);
-pcsimple(X(n2))(0)(X(r4))(1);
-pcsimple(X(n2))(0)(X(r5))(1);
-pcsimple(X(n2))(0)(X(r6))(1);
-pcsimple(X(n2))(0)(X(r3))(1);
-pcsimple(X(r3))(2)(X(r7))(1);
+XdrawObj(r1,r2,r3,r4,r5,r6,r7,m1);
+Xpclist(
+	"n1,0,r1,1",
+	"n1,0,r4,2",
+	"r1,2,r7,2",
+	"r2,1,r4,2",
+	"r2,1,r5,2",
+	"r2,2,r6,2",
+	"r2,2,r7,2",
+	"n2,0,r4,1",
+	"n2,0,r5,1",
+	"n2,0,r6,1",
+	"n2,0,r3,1",
+	"r3,2,r7,1"
+);

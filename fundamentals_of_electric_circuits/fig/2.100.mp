@@ -1,34 +1,34 @@
-newRa.X(r1);
-ObjMLP.X(r1)("80\Omega")(in)(top);
-newRa.X(r2);
-ObjMLP.X(r2)("24\Omega")(in)(top);
-newRa.X(r3);
-ObjMLP.X(r3)("50\Omega")(in)(top);
+XnewRa.r1;
+XObjMLP.r1("80\Omega")(in)(top);
+XnewRa.r2;
+XObjMLP.r2("24\Omega")(in)(top);
+XnewRa.r3;
+XObjMLP.r3("50\Omega")(in)(top);
 
-newRa.X(r4) "angle(90)";
-ObjMLP.X(r4)("25\Omega")(is)(rt);
-newRa.X(r5) "angle(90)";
-ObjMLP.X(r5)("20\Omega")(is)(rt);
-newRa.X(r6) "angle(90)";
-ObjMLP.X(r6)("30\Omega")(in)(lft);
-ObjMLP.X(r6)("+")(ise)(rt);
-ObjMLP.X(r6)("-")(isw)(rt);
-ObjMLP.X(r6)("V_o")(is)(rt);
-newRa.X(r7) "angle(90)";
-ObjMLP.X(r7)("60\Omega")(in)(lft);
-newRa.X(r8) "angle(90)";
-ObjMLP.X(r8)("20\Omega")(is)(rt);
+XnewRa.r4 "angle(90)";
+XObjMLP.r4("25\Omega")(is)(rt);
+XnewRa.r5 "angle(90)";
+XObjMLP.r5("20\Omega")(is)(rt);
+XnewRa.r6 "angle(90)";
+XObjMLP.r6("30\Omega")(in)(lft);
+XObjMLP.r6("+")(ise)(rt);
+XObjMLP.r6("-")(isw)(rt);
+XObjMLP.r6("V_o")(is)(rt);
+XnewRa.r7 "angle(90)";
+XObjMLP.r7("60\Omega")(in)(lft);
+XnewRa.r8 "angle(90)";
+XObjMLP.r8("20\Omega")(is)(rt);
 
-newIVS.X(u1) "angle(90)";
-ObjMLP.X(u1)("20V")(in)(lft);
+XnewIVS.u1 "angle(90)";
+XObjMLP.u1("20V")(in)(lft);
 
-newCDM.X(m1);
-ObjMLP.X(m1)("i")(in)(top);
+XnewCDM.m1;
+XObjMLP.m1("i")(in)(top);
 
 
-newNode.X(n1);
-newNode.X(n2);
-newNode.X(n3);
+XnewNode.n1;
+XnewNode.n2;
+XnewNode.n3;
 
 X(n3).c = origin;
 
@@ -46,22 +46,21 @@ X(r8).c = X(n3).c + UD(2,-3);
 
 X(m1).se = X(r1).iw;
 
-drawObj(X(r1),X(r2),X(r3),X(r4),X(r5),X(r6),X(r7),X(r8),X(u1),X(m1));
-pcsimple(X(u1))(2)(X(n1))(90);
-pcsimple(X(u1))(1)(X(n2))(-90);
-
-pcsimple(X(n1))(0)(X(r1))(1);
-pcsimple(X(r1))(2)(X(r4))(2);
-pcsimple(X(r1))(2)(X(r2))(1);
-pcsimple(X(r2))(2)(X(r5))(2);
-pcsimple(X(r2))(2)(X(r3))(1);
-pcsimple(X(r3))(2)(X(r6))(2);
-
-pcsimple(X(n3))(90)(X(r4))(1);
-pcsimple(X(n3))(180)(X(r7))(2);
-pcsimple(X(n3))(0)(X(r8))(2);
-
-pcsimple(X(n2))(0)(X(r7))(1);
-pcsimple(X(n2))(0)(X(r8))(1);
-pcsimple(X(n2))(0)(X(r5))(1);
-pcsimple(X(n2))(0)(X(r6))(1);
+XdrawObj(r1,r2,r3,r4,r5,r6,r7,r8,u1,m1);
+Xpclist(
+	"u1,2,n1,90",
+	"u1,1,n2,-90",
+	"n1,0,r1,1",
+	"r1,2,r4,2",
+	"r1,2,r2,1",
+	"r2,2,r5,2",
+	"r2,2,r3,1",
+	"r3,2,r6,2",
+	"n3,90,r4,1",
+	"n3,180,r7,2",
+	"n3,0,r8,2",
+	"n2,0,r7,1",
+	"n2,0,r8,1",
+	"n2,0,r5,1",
+	"n2,0,r6,1"
+);

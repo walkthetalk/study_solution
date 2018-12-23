@@ -1,16 +1,16 @@
-newR.X(r1);
-ObjMLP.X(r1)("16\Omega")(in)(top);
-newR.X(r2);
-ObjMLP.X(r2)("14\Omega")(in)(top);
-newIVS.X(u1) "angle(90)";
-ObjMLP.X(u1)("10V")(in)(lft);
-newIVS.X(u2) "angle(90)";
-ObjMLP.X(u2)("25V")(is)(rt);
+XnewR.r1;
+XObjMLP.r1("16\Omega")(in)(top);
+XnewR.r2;
+XObjMLP.r2("14\Omega")(in)(top);
+XnewIVS.u1 "angle(90)";
+XObjMLP.u1("10V")(in)(lft);
+XnewIVS.u2 "angle(90)";
+XObjMLP.u2("25V")(is)(rt);
 
-newNode.X(n1);
-ObjMLP.X(n1)("+")(is)(bot);
-newNode.X(n2);
-ObjMLP.X(n2)("-")(in)(top);
+XnewNode.n1;
+XObjMLP.n1("+")(is)(bot);
+XnewNode.n2;
+XObjMLP.n2("-")(in)(top);
 
 X(n1).c = UD(0, 3);
 X(n2).c = UD(0,-3);
@@ -19,13 +19,15 @@ X(r2).c = X(n1).c + UD( 3, 0);
 X(u1).c = UD(-6, 0);
 X(u2).c = UD( 6, 0);
 
-ObjMLabel.X(n2)("V_0") "labshift((X(n1).c - X(n2).c) / 2)";
+XObjMLP.n2("V_0")(c)(c) "labshift((X(n1).c - X(n2).c) / 2)";
 
-drawObj(X(r1),X(r2),X(u1),X(u2));
-pcsimple(X(r1))(2)(X(n1))(0);
-pcsimple(X(n1))(0)(X(r2))(1);
-pcsimple(X(r2))(2)(X(u2))(2);
-pcsimple(X(u2))(1)(X(n2))(180);
-pcsimple(X(n2))(180)(X(u1))(1);
-pcsimple(X(u1))(2)(X(r1))(1);
-drawObj(X(n1),X(n2));
+XdrawObj(r1,r2,u1,u2);
+Xpclist(
+	"r1,2,n1,0",
+	"n1,0,r2,1",
+	"r2,2,u2,2",
+	"u2,1,n2,180",
+	"n2,180,u1,1",
+	"u1,2,r1,1"
+);
+XdrawObj(n1,n2);

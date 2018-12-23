@@ -16,6 +16,14 @@ vardef stringify_color(expr _c) =
 enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% schematic aux %%%%%%%%%%%%%%%%%%%%%%%%%%%
+vardef defXExt(expr _src_)=
+	save _tmp; string tmp;
+	tmp := "vardef X" & _src_ & "@# text _options_ ="
+		& _src_ & " X(@#) _options_ "
+		& "enddef;";
+	sc_ tmp;
+enddef;
+
 % WARNING: if no underbar, the name will be conflict with context internal
 vardef stringifyFrame@#(expr _p)=
 	message "   :"
@@ -284,7 +292,9 @@ enddef;
 vardef ObjMLP@#(text p)(suffix _labpoint_)(suffix _labdir_) text options=
 	ObjMLabel@#(p)
 		"labpoint(" & (str _labpoint_) & ")",
-		"labdir(" & (str _labdir_) & ")",
+		if (str _labdir_) <> "c":
+			"labdir(" & (str _labdir_) & ")",
+		fi
 		options;
 enddef;
 
@@ -594,6 +604,65 @@ vardef pcsimple@#(text n)(text pn)(text m)(text pm) text options =
 	);
 enddef;
 
+% NOTE: if _src_ contain '-', we can't use 'suffix' to iterate it.
+%       so we need use custom function.
+vardef Xsplitstr@#(expr _src_) =
+	save _tc_, pcnt, scnt;
+	string _tc_;
+
+	@#idx := 0; @#[0] := "";
+	numeric pcnt;pcnt:= 0;
+	numeric scnt;scnt:= 0;
+	for i:=1 upto length _src_:
+		_tc_ := substring (i-1, i) of _src_;
+		if (_tc_ = ",") and (pcnt = 0) and (scnt = 0):
+			@#idx := @#idx + 1;
+			@#[@#idx] := "";
+		else:
+			@#[@#idx] := @#[@#idx] & _tc_;
+			if (_tc_ = "("):
+				pcnt := pcnt + 1;
+			elseif (_tc_ = ")"):
+				pcnt := pcnt - 1;
+			elseif (_tc_ = "["):
+				scnt := scnt + 1;
+			elseif (_tc_ = "]"):
+				scnt := scnt - 1;
+			fi;
+		fi;
+	endfor;
+enddef;
+
+vardef pclist@#(text _conns_) text options =
+	save sstr;
+	string sstr[];
+	numeric sstr.idx;
+
+	for $ = _conns_:
+		Xsplitstr.sstr($);
+		pcsimple@#
+			(sc_ sstr[0])
+			(sc_ sstr[1])
+			(sc_ sstr[2])
+			(sc_ sstr[3]) options;
+	endfor;
+enddef;
+
+vardef Xpclist@#(text _conns_) text options =
+	save sstr;
+	string sstr[];
+	numeric sstr.idx;
+
+	for $ = _conns_:
+		Xsplitstr.sstr($);
+		pcsimple@#
+			(X(sc_ sstr[0]))
+			(sc_ sstr[1])
+			(X(sc_ sstr[2]))
+			(sc_ sstr[3]) options;
+	endfor;
+enddef;
+
 vardef pcsimple_(suffix $)(suffix n,m)(suffix p)=
   % we have to find one additional points; we must be careful
   % not to use assignments, because |n.c| and |m.c|
@@ -630,4 +699,29 @@ vardef pcsimple_(suffix $)(suffix n,m)(suffix p)=
       (smoothen(objectpoint_(n)("A")--ap1--ap2--objectpoint_(m)("B"))
          (CLOV_("linearc")));
   fi;
+enddef;
+
+%%%%%%%%%%%%%%%%%%%%%%%%% X series %%%%%%%%%%%%%%%%%%%%%%%%%
+defXExt("newNode");
+defXExt("newRa");
+defXExt("newR");
+defXExt("newSwitch");
+defXExt("newIVS");
+defXExt("newICS");
+defXExt("newDVS");
+defXExt("newDCS");
+defXExt("newCDM");
+defXExt("ObjMLP");
+
+vardef Xncline@#(text n)(text m) text options =
+	ncline@#(X(n))(X(m)) options;
+enddef;
+vardef Xnccurve@#(text n)(text m) text options =
+	nccurve@#(X(n))(X(m)) options;
+enddef;
+
+def XdrawObj(text l)=
+	forsuffixes $:=l:
+		drawObj(X($));
+	endfor;
 enddef;

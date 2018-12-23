@@ -1,27 +1,29 @@
-newRa.X(r1) "angle(90)";
-ObjMLP.X(r1)("3\Omega")(is)(rt);
-ObjMLP.X(r1)("p_4")(in)(lft);
-newIVS.X(u1) "angle(180)";
-ObjMLP.X(u1)("10V")(is)(top);
-ObjMLP.X(u1)("p_1")(in)(bot);
-newIVS.X(u2) "angle(90)";
-ObjMLP.X(u2)("12V")(in)(lft);
-ObjMLP.X(u2)("p_2")(is)(rt);
-newIVS.X(u3) "angle(180)";
-ObjMLP.X(u3)("-8V")(in)(bot);
-ObjMLP.X(u3)("p_3")(is)(top);
+XnewRa.r1 "angle(90)";
+XObjMLP.r1("3\Omega")(is)(rt);
+XObjMLP.r1("p_4")(in)(lft);
+XnewIVS.u1 "angle(180)";
+XObjMLP.u1("10V")(is)(top);
+XObjMLP.u1("p_1")(in)(bot);
+XnewIVS.u2 "angle(90)";
+XObjMLP.u2("12V")(in)(lft);
+XObjMLP.u2("p_2")(is)(rt);
+XnewIVS.u3 "angle(180)";
+XObjMLP.u3("-8V")(in)(bot);
+XObjMLP.u3("p_3")(is)(top);
 
-newCDM.X(m0) "angle(-90)";
-ObjMLP.X(m0)("I")(in)(rt);
+XnewCDM.m0 "angle(-90)";
+XObjMLP.m0("I")(in)(rt);
 
-X(r1).c = UD(3,0);
-X(u1).c = UD(0,3);
-X(u2).c = UD(-3,0);
-X(u3).c = UD(0,-3);
+X(r1).c = UD(4,0);
+X(u1).c = UD(0,4);
+X(u2).c = UD(-4,0);
+X(u3).c = UD(0,-4);
 X(m0).se = X(r1).ie;
 
-drawObj(X(r1),X(u1),X(u2),X(u3),X(m0));
-pcsimple(X(r1))(2)(X(u1))(1);
-pcsimple(X(r1))(1)(X(u3))(1);
-pcsimple(X(u2))(2)(X(u1))(2);
-pcsimple(X(u2))(1)(X(u3))(2);
+XdrawObj(r1,u1,u2,u3,m0);
+Xpclist(
+	"r1,2,u1,1",
+	"r1,1,u3,1",
+	"u2,2,u1,2",
+	"u2,1,u3,2"
+);

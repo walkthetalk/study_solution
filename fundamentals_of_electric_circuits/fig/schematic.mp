@@ -499,6 +499,53 @@ def drawIVS(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
+%%%%%%%%%%%%%%%%%% Light Bult %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("LightBulb")("angle")(0);
+setObjectDefaultOption("LightBulb")("dx")(4);
+setObjectDefaultOption("LightBulb")("dy")(6);
+setObjectDefaultOption("LightBulb")("linecolor")(FireBrick);
+setObjectDefaultOption("LightBulb")("pathfillcolor")(Khaki);
+
+% assign point value by regular value
+def RegToReal(suffix n)(text _point_or_path_)=
+	((_point_or_path_)
+		xscaled (n.dx * elesize_ratio)
+		yscaled (n.dy * elesize_ratio)
+		rotated n.ang shifted n.c)
+enddef;
+vardef newLightBulb@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "LightBulb");
+
+	SchematicInterface(2);
+	ObjPointArray(bpl)(7); % bounding point list
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 0),0)";
+
+	@#bpl[1] = (-0.4,0.2);
+	@#bpl[2] = (-0.2,-0.25);
+	@#bpl[3] = (-0.2,-0.25);
+	@#bpl[4] = (-0.2,-0.42);
+	@#bpl[5] = (-0.46,-0.42);
+	@#bpl[6] = (-0.5,-0.46);
+	@#bpl[7] = (-0.5,-0.5);
+
+	ObjPath(BpathLightBulb(@#));% "pathfilled(true)";
+enddef;
+def BpathLightBulbAux(suffix n)=
+	(n.bpl[1]{dir -90}..{dir -110}n.bpl[2]
+	--n.bpl[3]--n.bpl[4]--n.bpl[5]{dir 180}..{dir -90}n.bpl[6]--n.bpl[7])
+enddef;
+def BpathLightBulb(suffix n)=
+	RegToReal(n)(BpathLightBulbAux(n)--(reverse (BpathLightBulbAux(n) xscaled (-1)))
+	..{dir 180}(0,0.5)..cycle)
+enddef;
+def drawLightBulb(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
 %%%%%%%%%%%%%%%%%% Current Direction Mark %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("CDM")("angle")(0);
 setObjectDefaultOption("CDM")("dx")(3);
@@ -710,6 +757,7 @@ defXExt("newIVS");
 defXExt("newICS");
 defXExt("newDVS");
 defXExt("newDCS");
+defXExt("newLightBulb");
 defXExt("newCDM");
 defXExt("ObjMLP");
 

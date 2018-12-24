@@ -502,7 +502,7 @@ enddef;
 %%%%%%%%%%%%%%%%%% Light Bult %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("LightBulb")("angle")(0);
 setObjectDefaultOption("LightBulb")("dx")(4);
-setObjectDefaultOption("LightBulb")("dy")(6);
+setObjectDefaultOption("LightBulb")("dy")(5.4);
 setObjectDefaultOption("LightBulb")("linecolor")(FireBrick);
 setObjectDefaultOption("LightBulb")("pathfillcolor")(Khaki);
 
@@ -513,30 +513,82 @@ def RegToReal(suffix n)(text _point_or_path_)=
 		yscaled (n.dy * elesize_ratio)
 		rotated n.ang shifted n.c)
 enddef;
+vardef ___zigzag(expr _n_)=
+	save _h_; numeric _h_; _h_ := 0.4;
+	save _p_; path _p_;
+	_p_ := origin;
+	_p_ := _p_{dir 90}..(0.5,_h_){dir 0}..{dir -90}(1,0);
+	for i:=1 step 0.5 until _n_/2:
+		_p_ := _p_..(i-0.25,-_h_){dir 180}..(i-0.5,0){dir 90}..(i,_h_){dir 0}..{dir -90}(i+0.5,0);
+	endfor;
+
+	_p_
+enddef;
+
+vardef __zigzag(expr _l_, _n_)=
+	save _xs_; numeric _xs_;
+	_xs_ = _l_ / (_n_/2+0.5);
+	(___zigzag(_n_) xscaled _xs_ yscaled _xs_)
+enddef;
+
 vardef newLightBulb@# text options =
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "LightBulb");
 
 	SchematicInterface(2);
-	ObjPointArray(bpl)(7); % bounding point list
+	ObjPointArray(bpl)(8); % bounding point list
+	ObjNumeric zigzagn;
 
 	ObjCode "SchematicEq@#",
 		"defPin@#(1,StdPos@#(w, 0),180)",
 		"defPin@#(2,StdPos@#(e, 0),0)";
 
-	@#bpl[1] = (-0.4,0.2);
-	@#bpl[2] = (-0.2,-0.25);
-	@#bpl[3] = (-0.2,-0.25);
-	@#bpl[4] = (-0.2,-0.42);
-	@#bpl[5] = (-0.46,-0.42);
-	@#bpl[6] = (-0.5,-0.46);
-	@#bpl[7] = (-0.5,-0.5);
+	@#bpl[1] = (-0.345,0.24);
+	@#bpl[2] = (-0.237,0.06);
+	@#bpl[3] = (-0.185,-0.17);
+	@#bpl[4] = (-0.185,-0.17);
+	@#bpl[5] = (-0.185,-0.42);
+	@#bpl[6] = (-0.46,-0.42);
+	@#bpl[7] = (-0.5,-0.46);
+	@#bpl[8] = (-0.5,-0.5);
+	@#bpl[9] = (-0.19,0.2);
+	@#bpl[10]= (-0.1,-0.17);
+	@#zigzagn= 5;
 
-	ObjPath(BpathLightBulb(@#));% "pathfilled(true)";
+	for i := -0.5 step 0.1 until 0.5:
+		ObjPath(RegToReal(@#)((i,0.5)--(i,-0.5))) "linecolor(blue)";
+		ObjPath(RegToReal(@#)((0.5,i)--(-0.5,i))) "linecolor(blue)";
+	endfor;
+	ObjPath(BpathLightBulb(@#));
+	ObjPath(RegToReal(@#)(
+		__zigzag(-(xpart @#bpl[9])*2,@#zigzagn) shifted @#bpl[9]
+	)) "linecolor(Orange)", "linewidth(3)";
+	ObjPath(RegToReal(@#)(
+		BpathLightBulbD(@#)
+	)) "linecolor(LightSlateGray)", "linewidth(5)";
+	ObjPath(RegToReal(@#)(
+		BpathLightBulbD(@#) xscaled (-1)
+	)) "linecolor(LightSlateGray)", "linewidth(5)";
+	ObjPath(RegToReal(@#)(
+		BpathLightBulbA(@#)--(reverse BpathLightBulbA(@#) xscaled (-1))..{dir 180}(0,0.5)..cycle
+	)) "linecolor(Orange)", "linewidth(3)";
+	ObjPath(fullcircle shifted RegToReal(@#)(0,0));
+enddef;
+def BpathLightBulbA(suffix n)=
+	(n.bpl[1]{dir -90}..{dir -40}n.bpl[2]..{dir -100}n.bpl[3])
+enddef;
+def BpathLightBulbB(suffix n)=
+	(n.bpl[4]--n.bpl[5])
+enddef;
+def BpathLightBulbC(suffix n)=
+	(n.bpl[6]{dir 180}..{dir -90}n.bpl[7]--n.bpl[8])
+enddef;
+def BpathLightBulbD(suffix n)=
+	(n.bpl[9]--n.bpl[10])
 enddef;
 def BpathLightBulbAux(suffix n)=
-	(n.bpl[1]{dir -90}..{dir -110}n.bpl[2]
-	--n.bpl[3]--n.bpl[4]--n.bpl[5]{dir 180}..{dir -90}n.bpl[6]--n.bpl[7])
+	(BpathLightBulbA(n)--BpathLightBulbB(n)
+	--BpathLightBulbC(n))
 enddef;
 def BpathLightBulb(suffix n)=
 	RegToReal(n)(BpathLightBulbAux(n)--(reverse (BpathLightBulbAux(n) xscaled (-1)))

@@ -499,7 +499,7 @@ def drawIVS(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
-%%%%%%%%%%%%%%%%%% Light Bult %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% Light Bulb %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("LightBulb")("angle")(0);
 setObjectDefaultOption("LightBulb")("dx")(4);
 setObjectDefaultOption("LightBulb")("dy")(5.4);
@@ -562,16 +562,16 @@ vardef newLightBulb@# text options =
 	ObjPath(BpathLightBulb(@#));
 	ObjPath(RegToReal(@#)(
 		__zigzag(-(xpart @#bpl[9])*2,@#zigzagn) shifted @#bpl[9]
-	)) "linecolor(Orange)", "linewidth(3)";
+	)) "linecolor(Orange)";%, "linewidth(1)";
 	ObjPath(RegToReal(@#)(
 		BpathLightBulbD(@#)
-	)) "linecolor(LightSlateGray)", "linewidth(5)";
+	)) "linecolor(LightSlateGray)", "linewidth(2)";
 	ObjPath(RegToReal(@#)(
 		BpathLightBulbD(@#) xscaled (-1)
-	)) "linecolor(LightSlateGray)", "linewidth(5)";
+	)) "linecolor(LightSlateGray)", "linewidth(2)";
 	ObjPath(RegToReal(@#)(
 		BpathLightBulbA(@#)--(reverse BpathLightBulbA(@#) xscaled (-1))..{dir 180}(0,0.5)..cycle
-	)) "linecolor(Orange)", "linewidth(3)";
+	)) "linecolor(Orange)", "linewidth(1)";
 	ObjPath(fullcircle shifted RegToReal(@#)(0,0));
 enddef;
 def BpathLightBulbA(suffix n)=
@@ -596,6 +596,14 @@ def BpathLightBulb(suffix n)=
 enddef;
 def drawLightBulb(suffix n) =
 	drawMemorizedPaths_(n);
+	withshademethod "circular"
+
+	fill fullcircle scaled 5cm shifted (6cm,0)
+withshademethod "circular"
+withcolor "red" shadedinto "blue"
+;
+
+
 enddef;
 
 %%%%%%%%%%%%%%%%%% Current Direction Mark %%%%%%%%%%%%%%%%%%

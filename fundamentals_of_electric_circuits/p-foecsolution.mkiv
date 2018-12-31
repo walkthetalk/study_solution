@@ -139,7 +139,7 @@ end
 \def\placeschemq{\dodoubleempty\doplaceschemq}
 \def\doplaceschemq[#1][#2]#3#4{%
   \fixCounter{figure}{#3}
-  \placefigure[here][fig:#3]{for \refq{#4}}{%
+  \placefigure[always,here,force][fig:#3]{for \refq{#4}}{%
     \ctxlua{commands.figComb([==[schemfig]==],[==[#1]==],[==[#2]==],[==[#3]==])}
   }%
 }
@@ -147,7 +147,7 @@ end
 % schematic figure for answer
 \def\placeschema{\dodoubleempty\doplaceschema}
 \def\doplaceschema[#1][#2]#3{%
-  \placeafigure[here][afig:#3]{for \refq{#3}}{%
+  \placeafigure[always,here,force][afig:#3]{for \refq{#3}}{%
     \ctxlua{commands.figComb([==[schemfig]==],[==[#1]==],[==[#2]==],[==[a#3]==])}
   }%
 }

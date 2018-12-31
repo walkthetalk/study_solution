@@ -2,7 +2,7 @@ input smetaobj;
 input colordef;
 
 numeric elesize_ratio;
-elesize_ratio := 5;
+elesize_ratio := 3;
 numeric eleconn_ratio;
 eleconn_ratio := 10;
 def UD(text _nop_)=
@@ -114,8 +114,13 @@ enddef;
 
 vardef SchematicEq@#=
 	@#ang:= OptionValue@#("angle");
-	@#dx = OptionValue@#("dx") * elesize_ratio;
-	@#dy = OptionValue@#("dy") * elesize_ratio;
+	if unknown @#.mainpic:%
+		@#dx = OptionValue@#("dx") * elesize_ratio;
+		@#dy = OptionValue@#("dy") * elesize_ratio;
+	else:
+		@#dx = xpart (urcorner @#.mainpic - ulcorner @#.mainpic);
+		@#dy = ypart (urcorner @#.mainpic - lrcorner @#.mainpic);
+	fi;
 
 	save DX,DY; numeric DX,DY;
 	DX = @#dx + 1*elesize_ratio;
@@ -175,9 +180,9 @@ vardef StdPos@#(suffix _edge)(expr _offset)=
 	save _pu; numeric _pu; _pu:=5;
 (
 	if _edgestr = "n":
-		(0, -@#dy/2) shifted (_offset * _pu, 0)
-	elseif _edgestr = "s":
 		(0, @#dy/2) shifted (_offset * _pu, 0)
+	elseif _edgestr = "s":
+		(0, -@#dy/2) shifted (_offset * _pu, 0)
 	elseif _edgestr = "w":
 		(-@#dx/2, 0) shifted (0, _offset * _pu)
 	elseif _edgestr = "e":
@@ -194,6 +199,10 @@ enddef;
 %       |_angle|: the angle for output direction
 vardef defPin@#(expr _pinid, _pos, _angle) =
 	@#pin[_pinid]=_pos rotated @#ang shifted @#c;
+	@#pin_angle[_pinid]=_angle + @#ang;
+enddef;
+vardef defSpotPin@#(suffix _pinid, _pos, _angle) =
+	@#pin[_pinid]=@#_pos;
 	@#pin_angle[_pinid]=_angle + @#ang;
 enddef;
 
@@ -288,9 +297,20 @@ setCurveDefaultOption("linecolor")(SteelBlue);
 vardef ObjMLabel@#(text p) text options=
 	ObjLabel@#(textext("$" & p & "$")) options;
 enddef;
+vardef ObjTLabel@#(text p) text options=
+	ObjLabel@#(textext(p)) options;
+enddef;
 
 vardef ObjMLP@#(text p)(suffix _labpoint_)(suffix _labdir_) text options=
 	ObjMLabel@#(p)
+		"labpoint(" & (str _labpoint_) & ")",
+		if (str _labdir_) <> "c":
+			"labdir(" & (str _labdir_) & ")",
+		fi
+		options;
+enddef;
+vardef ObjTLP@#(text p)(suffix _labpoint_)(suffix _labdir_) text options=
+	ObjTLabel@#(p)
 		"labpoint(" & (str _labpoint_) & ")",
 		if (str _labdir_) <> "c":
 			"labdir(" & (str _labdir_) & ")",
@@ -501,16 +521,17 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Light Bulb %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("LightBulb")("angle")(0);
-setObjectDefaultOption("LightBulb")("dx")(4);
-setObjectDefaultOption("LightBulb")("dy")(5.4);
+setObjectDefaultOption("LightBulb")("dx")(6);
+setObjectDefaultOption("LightBulb")("dy")(8.1);
 setObjectDefaultOption("LightBulb")("linecolor")(FireBrick);
 setObjectDefaultOption("LightBulb")("pathfillcolor")(Khaki);
 
 % assign point value by regular value
+% NOTE: X=[-0.5,0.5], Y=[-0.5,0.5]
 def RegToReal(suffix n)(text _point_or_path_)=
 	((_point_or_path_)
-		xscaled (n.dx * elesize_ratio)
-		yscaled (n.dy * elesize_ratio)
+		xscaled (n.dx)
+		yscaled (n.dy)
 		rotated n.ang shifted n.c)
 enddef;
 vardef ___zigzag(expr _n_)=
@@ -531,17 +552,24 @@ vardef __zigzag(expr _l_, _n_)=
 	(___zigzag(_n_) xscaled _xs_ yscaled _xs_)
 enddef;
 
+vardef ObjFixedPointArray(suffix a)(expr n)=
+  save co;string co;co=currentObjname;
+  if not isOfType("pair",co & "." & str a & "1"):
+    sc_ ("pair " & generisize_(co) & "." & str a & "[]");
+  fi;
+enddef;
+
 vardef newLightBulb@# text options =
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "LightBulb");
 
 	SchematicInterface(2);
-	ObjPointArray(bpl)(8); % bounding point list
+	ObjFixedPointArray(bpl)(8); % bounding point list
 	ObjNumeric zigzagn;
 
 	ObjCode "SchematicEq@#",
-		"defPin@#(1,StdPos@#(w, 0),180)",
-		"defPin@#(2,StdPos@#(e, 0),0)";
+		"defSpotPin@#(1,isw,180)",
+		"defSpotPin@#(2,ise,0)";
 
 	@#bpl[1] = (-0.345,0.24);
 	@#bpl[2] = (-0.237,0.06);
@@ -556,23 +584,20 @@ vardef newLightBulb@# text options =
 	@#zigzagn= 5;
 
 	for i := -0.5 step 0.1 until 0.5:
-		ObjPath(RegToReal(@#)((i,0.5)--(i,-0.5))) "linecolor(blue)";
-		ObjPath(RegToReal(@#)((0.5,i)--(-0.5,i))) "linecolor(blue)";
+		%ObjPath(RegToReal(@#)((i,0.5)--(i,-0.5))) "linecolor(blue)";
+		%ObjPath(RegToReal(@#)((0.5,i)--(-0.5,i))) "linecolor(blue)";
 	endfor;
-	ObjPath(BpathLightBulb(@#));
+
 	ObjPath(RegToReal(@#)(
-		__zigzag(-(xpart @#bpl[9])*2,@#zigzagn) shifted @#bpl[9]
+		BpathLightBulbBulb(@#)
 	)) "linecolor(Orange)";%, "linewidth(1)";
+	%ObjPath(fullcircle shifted RegToReal(@#)(0,0));
 	ObjPath(RegToReal(@#)(
-		BpathLightBulbD(@#)
-	)) "linecolor(LightSlateGray)", "linewidth(2)";
+		BpathLightBulbHull(@#)
+	)) "linecolor(black)";%, "linewidth(1)";
 	ObjPath(RegToReal(@#)(
-		BpathLightBulbD(@#) xscaled (-1)
-	)) "linecolor(LightSlateGray)", "linewidth(2)";
-	ObjPath(RegToReal(@#)(
-		BpathLightBulbA(@#)--(reverse BpathLightBulbA(@#) xscaled (-1))..{dir 180}(0,0.5)..cycle
-	)) "linecolor(Orange)", "linewidth(1)";
-	ObjPath(fullcircle shifted RegToReal(@#)(0,0));
+		BpathLightBulbBase(@#)
+	)) "linecolor(black)";%, "linewidth(1)";
 enddef;
 def BpathLightBulbA(suffix n)=
 	(n.bpl[1]{dir -90}..{dir -40}n.bpl[2]..{dir -100}n.bpl[3])
@@ -580,30 +605,92 @@ enddef;
 def BpathLightBulbB(suffix n)=
 	(n.bpl[4]--n.bpl[5])
 enddef;
+vardef BpathLightBulbHull(suffix n)=
+	(BpathLightBulbB(n)--(reverse BpathLightBulbB(n) xscaled (-1))--cycle)
+enddef;
 def BpathLightBulbC(suffix n)=
 	(n.bpl[6]{dir 180}..{dir -90}n.bpl[7]--n.bpl[8])
 enddef;
-def BpathLightBulbD(suffix n)=
+vardef BpathLightBulbBase(suffix n)=
+	(BpathLightBulbC(n)--(reverse BpathLightBulbC(n) xscaled (-1))--cycle)
+enddef;
+def BpathLightBulbRod(suffix n)=
 	(n.bpl[9]--n.bpl[10])
 enddef;
-def BpathLightBulbAux(suffix n)=
-	(BpathLightBulbA(n)--BpathLightBulbB(n)
-	--BpathLightBulbC(n))
+def BpathLightBulbBulb(suffix n)=
+	(BpathLightBulbA(n)--(reverse BpathLightBulbA(n) xscaled (-1))..{dir 180}(0,0.5)..cycle)
+enddef;
+vardef BpathLightBulbFlash(suffix n)=
+	save _p; path _p;
+	_p := (0, 0)--(1,0);
+	for i := 0 upto 5:
+		_p := _p -- ((.5,0) rotated (i * 30+15))
+			-- ((1, 0) rotated (i * 30+30));
+	endfor;
+	_p := _p -- cycle;
+	_p
+enddef;
+vardef BpathLightBulbScrew(suffix n)=
+	(n.bpl[4]{dir -5}..(0, ypart n.bpl[4]){dir 5}..(n.bpl[4] xscaled (-1)){dir -5})
+enddef;
+vardef BpathLightBulbAux(suffix n)=
+	save _p_; path _p_;
+	_p_ := (BpathLightBulbA(n)--BpathLightBulbB(n)--BpathLightBulbC(n));
+	(_p_--(reverse _p_ xscaled (-1))..{dir 180}(0,0.5)..cycle)
 enddef;
 def BpathLightBulb(suffix n)=
-	RegToReal(n)(BpathLightBulbAux(n)--(reverse (BpathLightBulbAux(n) xscaled (-1)))
-	..{dir 180}(0,0.5)..cycle)
+	RegToReal(n)(BpathLightBulbAux(n))
 enddef;
-def drawLightBulb(suffix n) =
+vardef drawLightBulb(suffix n) =
+	save _tsquare_;
+	vardef _tsquare_(expr xstart, xend)=
+		((xstart,-0.5)--(xend,-0.5)--(xend,0.5)--(xstart,0.5)--cycle)
+	enddef;
+	save _shadehull_; picture _shadehull_;
+	_shadehull_ := image(
+		fill _tsquare_(-0.5,-0.15) withcolor Gray;
+		fill _tsquare_(xpart n.bpl[4],-0.05)
+			withshademethod "linear"
+			withshadevector (0,1)
+			withshadecolors (Gray,white);
+		fill _tsquare_(-0.05, 0.101)
+			withshademethod "linear"
+			withshadevector (0,1)
+			withshadecolors (white,black);
+		fill _tsquare_(0.099,-xpart n.bpl[4])
+			withshademethod "linear"
+			withshadevector (0,1)
+			withshadecolors (black, Gray);
+		for i := 1 upto 4:
+			draw BpathLightBulbScrew(n) shifted (0, (-i * 0.02))
+				withcolor black withpen (pencircle scaled 0.01);
+		endfor;
+	);
+	clip _shadehull_ to BpathLightBulbHull(n);
+
+	save _shadebulb_; picture _shadebulb_;
+	_shadebulb_ := image(
+		fill fullcircle scaled 1.5 shifted (0,0.4) withcolor yellow;
+		fill fullcircle shifted (0,0.4)
+			withshademethod "circular"
+			%withshadevector (0.8, 1)
+			%withshadecenter (0,0.8)
+			withshadedomain (0,2)
+			%withshadefactor 0.5
+			withshadecolors (white,yellow);
+		fill BpathLightBulbFlash(n) scaled 0.18 shifted (0,0.2) withcolor (.5white + .5yellow);
+		% filament
+		draw __zigzag(-(xpart n.bpl[9])*2,n.zigzagn) shifted n.bpl[9] withcolor Orange withpen (pencircle scaled 0.02);
+		% rod
+		draw BpathLightBulbRod(n) withcolor LightSlateGray withpen (pencircle scaled 0.03);
+		draw BpathLightBulbRod(n) xscaled (-1) withcolor LightSlateGray withpen (pencircle scaled 0.03);
+	);
+	clip _shadebulb_ to BpathLightBulbBulb(n);
+
+	draw RegToReal(n)(_shadebulb_);
+	draw RegToReal(n)(_shadehull_);
+
 	drawMemorizedPaths_(n);
-	withshademethod "circular"
-
-	fill fullcircle scaled 5cm shifted (6cm,0)
-withshademethod "circular"
-withcolor "red" shadedinto "blue"
-;
-
-
 enddef;
 
 %%%%%%%%%%%%%%%%%% Current Direction Mark %%%%%%%%%%%%%%%%%%
@@ -654,6 +741,62 @@ def BpathNode(suffix n)=
 	(n.in..n.iw..n.is..n.ie..cycle)
 enddef;
 def drawNode(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
+%%%%%%%%%%%%%%%%%% LabelNode %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("LabelNode")("angle")(0);
+%setObjectDefaultOption("LabelNode")("dx")(1);
+%setObjectDefaultOption("LabelNode")("dy")(1);
+setObjectDefaultOption("LabelNode")("linecolor")(FireBrick);
+setObjectDefaultOption("LabelNode")("pathfillcolor")(Khaki);
+setObjectDefaultOption("LabelNode")("pathfilled")(true);
+
+vardef newLabelNode@#(expr _picstr) text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "LabelNode");
+
+	SchematicInterface(0);
+	ObjPicture mainpic;
+	@#.mainpic := image(label(textext(_picstr), origin););
+
+	ObjCode "SchematicEq@#";
+
+	ObjPath(BpathLabelNode(@#));
+enddef;
+def BpathLabelNode(suffix n)=
+	(n.inw--n.ine--n.ise--n.isw--cycle)
+enddef;
+def drawLabelNode(suffix n) =
+	drawMemorizedPaths_(n);
+	draw n.mainpic rotated n.ang shifted n.c;
+enddef;
+
+%%%%%%%%%%%%%%%%%% Digital Earth %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("DEarth")("angle")(0);
+setObjectDefaultOption("DEarth")("dx")(3);
+setObjectDefaultOption("DEarth")("dy")(1);
+setObjectDefaultOption("DEarth")("linecolor")(Green);
+setObjectDefaultOption("DEarth")("pathfillcolor")(Khaki);
+setObjectDefaultOption("DEarth")("pathfilled")(true);
+
+vardef newDEarth@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "DEarth");
+
+	SchematicInterface(1);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(n, 0),90)";
+
+	ObjPath(@#.inw--@#.ine);
+	ObjPath(subpath (1/6,5/6) of (@#.iw--@#.ie));
+	ObjPath(subpath (1/3,2/3) of (@#.isw--@#.ise));
+enddef;
+def BpathDEarth(suffix n)=
+	(n.inw--n.ine--n.ise--n.isw--cycle)
+enddef;
+def drawDEarth(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
@@ -810,6 +953,7 @@ enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%% X series %%%%%%%%%%%%%%%%%%%%%%%%%
 defXExt("newNode");
+defXExt("newLabelNode");
 defXExt("newRa");
 defXExt("newR");
 defXExt("newSwitch");
@@ -817,9 +961,11 @@ defXExt("newIVS");
 defXExt("newICS");
 defXExt("newDVS");
 defXExt("newDCS");
+defXExt("newDEarth");
 defXExt("newLightBulb");
 defXExt("newCDM");
 defXExt("ObjMLP");
+defXExt("ObjTLP");
 
 vardef Xncline@#(text n)(text m) text options =
 	ncline@#(X(n))(X(m)) options;

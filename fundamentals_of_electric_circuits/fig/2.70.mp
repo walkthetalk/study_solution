@@ -23,5 +23,7 @@ for i:=1 upto 6:
 	ncline(_n_(i))(_n_(i+6));
 	ncline(_n_(i+6))(_n_(_next));
 endfor;
-pcsimple(_n_(8))(180)(_n_(0))(180);
-pcsimple(_n_(11))(180)(_n_(0))(90);
+Xpclist(
+	"n8,180,n0,180",
+	"n11,180,n0,90"
+);

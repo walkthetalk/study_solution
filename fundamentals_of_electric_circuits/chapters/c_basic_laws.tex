@@ -594,7 +594,8 @@ a single resistor at terminals $a$-$b$.
 \stopQ
 
 \startA
-$R_{(a)}=4\sunit[l]{ohm}$, $R_{(b)}\approx 5.818\sunit[l]{ohm}$.
+$R_{(a)}=4\sunit[l]{ohm}$.\\
+$R_{(b)}\approx 5.818\sunit[l]{ohm}$.
 \stopA
 
 % 2.43
@@ -673,8 +674,7 @@ Transform the circuits in \reffig{2.113} from $\Delta$ to $Y$.
 % 2.50
 \startQ[Q:2.50]
 Design a problem to help other students better
-understand wye-delta transformations using
-\reffig{2.114}.
+understand wye-delta transformations using \reffig{2.114}.
 \placeschemq{2.114}{2.50}
 \stopQ
 
@@ -690,7 +690,7 @@ for each of the circuits in \reffig{2.115}.
 \stopQ
 
 \startA
-$R_{(a)}=\frac{120}{13}\approx 9.23\sunit[l]{ohm}$.
+$R_{(a)}=\frac{120}{13}\approx 9.23\sunit[l]{ohm}$.\\
 $R_{(b)}=36.25\sunit[l]{ohm}$.
 \stopA
 
@@ -715,10 +715,8 @@ In (b), all resistors have a value of \sunit{30 ohm}.
 \stopQ
 
 \startA
-\startIG
-\item $R_{ab} = 142\frac{32}{99} \approx 142.32\sunit[l]{ohm}$.
-\item $R_{ab} = 33\frac{1}{3} \approx 33.33\sunit[l]{ohm}$.
-\stopIG
+$R_{ab} = 142\frac{32}{99} \approx 142.32\sunit[l]{ohm}$.\\
+$R_{ab} = 33\frac{1}{3} \approx 33.33\sunit[l]{ohm}$.
 \stopA
 
 % 2.54
@@ -770,6 +768,85 @@ The \sunit{150 watt} light bulb in \reffig{2.122} is rated at 110 volts.
 Calculate the value of $V_s$ to make the light bulb operate at its rated conditions.
 \placeschemq{2.122}{2.58}
 \stopQ
+
+\startA
+$110 + (110/100 + 150/110)\times 50 = 2455/11 \approx 223.18\sunit[l]{ohm}$.
+\stopA
+
+% 2.59
+\startQ[Q:2.59]
+An enterprising young man travels to Europe carrying
+three light bulbs he had purchased in North America.
+The light bulbs he has are a 100-W light bulb,
+a 60-W light bulb, and a 40-W light bulb.
+Each light bulb is rated at 110 V. He wishes to connect
+these to a 220-V system that is found in Europe.
+For reasons we are not sure of, he connects the 40-W
+light bulb in series with a parallel combination of the
+60-W light bulb and the 100-W light bulb as shown \reffig{2.123}.
+How much power is actually being delivered to each light bulb?
+What does he see when he first turns on the light bulbs?
+
+Is there a better way to connect these light bulbs
+in order to have them work more effectively?
+\placeschemq{2.123}{2.59}
+\stopQ
+
+\startA
+The 40-W light bulb will choked.
+\placeschema{2.59}
+\stopA
+
+% 2.60
+\startQ[Q:2.60]
+If the three bulbs of \refq{2.59} are connected
+in parallel to the 120-V source,
+calculate the current through each bulb.
+\stopQ
+
+\startA
+$I_{40}=\frac{192}{605}\approx 0.317\sunit[l]{ampere}$.\\
+$I_{60}=\frac{72}{605}\approx 0.119\sunit[l]{ampere}$.\\
+$I_{100}=\frac{24}{121}\approx 0.198\sunit[l]{ampere}$.
+\stopA
+
+% 2.61
+\startQ[Q:2.61]
+As a design engineer,
+you are asked to design a lighting system
+consisting of a 70-W power supply and
+two light bulbs as shown in \reffig{2.124}.
+You must select the two bulbs from
+the following three available bulbs.
+
+$R_1 = 80 Ω$, cost = \$0.60 (standard size)
+$R_2 = 90 Ω$, cost = \$0.90 (standard size)
+$R_3 = 100 Ω$, cost = \$0.75 (nonstandard size)
+
+The system should be designed for minimum cost
+such that $I$ lies within the range $I = 1.2 A ± 5\%$.
+\placeschemq{2.124}{2.61}
+\stopQ
+
+\startA
+Select $R_1$ and $R_3$ ($R_2$ and $R_3$ will cost more).
+\stopA
+
+% 2.62
+\startQ[Q:2.62]
+A three-wire system supplies two loads $A$ and $B$ as
+shown in \reffig{2.125}.
+Load $A$ consists of a motor drawing a current
+of $8\sunit[l]{ampere}$,
+while load B is a PC drawing $2\sunit[l]{ampere}$.
+Assuming 10 h/day of use for 365 days and 6 cents/kWh,
+calculate the annual energy cost of the system.
+\placeschemq{2.125}{2.62}
+\stopQ
+
+\startA
+$110\times(8+2)/1000 \times 10 \times 365 \times 0.06 = \$240.9$.
+\stopA
 
 \stopchapter
 \stopcomponent

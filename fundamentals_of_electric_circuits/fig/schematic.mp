@@ -15,7 +15,52 @@ vardef stringify_color(expr _c) =
 	    & decimal(bluepart(_c)) & ")"
 enddef;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% models %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+vardef _model_coil(expr _n_)=
+	save _h_; numeric _h_; _h_ := 0.4;
+	save _p_; path _p_;
+	_p_ := origin;
+	_p_ := _p_{dir 90}..(0.5,_h_){dir 0}..{dir -90}(1,0);
+	for i:=1 step 0.5 until _n_/2:
+		_p_ := _p_..(i-0.25,-_h_){dir 180}..(i-0.5,0){dir 90}..(i,_h_){dir 0}..{dir -90}(i+0.5,0);
+	endfor;
+
+	_p_
+enddef;
+
+vardef model_coil(expr _l_, _n_)=
+	save _xs_; numeric _xs_;
+	_xs_ = _l_ / (_n_/2+0.5);
+	(_model_coil(_n_) xscaled _xs_ yscaled _xs_)
+enddef;
+
+vardef model_zigzag(expr _n_)=
+	save _rwire; path _rwire;
+	save _x;
+	vardef _x(expr _i, _p)=
+		((4 * (_i - 1) + _p)/(4 * _n_))
+	enddef;
+	_rwire := (0,0);
+	for i:=1 step 1 until _n_:
+		_rwire := _rwire
+			-- (_x(i, 1), 0.5)
+			-- (_x(i, 3),-0.5)
+			-- (_x(i, 4),  0);
+	endfor;
+	(_rwire shifted (-0.5,0))
+enddef;
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% schematic aux %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% assign point value by regular value
+% NOTE: X=[-0.5,0.5], Y=[-0.5,0.5]
+def RegToReal(suffix n)(text _point_or_path_)=
+	((_point_or_path_)
+		xscaled (n.dx)
+		yscaled (n.dy)
+		rotated n.ang shifted n.c)
+enddef;
+
 vardef defXExt(expr _src_)=
 	save _tmp; string tmp;
 	tmp := "vardef X" & _src_ & "@# text _options_ ="
@@ -177,7 +222,7 @@ enddef;
 % |_edge| w,e,n,s
 vardef StdPos@#(suffix _edge)(expr _offset)=
 	save _edgestr; string _edgestr; _edgestr:=str _edge;
-	save _pu; numeric _pu; _pu:=5;
+	save _pu; numeric _pu; _pu:=elesize_ratio;
 (
 	if _edgestr = "n":
 		(0, @#dy/2) shifted (_offset * _pu, 0)
@@ -363,29 +408,42 @@ vardef newRa@# text options =
 		"defPin@#(1,StdPos@#(w, 0),180)",
 		"defPin@#(2,StdPos@#(e, 0),0)";
 
-	save _rwire, _rwn; path _rwire; numeric _rwn;
-	_rwn := 4;
-	save _x;
-	vardef _x(expr _i, _p)=
-		((4 * (_i - 1) + _p)/(4 * _rwn))
-	enddef;
-	_rwire := (0,0);
-	for i:=1 step 1 until _rwn:
-		_rwire := _rwire
-			-- (_x(i, 1), 0.5)
-			-- (_x(i, 3),-0.5)
-			-- (_x(i, 4),  0);
-	endfor;
-	ObjPath(_rwire shifted (-0.5,0)
-		xscaled @#dx
-		yscaled @#dy
-		rotated @#ang
-		shifted @#.c);
+	ObjPath(RegToReal(@#)(model_zigzag(4)));
 enddef;
 def BpathRa(suffix n)=
 	SchematicBpath(n)
 enddef;
 def drawRa(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
+%%%%%%%%%%%%%%%%%% Adjustable Resistor ANSI %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("ARa")("angle")(0);
+setObjectDefaultOption("ARa")("dx")(6);
+setObjectDefaultOption("ARa")("dy")(2);
+setObjectDefaultOption("ARa")("linecolor")(Green);
+setObjectDefaultOption("ARa")("pathfillcolor")(Khaki);
+setObjectDefaultOption("ARa")("framed")(true);
+
+vardef newARa@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "ARa");
+
+	SchematicInterface(2);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 3),0)";
+
+	ObjPath(RegToReal(@#)(model_zigzag(4)));
+	ObjPath(RegToReal(@#)((0.5,1.5)--(0,1.5)--(0,0.5)))
+		"linecolor(SteelBlue)",
+		"arrows(drawarrow)";
+enddef;
+def BpathARa(suffix n)=
+	SchematicBpath(n)
+enddef;
+def drawARa(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
@@ -526,32 +584,6 @@ setObjectDefaultOption("LightBulb")("dy")(8.1);
 setObjectDefaultOption("LightBulb")("linecolor")(FireBrick);
 setObjectDefaultOption("LightBulb")("pathfillcolor")(Khaki);
 
-% assign point value by regular value
-% NOTE: X=[-0.5,0.5], Y=[-0.5,0.5]
-def RegToReal(suffix n)(text _point_or_path_)=
-	((_point_or_path_)
-		xscaled (n.dx)
-		yscaled (n.dy)
-		rotated n.ang shifted n.c)
-enddef;
-vardef ___zigzag(expr _n_)=
-	save _h_; numeric _h_; _h_ := 0.4;
-	save _p_; path _p_;
-	_p_ := origin;
-	_p_ := _p_{dir 90}..(0.5,_h_){dir 0}..{dir -90}(1,0);
-	for i:=1 step 0.5 until _n_/2:
-		_p_ := _p_..(i-0.25,-_h_){dir 180}..(i-0.5,0){dir 90}..(i,_h_){dir 0}..{dir -90}(i+0.5,0);
-	endfor;
-
-	_p_
-enddef;
-
-vardef __zigzag(expr _l_, _n_)=
-	save _xs_; numeric _xs_;
-	_xs_ = _l_ / (_n_/2+0.5);
-	(___zigzag(_n_) xscaled _xs_ yscaled _xs_)
-enddef;
-
 vardef ObjFixedPointArray(suffix a)(expr n)=
   save co;string co;co=currentObjname;
   if not isOfType("pair",co & "." & str a & "1"):
@@ -565,7 +597,7 @@ vardef newLightBulb@# text options =
 
 	SchematicInterface(2);
 	ObjFixedPointArray(bpl)(8); % bounding point list
-	ObjNumeric zigzagn;
+	ObjNumeric coiln;
 
 	ObjCode "SchematicEq@#",
 		"defSpotPin@#(1,isw,180)",
@@ -581,7 +613,7 @@ vardef newLightBulb@# text options =
 	@#bpl[8] = (-0.5,-0.5);
 	@#bpl[9] = (-0.19,0.2);
 	@#bpl[10]= (-0.1,-0.17);
-	@#zigzagn= 5;
+	@#coiln= 5;
 
 	for i := -0.5 step 0.1 until 0.5:
 		%ObjPath(RegToReal(@#)((i,0.5)--(i,-0.5))) "linecolor(blue)";
@@ -680,7 +712,7 @@ vardef drawLightBulb(suffix n) =
 			withshadecolors (white,yellow);
 		fill BpathLightBulbFlash(n) scaled 0.18 shifted (0,0.2) withcolor (.5white + .5yellow);
 		% filament
-		draw __zigzag(-(xpart n.bpl[9])*2,n.zigzagn) shifted n.bpl[9] withcolor Orange withpen (pencircle scaled 0.02);
+		draw model_coil(-(xpart n.bpl[9])*2,n.coiln) shifted n.bpl[9] withcolor Orange withpen (pencircle scaled 0.02);
 		% rod
 		draw BpathLightBulbRod(n) withcolor LightSlateGray withpen (pencircle scaled 0.03);
 		draw BpathLightBulbRod(n) xscaled (-1) withcolor LightSlateGray withpen (pencircle scaled 0.03);
@@ -695,7 +727,7 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Current Direction Mark %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("CDM")("angle")(0);
-setObjectDefaultOption("CDM")("dx")(3);
+setObjectDefaultOption("CDM")("dx")(4);
 setObjectDefaultOption("CDM")("dy")(1);
 setObjectDefaultOption("CDM")("linecolor")(FireBrick);
 setObjectDefaultOption("CDM")("pathfillcolor")(Khaki);
@@ -954,6 +986,7 @@ enddef;
 %%%%%%%%%%%%%%%%%%%%%%%%% X series %%%%%%%%%%%%%%%%%%%%%%%%%
 defXExt("newNode");
 defXExt("newLabelNode");
+defXExt("newARa");
 defXExt("newRa");
 defXExt("newR");
 defXExt("newSwitch");

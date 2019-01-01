@@ -848,5 +848,46 @@ calculate the annual energy cost of the system.
 $110\times(8+2)/1000 \times 10 \times 365 \times 0.06 = \$240.9$.
 \stopA
 
+% 2.63
+\startQ[Q:2.63]
+If an ammeter with an internal resistance of \sunit{100 ohm}
+and a current capacity of \sunit{2 milli ampere} is to measure \sunit{5 ampere},
+determine the value of the resistance needed.
+Calculate the power dissipated in the shunt resistor.
+\stopQ
+
+\startA
+$100\times 0.002 / (5 - 0.002) = \frac{100}{2499} \approx 0.04\sunit[l]{ohm}$.\\
+$p=100\times 0.002\times (5-0.002) = 0.9996\sunit[l]{watt}$.
+\stopA
+
+% 2.64
+\startQ[Q:2.64]
+The potentiometer (adjustable resistor) $R_x$ in \reffig{2.126}
+is to be designed to adjust current $i_x$ from \sunit{10 milli ampere} to \sunit{1 ampere}.
+Calculate the values of $R$ and $R_x$ to achieve this.
+\placeschemq{2.126}{2.64}
+\stopQ
+
+\startA
+$R=110/1=110\sunit[l]{ohm}$.\\
+$R_x=110/0.010 - 110=10890\sunit[l]{ohm}$.
+\stopA
+
+% 2.65
+\startQ[Q:2.65]
+Design a circuit that uses a d’Arsonval meter
+(with an internal resistance of \sunit{2 kilo ohm}
+that requires a current of \sunit{5 mili ampere}
+to cause the meter to deflect full scale) to build
+a voltmeter to read values of voltages up to 100 volts.
+\stopQ
+
+\startA
+$R=100/(5\times 10^-3) - 2\times 10^3
+  = 18\times 10^3\sunit[l]{ohm}
+  = 18\sunit[l]{kilo ohm}$.
+\stopA
+
 \stopchapter
 \stopcomponent

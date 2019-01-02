@@ -447,6 +447,36 @@ def drawARa(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
+%%%%%%%%%%%%%%%%%% potentiometer %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("Potentiometer")("angle")(0);
+setObjectDefaultOption("Potentiometer")("dx")(6);
+setObjectDefaultOption("Potentiometer")("dy")(2);
+setObjectDefaultOption("Potentiometer")("linecolor")(Green);
+setObjectDefaultOption("Potentiometer")("pathfillcolor")(Khaki);
+setObjectDefaultOption("Potentiometer")("framed")(true);
+
+vardef newPotentiometer@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "Potentiometer");
+
+	SchematicInterface(2);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 0),0)";
+
+	ObjPath(RegToReal(@#)(model_zigzag(4)));
+	ObjPath(RegToReal(@#)((0.4,-1)--(-0.4,1)))
+		"linecolor(FireBrick)",
+		"arrows(drawarrow)";
+enddef;
+def BpathPotentiometer(suffix n)=
+	SchematicBpath(n)
+enddef;
+def drawPotentiometer(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
 %%%%%%%%%%%%%%%%%% Dependent Current Source %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("DCS")("angle")(0);
 setObjectDefaultOption("DCS")("dx")(5);
@@ -863,6 +893,46 @@ enddef;
 def drawSwitch(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
+
+%%%%%%%%%%%%%%%%%% Volt meter %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("Vmeter")("angle")(0);
+setObjectDefaultOption("Vmeter")("dx")(8);
+setObjectDefaultOption("Vmeter")("dy")(8);
+setObjectDefaultOption("Vmeter")("linecolor")(Green);
+setObjectDefaultOption("Vmeter")("pathfillcolor")(Khaki);
+
+vardef newVmeter@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "Vmeter");
+
+	SchematicInterface(2);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 0),0)";
+
+	ObjPath(BpathVmeter(@#))
+		"linecolor(FireBrick)",
+		"pathfilled(true)",
+		"pathfillcolor(Yellow)";
+	ObjPath(RegToReal(@#)(
+		(-0.5,0)--(model_zigzag(4) xscaled 6/8 yscaled 2/8)--(0.5,0)
+	));
+	ObjPath(RegToReal(@#)(
+		(halfcircle--cycle) scaled 0.5
+		shifted (0,0.2)
+	));
+	ObjPath(RegToReal(@#)(
+		(origin--(0.25,0) rotated 120)
+		shifted (0,0.2)
+	)) "linecolor(FireBrick)", "arrows(drawarrow)";
+enddef;
+def BpathVmeter(suffix n)=
+	RegToReal(n)(fullcircle);
+enddef;
+def drawVmeter(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
 %%%%%%%%%%%%%%%%%%%%%%%% pin connection simple %%%%%%%%%%%%%%%%%%%
 % ncdiaga: ncdiag without armlength, auto intersect two directions
 % |@#| is the object to which a line is added
@@ -987,6 +1057,7 @@ enddef;
 defXExt("newNode");
 defXExt("newLabelNode");
 defXExt("newARa");
+defXExt("newPotentiometer");
 defXExt("newRa");
 defXExt("newR");
 defXExt("newSwitch");
@@ -996,6 +1067,7 @@ defXExt("newDVS");
 defXExt("newDCS");
 defXExt("newDEarth");
 defXExt("newLightBulb");
+defXExt("newVmeter");
 defXExt("newCDM");
 defXExt("ObjMLP");
 defXExt("ObjTLP");

@@ -1,7 +1,5 @@
 #!/usr/bin/env sh
 
-set -e
-
 SELFDIR="`dirname $0`"
 MAINDIR="`readlink -fe ${SELFDIR}/../`"
 
@@ -30,7 +28,7 @@ input ${FIGDIR}/${SRCFILE}
 \stoptext
 " > ${TMPFILE}
 
-context --purgeall ${TMPFILE}
+context --batchmode --purgeall ${TMPFILE}
 
 echo "rming ${TMPDIR}"
 rm -rf ${TMPDIR}

@@ -876,17 +876,205 @@ $R_x=110/0.010 - 110=10890\sunit[l]{ohm}$.
 
 % 2.65
 \startQ[Q:2.65]
-Design a circuit that uses a d’Arsonval meter
+Design a circuit that uses a d'Arsonval meter
 (with an internal resistance of \sunit{2 kilo ohm}
-that requires a current of \sunit{5 mili ampere}
+that requires a current of \sunit{5 milli ampere}
 to cause the meter to deflect full scale) to build
 a voltmeter to read values of voltages up to 100 volts.
 \stopQ
 
 \startA
+series resistor:\\
 $R=100/(5\times 10^-3) - 2\times 10^3
   = 18\times 10^3\sunit[l]{ohm}
   = 18\sunit[l]{kilo ohm}$.
+\stopA
+
+% 2.66
+\startQ[Q:2.66]
+A 20-kΩ/V voltmeter reads 10 V full scale.
+\startIG
+\item What series resistance is required to make the
+meter read 50 V full scale?
+\item What power will the series resistor dissipate
+when the meter reads full scale?
+\stopIG
+\stopQ
+
+\startA
+\startIG
+\item $50/\frac{10}{20k} - 20k = 80\sunit[l]{kilo ohm}$.
+\item $\frac{10}{20k}\times (50-10) = 0.02\sunit[l]{watt}$.
+\stopIG
+\stopA
+
+% 2.67
+\startQ[Q:2.67]
+\startIG
+\item Obtain the voltage $V_o$ in the circuit of \reffig{2.127}(a).
+\item Determine the voltage $V_o'$ measured when a voltmeter with
+6-kΩ internal resistance is connected as shown in \reffig{2.127}(b).
+\startitem The finite resistance of the meter introduces an
+error into the measurement.
+Calculate the percent error as
+\startformula
+\left|\frac{V_o - V_o'}{V_o}\right| \times 100\%
+\stopformula
+\stopitem
+\item Find the percent error if the internal resistance were 36 kΩ.
+\stopIG
+\placeschemq[2*1][a,b]{2.127}{2.67}
+\stopQ
+
+\startA
+\startIG
+\startitem
+By current division,\\
+$i_o=\frac{5}{5+5}\times \sunit{2 milli ampere} = \sunit{1 milli ampere}$;\\
+$V_o=i_o\times \sunit{4 kilo ohm} = \sunit{4 volt}$.
+\stopitem
+\startitem
+$4k||6k=2.4\sunit[l]{kilo ohm}$, by current division,\\
+$i_o=\frac{5}{1+2.4+5}\times \sunit{2 milli ampere}
+    = \frac{25}{21}\sunit[l]{milli ampere}$;\\
+$V_o=i_o\times \sunit{2.4 kilo ohm}
+    = \frac{20}{7}\sunit[l]{volt}
+    \approx 2.857\sunit[l]{volt}$.
+\stopitem
+\startitem
+$\frac{2}{7}\approx 28.57\%$.
+\stopitem
+\startitem
+$\frac{12}{12+5R} = \frac{1}{16} \approx 6.25\%$.
+\stopitem
+\stopIG
+\stopA
+
+% 2.68
+\startQ[Q:2.68]
+\startIG
+\item Find the current $I$ in the circuit of \reffig{2.128}(a).
+\item An ammeter with an internal resistance of \sunit{1 ohm}
+is inserted in the network to measure $I'$ ​as shown in \reffig{2.128}(b).
+What is $I' $?
+\startitem Calculate the percent error introduced by the meter as
+\startformula
+\left|\frac{I-I'}{I}\right|\times 100\%
+\stopformula
+\stopitem
+\stopIG
+\placeschemq[2*1][a,b]{2.128}{2.68}
+\stopQ
+
+\startA
+\startIG
+\startitem
+$40||60=\sunit{24 ohm}$,\\
+$I=\frac{4}{16+24}=0.1\sunit{ampere}$.
+\stopitem
+
+\startitem
+$I'=\frac{4}{16+24+1}=\frac{4}{41}\approx=0.098\sunit[l]{ampere}$.
+\stopitem
+
+\startitem
+$\left|\frac{I-I'}{I}\right|\times 100\%=\frac{1}{41}\approx 2.44\%$.
+\stopitem
+\stopIG
+\stopA
+
+% 2.69
+\startQ[Q:2.69]
+A voltmeter is used to measure $V_o$ in the circuit in \reffig{2.129}.
+The voltmeter model consists of an ideal voltmeter
+in parallel with a 250-kΩ resistor.
+Let $V_s = \sunit{95 volt}$, $R_s = \sunit{25 kilo ohm}$,
+and $R_1 = \sunit{40 kilo ohm}$.
+Calculate $V_o$ with and without the voltmeter when
+\startIG
+\item $R_2 = \sunit{5 kilo ohm}$
+\item $R_2 = \sunit{250 kilo ohm}$
+\item $R_2 = \sunit{25 kilo ohm}$
+\stopIG
+\placeschemq{2.129}{2.69}
+\stopQ
+
+\startA
+Without voltmeter, $V_o$ is
+$95/14\approx 6.786$,
+$475/18\approx 26.389$,
+$4750/63\approx75.397$ \sunit[l]{volt}.
+\startformula
+V_o=\frac{R_2}{R_s+R_1+R_2}\times V_s
+   =\frac{95 R_2}{65+R_2}
+\stopformula
+
+With voltmeter, $V_o$ is
+$4750/713\approx 6.662$,
+$4750/193\approx 24.611$,
+$125/2\approx 62.5$ \sunit[l]{volt}.
+\startformula
+V_o=\frac{R_2'}{R_s+R_1+R_2'}\times V_s
+   =\frac{95 R_2'}{65+R_2'}
+   =\frac{4750 R_2}{63 R_2 + 3250}
+\stopformula
+\stopA
+
+% 2.70
+\startQ[Q:2.70]
+\startIG
+\item Consider the Wheatstone bridge shown in \reffig{2.130}.
+Calculate $v_a$, $v_b$, and $v_{ab}$.
+\item Rework part (a) if the ground is placed at $a$ instead of $o$.
+\stopIG
+\placeschemq{2.130}{2.70}
+\stopQ
+
+\startA
+\startIG
+\item $v_a = \sunit{15 volt}$, $v_b = \sunit{10 volt}$, $v_{ab}=\sunit{5 volt}$.
+\item $v_a = \sunit{0 volt}$, $v_b = \sunit{-5 volt}$, $v_{ab}=\sunit{5 volt}$.
+\stopIG
+\stopA
+
+% 2.71
+\startQ[Q:2.71]
+\reffig{2.131} represents a model of a solar photovoltaic panel.
+Given that $V_s = \sunit{95 volt}$, $R_1 = \sunit{25 ohm}$,
+and $i_L = \sunit{2 ampere}$, find $R_L$.
+\placeschemq{2.131}{2.71}
+\stopQ
+
+\startA
+$R_L=\frac{V_s}{i_L} - R_1 = \sunit{22.5 ohm}$
+\stopA
+
+% 2.72
+\startQ[Q:2.72]
+Find $V_o$ in the two-way power divider circuit in \reffig{2.132}.
+\placeschemq{2.132}{2.72}
+\stopQ
+
+\startA
+$V_o = \sunit{5 volt}$.
+\stopA
+
+% 2.73
+\startQ[Q:2.73]
+An ammeter model consists of an ideal ammeter
+in series with a 20-Ω resistor.
+It is connected with a current source and an
+unknown resistor $R_x$ as shown in \reffig{2.133}.
+The ammeter reading is noted.
+When a potentiometer $R$ is added and adjusted
+until the ammeter reading drops to one half its
+previous reading, then $R = \sunit{65 ohm}$.
+What is the value of $R_x$ ?
+\placeschemq{2.133}{2.73}
+\stopQ
+
+\startA
+$R=R_x + 20$, $R_x=65-20=\sunit{45 ohm}$.
 \stopA
 
 \stopchapter

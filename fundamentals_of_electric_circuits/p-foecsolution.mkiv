@@ -71,7 +71,7 @@
 ]
 
 \startMPinclusions
-ahangle:=30;
+%
 \stopMPinclusions
 
 \defineMPinstance
@@ -90,24 +90,6 @@ end
 \ctxlua{commands.fixCounter([==[#2]==])}%
 ]}%
 
-\define[1]\schemfig{
-  \startMPcode{schematic}
-  input schematic;
-  elesize_ratio := 3;
-  eleconn_ratio := 6;
-  labeloffset := 1;
-  clearObjsForTwiceRun;
-  setX("fig" & str #1);
-  input #1
-  \stopMPcode
-}
-
-\define[1]\coordfig{
-  \startMPcode
-  input coord;
-  input #1
-  \stopMPcode
-}
 
 %%%%%%%%%%%%%%%%%%%%%%%% figure combination %%%%%%%%%%%%%%%%%%%%%%%
 % NOTE: because we can't use \processcommalist or \dorecurse in
@@ -122,43 +104,36 @@ end
     stopper={)},
 ]
 \startluacode
-function commands.figComb(figfunc, cp, postlist, figname)
+function commands.figComb(cp, postlist, figname)
 	if postlist ~= "" then
 		tex.sprint(tex.ctxcatcodes, "\\startcombination[figcomb]["..cp.."]")
 		for w in string.gmatch(postlist, "%a+") do
-			tex.sprint(tex.ctxcatcodes, "{".."\\"..figfunc.."{"..figname.."."..w.."}}")
+			tex.sprint(tex.ctxcatcodes, "{\\externalfigure[" .. figname.."."..w..".pdf]}")
 		end
 		tex.sprint(tex.ctxcatcodes, "\\stopcombination")
 	else
-		tex.sprint(tex.ctxcatcodes, "\\"..figfunc.."{"..figname.."}")
+		tex.sprint(tex.ctxcatcodes, "\\externalfigure["..figname..".pdf]")
 	end
 end
 \stopluacode
 
 % schematic figure for question
-\def\placeschemq{\dodoubleempty\doplaceschemq}
-\def\doplaceschemq[#1][#2]#3#4{%
+\def\placefigq{\dodoubleempty\doplacefigq}
+\def\doplacefigq[#1][#2]#3#4{
   \fixCounter{figure}{#3}
-  \placefigure[always,here,force][fig:#3]{for \refq{#4}}{%
-    \ctxlua{commands.figComb([==[schemfig]==],[==[#1]==],[==[#2]==],[==[#3]==])}
-  }%
+  \placefigure[always,here,force][fig:#3]{for \refq{#4}}{
+    \ctxlua{commands.figComb([==[#1]==],[==[#2]==],[==[#3]==])}
+  }
 }
 
 % schematic figure for answer
-\def\placeschema{\dodoubleempty\doplaceschema}
-\def\doplaceschema[#1][#2]#3{%
-  \placeafigure[always,here,force][afig:#3]{for \refq{#3}}{%
-    \ctxlua{commands.figComb([==[schemfig]==],[==[#1]==],[==[#2]==],[==[a#3]==])}
-  }%
-}
-
-\def\placecoordq{\dodoubleempty\doplacecoordq}
-\def\doplacecoordq[#1][#2]#3#4{
-  \fixCounter{figure}{#3}
-  \placefigure[here][fig:#3]{for \refq{#4}}{
-    \ctxlua{commands.figComb([==[coordfig]==],[==[#1]==],[==[#2]==],[==[#3]==])}
+\def\placefiga{\dodoubleempty\doplacefiga}
+\def\doplacefiga[#1][#2]#3{
+  \placefigure[always,here,force][afig:#3]{for \refq{#3}}{
+    \ctxlua{commands.figComb([==[#1]==],[==[#2]==],[==[a#3]==])}
   }
 }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for enum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % NOTE: if you want to use specific font:

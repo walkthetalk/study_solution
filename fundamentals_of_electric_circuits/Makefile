@@ -3,15 +3,16 @@ tex_name=main
 pdf_name=fundamentals_of_electric_circuits
 
 dir_self := $(shell dirname $(shell readlink -fe $(lastword ${MAKEFILE_LIST})))
-dir_mp   := ${dir_self}:$(shell kpsepath mp)
+dir_mp   := ${dir_self}/fig/:$(shell kpsepath mp)
 dir_main := $(shell readlink -fe ${dir_self})
 
 dir_env  := $(shell readlink -fe ${dir_self}/../env/en)
 dir_output := ${dir_main}/output
-output_dirs:=${dir_output}
+output_dirs:=${dir_output} ${dir_output}/fig
 
-tex_deps:=$(shell find ${dir_env} -type f)
-tex_deps+=$(shell find . -type f -name \*.tex)
+env_deps:=$(shell find ${dir_env} -type f)
+
+tex_deps:=$(shell find . -type f -name \*.tex)
 tex_deps+=$(shell find . -type f -name \*.mp)
 tex_deps+=$(shell find . -type f -name \*.bib)
 tex_deps+=$(shell find . -type f -name \*.lua)
@@ -21,10 +22,14 @@ define clean_misc =
 	rm -f $(tex_name).aux $(tex_name).bbl $(tex_name).blg $(tex_name).log $(pdf_name).tuc
 endef
 
-fig_srcs:=$(shell cd fig; find . -type f -name e\*.mp | cut -d '/' -f 2)
-fig_srcs+=$(shell cd fig; find . -type f -name p\*.mp | cut -d '/' -f 2)
-fig_incs:=$(shell cd fig; find . -type f -name "*.mp" | cut -d '/' -f 2 | grep -v "^[e|p]")
-#$(warning figincs is ${fig_incs})
+fig_srcs:=$(shell cd ${dir_main}/fig; find . -type f -name '[a1-9]*.mp' | cut -d '/' -f 2)
+fig_incs:=schematic.mp coord.mp smetaobj.mp
+
+$(warning dr_main is ${dir_main})
+$(warning fig_srcs is ${fig_srcs})
+
+fig_pdfs:=$(patsubst %.mp,$(dir_output)/fig/%.pdf,$(fig_srcs))
+fig_deps:=$(patsubst %.mp,${dir_main}/fig/%.mp,$(fig_incs))
 
 ifneq ($(MAKECMDGOALS),clean)
 #$(warning MAKECMDGOALS is $(MAKECMDGOALS))
@@ -36,13 +41,13 @@ endif
 .PHONY: all
 all: $(pdf_name).pdf
 
-.PHONY: clean
-clean:
-	@rm -f $(pdf_name).pdf
-	@$(call clean_misc)
-	@rm -f ${dir_output}/*
+#.PHONY: clean
+#clean:
+#	@rm -f $(pdf_name).pdf
+#	@$(call clean_misc)
+#	@rm -f ${dir_output}/*
 
-$(pdf_name).pdf: $(tex_deps)
+$(pdf_name).pdf: $(tex_deps) ${fig_pdfs}
 	@echo [gen] $@
 	@export MPINPUTS=${dir_mp}; \
 	context --jit --purge \
@@ -52,3 +57,31 @@ $(pdf_name).pdf: $(tex_deps)
 	  --result=$(pdf_name).pdf \
 	  $(tex_name).tex; \
 	$(call clean_misc)
+
+$(dir_output)/fig/%.pdf: $(dir_output)/fig/%.tex $(env_deps)
+	cd $(dir_output)/fig; \
+	export MPINPUTS=${dir_mp}; \
+	context --jit --purgeall\
+	  --nocompression \
+	  --environment=env_cmm \
+	  --path=$(dir_env) \
+	  $<
+
+# NOTE: set pagenumbering is only for getting single page
+$(dir_output)/fig/%.tex: $(dir_main)/fig/%.mp ${fig_deps}
+	@echo "\usemodule[p][foecsolution] \
+\setuppagenumbering[state=stop,alternative=singlesided] \
+\starttext \
+\switchtobodyfont[6pt] \
+\startMPpage \
+input coord; \
+input schematic; \
+elesize_ratio := 3; \
+eleconn_ratio := 6; \
+labeloffset := 1; \
+ahangle:=30; \
+clearObjsForTwiceRun; \
+input $< \
+\stopMPpage \
+\stoptext" > $@
+

@@ -35,6 +35,18 @@ all: ${dir_output}/$(pdf_name).pdf
 clean:
 	@rm -r ${dir_output}/*
 
+$(pdf_name)-aio.pdf: $(tex_deps) ${env_deps}
+	@echo [gen] $@
+	@cd ${dir_output}; \
+	export MPINPUTS=${dir_mp}; \
+	context --jit --purgeall \
+	  --paranoid \
+	  --nocompression \
+	  --environment=env_cmm \
+	  --path=${dir_env},${dir_main},${dir_main}/chapters,${dir_main}/fig \
+	  --result=${pdf_name}-aiok.pdf \
+	  ${dir_main}/main.tex
+
 ${dir_output}/$(pdf_name).pdf: $(tex_deps) ${fig_pdfs} ${env_deps}
 	@echo [gen] $@
 	@cd ${dir_output}; \
@@ -44,6 +56,7 @@ ${dir_output}/$(pdf_name).pdf: $(tex_deps) ${fig_pdfs} ${env_deps}
 	  --nocompression \
 	  --environment=env_cmm \
 	  --path=${dir_env},${dir_main},${dir_main}/chapters,${dir_main}/fig \
+	  --mode=sepfig \
 	  --result=${pdf_name}.pdf \
 	  ${dir_main}/main.tex
 
@@ -76,6 +89,7 @@ $(dir_output)/fig/%.pdf: ${dir_main}/fig/%.mp $(env_deps)
 	  --nocompression \
 	  --environment=env_cmm \
 	  --path=$(dir_env),${dir_main} \
+	  --mode=sepfig \
 	  $${TMPDIR}/$*.tex; \
 	mv $${TMPDIR}/$*.pdf $@; \
 	rm -r $${TMPDIR}

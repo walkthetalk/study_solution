@@ -12,6 +12,8 @@
 \writestatus{loading}{ConTeXt User Module / foecsolution}
 \startmodule[foecsolution]
 
+\definemode[sepfig][keep]
+
 \define\prdname{《电路基础》習題彙編}
 
 \setupinteraction[
@@ -61,7 +63,6 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for figure %%%%%%%%%%%%%%%%%%%%%%%%%%
 \setupfloat[figure][location=middle]
-\setupexternalfigures[location=global,directory={fig}]
 
 \definefloat[afigure][afigures]
 \setuplabeltext[en][afigure={Answer Figure\;,}]
@@ -77,11 +78,6 @@
 %
 \stopMPinclusions
 
-\defineMPinstance
-  [schematic]
-  [metafun] % needs to be inherited from the global metafun instance
-  [textstyle={\switchtobodyfont[6pt]}]
-
 \startluacode
 function commands.fixCounter(dst)
 	local dstN = string.match(dst, '.*[^0-9]([0-9]*)')
@@ -93,8 +89,6 @@ end
 \ctxlua{commands.fixCounter([==[#2]==])}%
 ]}%
 
-
-%%%%%%%%%%%%%%%%%%%%%%%% figure combination %%%%%%%%%%%%%%%%%%%%%%%
 % NOTE: because we can't use \processcommalist or \dorecurse in
 %       combination, we implement it with a loop in lua code.
 \definecombination[figcomb][%
@@ -106,6 +100,28 @@ end
     numberconversion=character,
     stopper={)},
 ]
+
+% figure for question
+\def\placefigq{\dodoubleempty\doplacefigq}
+\def\doplacefigq[#1][#2]#3#4{
+  \fixCounter{figure}{#3}
+  \placefigure[force][fig:#3]{for \refq{#4}}{
+    \ctxlua{commands.figComb([==[#1]==],[==[#2]==],[==[#3]==])}
+  }
+}
+
+% figure for answer
+\def\placefiga{\dodoubleempty\doplacefiga}
+\def\doplacefiga[#1][#2]#3{
+  \placeafigure[force][afig:#3]{for \refq{#3}}{
+    \ctxlua{commands.figComb([==[#1]==],[==[#2]==],[==[a#3]==])}
+  }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%% seperate figure version %%%%%%%%%%%%%%%%%%
+\startmode[sepfig]
+\setupexternalfigures[location=global,directory={fig}]
+
 \startluacode
 function commands.figComb(cp, postlist, figname)
 	if postlist ~= "" then
@@ -120,22 +136,41 @@ function commands.figComb(cp, postlist, figname)
 end
 \stopluacode
 
-% schematic figure for question
-\def\placefigq{\dodoubleempty\doplacefigq}
-\def\doplacefigq[#1][#2]#3#4{
-  \fixCounter{figure}{#3}
-  \placefigure[force][fig:#3]{for \refq{#4}}{
-    \ctxlua{commands.figComb([==[#1]==],[==[#2]==],[==[#3]==])}
-  }
+\stopmode
+
+%%%%%%%%%%%%%%%%%%%%%% integrate figure version %%%%%%%%%%%%%%%%%%%%
+\startnotmode[sepfig]
+\defineMPinstance
+  [FOEC]
+  [metafun] % needs to be inherited from the global metafun instance
+  [textstyle={\switchtobodyfont[6pt]}]
+\define[1]\foecfig{
+  \startMPcode{FOEC}
+  input coord;
+  input schematic;
+  elesize_ratio := 3;
+  eleconn_ratio := 6;
+  labeloffset := 1;
+  clearObjsForTwiceRun;
+  setX("fig" & str #1);
+  input #1
+  \stopMPcode
 }
 
-% schematic figure for answer
-\def\placefiga{\dodoubleempty\doplacefiga}
-\def\doplacefiga[#1][#2]#3{
-  \placeafigure[force][afig:#3]{for \refq{#3}}{
-    \ctxlua{commands.figComb([==[#1]==],[==[#2]==],[==[a#3]==])}
-  }
-}
+\startluacode
+function commands.figComb(cp, postlist, figname)
+	if postlist ~= "" then
+		tex.sprint(tex.ctxcatcodes, "\\startcombination[figcomb]["..cp.."]")
+		for w in string.gmatch(postlist, "%a+") do
+			tex.sprint(tex.ctxcatcodes, "{\\foecfig{" .. figname.."."..w.."}}")
+		end
+		tex.sprint(tex.ctxcatcodes, "\\stopcombination")
+	else
+		tex.sprint(tex.ctxcatcodes, "\\foecfig{"..figname.."}")
+	end
+end
+\stopluacode
+\stopnotmode
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for enum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

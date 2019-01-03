@@ -9,6 +9,7 @@ we use metapost to draw figures with text in document
    the workaround is extend it using lua code.
    but you should take care of the 'comma'.
 5. when placefigure, always/here/auto may result in corrupt view,
-   only use force in this project.
+   or some figure missed if expected located on the bottom of page
+   without enough space. so only use force in this project.
 6. externalfigure, the path is set by setupexternalfigures,
    context arguments --path not work.

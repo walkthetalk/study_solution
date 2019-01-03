@@ -1077,5 +1077,21 @@ What is the value of $R_x$ ?
 $R=R_x + 20$, $R_x=65-20=\sunit{45 ohm}$.
 \stopA
 
+% 2.74
+\startQ[Q:2.74]
+The circuit in \reffig{2.134} is to control the speed of a motor such
+that the motor draws currents \sunit{5 ampere}, \sunit{3 ampere}, and
+\sunit{1 ampere} when the switch is at high, medium, and low positions, respectively.
+The motor can be modeled as a load resistance of \sunit{20 milli ohm}.
+Determine the series dropping resistances $R_1$, $R_2$, and $R_3$.
+\placefigq{2.134}{2.74}
+\stopQ
+
+\startA
+$R_3 = \frac{V}{I_h} - R_f - R_m = 6/5 - 0.01 - 0.02 = 1.17\sunit[l]{ohm}$,\\
+$R_2 = \frac{V}{I_m} - \frac{V}{I_h} = 0.8\sunit[l]{ohm}$,\\
+$R_1 = \frac{V}{I_l} - \frac{V}{I_m} = 4\sunit[l]{ohm}$.
+\stopA
+
 \stopchapter
 \stopcomponent

@@ -60,6 +60,9 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for figure %%%%%%%%%%%%%%%%%%%%%%%%%%
+\setupfloat[figure][location=middle]
+\setupexternalfigures[location=global,directory={fig}]
+
 \definefloat[afigure][afigures]
 \setuplabeltext[en][afigure={Answer Figure\;,}]
 \setupcaption[afigure][
@@ -121,7 +124,7 @@ end
 \def\placefigq{\dodoubleempty\doplacefigq}
 \def\doplacefigq[#1][#2]#3#4{
   \fixCounter{figure}{#3}
-  \placefigure[always,here,force][fig:#3]{for \refq{#4}}{
+  \placefigure[force][fig:#3]{for \refq{#4}}{
     \ctxlua{commands.figComb([==[#1]==],[==[#2]==],[==[#3]==])}
   }
 }
@@ -129,7 +132,7 @@ end
 % schematic figure for answer
 \def\placefiga{\dodoubleempty\doplacefiga}
 \def\doplacefiga[#1][#2]#3{
-  \placefigure[always,here,force][afig:#3]{for \refq{#3}}{
+  \placeafigure[force][afig:#3]{for \refq{#3}}{
     \ctxlua{commands.figComb([==[#1]==],[==[#2]==],[==[a#3]==])}
   }
 }

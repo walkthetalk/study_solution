@@ -60,9 +60,7 @@ ${dir_output}/$(pdf_name).pdf: $(tex_deps) ${fig_pdfs} ${env_deps}
 	  --result=${pdf_name}.pdf \
 	  ${dir_main}/main.tex
 
-# NOTE: the tex file will be deleted automatically,
-#       if you don't want so, please add it in .SECONDARY or .PRECIOUS
-$(dir_output)/fig/%.pdf: ${dir_main}/fig/%.mp $(env_deps)
+$(dir_output)/fig/%.pdf: ${dir_main}/fig/%.mp ${fig_deps} ${env_deps}
 	@cd $(dir_output)/fig; \
 	export TMPDIR="`mktemp -p /tmp -d context.XXXX`"; \
 	echo "\usemodule[p][foecsolution] \

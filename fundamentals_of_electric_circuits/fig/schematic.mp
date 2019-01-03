@@ -827,7 +827,7 @@ vardef newLabelNode@#(expr _picstr) text options =
 	ObjPath(BpathLabelNode(@#));
 enddef;
 def BpathLabelNode(suffix n)=
-	(n.inw--n.ine--n.ise--n.isw--cycle)
+	SchematicBpath(n)
 enddef;
 def drawLabelNode(suffix n) =
 	drawMemorizedPaths_(n);
@@ -856,7 +856,7 @@ vardef newDEarth@# text options =
 	ObjPath(subpath (1/3,2/3) of (@#.isw--@#.ise));
 enddef;
 def BpathDEarth(suffix n)=
-	(n.inw--n.ine--n.ise--n.isw--cycle)
+	SchematicBpath(n)
 enddef;
 def drawDEarth(suffix n) =
 	drawMemorizedPaths_(n);
@@ -931,6 +931,38 @@ def BpathVmeter(suffix n)=
 	RegToReal(n)(fullcircle);
 enddef;
 def drawVmeter(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
+%%%%%%%%%%%%%%%%%% Fuse %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("Fuse")("angle")(0);
+setObjectDefaultOption("Fuse")("dx")(4);
+setObjectDefaultOption("Fuse")("dy")(2);
+setObjectDefaultOption("Fuse")("linecolor")(Green);
+setObjectDefaultOption("Fuse")("pathfillcolor")(Khaki);
+
+vardef newFuse@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "Fuse");
+
+	SchematicInterface(2);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w, 0),180)",
+		"defPin@#(2,StdPos@#(e, 0),0)";
+
+	save _x;
+	vardef _x =
+		save main;
+		defcurve.main(-180,180,10,20)(sind)(3.1415926/180*cosd);
+		pathcurve.main xscaled (1/360) yscaled (1/2)
+	enddef;
+	ObjPath(RegToReal(@#)(_x));
+enddef;
+def BpathFuse(suffix n)=
+	SchematicBpath(n)
+enddef;
+def drawFuse(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 %%%%%%%%%%%%%%%%%%%%%%%% pin connection simple %%%%%%%%%%%%%%%%%%%
@@ -1068,6 +1100,7 @@ defXExt("newDCS");
 defXExt("newDEarth");
 defXExt("newLightBulb");
 defXExt("newVmeter");
+defXExt("newFuse");
 defXExt("newCDM");
 defXExt("ObjMLP");
 defXExt("ObjTLP");

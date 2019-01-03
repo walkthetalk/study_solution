@@ -194,7 +194,7 @@ $E = pt = ivt = qv = \munit{3888 coulomb} \times \munit{1.5 volt} = \munit{5832 
 \stopA
 
 % 1.12
-\startQ
+\startQ[Q:1.12]
 If the current flowing through an element is given by
 \startformula
 i(t)=\startmathcases
@@ -226,19 +226,7 @@ q(t)=\startmathcases
 \NC 66 \munit[l]{ampere},       \MC t \ge \munit{15 second} \NR
 \stopmathcases
 \stopformula
-
-\startMPcode
-	input coord;
-	defcoord(7,0.7,15,15,1.5);
-	defdim.x("(t) s")(0,6,10,15);
-	setloc.x("lrt")(10,15);
-	defdim.y("q(t) C")(18,54,66,126);
-	draw coordsys;
-
-	polydef.main(0,6,1,20)(0,0,1.5);
-	drawauxp.p((6,54),(10,126),(15,66));
-	drawemp(polycurve.main--(10,126)--(15,66)--(16,66));
-\stopMPcode
+\placefiga{1.12}
 \stopA
 
 % 1.13

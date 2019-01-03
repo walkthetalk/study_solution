@@ -138,7 +138,15 @@ vardef polytan(expr x)(text _cl) =
 	_r
 enddef;
 
-vardef polydef@#(expr l,r,mx,ma)(text _pl) =
+% l: left x value
+% r: right x value
+% mx: max x diff per step
+% ma: max angle diff per step
+% yfx: y = yfx(x)
+% ydiffx: dy/dx = ydiffx(x)
+% options: yfx/ydiffx coefficients
+% x range: [l, r]
+vardef defcurve@#(expr l, r, mx, ma)(text yfx)(text ydiffx) text options=
 	save dist,j;
 	numeric dist,j;
 	numeric n@#;
@@ -149,8 +157,8 @@ vardef polydef@#(expr l,r,mx,ma)(text _pl) =
 
 	j := 0;
 	x@#[j] := l;
-	y@#[j] := polyval(x@#[j])(_pl);
-	t@#[j] := polytan(x@#[j])(_pl);
+	y@#[j] := yfx(x@#[j]) options;
+	t@#[j] := ydiffx(x@#[j]) options;
 	a@#[j] := angle(1, t@#[j]);
 
 	forever:
@@ -159,8 +167,8 @@ vardef polydef@#(expr l,r,mx,ma)(text _pl) =
 		forever:
 			dist := dist / 2;
 			x@#[j] := x@#[j-1] + dist;
-			y@#[j] := polyval(x@#[j])(_pl);
-			t@#[j] := polytan(x@#[j])(_pl);
+			y@#[j] := yfx(x@#[j]) options;
+			t@#[j] := ydiffx(x@#[j]) options;
 			a@#[j] := angle(1,t@#[j]);
 			adiff := abs(a@#[j-1] - a@#[j]);
 			exitif (adiff < ma);
@@ -170,8 +178,8 @@ vardef polydef@#(expr l,r,mx,ma)(text _pl) =
 	endfor;
 
 	x@#[j] := r;
-	y@#[j] := polyval(r)(_pl);
-	t@#[j] := polytan(r)(_pl);
+	y@#[j] := yfx(r) options;
+	t@#[j] := ydiffx(r) options;
 	a@#[j] := angle(1, t@#[j]);
 
 	n@# := j;
@@ -194,7 +202,7 @@ image(
 )
 enddef;
 
-vardef polycurve@# =
+vardef pathcurve@# =
 	for i := 0 step 1 until n@#:
 		if (i = n@#):
 			{(1, t@#[i])}

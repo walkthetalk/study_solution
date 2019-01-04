@@ -157,15 +157,8 @@ vardef EqFPoints@#(expr _f)(expr _b)=
 	_d(e)  = (_d(ne) + _d(se))/2;
 enddef;
 
-vardef SchematicEq@#=
+vardef __SchematicEq@#=
 	@#ang:= OptionValue@#("angle");
-	if unknown @#.mainpic:%
-		@#dx = OptionValue@#("dx") * elesize_ratio;
-		@#dy = OptionValue@#("dy") * elesize_ratio;
-	else:
-		@#dx = xpart (urcorner @#.mainpic - ulcorner @#.mainpic);
-		@#dy = ypart (urcorner @#.mainpic - lrcorner @#.mainpic);
-	fi;
 
 	save DX,DY; numeric DX,DY;
 	DX = @#dx + 1*elesize_ratio;
@@ -186,6 +179,18 @@ vardef SchematicEq@#=
 	@#ese = ( DX/2,-@#dy/2) rotated @#ang shifted @#c;
 
 	EqFPoints@#("f")("i");
+enddef;
+
+vardef SchematicEq@#=
+	@#dx = OptionValue@#("dx") * elesize_ratio;
+	@#dy = OptionValue@#("dy") * elesize_ratio;
+	__SchematicEq@#;
+enddef;
+
+vardef SchematicPicEq@#(expr _pic)=
+	@#dx = xpart (urcorner _pic - ulcorner _pic);
+	@#dy = ypart (urcorner _pic - lrcorner _pic);
+	__SchematicEq@#;
 enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%% schematic path ###########################
@@ -419,7 +424,7 @@ enddef;
 
 %%%%%%%%%%%%%%%%%% Adjustable Resistor ANSI %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("ARa")("angle")(0);
-setObjectDefaultOption("ARa")("dx")(6);
+setObjectDefaultOption("ARa")("dx")(12);
 setObjectDefaultOption("ARa")("dy")(2);
 setObjectDefaultOption("ARa")("linecolor")(Green);
 setObjectDefaultOption("ARa")("pathfillcolor")(Khaki);
@@ -433,10 +438,10 @@ vardef newARa@# text options =
 
 	ObjCode "SchematicEq@#",
 		"defPin@#(1,StdPos@#(w, 0),180)",
-		"defPin@#(2,StdPos@#(e, 3),0)";
+		"defPin@#(2,StdPos@#(e, 0),0)";
 
-	ObjPath(RegToReal(@#)(model_zigzag(4)));
-	ObjPath(RegToReal(@#)((0.5,1.5)--(0,1.5)--(0,0.5)))
+	ObjPath(RegToReal(@#)(model_zigzag(8)));
+	ObjPath(RegToReal(@#)((0.5,0)--(0.5,1.5)--(0,1.5)--(0,0.5)))
 		"linecolor(SteelBlue)",
 		"arrows(drawarrow)";
 enddef;
@@ -614,19 +619,12 @@ setObjectDefaultOption("LightBulb")("dy")(8.1);
 setObjectDefaultOption("LightBulb")("linecolor")(FireBrick);
 setObjectDefaultOption("LightBulb")("pathfillcolor")(Khaki);
 
-vardef ObjFixedPointArray(suffix a)(expr n)=
-  save co;string co;co=currentObjname;
-  if not isOfType("pair",co & "." & str a & "1"):
-    sc_ ("pair " & generisize_(co) & "." & str a & "[]");
-  fi;
-enddef;
-
 vardef newLightBulb@# text options =
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "LightBulb");
 
 	SchematicInterface(2);
-	ObjFixedPointArray(bpl)(8); % bounding point list
+	ObjPairArray(bpl)(8); % bounding point list
 	ObjNumeric coiln;
 
 	ObjCode "SchematicEq@#",
@@ -755,10 +753,47 @@ vardef drawLightBulb(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
+%%%%%%%%%%%%%%%%%% Loudspeaker %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("Loudspeaker")("angle")(0);
+setObjectDefaultOption("Loudspeaker")("dx")(4);
+setObjectDefaultOption("Loudspeaker")("dy")(8);
+setObjectDefaultOption("Loudspeaker")("linecolor")(FireBrick);
+setObjectDefaultOption("Loudspeaker")("pathfillcolor")(Yellow);
+
+vardef newLoudspeaker@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "Loudspeaker");
+
+	SchematicInterface(2);
+	ObjPairArray(bpl)(6); % bounding point list
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w,1),90)",
+		"defPin@#(2,StdPos@#(w,2),-90)";
+
+	@#bpl[1] = (-0.5,0.2);
+	@#bpl[2] = (-0.25,0.2);
+	@#bpl[3] = (0.5,0.5);
+	@#bpl[4] = @#bpl[1] yscaled -1;
+	@#bpl[5] = @#bpl[2] yscaled -1;
+	@#bpl[6] = @#bpl[3] yscaled -1;
+
+	ObjPath(BpathLoudspeaker(@#)) "pathfilled(true)";
+	ObjPath(RegToReal(@#)(@#.bpl[2]--@#.bpl[5]));
+enddef;
+
+def BpathLoudspeaker(suffix n)=
+	RegToReal(n)(n.bpl[1]--n.bpl[2]--n.bpl[3]--n.bpl[6]--n.bpl[5]--n.bpl[4]--cycle)
+enddef;
+vardef drawLoudspeaker(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
 %%%%%%%%%%%%%%%%%% Current Direction Mark %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("CDM")("angle")(0);
 setObjectDefaultOption("CDM")("dx")(4);
 setObjectDefaultOption("CDM")("dy")(1);
+setObjectDefaultOption("CDM")("arrows")("drawarrow");
 setObjectDefaultOption("CDM")("linecolor")(FireBrick);
 setObjectDefaultOption("CDM")("pathfillcolor")(Khaki);
 
@@ -772,7 +807,7 @@ vardef newCDM@# text options =
 		"defPin@#(1,StdPos@#(w, 0),180)",
 		"defPin@#(2,StdPos@#(e, 0),0)";
 
-	ObjPath(BpathCDM(@#)) "arrows(->)";
+	ObjPath(BpathCDM(@#));
 enddef;
 def BpathCDM(suffix n)=
 	(n.iw--n.ie)
@@ -814,15 +849,21 @@ setObjectDefaultOption("LabelNode")("linecolor")(FireBrick);
 setObjectDefaultOption("LabelNode")("pathfillcolor")(Khaki);
 setObjectDefaultOption("LabelNode")("pathfilled")(true);
 
-vardef newLabelNode@#(expr _picstr) text options =
+vardef newLabelNode@#(expr _picstr)(expr _frmoption) text options =
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "LabelNode");
 
 	SchematicInterface(0);
 	ObjPicture mainpic;
-	@#.mainpic := image(label(textext(_picstr), origin););
+	@#.mainpic := thelabel(textext(
+		"\framedtext[width=fit,frame=off,align=middle,offset=0pt,"
+		& _frmoption
+		& "]{"
+		& _picstr
+		& "}"
+	), origin);
 
-	ObjCode "SchematicEq@#";
+	ObjCode "SchematicPicEq@#(@#mainpic)";
 
 	ObjPath(BpathLabelNode(@#));
 enddef;
@@ -831,7 +872,7 @@ def BpathLabelNode(suffix n)=
 enddef;
 def drawLabelNode(suffix n) =
 	drawMemorizedPaths_(n);
-	draw n.mainpic rotated n.ang shifted n.c;
+	draw n.mainpic rotated n.ang shifted n.c withcolor FireBrick;
 enddef;
 
 %%%%%%%%%%%%%%%%%% Digital Earth %%%%%%%%%%%%%%%%%%
@@ -862,6 +903,34 @@ def drawDEarth(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
+%%%%%%%%%%%%%%%%%% Battery %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("Battery")("angle")(0);
+setObjectDefaultOption("Battery")("dx")(3);
+setObjectDefaultOption("Battery")("dy")(1);
+setObjectDefaultOption("Battery")("linecolor")(Green);
+setObjectDefaultOption("Battery")("pathfillcolor")(Khaki);
+setObjectDefaultOption("Battery")("pathfilled")(true);
+
+vardef newBattery@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "Battery");
+
+	SchematicInterface(2);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(n, 0),90)",
+		"defPin@#(2,StdPos@#(s, 0),-90)";
+
+	ObjPath(@#.inw--@#.ine);
+	ObjPath(subpath (1/6,5/6) of (@#.isw--@#.ise));
+enddef;
+def BpathBattery(suffix n)=
+	SchematicBpath(n)
+enddef;
+def drawBattery(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
 %%%%%%%%%%%%%%%%%% Switch %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("Switch")("angle")(0);
 setObjectDefaultOption("Switch")("dx")(5);
@@ -873,7 +942,7 @@ vardef newSwitch@#(expr _defcp) text options =
 	ExecuteOptions(@#)(options);
 	assignObj(@#, "Switch");
 
-	SchematicInterface(4);
+	SchematicInterface(3);
 
 	ObjCode "SchematicEq@#",
 		"defPin@#(3,CirclePos@#(180),180)",
@@ -891,6 +960,73 @@ def BpathSwitch(suffix n)=
 	(n.in..n.iw..n.is..n.ie..cycle)
 enddef;
 def drawSwitch(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
+%%%%%%%%%%%%%%%%%% SSwitch %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("SSwitch")("angle")(0);
+setObjectDefaultOption("SSwitch")("dx")(5);
+setObjectDefaultOption("SSwitch")("dy")(5);
+setObjectDefaultOption("SSwitch")("linecolor")(FireBrick);
+setObjectDefaultOption("SSwitch")("pathfillcolor")(Yellow);
+
+vardef newSSwitch@#(expr _defState) text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "SSwitch");
+
+	SchematicInterface(2);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(1,StdPos@#(w,0),180)",
+		"defPin@#(2,StdPos@#(e,0),0)";
+
+	if (_defState):
+		ObjPath(@#.pin[1]--@#.pin[2]) "arrows(->)";
+	else:
+		ObjPath(RegToReal(@#)(
+			((0,0)--(1,0)) rotated 60 shifted (-0.5,0)
+		)) "arrows(->)";
+	fi;
+	ObjPath(fullcircle shifted @#.pin[1]) "pathfilled(true)", "pathfillcolor(White)";
+	ObjPath(fullcircle shifted @#.pin[2]) "pathfilled(true)", "pathfillcolor(White)";
+enddef;
+def BpathSSwitch(suffix n)=
+	SchematicBpath(n)
+enddef;
+def drawSSwitch(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
+%%%%%%%%%%%%%%%%%% TriSwitch %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("TriSwitch")("angle")(0);
+setObjectDefaultOption("TriSwitch")("dx")(5);
+setObjectDefaultOption("TriSwitch")("dy")(5 * sqrt(3));
+setObjectDefaultOption("TriSwitch")("linecolor")(FireBrick);
+setObjectDefaultOption("TriSwitch")("pathfillcolor")(Yellow);
+
+vardef newTriSwitch@#(expr _defcp) text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "TriSwitch");
+
+	SchematicInterface(4);
+
+	ObjCode "SchematicEq@#",
+		"defPin@#(4,StdPos@#(w,0),180)",
+		"defPin@#(1,StdPos@#(n,0),60)",
+		"defPin@#(2,StdPos@#(e,0),0)",
+		"defPin@#(3,StdPos@#(s,0),-60)";
+
+	ObjPath(BpathTriSwitch(@#)) "pathfilled(true)";
+	ObjPath(@#.pin[4]--@#.pin[_defcp]) "arrows(->)";
+	ObjPath(fullcircle shifted @#.pin[1]) "pathfilled(true)", "pathfillcolor(White)";
+	ObjPath(fullcircle shifted @#.pin[2]) "pathfilled(true)", "pathfillcolor(White)";
+	ObjPath(fullcircle shifted @#.pin[3]) "pathfilled(true)", "pathfillcolor(White)";
+	ObjPath(fullcircle shifted @#.pin[4]) "pathfilled(true)", "pathfillcolor(White)";
+enddef;
+def BpathTriSwitch(suffix n)=
+	(n.in..n.iw..n.is..n.ie..cycle)
+enddef;
+def drawTriSwitch(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
@@ -955,7 +1091,7 @@ vardef newFuse@# text options =
 	vardef _x =
 		save main;
 		defcurve.main(-180,180,10,20)(sind)(3.1415926/180*cosd);
-		pathcurve.main xscaled (1/360) yscaled (1/2)
+		pathcurve.main xscaled (1/360) yscaled (-1/2)
 	enddef;
 	ObjPath(RegToReal(@#)(_x));
 enddef;
@@ -1093,12 +1229,16 @@ defXExt("newPotentiometer");
 defXExt("newRa");
 defXExt("newR");
 defXExt("newSwitch");
+defXExt("newSSwitch");
+defXExt("newTriSwitch");
+defXExt("newBattery");
 defXExt("newIVS");
 defXExt("newICS");
 defXExt("newDVS");
 defXExt("newDCS");
 defXExt("newDEarth");
 defXExt("newLightBulb");
+defXExt("newLoudspeaker");
 defXExt("newVmeter");
 defXExt("newFuse");
 defXExt("newCDM");

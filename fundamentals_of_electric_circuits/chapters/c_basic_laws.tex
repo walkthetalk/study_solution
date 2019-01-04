@@ -1093,5 +1093,111 @@ $R_2 = \frac{V}{I_m} - \frac{V}{I_h} = 0.8\sunit[l]{ohm}$,\\
 $R_1 = \frac{V}{I_l} - \frac{V}{I_m} = 4\sunit[l]{ohm}$.
 \stopA
 
+% 2.75
+\startQ[Q:2.75]
+Find $R_{ab}$ in the four-way power divider circuit in \reffig{2.135}.
+Assume each $R = \sunit{4 ohm}$.
+\placefigq{2.135}{2.75}
+\stopQ
+
+\startA
+$R_{ab} = 2 R = \sunit{8 ohm}$.
+\stopA
+
+% 2.76
+\startQ[Q:2.76]
+Repeat \refq{2.75} for the eight-way divider shown in \reffig{2.136}.
+\placefigq{2.136}{2.76}
+\stopQ
+
+\startA
+$R_{ab} = 2 R$.
+\stopA
+
+% 2.77
+\startQ[Q:2.77]
+Suppose your circuit laboratory has the following standard
+commercially available resistors in large quantities:
+
+\munit{1.8 ohm}, \munit{20 ohm},​ \munit{300 ohm},
+\munit{24 kilo ohm}, \munit{56 kilo ohm}
+
+Using series and parallel combinations and a minimum number
+of available resistors, how would you obtain the following
+resistances for an electronic circuit design?
+\startIG
+\item \munit{5 ohm}
+\item \munit{311.8 ohm}
+\item \munit{40 kilo ohm}
+\item \munit{52.32 kilo ohm}
+\stopIG
+\stopQ
+
+\startA
+\placefiga[2*2][a,b,c,d]{2.77}
+\stopA
+
+% 2.78
+\startQ[Q:2.78]
+In the circuit in \reffig{2.137},
+the wiper divides the potentiometer resistance between $\alpha R$
+and $(1-\alpha)R$, $0\le\alpha\le 1$.
+Find $v_o / v_s$.
+\placefigq{2.137}{2.78}
+\stopQ
+
+\startA
+\startformula
+\frac{v_o}{v_s}=\frac{1-\alpha}{2-alpha}
+\stopformula
+\stopA
+
+% 2.79
+\startQ[Q:2.79]
+An electric pencil sharpener rated \munit{240 milli watt},
+\munit{6 volt} is connected to a 9-V battery as shown in \reffig{2.138}.
+Calculate the value of the series-dropping resistor $R_x$
+needed to power the sharpener.
+\placefigq{2.138}{2.79}
+\stopQ
+
+\startA
+\startformula
+R_s = \frac{6^2}{0.24} = \sunit{150 ohm}, R_x = \frac{9-V_s}{V_s}\times R_s = \sunit{75 ohm}
+\stopformula
+\stopA
+
+% 2.80
+\startQ[Q:2.80]
+a loudspeaker is connected to an amplifier as shown in \reffig{2.139}.
+If a 10-Ω loudspeaker draws the maximum power of \munit{12 watt} from the amplifier,
+determine the maximum power a 4-Ω loudspeaker will draw.
+\stopQ
+
+\startA
+The amplifier can be modeled as a voltage source,
+and the loudspeaker as a resistor.
+
+Since $P=\frac{V^2}{R}$, $P_2 = \frac{R_1P_1}{R_2} = \sunit{30 watt}$.
+\stopA
+
+% 2.81
+\startQ[Q:2.81]
+For a specific application,
+the circuit shown in \reffig{2.140} was designed so that
+$I_L =\sunit{83,33 milli ampere}$ and that $R_{in}=\sunit{5 kilo ohm}$.
+What are the values of $R_1$ and $R_2$?
+placefigq{2.140}{2.81}
+\stopQ
+
+\startA
+$I_{in}=\sunit{0.5 ampere}$, $V_{in}=\sunit{2500 volt}$.\\
+$I_{10k}=\sunit{250 milli ampere}$, $I_1=\sunit{250 milli ampere}$.\\
+$I_2=I_1-I_L$, $R_2 = I_L\times \sunit{10 kilo ohm} / I_2 = \sunit{5 kilo ohm}$.\\
+$R_1=(V_{in}-I_L\times \sunit{10 kilo ohm}) / I_1
+    = \frac{20}{3}\sunit[l]{kilo ohm}
+    \approx \sunit{6.667 kilo ohm}$.
+\stopA
+
 \stopchapter
 \stopcomponent

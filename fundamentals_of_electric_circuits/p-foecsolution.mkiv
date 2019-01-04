@@ -55,9 +55,9 @@
 \def\munit{\dosingleempty\domunit}
 \unexpanded\def\domunit[#1]#2{%
 \ifmmode%
-  \iffirstargument\sunit[#1]{#2}\else\sunit{#2}\fi%
+  \sunit[#1]{#2}%
 \else%
-  \math{\iffirstargument\sunit[#1]{#2}\else\sunit{#2}\fi}%
+  \math{\sunit[#1]{#2}}%
 \fi%
 }
 

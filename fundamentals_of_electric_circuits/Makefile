@@ -35,7 +35,7 @@ all: ${dir_output}/$(pdf_name).pdf
 clean:
 	@rm -r ${dir_output}/*
 
-$(pdf_name)-aio.pdf: $(tex_deps) ${env_deps}
+${dir_output}/$(pdf_name)-aio.pdf: $(tex_deps) ${env_deps}
 	@echo [gen] $@
 	@cd ${dir_output}; \
 	export MPINPUTS=${dir_mp}; \
@@ -75,7 +75,7 @@ $(dir_output)/fig/%.pdf: ${dir_main}/fig/%.mp ${fig_deps} ${env_deps}
 		labeloffset := 1; \
 		ahangle:=30; \
 		clearObjsForTwiceRun; \
-		input $< \
+		input $<; \
 		\stopMPpage \
 		\stoptext" > $${TMPDIR}/$*.tex; \
 	echo TMPDIR is $${TMPDIR}; \

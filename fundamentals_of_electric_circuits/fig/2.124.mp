@@ -3,7 +3,7 @@ XObjMLP.lb1("R_x")(in)(rt);
 XnewLightBulb.lb2 "angle(-90)";
 XObjMLP.lb2("R_y")(in)(rt);
 
-XnewLabelNode.u1("\framedtext[width=fit,frame=off,align=middle]{70-W\\Power\\Supply}");
+XnewLabelNode.u1("70-W\\Power\\Supply")("");
 XObjMLP.u1("+")(in)(ulft);
 XObjMLP.u1("-")(is)(llft);
 

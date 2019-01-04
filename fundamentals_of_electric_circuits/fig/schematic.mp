@@ -841,6 +841,31 @@ def drawNode(suffix n) =
 	drawMemorizedPaths_(n);
 enddef;
 
+%%%%%%%%%%%%%%%%%% SquareNode %%%%%%%%%%%%%%%%%%
+setObjectDefaultOption("SquareNode")("angle")(0);
+setObjectDefaultOption("SquareNode")("dx")(1);
+setObjectDefaultOption("SquareNode")("dy")(1);
+setObjectDefaultOption("SquareNode")("linecolor")(FireBrick);
+setObjectDefaultOption("SquareNode")("pathfillcolor")(Yellow);
+setObjectDefaultOption("SquareNode")("pathfilled")(true);
+
+vardef newSquareNode@# text options =
+	ExecuteOptions(@#)(options);
+	assignObj(@#, "SquareNode");
+
+	SchematicInterface(0);
+
+	ObjCode "SchematicEq@#";
+
+	ObjPath(BpathSquareNode(@#));
+enddef;
+def BpathSquareNode(suffix n)=
+	SchematicBpath(n)
+enddef;
+def drawSquareNode(suffix n) =
+	drawMemorizedPaths_(n);
+enddef;
+
 %%%%%%%%%%%%%%%%%% LabelNode %%%%%%%%%%%%%%%%%%
 setObjectDefaultOption("LabelNode")("angle")(0);
 %setObjectDefaultOption("LabelNode")("dx")(1);
@@ -1074,7 +1099,7 @@ enddef;
 setObjectDefaultOption("Fuse")("angle")(0);
 setObjectDefaultOption("Fuse")("dx")(4);
 setObjectDefaultOption("Fuse")("dy")(2);
-setObjectDefaultOption("Fuse")("linecolor")(Green);
+setObjectDefaultOption("Fuse")("linecolor")(FireBrick);
 setObjectDefaultOption("Fuse")("pathfillcolor")(Khaki);
 
 vardef newFuse@# text options =
@@ -1093,7 +1118,9 @@ vardef newFuse@# text options =
 		defcurve.main(-180,180,10,20)(sind)(3.1415926/180*cosd);
 		pathcurve.main xscaled (1/360) yscaled (-1/2)
 	enddef;
-	ObjPath(RegToReal(@#)(_x));
+	ObjPath(RegToReal(@#)(_x)) "linecolor(Green)";
+	ObjPath(fullcircle shifted @#.pin[1]) "pathfilled(true)", "pathfillcolor(White)";
+	ObjPath(fullcircle shifted @#.pin[2]) "pathfilled(true)", "pathfillcolor(White)";
 enddef;
 def BpathFuse(suffix n)=
 	SchematicBpath(n)
@@ -1223,6 +1250,7 @@ enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%% X series %%%%%%%%%%%%%%%%%%%%%%%%%
 defXExt("newNode");
+defXExt("newSquareNode");
 defXExt("newLabelNode");
 defXExt("newARa");
 defXExt("newPotentiometer");

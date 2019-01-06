@@ -43,8 +43,8 @@ X(n3).c = X(r2).c + UD(0,3);
 X(n4).c = X(r1).c + UD(0,3);
 X(sn1).inw = X(n1).c;
 X(sn2).ine = X(n2).c;
-X(sn3).isw = X(n3).c;
-X(sn4).ise = X(n4).c;
+X(sn3).ise = X(n3).c;
+X(sn4).isw = X(n4).c;
 
 draw unitsquare shifted (-0.5,-0.5) scaled UD(9*2) dashed evenly withcolor SteelBlue;
 fill (halfcircle--cycle) scaled UD(3) rotated -90 shifted (-UD(9),0) withcolor Yellow;

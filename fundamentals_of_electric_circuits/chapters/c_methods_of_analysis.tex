@@ -1,0 +1,97 @@
+\startcomponent c_methods_of_analysis
+\startchapter[
+  title={Methods of Analysis},
+]
+
+% 3.1
+\startQ[Q:3.1]
+Using \reffig{3.50}, design a problem to help other
+students better understand nodal analysis.
+\placefigq{3.50}{3.1}
+\stopQ
+
+\startA
+...
+\stopA
+
+% 3.2
+\startQ[Q:3.2]
+For the circuit in \reffig{3.51}, obtain $v_1$ and $v_2$.
+\placefigq{3.51}{3.2}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC \frac{v_2-v_1}{2} - \frac{v_1}{10} - \frac{v_1}{5} = 6 \NC \NR
+\NC \frac{v_2-v_1}{2} + \frac{v_2}{4} = 6 + 3 \NC \NR
+\stopmathalignment\stopformula
+
+$v_1 = \sunit{0 volt}$, $v_2 = \sunit{12 volt}$.
+\stopA
+
+% 3.3
+\startQ[Q:3.3]
+Find the current $I_1$ through $I_4$ and the voltage $v_o$
+in the circuit of \reffig{3.52}.
+\placefigq{3.52}{3.3}
+\stopQ
+
+\startA
+$I_1 = \sunit{6 ampere}$\\
+$I_2 = \sunit{3 ampere}$\\
+$I_3 = \sunit{2 ampere}$\\
+$I_4 = \sunit{1 ampere}$\\
+\stopA
+
+% 3.4
+\startQ[Q:3.4]
+Given the circuit in \reffig{3.53},
+caculate the currents $i_1$ through $i_4$.
+\placefigq{3.53}{3.4}
+\stopQ
+
+\startA
+$I_1 = \sunit{3 ampere}$\\
+$I_2 = \sunit{6 ampere}$\\
+$I_3 = \sunit{-0.5 ampere}$\\
+$I_4 = \sunit{-0.5 ampere}$\\
+\stopA
+
+% 3.5
+\startQ[Q:3.5]
+Obtain $v_o$ in the circuit of \reffig{3.54}.
+\placefigq{3.54}{3.5}
+\stopQ
+
+\startA
+\startformula
+\frac{v_o}{120k} + \frac{v_o + 120}{120k} + \frac{v_o+120-60}{30k} = 0
+\stopformula
+$v_o = \sunit{-60 volt}$.
+\stopA
+
+% 3.6
+\startQ[Q:3.6]
+Solve for $V_1$ in the circuit of \reffig{3.55}
+using nodal analysis.
+\placefigq{3.55}{3.6}
+\stopQ
+
+\startA
+$\frac{V_1}{10} = \frac{20-V_1}{4} + \frac{10-V_1}{10/3}$\\
+$V_1 = \frac{160}{13}\approx \sunit{12.308 volt}$.
+\stopA
+
+% 3.7
+\startQ[Q:3.7]
+Apply nodal analysis to solve for $V_x$ in the circuit of \reffig{3.56}.
+\placefigq{3.56}{3.7}
+\stopQ
+
+\startA
+$\frac{V_x}{60} + \frac{V_x}{30} + 0.05 V_x = 2$\\
+$V_x = \sunit{20 volt}$.
+\stopA
+
+\stopchapter
+\stopcomponent

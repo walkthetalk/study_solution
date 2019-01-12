@@ -105,7 +105,56 @@ Using nodal analysis, find $v_o$ in the circuit of \reffig{3.57}.
 \NC v_1 = i_o \times (6+4) \NC \NR
 \NC \frac{v_1 - 5 v_o}{20} + i_o = \frac{60-v_1}{20} \NC \NR
 \stopmathalignment\stopformula
-$v_o = \sunti{12 volt}$.
+$v_o = \sunit{12 volt}$.
+\stopA
+
+% 3.9
+\startQ[Q:3.9]
+Determine $I_b$ in the circuit in \reffig{3.58} using nodal analysis.
+\placefigq{3.58}{3.9}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC V_{50} = 24 - 250 I_b \NC \NR
+\NC I_b = \frac{V_{50}}{50} + \frac{V_{50}-60I_b}{150} \NC \NR
+\stopmathalignment\stopformula
+
+$I_b = \frac{48}{605}\sunit[l]{ampere}\approx 79.34\sunit[l]{milli ampere}$.
+\stopA
+
+% 3.10
+\startQ[Q:3.10]
+Find $I_o$ in the circuit of \reffig{3.59}.
+\placefigq{3.59}{3.10}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC I_4 + 2 I_o = I_o + 4\NC\NR
+\NC I_o = I_2 + I_4 \NC\NR
+\NC 8I_o + 4I_4 + (4 + I_o) = 0 \NC\NR
+\stopmathalignment\stopformula
+
+$I_o = -4\sunit[l]{ampere}$.
+\stopA
+
+% 3.11
+\startQ[Q:3.11]
+Find $V_o$ and the power dissipated in all the resistors
+in the circuit of \reffig{3.60}.
+\placefigq{3.60}{3.11}
+\stopQ
+
+\startA
+\startformula
+\frac{60-V_o}{12} = \frac{V_o}{12} + \frac{V_o + 24}{6}
+\stopformula
+
+$V_o = \sunit{3 volt}$\\
+$p_1 = \frac{(60-3)^2}{12} = 270.75\sunit[l]{watt}$\\
+$p_2 = \frac{3^2}{12} = 0.75\sunit[l]{watt}$\\
+$p_3 = \frac{(3+24)^2}{6} = 121.5\sunit[l]{watt}$.
 \stopA
 
 \stopchapter

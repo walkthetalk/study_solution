@@ -157,5 +157,105 @@ $p_2 = \frac{3^2}{12} = 0.75\sunit[l]{watt}$\\
 $p_3 = \frac{(3+24)^2}{6} = 121.5\sunit[l]{watt}$.
 \stopA
 
+% 3.12
+\startQ[Q:3.12]
+Using nodal analysis, determine $V_o$ in the circuit in \reffig{3.61}.
+\placefigq{3.61}{3.12}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC\NC (\frac{V_o}{10} - 4 I_x + I_x) \times 20 + I_x \times 20 = 40 \NR
+\NC\NC (\frac{V_o}{10} - 4 I_x)\times 10 + V_o = I_x \times 20 \NR
+\stopmathalignment\stopformula
+
+$V_o = 60\sunit[l]{volt}$, $I_x = 2\sunit[l]{ampere}$.
+\stopA
+
+% 3.13
+\startQ[Q:3.13]
+Calculate $v_1$ and $v_2$ in the circuit of \reffig{3.62} using nodal analysis.
+\placefigq{3.62}{3.13}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC\NC \frac{v_2}{30} + \frac{v_1}{50} = 15 \NR
+\NC\NC \frac{v_1}{50}\times 10 + v_1 = 600 + v_2 \NR
+\stopmathalignment\stopformula
+
+$v_1 = 1750/3 \approx 583.3\sunit[l]{volt}$,
+$v_2 = 100\sunit[l]{volt}$.
+\stopA
+
+% 3.14
+\startQ[Q:3.14]
+Using nodal analysis, find $v_o$ in the circuit of \reffig{3.63}.
+\placefigq{3.63}{3.14}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC\NC v_x + 100 + (12.5 + \frac{v_x}{1})\times 2 = v_o \NR
+\NC\NC \frac{v_x}{1} + \frac{v_o}{4} + \frac{v_o+50}{8} = 0 \NR
+\stopmathalignment\stopformula
+
+$v_x = -25\sunit[l]{volt}$,
+$v_o = 50\sunit[l]{volt}$.
+\stopA
+
+% 3.15
+\startQ[Q:3.15]
+Apply nodal analysis to find $i_o$ and the power dissipated
+in each resistor in the circuit of \reffig{3.64}.
+\placefigq{3.64}{3.15}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC\NC \frac{i_o}{6} + \frac{i_o-4}{5} = 10 \NR
+\stopmathalignment\stopformula
+
+$i_o = \frac{324}{11}\approx 29.45\sunit[l]{ampere}$\\
+$p_6 = \frac{17496}{121} \approx 144.60\sunit[l]{watt}$\\
+$p_5 = \frac{15680}{121} \approx 129.59\sunit[l]{watt}$\\
+$p_3 = 12\sunit[l]{watt}$
+\stopA
+
+% 3.16
+\startQ[Q:3.16]
+Determine voltages $v_1$ through $v_3$ in the circuit
+of \reffig{3.65} using nodal analysis.
+\placefigq{3.65}{3.16}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC\NC v_2 = v_o \NR
+\NC\NC v_1 = 2 v_o + v_2 \NR
+\NC\NC v_1 \times 1 - 2 + v_2\times 4
+       + (v_2-v_3)\times 8 + (v_1-v_3)\times 2 = 0 \NR
+\stopmathalignment\stopformula
+
+$v_3 = \sunit{13 volt}$\\
+$v_2 = \frac{44}{7} \approx \sunit{6.286 volt}$\\
+$v_1 = \frac{132}{7} \approx \sunit{18.857 volt}$
+\stopA
+
+% 3.17
+\startQ[Q:3.17]
+Using nodal analysis, find current $i_o$ in the circuit of \reffig{3.66}.
+\placefigq{3.66}{3.17}
+\stopQ
+
+\startA
+\startformula\startmathalignment
+\NC\NC i_2 = i_o - \frac{60 - 4i_o}{8} \NR
+\NC\NC (i_2 + 3i_o)\times 10 + 4i_o + 2i_2 = 0 \NR
+\stopmathalignment\stopformula
+
+$i_o=\frac{45}{26}\approx \sunit{1.73 ampere}$.
+\stopA
+
 \stopchapter
 \stopcomponent

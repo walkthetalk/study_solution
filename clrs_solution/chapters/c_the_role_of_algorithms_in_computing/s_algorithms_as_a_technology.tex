@@ -1,0 +1,47 @@
+\startsection[
+  title={Algorithms as a technology},
+]
+
+%e1.2-1
+\startEXERCISE
+給出一個應用範例，要求在整個應用層面需要算法的内容，
+並討論一下所含算法要具備的功能。
+\stopEXERCISE
+
+\startANSWER
+自動駕駛。
+\stopANSWER
+
+%e1.2-2
+\startEXERCISE
+假設在某臺計算機上，有大小為 \m{n} 的輸入，
+其插入排序需要運行步數為 \m{8n^2}，
+歸并排序需要運行步數為 \m{64n \lg n}。
+\m{n} 為何值時，插入排序要優於歸并排序？
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment[n=3,
+  align={right,middle,left}]
+\NC 8n^2   \NC <   \NC 64n \lg n \NR
+\NC 2^n    \NC <   \NC n^8 \NR
+\NC 2\le n \NC \le \NC 43  \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e1.2-3
+\startEXERCISE
+在同一臺計算機上，如果一個算法運行時間是 \m{100 n^2}，
+另一個算法運行時間是 \m{2^n}，要想使前者快於後者，
+\m{n} 最小是多少？
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment[n=3,
+  align={right,middle,left}]
+\NC 100 n^2   \NC <   \NC 2^n \NR
+\NC       n   \NC \ge \NC 15 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\stopsection

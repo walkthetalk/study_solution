@@ -1,0 +1,111 @@
+\startsubject[
+  title={Problems},
+]
+%p1-1
+\startPROBLEM
+比較運行時間
+
+下表中有一些列函數 \m{f(n)} 及相應的時間 \m{t}，
+假設算法解決問題需要的時間為 \m{f(n)} 微秒，
+要想在時間 \m{t} 内解決問題，
+\m{n} 最大是多少。
+
+\bTABLE[align=center]
+\bTR \bTD \eTD \bTD 1秒 \eTD \bTD 1分鐘\eTD \bTD 1小時\eTD \bTD 1天\eTD \bTD 1月\eTD \bTD 1年\eTD \bTD 1世紀\eTD \eTR
+\bTR \bTD \m{\lg n}   \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \eTR
+\bTR \bTD \m{\sqrt{n}}\eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \eTR
+\bTR \bTD \m{n}       \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \eTR
+\bTR \bTD \m{n\lg n}  \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \eTR
+\bTR \bTD \m{n^2}     \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \eTR
+\bTR \bTD \m{n^3}     \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \eTR
+\bTR \bTD \m{2^n}     \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \eTR
+\bTR \bTD \m{n!}      \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \bTD \eTD \eTR
+\eTABLE
+\stopPROBLEM
+
+\startANSWER
+\bTABLE[align=center]
+\bTR \bTD \eTD
+  \bTD 1秒 \eTD
+  \bTD 1分鐘\eTD
+  \bTD 1小時\eTD
+  \bTD 1天\eTD
+  \bTD 1月\eTD
+  \bTD 1年\eTD
+  \bTD 1世紀\eTD \eTR
+\bTR \bTD \eTD
+  \bTD \m{10^6}\eTD
+  \bTD \m{6\times 10^7}\eTD
+  \bTD \m{3.6\times 10^9}\eTD
+  \bTD \m{8.64\times 10^{10}}\eTD
+  \bTD \m{2.59\times 10^{12}}\eTD
+  \bTD \m{3.15\times 10^{13}}\eTD
+  \bTD \m{3.15\times 10^{15}}\eTD \eTR
+\bTR \bTD \m{\lg n}\eTD
+  \bTD \m{2^t}\eTD
+  \bTD \m{2^t}\eTD
+  \bTD \m{2^t}\eTD
+  \bTD \m{2^t}\eTD
+  \bTD \m{2^t}\eTD
+  \bTD \m{2^t}\eTD
+  \bTD \m{2^t}\eTD \eTR
+\bTR \bTD \m{\sqrt{n}}\eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD \eTR
+\bTR \bTD \m{n}\eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD \eTR
+\bTR \bTD \m{n\lg n}\eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD \eTR
+\bTR \bTD \m{n^2}\eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD \eTR
+\bTR \bTD \m{n^3}\eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD \eTR
+\bTR \bTD \m{2^n}\eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD \eTR
+\bTR \bTD \m{n!}\eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD
+  \bTD \eTD \eTR
+\eTABLE
+\stopANSWER
+
+\stopsubject

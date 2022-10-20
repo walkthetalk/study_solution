@@ -1,1 +1,16 @@
+https://walkccc.me/CLRS/
+https://sites.math.rutgers.edu/~ajl213/CLRS/CLRS.html
+
+Errata:
+https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/11599/e4-bugs.html
+
+only first 4 chapters:
+https://atekihcan.github.io/CLRS/
+
+2nd, 1-18, appA-C:
+https://github.com/wojtask/CormenSol
+
+1-35:
+https://github.com/gzc/CLRS
+
 https://zhuanlan.zhihu.com/p/384846877

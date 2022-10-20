@@ -51,12 +51,14 @@ fig_pdfs: ${fig_pdfs}
 
 $(pdf_name).pdf: $(tex_deps) ${fig_pdfs}
 	@echo [gen] $@
-	@context --jit --purge \
-	  --nocompression \
-	  --environment=env_cmm \
-	  --path=$(dir_env) \
-	  --result=$(pdf_name).pdf \
-	  $(tex_name).tex; \
+	@context \
+		--luatex \
+		--jit --purge \
+		--nocompression \
+		--environment=env_cmm \
+		--path=$(dir_env) \
+		--result=$(pdf_name).pdf \
+		$(tex_name).tex; \
 	$(call clean_misc)
 
 $(dir_output)/%-1.pdf : ${dir_main}/fig/%.mp ${fig_deps}

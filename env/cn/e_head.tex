@@ -308,28 +308,36 @@
 []
 [\BodyTextLeftFooter]
 
-\define\BodyEdgeLeftFooter{\rotate[%
-  rotation=-90,
-  width=fit,
-  height=fit,
-  frame=off,
-  offset=2pt,
-  background=color,
-  backgroundcolor=darkgray,
-  foregroundcolor=white,
-  corner=round,
-]{\prdname —— \from[authorEmail]}}
-\define\BodyEdgeRightFooter{\rotate[%
-  rotation=90,
-  width=fit,
-  height=fit,
-  frame=off,
-  offset=2pt,
-  background=color,
-  backgroundcolor=darkgray,
-  foregroundcolor=white,
-  corner=round,
-]{\prdname —— \from[authorBlog]}}
+\define\BodyEdgeLeftFooter{%
+\framed[frame=off]{% @note avoid wrong footer height for rotation
+  \rotate[%
+    rotation=-90,
+    width=fit,
+    height=fit,
+    frame=off,
+    offset=2pt,
+    background=color,
+    backgroundcolor=darkgray,
+    foregroundcolor=white,
+    corner=round,
+  ]{\prdname —— \from[authorEmail]}
+}
+}
+\define\BodyEdgeRightFooter{%
+\framed[frame=off]{% @note avoid wrong footer height for rotation
+  \rotate[%
+    rotation=90,
+    width=fit,
+    height=fit,
+    frame=off,
+    offset=2pt,
+    background=color,
+    backgroundcolor=darkgray,
+    foregroundcolor=white,
+    corner=round,
+  ]{\prdname —— \from[authorBlog]}
+}
+}
 
 \setupfootertexts[edge]
 []

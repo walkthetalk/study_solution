@@ -10,8 +10,18 @@ $\Theta(n^3)$
 \stopANSWER
 
 \startEXERCISE
-選擇排序。
+對數列 $A[1:n]$ 中的 $n$ 個數進行排序。
+先找到 $A[1:n]$ 中的最小元素，並將其與 $A[1]$ 進行交換；
+然後找到 $A[2:n]$ 中的最小元素，並將其與 $A[2]$ 進行交換；
+再找到 $A[3:n]$ 中的最小元素，並將其與 $A[3]$ 進行交換；
+對於 $A$ 中前 $n-1$ 個元素都用這種方式進行處理。
+這種排序方式稱爲\EMP{選擇排序}，試寫出其僞碼。
+此算法滿足循環不變性嗎？
+爲什麽僅需處理前 $n-1$ 個元素，而不是所有元素？
+給出其最壞情況下的運行時間，用 $\theta$ 表示。
+最好情況下的運行時間有改善嗎？
 \stopEXERCISE
+
 \startANSWER
 \startCLRS
 n = A.length
@@ -23,11 +33,24 @@ for j = 1 to n - 1
 	exchange A[j] with A[smallest]
 \stopCLRS
 
+\startformula
+\sigma_{i=1}^{n-1}n-i
+= n(n-1) - \sigma_{i=1}^{n-1}i
+=n^2-n-\frac{n^2-n}{2}
+=\frac{n^2-n}{2}
+=\theta(n^2)
+\stopformula
+
 所用時間爲 $\Theta(n^2)$。
 \stopANSWER
 
 \startEXERCISE
-線性查找所用時間。
+回顧\refexercise{linear_earch}中的綫性查找問題。
+假設所搜索的值可能是數列中的任一元素，
+平均要檢查輸入數列中多少個元素？
+最壞情況呢？
+用 $\theta$ 標記表示這兩種情況的運行時間，
+並驗證你的答案。
 \stopEXERCISE
 \startANSWER
 一般情況 $\Theta(n)$。
@@ -35,7 +58,7 @@ for j = 1 to n - 1
 \stopANSWER
 
 \startEXERCISE
-如何修改算法時期最好情況下運行時間最短。
+對於任一排序算法，如何修改使其最好情況下運行時間最短。
 \stopEXERCISE
 \startANSWER
 測試輸入是否滿足某個特例，如果滿足，則直接輸出預先算好的結果。

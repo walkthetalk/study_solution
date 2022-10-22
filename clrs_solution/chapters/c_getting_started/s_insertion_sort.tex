@@ -3,7 +3,7 @@
 ]
 
 \startEXERCISE
-參照圖 2.2，描述如何對數列 \math{A = <31, 41, 59, 26, 41, 58>} 進行排序。
+參照圖 2.2，描述如何對數列 $A = \langle 31, 41, 59, 26, 41, 58\rangle$ 進行排序。
 \stopEXERCISE
 
 \startANSWER
@@ -18,7 +18,29 @@
 \stopANSWER
 
 \startEXERCISE
-重寫插入排序例程，以實現遞減排序。
+\ALGO{SUM-ARRAY} 用於計算數列 $A[1:n]$ 中 $n$ 個數的和。
+試對其循環不變性的初始化、保持、終止進行分析，
+並據此説明此算法是如何得到 $A[1:n]$ 的和的。
+
+\CLRSH{SUM-ARRAY(A, n)}
+\startCLRS
+sum = 0
+for i = 1 to n
+	sum = sum + A[i]
+return sum
+\stopCLRS
+\stopEXERCISE
+
+\startANSWER
+\startigBase
+\item 初始化：第一次迭代前， \m{sum} 是 \m{A[1..i-1]} 中元素的和；
+\item 保持：每次迭代后， \m{sum} 是 \m{A[1..i]} 中元素的和；
+\item 終止：迭代終止后， \m{sum} 是 \m{A[1..n]} 中元素的和。
+\stopigBase
+\stopANSWER
+
+\startEXERCISE
+重寫插入\ALGO{INSERTION-SORT} 例程，以實現遞減排序。
 \stopEXERCISE
 \startANSWER
 
@@ -43,22 +65,39 @@ for j = 2 to A.length
 \stopcombination
 \stopANSWER
 
-\startEXERCISE
-線性查找問題。
-\stopEXERCISE
-\startANSWER
+\startEXERCISE[exercise:linear_earch]
+線性查找問題：
 
+輸入： $n$ 個數 $\langle a_1, a_2, ..., a_n \rangle$ （存儲在數列 \m{A1:n} 中），
+以及 $x$。
+
+輸出：索引 $i$ （滿足 $x = A[i]$），
+或者 $NIL$（如果 $A$ 中沒有 $x$）。
+
+請給出在數列中搜索 $x$ 的綫性查找算法的僞碼。
+用循環不變性證明算法的正確性，確保滿足循環不變性三個必需的性質。
+\stopEXERCISE
+
+\startANSWER
 \startCLRS
 for j = 1 to A.length
 	if A[i] == v
 		return i
 return NIL
 \stopCLRS
-
 \stopANSWER
 
 \startEXERCISE
-二進制加法問題。
+有兩個 $n$ 位二進制整數 $a$ 和 $b$，
+存儲在兩個元素數目為 $n$ 的數列 $A[0:n-1]$ 和 $B[0:n-1]$ 中，
+數列中的所有元素均為 $0$ 或 $1$，
+$a = \sigma_{i=0}^{n-1}A[i]\dot 2^i$，
+$b = \sigma_{i=0}^{n-1}B[i]\dot 2^i$。
+數列 $C[0:n]$ 用於存儲兩數之和 $c=a+b$，
+$c = \sigma_{i=0}^{n}C[i]\dot 2^i$。
+請給出例程 \ALGO{ADD-BINARY-INTEGERS}，
+其輸入為數列 $A$ 和 $B$，長度均爲 $n$，
+返回的數列 $C$ 中存儲兩數之和。
 \stopEXERCISE
 \startANSWER
 

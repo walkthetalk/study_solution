@@ -1,3 +1,4 @@
+input clrs
 
 vardef insert_sort_step(suffix A, Alength)(expr gsize, j, nondecrease, needdraw) :=
 image(
@@ -49,12 +50,12 @@ image(
 			fg[i] := black;
 		endfor;
 		for i := istart upto (iend-1):
-			bg[i] := .8 white;
+			bg[i] := clrsCfA;
 			fg[i] := black;
 		endfor;
 		for i := iend upto iend:
-			bg[i] := black;
-			fg[i] := white;
+			bg[i] := clrsCfB;
+			fg[i] := black;
 		endfor;
 		for i := (iend+1) upto Alength:
 			bg[i] := white;
@@ -79,13 +80,13 @@ image(
 			arrowe := (k*gsize + 0.8 * gsize, -gsize/2);
 			arrowc := (k*gsize + 0.5 * gsize, -gsize);
 
-			drawarrow (arrows{down}..arrowc..{up}arrowe) withcolor .8 white;
+			drawarrow (arrows{down}..arrowc..{up}arrowe) withcolor clrsClA;
 		endfor;
 		arrows := (iend*gsize + 0.3 * gsize, -gsize/2);
 		arrowe := ((istart+1)*gsize - 0.3 * gsize, -gsize/2);
 		arrowc := ((istart+1 + iend) / 2 *gsize, -gsize * 1.1);
 
-		drawarrow (arrows{dir -100}..arrowc..{dir 100}arrowe) withcolor black;
+		drawarrow (arrows{dir -100}..arrowc..{dir 100}arrowe) withcolor clrsClB;
 	fi;
 )
 enddef;

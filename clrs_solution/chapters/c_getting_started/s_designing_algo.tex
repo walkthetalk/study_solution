@@ -10,6 +10,27 @@
 \stopANSWER
 
 \startEXERCISE
+\ALGO{MERGE_SORT} 例程中，
+第一行在測試時用的是 $p\ge r$ 而不是 $p\ne r$。
+如果在調用 \ALGO{MERGE_SORT} 時， $p>r$，
+則子數列 $A[p:r]$ 爲空。
+只要第一次調用 \ALGO{MMERGE-SORT(A,1,n)} 時 $n\ge 1$，
+測試 $p\ne r$ 就能保證遞歸調用時不會出現 $p>r$ 的情況。
+\stopEXERCISE
+\startANSWER
+第一次調用時 $n\ge 1$ 即 $p\le r$，滿足要求；
+如果測試條件為 $p\ne r$，
+則 $p\le q$ 且 $q+1\le r$，
+即滿足遞歸調用時 $p\le r$；
+因此只要保證第一次調用時 $n\ge 1$，
+測試 $p\ne r$ 就能保證遞歸調用時不會出現 $p>r$ 的情況。
+\stopANSWER
+
+\startEXERCISE
+分析例程\ALGO{MERGE-SORT} 中第 12 至 18 行中的循環不變性。
+\stopEXERCISE
+
+\startEXERCISE
 不使用哨兵，重寫 MERGE 例程。
 \stopEXERCISE
 \startANSWER

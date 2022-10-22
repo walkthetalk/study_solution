@@ -1,3 +1,5 @@
+input clrs
+
 vardef merge(suffix A, Alength)(expr gsize, p, q, r, nondecrease, needdraw) :=
 image(
 	numeric L[];
@@ -51,7 +53,7 @@ image(
 			%fr := unitsquare shifted(-0.5,-0.5) xyscaled gsize shifted(center);
 			fr := fullcircle scaled gsize shifted(center);
 
-			fill fr withcolor .8 white;
+			fill fr withcolor clrsCfA;
 			label(decimal(A[k]), center) withcolor black;
 			draw fr withcolor black;
 		endfor;
@@ -82,8 +84,8 @@ image(
 			shifted rshift;
 		draw merge(A, Alength)(gsize, p, q, r, nondecrease, needdraw);
 		aratio = 1.1;
-		drawarrow (lshift + (0, gsize/2 * aratio)) .. (-gsize/2,-gsize/2 * aratio);
-		drawarrow (rshift + (0, gsize/2 * aratio)) .. ( gsize/2,-gsize/2 * aratio);
+		drawarrow (lshift + (0, gsize/2 * aratio)) .. (-gsize/2,-gsize/2 * aratio) withcolor clrsClA;
+		drawarrow (rshift + (0, gsize/2 * aratio)) .. ( gsize/2,-gsize/2 * aratio) withcolor clrsClA;
 	elseif p = r:
 		if needdraw:
 			path fr;
@@ -92,7 +94,7 @@ image(
 			%fr := unitsquare shifted(-0.5,-0.5) xyscaled gsize shifted(center);
 			fr = fullcircle scaled gsize shifted(center);
 
-			fill fr withcolor .8 white;
+			fill fr withcolor clrsCfA;
 			label(decimal(p), center) shifted(0, -gsize) withcolor red;
 			label(decimal(A[p]), center) withcolor black;
 			draw fr withcolor black;

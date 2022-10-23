@@ -1,0 +1,59 @@
+%C Copyright 2022 Yi Qingliang <niqingliang2003@gmail.com>
+%C Time-stamp: <2022-10-22 11:25:20>
+%C This program is free software: you can redistribute it and/or modify
+%C it under the terms of the GNU General Public License as published by
+%C the Free Software Foundation, either version 3 of the License, or
+%C (at your option) any later version.
+%C
+%C This program is distributed in the hope that it will be useful,
+%C but WITHOUT ANY WARRANTY; without even the implied warranty of
+%C MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%C GNU General Public License for more details.
+%C
+%C You should have received a copy of the GNU General Public License
+%C along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%C
+%C
+%C This work is fully inspired by Peter Münster's pret-c module.
+%C
+%D \module[
+%D      file=t-pretty-clrscode,
+%D      version=0.9,
+%D      title=CLRS code Pretty Printer for the \CONTEXT\ Macro package,
+%D      author=Yi Qingliang
+%D      date=\currentdate,
+%D      copyright=2022 YiQingliang]
+ 
+\registerctxluafile{t-pretty-clrscode.lua}{0.9}
+
+\unprotect
+
+\setupcolor[ema]
+
+% TODO: the final space is a workaround for using in code section
+\define[1]\clrskeyword{{\bf #1} }
+\define\For{\clrskeyword{for}}
+\define\While{\clrskeyword{while}}
+\define\To{\clrskeyword{to}}
+\define\Downto{\clrskeyword{downto}}
+\define\Return{\clrskeyword{return}}
+\define\If{\clrskeyword{if}}
+\define\Else{\clrskeyword{else}}
+\define\NIL{\clrskeyword{NIL}}
+
+\definestartstop
+    [CSnippet]
+    [DefaultSnippet]
+
+\definestartstop
+    [CSnippetStrip]
+    []
+
+\definetyping
+    [CLRSCODE]
+    [\c!option=clrscode,
+     \c!escape=yes,
+     \c!tab=4,
+     \c!numbering=line]
+
+\protect \endinput

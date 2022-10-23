@@ -10,9 +10,9 @@
 \stopANSWER
 
 \startEXERCISE
-\ALGO{MERGE_SORT} 例程中，
+\ALGO{MERGE-SORT} 例程中，
 第一行在測試時用的是 $p\ge r$ 而不是 $p\ne r$。
-如果在調用 \ALGO{MERGE_SORT} 時， $p>r$，
+如果在調用 \ALGO{MERGE-SORT} 時， $p>r$，
 則子數列 $A[p:r]$ 爲空。
 只要第一次調用 \ALGO{MMERGE-SORT(A,1,n)} 時 $n\ge 1$，
 測試 $p\ne r$ 就能保證遞歸調用時不會出現 $p>r$ 的情況。
@@ -27,8 +27,18 @@
 \stopANSWER
 
 \startEXERCISE
-分析例程\ALGO{MERGE-SORT} 中第 12 至 18 行中的循環不變性。
+分析例程 \ALGO{MERGE-SORT} 中第 12-18 行 while 循环中的循環不變性。
+根據這個性質，與 while 循環中第 20-23 行和 24-27 行一起，
+證明例程 \ALGO{MERGE-SORT} 的正確性。
+
+\CLRSH{MERGE(A,p,q,r)}
+\startCLRS
+$n_L = q - p + 1$	// length of $A[p:q]$
+$n_R = r - q$		// length of $A[q + 1 : r]$
+\stopCLRS
 \stopEXERCISE
+\startANSWER
+\stopANSWER
 
 \startEXERCISE
 不使用哨兵，重寫 MERGE 例程。
@@ -103,7 +113,7 @@ A[i + 1] = key
 
 \startformula
 T(n) = \startmathcases
-\NC \Theta(1)		\NC 若 \m{n = 1}， \NR
+\NC \Theta(1)		\NC 若 $n = 1$， \NR
 \NC T(n-1) + C(n-1)	\NC 否則。 \NR
 \stopmathcases
 \stopformula
@@ -134,7 +144,8 @@ T(n+1) = T(n/2) + c
 \stopANSWER
 
 \startEXERCISE
-插入排序時用二分法查找要插入的位置，以改進插入排序最壞情況的總運行時間至 \m{\Theta(nlgn)}？
+插入排序時用二分法查找要插入的位置，
+以改進插入排序最壞情況的總運行時間至 $\Theta(nlgn)$？
 \stopEXERCISE
 \startANSWER
 不行，二分查找只可能減少比較的次數，而無法減少數據搬移的次數。
@@ -142,7 +153,8 @@ T(n+1) = T(n/2) + c
 
 %e2.3-7
 \startEXERCISE
-設計一個所用時間爲 \m{\Theta(nlgn)} 的算法，用來在集合 \m{S} 中查找是否有兩個數的和正好是 \m{x}。
+設計一個所用時間爲 $\Theta(nlgn)$ 的算法，
+用來在集合 $S$ 中查找是否有兩個數的和正好是 $x$。
 \stopEXERCISE
 \startANSWER
 \CLRSH{PAIR-EXISTS(S, x)}

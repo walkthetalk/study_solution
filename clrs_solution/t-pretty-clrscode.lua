@@ -23,6 +23,8 @@ if not modules then modules = { } end modules ['t-pretty-clrscode'] = {
     license   = "GNU General Public License version 3"
 }
 
+-- note: the \t is alreay converted to spaces when parsing.
+
 local tohash = table.tohash
 local P, S, V, patterns = lpeg.P, lpeg.S, lpeg.V, lpeg.patterns
 
@@ -35,22 +37,23 @@ local handler = visualizers.newhandler {
     startdisplay = function() context.startCSnippet() end,
     stopdisplay  = function() context.stopCSnippet() end ,
 
-    fstartcomments    = function(s)
+    fcomments    = function(s)
                         context("\\color[red]{")
                         context(s)
-                    end,
-    fstopcomments= function(s)
-                        context("}")
-                        -- for newline
-                        context.verbatim.CSnippetStrip(s)
-                    end,
-    fstopcomments2= function()
                         context("}")
                     end,
     ftext        = function(s)
                         context(s)
                     end,
-    fstrip       = function(s) context.verbatim.CSnippetStrip(s) end,
+    fstrip       = function(s)
+                        context.verbatim.CSnippetStrip(s)
+                    end,
+    fnewline     = function(s)
+                        context.verbatim.CSnippetStrip(s)
+                    end,
+    ftabs     = function(s)
+                        context.verbatim.CSnippetStrip(s)
+                    end,
 }
 
 local space       = patterns.space
@@ -59,11 +62,14 @@ local newline     = patterns.newline
 local emptyline   = patterns.emptyline
 local beginline   = patterns.beginline
 local somecontent = patterns.somecontent
+local utf8char    = patterns.utf8char
 local spacer      = patterns.spacer
 local spacers     = patterns.spacer^0
 local visualchar  = anything - spacer - S("\r\n")
 local notnewline  = anything - S("\r\n")
-local notBackSlash=notnewline - S("/")
+local notBackSlash= notnewline - S("/")
+local notBSTab    = anything - S("\t\r\n/")
+local notTab      = notnewline - S("\t")
 
 local gname       = (patterns.letter + patterns.underscore)
                   * (patterns.letter + patterns.underscore + patterns.digit)^0
@@ -82,25 +88,22 @@ local grammar = visualizers.newgrammar(
    "default",
    {
       "visualizer",
+      --pspacers = makepattern(handler, "fstrip", spacers),
+      ptabs    = makepattern(handler, "ftabs", S("\t ")^0),
+      --ptabs    = makepattern(handler, "ftabs", S(" \t")^0),
+      pnewline = makepattern(handler, "fnewline", newline),
 
+      -- not comments
       ptext         = makepattern(handler, "ftext",
-                        (notBackSlash^1 * (S("/") * notBackSlash^1)^0)
-                        + (S("/") * notBackSlash^1)^1),
-      pstartcomments= makepattern(handler, "fstartcomments", P("//")),
-      pstopcomments = makepattern(handler, "fstopcomments", newline),
-      pstopcomments2= makepattern(handler, "fstopcomments2", P(true)),
-    -- the pattern is for normal line (with newline)
-    pattern = makepattern(handler, "fstrip", spacers)
-                * V("ptext")^-1
-                * ((V("pstartcomments") * V("ptext")^-1 * V("pstopcomments"))
-                    + makepattern(handler, "fstrip", newline)),
-    -- the pattern2 is only for final line without newline
-    pattern2 = makepattern(handler, "fstrip", spacers)
-                * V("ptext")^-1
-                * ((V("pstartcomments") * V("ptext")^-1 * V("pstopcomments2"))^-1),
-    --pattern = makepattern(handler, "fcomments", anything),
+                        ((notBackSlash^1 * (S("/") * notBackSlash^1)^0)
+                        + (S("/") * notBackSlash^1)^1)),
+      pcomments = makepattern(handler, "fcomments", (P("//") * notnewline^0)),
+    -- the pattern is for normal line (without newline)
+    pattern = V("ptabs") *
+                ((V("ptext") * V("ptabs") * V("pcomments")^-1)
+                + V("pcomments")),
 
-    visualizer = V("pattern")^0 * V("pattern2")
+    visualizer = (V("pattern") * V("pnewline"))^0 * V("pattern")
    }
 )
 

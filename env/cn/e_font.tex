@@ -28,45 +28,48 @@
 
 \setupzhfonts
 [serif]
-[regular=adobesongstd,
-bold=adobeheitistd,
+[regular=notoserifcjkhkregular,%adobesongstd,
+bold=notoserifcjkhkbold,%adobeheitistd,
 italic=adobekaitistd,
 bolditalic=adobeheitistd]
 
 \setupzhfonts
 [sans]
-[regular=adobefangsongstd,
-bold=adobeheitistd,
+[regular=notosanscjkhkregular,%adobefangsongstd,
+bold=notosanscjkhkblack,%adobeheitistd,
 italic=adobefangsongstd,
 bolditalic=adobeheitistd]
 
 \setupzhfonts
 [mono]
-[regular=adobekaitistd,
-bold=adobeheitistd,
+[regular=notosansmonocjkhk,%adobekaitistd,
+bold=notosansmonocjkhkbold,%adobeheitistd,
 italic=adobekaitistd,
 bolditalic=adobeheitistd]
 
 \setupzhfonts
 [latin, serif]
-[regular=texgyrepagellaregular,
-bold=texgyrepagellabold,
-italic=texgyrepagellaitalic,
-bolditalic=texgyrepagellabolditalic]
+[regular=notoserifregular,%texgyrepagellaregular,
+bold=notoserifbold,%texgyrepagellabold,
+italic=notoserifitalic,%texgyrepagellaitalic,
+bolditalic=notoserifbolditalic%texgyrepagellabolditalic
+]
 
 \setupzhfonts
-[latin, mono]
-[regular=texgyrecursorregular,
-bold=texgyrecursorbold,
-italic=texgyrecursoritalic,
-bolditalic=texgyrecursorbolditalic]
+[latin, mono][
+  regular=notosansmonoregular,%texgyrecursorregular,
+  bold=notosansmonobold,%texgyrecursorbold,
+  italic=texgyrecursoritalic,
+  bolditalic=texgyrecursorbolditalic
+]
 
 \setupzhfonts
 [latin, sans]
-[regular=texgyreherosregular,
-bold=texgyreherosbold,
-italic=texgyreherositalic,
-bolditalic=texgyreherosbolditalic]
+[regular=notosansregular,%texgyreherosregular,
+bold=notosansbold,%texgyreherosbold,
+italic=notosansitalic,%texgyreherositalic,
+bolditalic=notosansbolditalic%texgyreherosbolditalic
+]
 
 % math
 \usetypescriptfile[euler]

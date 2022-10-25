@@ -11,11 +11,11 @@
 
 \startEXERCISE
 \ALGO{MERGE-SORT} 例程中，
-第一行在測試時用的是 $p\ge r$ 而不是 $p\ne r$。
+第一行在測試時用的是“\If $p\ge r$” 而不是“\If $p\ne r$”。
 如果在調用 \ALGO{MERGE-SORT} 時， $p>r$，
 則子數列 $A[p:r]$ 爲空。
 只要第一次調用 \ALGO{MMERGE-SORT(A,1,n)} 時 $n\ge 1$，
-測試 $p\ne r$ 就能保證遞歸調用時不會出現 $p>r$ 的情況。
+測試“\If $p\ne r$”就能保證遞歸調用時不會出現 $p>r$ 的情況。
 \stopEXERCISE
 \startANSWER
 第一次調用時 $n\ge 1$ 即 $p\le r$，滿足要求；
@@ -27,8 +27,8 @@
 \stopANSWER
 
 \startEXERCISE
-分析例程 \ALGO{MERGE-SORT} 中第 12-18 行 while 循环中的循環不變性。
-根據這個性質，與 while 循環中第 20-23 行和 24-27 行一起，
+分析例程 \ALGO{MERGE-SORT} 中第 12-18 行 \While 循环中的循環不變性。
+根據這個性質，與 \While 循環中第 20-23 行和 24-27 行一起，
 證明例程 \ALGO{MERGE-SORT} 的正確性。
 
 \startCLRSCODE

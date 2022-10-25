@@ -24,13 +24,13 @@ $\Theta(n^3)$
 
 \startANSWER
 \startCLRSCODE
-$n = A.length$
-\For $j = 1$ \To $n - 1$
-	$smallest = j$
-	\For $i = j + 1$ \To $n$
-		\If $A[i] < A[smallest]$
-			$smallest = i$
-	exchange $A[j]$ with $A[smallest]$
+n = A.length
+for j = 1 to n - 1
+	smallest = j
+	for i = j + 1 to n
+		if A[i] < A[smallest]
+			smallest = i
+	exchange A[j] with A[smallest]
 \stopCLRSCODE
 
 \startformula

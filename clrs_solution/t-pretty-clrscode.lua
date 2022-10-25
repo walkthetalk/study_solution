@@ -37,22 +37,26 @@ local handler = visualizers.newhandler {
     startdisplay = function() context.startCSnippet() end,
     stopdisplay  = function() context.stopCSnippet() end ,
 
-    fcomments    = function(s)
-                        context("\\color[red]{")
-                        context(s)
-                        context("}")
+    fcomments   = function(s)
+                        context("\\color[darkred]{"..s.."}")
                     end,
-    ftext        = function(s)
+    ftext       = function(s)
                         context(s)
                     end,
-    fstrip       = function(s)
+    fstrip      = function(s)
                         context.verbatim.CSnippetStrip(s)
                     end,
-    fnewline     = function(s)
+    fnewline    = function(s)
                         context.verbatim.CSnippetStrip(s)
                     end,
-    ftabs     = function(s)
+    ftabs       = function(s)
                         context.verbatim.CSnippetStrip(s)
+                    end,
+    fkeyword    = function(s)
+                        context.verbatim.CSnippetKeyword(s)
+                    end,
+    fmath        = function(s)
+                        context("$"..s.."$")
                     end,
 }
 
@@ -67,18 +71,32 @@ local spacer      = patterns.spacer
 local spacers     = patterns.spacer^0
 local visualchar  = anything - spacer - S("\r\n")
 local notnewline  = anything - S("\r\n")
-local notBackSlash= notnewline - S("/")
+local notBS       = visualchar - S("/")
 local notBSTab    = anything - S("\t\r\n/")
 local notTab      = notnewline - S("\t")
 
-local gname       = (patterns.letter + patterns.underscore)
-                  * (patterns.letter + patterns.underscore + patterns.digit)^0
+local validName   = --visualchar^1
+                S("/")^0 * (
+                        notBS^1 * (S("/") * notBS^1)^0
+                    ) * S("/")^0
 
-local gkeywords   = P("for")
+local gkeyword   = P("for")
+                  + P("to")
                   + P("do")
                   + P("while")
                   + P("if")
+                  + P("else")
                   + P("downto")
+                  + P("return")
+                  + P("NIL")
+                  + P("and")
+                  + P("or")
+local notkeyword = validName - gkeyword
+local mathContent = notkeyword * (spacer^1 * notkeyword)^0
+
+--local notComments = ((notBackSlash^1 * (S("/") * notBackSlash^1)^0)
+--                    + (S("/") * notBackSlash^1)^1)
+local containComments = notnewline^0 * P("//") * notnewline^0
 
 -- A + B: A or B
 -- A * B: A concat B
@@ -88,22 +106,25 @@ local grammar = visualizers.newgrammar(
    "default",
    {
       "visualizer",
-      --pspacers = makepattern(handler, "fstrip", spacers),
+      pspacers = makepattern(handler, "fstrip", spacer^1),
       ptabs    = makepattern(handler, "ftabs", S("\t ")^0),
       --ptabs    = makepattern(handler, "ftabs", S(" \t")^0),
       pnewline = makepattern(handler, "fnewline", newline),
 
-      -- not comments
-      ptext         = makepattern(handler, "ftext",
-                        ((notBackSlash^1 * (S("/") * notBackSlash^1)^0)
-                        + (S("/") * notBackSlash^1)^1)),
+      pkeyword = makepattern(handler, "fkeyword", gkeyword),
+      pmath    = makepattern(handler, "fmath", mathContent),
+
+      pkorm    = V("pkeyword") + V("pmath"),
+
+      ptext    = V("pkorm")
+                    * (V("pspacers") * V("pkorm"))^0,
       pcomments = makepattern(handler, "fcomments", (P("//") * notnewline^0)),
     -- the pattern is for normal line (without newline)
-    pattern = V("ptabs") *
-                ((V("ptext") * V("ptabs") * V("pcomments")^-1)
+    pattern = V("pspacers")^0 *
+                ((V("ptext") * V("pspacers")^0 * V("pcomments")^-1)
                 + V("pcomments")),
 
-    visualizer = (V("pattern") * V("pnewline"))^0 * V("pattern")
+    visualizer = (V("pattern")^0 * V("pnewline"))^0 * V("pattern")
    }
 )
 

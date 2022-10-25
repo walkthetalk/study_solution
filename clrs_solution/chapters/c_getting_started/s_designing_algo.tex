@@ -30,19 +30,32 @@
 分析例程 \ALGO{MERGE-SORT} 中第 12-18 行 \While 循环中的循環不變性。
 根據這個性質，與 \While 循環中第 20-23 行和 24-27 行一起，
 證明例程 \ALGO{MERGE-SORT} 的正確性。
-
-\startCLRSCODE
-\CLRSH{MERGE(A,p,q,r)}
-$n_L = q - p + 1$	// length of $A[p:q]$
-$n_R = r - q$		// length of $A[q + 1 : r]$
-\stopCLRSCODE
 \stopEXERCISE
 \startANSWER
+\TODO{略。}
 \stopANSWER
 
 \startEXERCISE
-不使用哨兵，重寫 MERGE 例程。
+用數學歸納法證明：如果 $n\ge 2$ 是 $2$ 的冪，
+則下式的解為 $T(n)=n\lg n$。
+\startformula
+T(n)=\startmathcases
+\NC 2 \NC 若 $n=2$，\NR
+\NC 2 T(n/2) + n \NC 若 $n>2$。 \NR
+\stopmathcases
+\stopformula
 \stopEXERCISE
+
+\startANSWER
+\startigBase
+\item $n=2$ 時， $T(n)=2$，成立；
+\item 若 $n=t$ 成立，則 $n=2t$ 時，
+$T(2t)=2T(t)+2t$；
+將 $T(t)=t\lg t$ 帶入，得 $T(2t) = 2t\lg t + 2t = 2t(\lg t + 1) = 2t \lg (2t) = n\lg n$；
+\item 由 1）、 2）可知，問題得證。
+\stopigBase
+\stopANSWER
+
 \startANSWER
 \startCLRS
 n1 = q - p + 1

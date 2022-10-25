@@ -46,12 +46,25 @@
     [DefaultSnippet]
 
 \definestartstop
+    [CSnippetKeyword]
+    [\c!style=\bf,
+     %\c!color=dodgerblue,
+    ]
+
+\definestartstop
     [CSnippetStrip]
     []
 
 \definetyping
     [CLRSCODE]
     [\c!option=clrscode,
+     \c!before={\startframedtext[
+                    width=\makeupwidth,
+                    frame=off,
+                    background=color,
+                    backgroundcolor=lightyellow,
+                ]},
+     \c!after={\stopframedtext},
      \c!escape=yes,
      \c!tab=8,
      \c!numbering=line]

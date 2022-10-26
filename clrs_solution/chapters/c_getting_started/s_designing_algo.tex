@@ -69,25 +69,29 @@ T(n)=\startmathcases
 並分析最壞情況下的算法是如何運行的。
 \stopEXERCISE
 \startANSWER
-\CLRSH{INSERTION(A, n)}
-\startCLRS
+\CLRSH{INSERTION‐SORT‐R(A, n)}
+\startCLRSCODE
 if n < 2
 	return
-INSERTION-SORT(A, n-1)
+INSERTION‐SORT‐R(A, n-1)
 key = A[n]
 i = n - 1
-while i > 0 and A[i] > key
+while i >= 0 and A[i] > key
 	A[i+1] = A[i]
 	i = i - 1
 A[i + 1] = key
-\stopCLRS
+\stopCLRSCODE
 
 \startformula
 T(n) = \startmathcases
-\NC \Theta(1)		\NC 若 $n = 1$， \NR
+\NC 0 \NC 若 $n = 1$， \NR
 \NC T(n-1) + C(n-1)	\NC 否則。 \NR
 \stopmathcases
 \stopformula
+
+初始數列爲逆序的情況下，需要移動元素最多，每次遞迴都需要遍歷所有元素：
+
+$T(n) = 1 + 2 + 3 + ... + (n-1) = \Theta(n^2)$
 \stopANSWER
 
 \startEXERCISE[exercise:bin_search]

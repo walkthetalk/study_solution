@@ -30,7 +30,10 @@ for j = 1 to n - 1
 	for i = j + 1 to n
 		if A[i] < A[smallest]
 			smallest = i
-	exchange A[j] with A[smallest]
+	// exchange $A[j]$ with $A[smallest]$
+	tmp = A[j]
+	A[j] = A[smallest]
+	A[smallest] = tmp
 \stopCLRSCODE
 
 \startformula

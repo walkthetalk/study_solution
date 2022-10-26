@@ -11,11 +11,11 @@
 
 \startEXERCISE
 \ALGO{MERGE-SORT} 例程中，
-第一行在測試時用的是“\If $p\ge r$” 而不是“\If $p\ne r$”。
-如果在調用 \ALGO{MERGE-SORT} 時， $p>r$，
-則子數列 $A[p:r]$ 爲空。
+第一行在測試時用的是“\CLRSCODE{if p \ge r}” 而不是“\CLRSCODE{if p\ne r}”。
+在調用 \ALGO{MERGE-SORT} 時，
+如果 $p>r$ 則子數列 $A[p:r]$ 爲空。
 只要第一次調用 \ALGO{MMERGE-SORT(A,1,n)} 時 $n\ge 1$，
-測試“\If $p\ne r$”就能保證遞歸調用時不會出現 $p>r$ 的情況。
+測試“\CLRSCODE{if p\ne r}”就能保證遞歸調用時不會出現 $p>r$ 的情況。
 \stopEXERCISE
 \startANSWER
 第一次調用時 $n\ge 1$ 即 $p\le r$，滿足要求；
@@ -27,8 +27,8 @@
 \stopANSWER
 
 \startEXERCISE
-分析例程 \ALGO{MERGE-SORT} 中第 12-18 行 \While 循环中的循環不變性。
-根據這個性質，與 \While 循環中第 20-23 行和 24-27 行一起，
+分析例程 \ALGO{MERGE-SORT} 中第 12~18 行 \CLRSCODE{while} 循环中的循環不變性。
+根據這個性質，與 \CLRSCODE{while} 循環中第 20~23 行和 24~27 行一起，
 證明例程 \ALGO{MERGE-SORT} 的正確性。
 \stopEXERCISE
 \startANSWER
@@ -47,68 +47,26 @@ T(n)=\startmathcases
 \stopEXERCISE
 
 \startANSWER
-\startigBase
-\item $n=2$ 時， $T(n)=2$，成立；
-\item 若 $n=t$ 成立，則 $n=2t$ 時，
-$T(2t)=2T(t)+2t$；
-將 $T(t)=t\lg t$ 帶入，得 $T(2t) = 2t\lg t + 2t = 2t(\lg t + 1) = 2t \lg (2t) = n\lg n$；
-\item 由 1）、 2）可知，問題得證。
+\startigBase[n]
+\item $n=2$ 時， $T(n)=2=n\lg n$，成立；
+\item 如果 \m{T(n) = n \lg(n)}，那麼：
+\startformula\startalign
+\NC T(2n) \NC = 2n \lg(2n) \NR
+\NC       \NC = 2n (\lg(n) + 1) \NR
+\NC	      \NC = 2n \lg(n) + 2n \NR
+\NC	      \NC = 2T(n) + 2n \NR
+\stopalign\stopformula
+\item 由 1）、 2）归纳可知，問題得證。
 \stopigBase
 \stopANSWER
 
-\startANSWER
-\startCLRS
-n1 = q - p + 1
-n2 = r - q
-let L[1..n1+1] and R[1..n2+1] be new arrays
-for i = 1 to n1
-	L[i] = A[p + i - 1]
-for j = 1 to n2
-	R[j] = A[q + j]
-i = 1
-j = 1
-for k = p to r
-	if i > n1
-		while j <= n2
-			A[k] = R[j]
-			k = k + 1
-			j = j + 1
-		return
-	if j > n2
-		while i <= n1
-			A[k] = L[i]
-			k = k + 1
-			i = i + 1
-		return
-	if L[i] <= R[j]
-		A[k] = L[i]
-		i = i + 1
-	else A[k] = R[j]
-		j = j + 1
-\stopCLRS
-\stopANSWER
-
 \startEXERCISE
-用數學歸納法證明 \m{T(n) = n \lg(n)}：
-\startformula
-T(n) = \startmathcases
-\NC 2		\NC 若 \m{n = 2}， \NR
-\NC 2T(n/2) + n	\NC 若 \m{n = 2^k}， \m{k > 1}。 \NR
-\stopmathcases
-\stopformula
-\stopEXERCISE
-\startANSWER
-如果 \m{T(n) = n \lg(n)}，那麼：
-\startformula\startalign
-\NC T(2n)	\NC = 2n \lg(2n) \NR
-\NC		\NC = 2n (\lg(n) + 1) \NR
-\NC		\NC = 2n \lg(n) + 2n \NR
-\NC		\NC = 2T(n) + 2n \NR
-\stopalign\stopformula
-\stopANSWER
-
-\startEXERCISE
-用遞迴方式重寫插入排序。
+以遞迴方式進行插入排序：
+要對 $A[1:n]$ 排序，
+可以先對子數列 $A[1:n-1]$ 排序，
+然後將 $A[n]$ 插入子數列 $A[1:n-1]$ 中。
+試給出此算法的僞碼。
+並分析最壞情況下的算法是如何運行的。
 \stopEXERCISE
 \startANSWER
 \CLRSH{INSERTION(A, n)}

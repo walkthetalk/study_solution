@@ -69,11 +69,11 @@ T(n)=\startmathcases
 並分析最壞情況下的算法是如何運行的。
 \stopEXERCISE
 \startANSWER
-\CLRSH{INSERTION‐SORT‐R(A, n)}
+\CLRSH{INSERTION_SORT_R(A, n)}
 \startCLRSCODE
 if n < 2
 	return
-INSERTION‐SORT‐R(A, n-1)
+\ALGO{INSERTION_SORT_R(A, n-1)}
 key = A[n]
 i = n - 1
 while i >= 0 and A[i] > key
@@ -95,11 +95,18 @@ $T(n) = 1 + 2 + 3 + ... + (n-1) = \Theta(n^2)$
 \stopANSWER
 
 \startEXERCISE[exercise:bin_search]
-二分查找。
+回顧\refexercise{linear_earch} 中的搜索問題，我們發現：
+如果待搜索的子數列已經排好序，
+則搜索算法可以檢查子數列的中間數值，而不是檢查 $v$，
+在下一步搜索時可以直接跳過子數列中的一半數據。
+二分查找算法就是重複這個過程，
+每次都可以使得帶搜索的子數列減半。
+試寫出二分查找算法的僞碼，遍歷、遞迴均可。
+並證明在最壞情況下，此算法的運行時間為 $\Theta(\lg n)$。
 \stopEXERCISE
 \startANSWER
 \CLRSH{BINARY-SEARCH(A, v)}
-\startCLRS
+\startCLRSCODE
 low = 1
 high = A.length
 while low <= high
@@ -111,37 +118,40 @@ while low <= high
 	else
 		high = m - 1
 return NIL
-\stopCLRS
+\stopCLRSCODE
 
 \startformula
-T(n+1) = T(n/2) + c
+T(n) = T(n/2) + c = \Theta(\lg n)
 \stopformula
 \stopANSWER
 
+%e2.3-7
 \startEXERCISE
-插入排序時用二分法查找要插入的位置，
-以改進插入排序最壞情況的總運行時間至 $\Theta(nlgn)$？
+在\refsection{insersion_sort} 的例程 \ALGO{INSERTION-SORT} 中，
+第 5~7 行的 \CLRSCODE{while} 循環以綫性搜索的方式，
+後向掃描已排好序的子數列 $A[1:j-1]$。
+如果用二分查找（\refexercise{bin_search}）代替綫性查找，該怎麽做？
+這能將最壞情況的運行時間提升到 $\Theta(n\lg n)$ 嗎？
 \stopEXERCISE
 \startANSWER
 不行，二分查找只可能減少比較的次數，而無法減少數據搬移的次數。
 \stopANSWER
 
-%e2.3-7
 \startEXERCISE
-設計一個所用時間爲 $\Theta(nlgn)$ 的算法，
+設計一個最壞運行時間爲 $\Theta(n\lg n)$ 的算法，
 用來在集合 $S$ 中查找是否有兩個數的和正好是 $x$。
 \stopEXERCISE
 \startANSWER
 \CLRSH{PAIR-EXISTS(S, x)}
-\startCLRS
-A = MERGE-SORT(S)
+\startCLRSCODE
+A = \ALGO{MERGE-SORT(S)}
 
-for i = 1 to S.length
-	if BINARY-SEARCH(A, x - S[i]) != NIL
+for i=S.length downto 1
+	if \ALGO{BINARY-SEARCH(A[1:i-1], x - S[i])} \ne NIL
 		return true
 
 return false
-\stopCLRS
+\stopCLRSCODE
 \stopANSWER
 
 \stopsection

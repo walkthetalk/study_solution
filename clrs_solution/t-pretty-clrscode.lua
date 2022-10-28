@@ -24,6 +24,7 @@ if not modules then modules = { } end modules ['t-pretty-clrscode'] = {
 }
 
 -- note: the \t is alreay converted to spaces when parsing.
+-- note: there must be spaces between '//' and other contents.
 
 local tohash = table.tohash
 local P, S, V, patterns = lpeg.P, lpeg.S, lpeg.V, lpeg.patterns
@@ -38,25 +39,38 @@ local handler = visualizers.newhandler {
     stopdisplay  = function() context.stopCSnippet() end ,
 
     fcomments   = function(s)
+                        --io.write("########comments\n"..s.."\nxxxxxxxxxxxxxx\n")
                         context("\\color[darkred]{"..s.."}")
                     end,
     ftext       = function(s)
+                        --io.write("########text\n"..s.."\nxxxxxxxxxxxxxx\n")
                         context(s)
                     end,
     fstrip      = function(s)
+                        --io.write("########strip\n"..s.."\nxxxxxxxxxxxxxx\n")
                         context.verbatim.CSnippetStrip(s)
                     end,
     fnewline    = function(s)
+                        --io.write("########newline\n"..s.."\nxxxxxxxxxxxxxx\n")
                         context.verbatim.CSnippetStrip(s)
                     end,
     ftabs       = function(s)
+                        --io.write("########tabs\n"..s.."\nxxxxxxxxxxxxxx\n")
                         context.verbatim.CSnippetStrip(s)
                     end,
     fkeyword    = function(s)
+                        --io.write("########keyword\n"..s.."\nxxxxxxxxxxxxxx\n")
                         context.verbatim.CSnippetKeyword(s)
                     end,
     fmath        = function(s)
+                        --io.write("########math\n"..s.."\nxxxxxxxxxxxxxx\n")
                         context("$"..s.."$")
+                    end,
+    ftest        = function(s)
+                        --io.write("########test\n"..s.."\nxxxxxxxxxxxxxx\n")
+                    end,
+    fpattern        = function(s)
+                        --io.write("########pattern\n"..s.."\nxxxxxxxxxxxxxx\n")
                     end,
 }
 
@@ -75,28 +89,22 @@ local notBS       = visualchar - S("/")
 local notBSTab    = anything - S("\t\r\n/")
 local notTab      = notnewline - S("\t")
 
-local validName   = --visualchar^1
-                S("/")^0 * (
-                        notBS^1 * (S("/") * notBS^1)^0
-                    ) * S("/")^0
+local validName   = visualchar^1
 
+-- note: keyword match must use greedy order
 local gkeyword   = P("for")
                   + P("to")
+                  + P("downto")
                   + P("do")
                   + P("while")
                   + P("if")
                   + P("else")
-                  + P("downto")
                   + P("return")
                   + P("NIL")
                   + P("and")
                   + P("or")
-local notkeyword = validName - gkeyword
+local notkeyword = validName - gkeyword - P("//")
 local mathContent = notkeyword * (spacer^1 * notkeyword)^0
-
---local notComments = ((notBackSlash^1 * (S("/") * notBackSlash^1)^0)
---                    + (S("/") * notBackSlash^1)^1)
-local containComments = notnewline^0 * P("//") * notnewline^0
 
 -- A + B: A or B
 -- A * B: A concat B
@@ -121,10 +129,9 @@ local grammar = visualizers.newgrammar(
       pcomments = makepattern(handler, "fcomments", (P("//") * notnewline^0)),
     -- the pattern is for normal line (without newline)
     pattern = V("pspacers")^0 *
-                ((V("ptext") * V("pspacers")^0 * V("pcomments")^-1)
-                + V("pcomments")),
-
-    visualizer = (V("pattern")^0 * V("pnewline"))^0 * V("pattern")
+                (V("pcomments")
+                + (V("ptext") * V("pspacers")^0 * V("pcomments")^-1)),
+    visualizer = (V("pattern") * V("pnewline"))^0 * V("pattern")
    }
 )
 

@@ -294,9 +294,9 @@
 
 \startluacode
 function commands.clrsalgo(algoname)
-	local name,args = string.match(algoname, '([%a%-]+)(.*)')
-	tex.sprint(tex.ctxcatcodes, "\\m{")
-	for word,postfix in string.gmatch(name, "([^%-]+)(%-?)") do
+	local name,args = string.match(algoname, '([%a%-_]+)(.*)')
+	tex.sprint(tex.ctxcatcodes, "\\text{\\rm ")
+	for word,postfix in string.gmatch(name, "([^%-_]+)([%-_]?)") do
 		if string.match(string.sub(word, 1), "%u") then
 			tex.sprint(tex.ctxcatcodes, string.sub(word, 1,1))
 			tex.sprint(tex.ctxcatcodes, "\\scale[scale=800]{")
@@ -305,19 +305,24 @@ function commands.clrsalgo(algoname)
 		else
 			tex.sprint(tex.ctxcatcodes, word)
 		end
+    -- note the '\!' is negative thin space.
 		if postfix ~= "" then
-			tex.sprint(tex.ctxcatcodes, "\\!\\allowbreak " .. postfix .. "\\!")
+			tex.sprint(tex.ctxcatcodes, "\\allowbreak-")
 		end
 	end
+	tex.sprint("}")
 	if args ~= "" then
 		tex.sprint(tex.ctxcatcodes, "\\allowbreak " .. args)
 	end
-	tex.sprint(tex.ctxcatcodes, "}")
 end
 \stopluacode
-\define[1]\ALGO{\ctxlua{%
-commands.clrsalgo([[#1]])
-}}%
+\define[1]\ALGO{
+\ifmmode
+  \ctxlua{commands.clrsalgo([[#1]])}
+\else
+  \m{\ctxlua{commands.clrsalgo([[#1]])}}
+\fi
+}%
 
 \define[1]\TODO{#1}
 

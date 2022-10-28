@@ -55,17 +55,21 @@
     [CSnippetStrip]
     []
 
+\definetextbackground[clrscodeBG][
+    location=paragraph,
+    alternative=0,
+    background=color,
+    backgroundcolor=lightyellow,
+    frame=off
+]
+
+% 'framedtext' 不能跨页, 改用 'textbackground'。
 \definetyping
     [CLRSCODE]
     [\c!option=clrscode,
-     \c!before={\startframedtext[
-                    width=\makeupwidth,
-                    frame=off,
-                    background=color,
-                    backgroundcolor=lightyellow,
-                ]},
-     \c!after={\stopframedtext},
-     \c!escape=yes,
+     \c!before={\starttextbackground[clrscodeBG]},
+     \c!after={\stoptextbackground},
+     \c!escape=no,
      \c!tab=8,
      \c!numbering=line]
 

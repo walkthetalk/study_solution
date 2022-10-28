@@ -62,16 +62,23 @@ local handler = visualizers.newhandler {
                         --io.write("########keyword\n"..s.."\nxxxxxxxxxxxxxx\n")
                         context.verbatim.CSnippetKeyword(s)
                     end,
-    fmath        = function(s)
+    fmath       = function(s)
                         --io.write("########math\n"..s.."\nxxxxxxxxxxxxxx\n")
-                        context("$"..s.."$")
+                        context("\\m{"..s.."}")
                     end,
-    ftest        = function(s)
+    ftest       = function(s)
                         --io.write("########test\n"..s.."\nxxxxxxxxxxxxxx\n")
                     end,
-    fpattern        = function(s)
-                        --io.write("########pattern\n"..s.."\nxxxxxxxxxxxxxx\n")
-                    end,
+    --fline       = function(s)
+    --                    -- check comment
+    --                    i,j = string.find(s, "//")
+    --                    if i == nil then
+    --                        fmath(s)
+    --                    else
+    --                        fmath(string.sub(s, 1, i-1))
+    --                        fcomments(string.sub(s, i))
+    --                    end
+    --                end,
 }
 
 local space       = patterns.space
@@ -131,7 +138,9 @@ local grammar = visualizers.newgrammar(
     pattern = V("pspacers")^0 *
                 (V("pcomments")
                 + (V("ptext") * V("pspacers")^0 * V("pcomments")^-1)),
-    visualizer = (V("pattern") * V("pnewline"))^0 * V("pattern")
+    visualizer = (V("pattern")^0 * V("pnewline"))^0 * V("pattern")
+    --pline = makepattern(handler, "fline", notnewline^1),
+    --visualizer = (V("pspacers")^0 * pline^0 * V("pnewline"))^0 * V("pattern")
    }
 )
 

@@ -201,8 +201,8 @@ p = 0
 for i = 0 to n
 	m = 1
 	for k = 1 to i
-		m = m * x
-	p = p + A[i] * m
+		m = m \cdot x
+	p = p + A[i] \cdot m
 \stopCLRSCODE
 所用時間爲 $\Theta(n^2)$。
 \stopANSWER
@@ -214,7 +214,10 @@ y = \sum_{k=0}^{n-(i+1)} A_{k+i+1}\cdot x^k
 \stopformula
 將空多項式求和結果定義爲 0。
 以本章循環不變性的證明方式，
-證明最終結果爲 $y = \sum_{k=0}^n a_kx^k$。
+證明最終結果爲：
+\startformula
+y = \sum_{k=0}^n a_kx^k
+\stopformula
 
 \startANSWER
 每次迭代完成後：

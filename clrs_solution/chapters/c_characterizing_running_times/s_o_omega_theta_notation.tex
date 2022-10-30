@@ -1,0 +1,46 @@
+\startsection[
+  title={\m{O}， \m{\Omega}， \m{\Theta} notation},
+]
+
+\startEXERCISE
+重新分析插入排序的下界，使得輸入的大小不必爲 $3$ 的倍數。
+\stopEXERCISE
+\startANSWER
+對於完全逆序的數列，
+其迭代次數和爲 $1+2+3+\dots+(n-1)=n (n-1)/2$，
+對於數列大小沒有要求。
+\stopANSWER
+
+\startEXERCISE
+回顧我們是如何分析插入排序的運行時間的，
+用類似的方法分析\refexercise{selection_sort}中選擇排序的運行時間。
+\stopEXERCISE
+\startANSWER
+構造數列 $\langle 2,3,4,5,\cdots,n,1\rangle$，
+其運行時間（下界）爲 $\sum_{i=n-1}^{1}i = n(n-1)/2$。
+上界爲 $O(n^2)$，
+下界依舊是 $\Omega(n^2)$，
+緊界爲 $\Theta(n^2)$。
+\stopANSWER
+
+\startEXERCISE
+有小數 $\alpha$ 滿足 $0<\alpha<1$。
+數列 $A=\langle A_1,A_2,\cdots,A_n\rangle$，
+其中最大的 $\alpha n$ 個數位於前 $\alpha n$ 個位置上。
+用此數列重新分析插入排序的下界。
+對於 $\alpha$ 還需要什麼限制？
+最大的 $\alpha n$ 個值必須
+穿越中間所有 $(1-2\alpha)n$ 個位置，
+要想使穿越次數最大， $\alpha$ 應取何值？
+\stopEXERCISE
+\startANSWER
+下界爲 $\alpha n \times (1-2\alpha)n$。
+
+$\alpha$ 須使得 $\alpha n$ 爲整數。
+
+$\alpha\times(1-2\alpha)$ 爲二次多項式，
+$\alpha\times(1-2\alpha)=0$ 的兩個根爲 $0$ 和 $1/2$，
+則 $\alpha$ 爲 $1/4$ 即爲所求。
+\stopANSWER
+
+\stopsection

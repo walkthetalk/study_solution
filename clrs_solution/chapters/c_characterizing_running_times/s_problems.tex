@@ -5,23 +5,24 @@
 %p3-1
 \startPROBLEM
 （多項式的漸近行爲）
-設\m{p(n) = \sum_{i = 0}^{d} {a_i n^i}}是關於\m{n}的\m{d}次多項式，
-其中\m{a_d > 0}，\m{k}是一個常量。用漸進記號的定義證明下列性質。
+令 $p(n) = \sum_{i = 0}^{d} {a_i n^i}$ 是 $n$ 的 $d$ 次多項式，
+其中 $a_d > 0$， $k$是一個常量。
+用漸進記號的定義證明下列性質。
 \startigBase[a]
-\item 如果\m{k \geq d}，那麼\m{p(n) = O(n^k)}。
-\item 如果\m{k \leq d}，那麼\m{p(n) = \Omega(n^k)}。
-\item 如果\m{k = d}，那麼\m{p(n) = \Theta(n^k)}。
-\item 如果\m{k > d}，那麼\m{p(n) = o(n^k)}。
-\item 如果\m{k < d}，那麼\m{p(n) = \omega(n^k)}。
+\item 如果 $k \ge d$，那麼 $p(n) = O(n^k)$。
+\item 如果 $k \le d$，那麼$p(n) = \Omega(n^k)$。
+\item 如果 $k = d$，那麼 $p(n) = \Theta(n^k)$。
+\item 如果 $k > d$，那麼 $p(n) = o(n^k)$。
+\item 如果 $k < d$，那麼 $p(n) = \omega(n^k)$。
 \stopigBase
 \stopPROBLEM
 
 \startANSWER
-取 \m{c = a_d + b}，滿足下列不等式：
+取 $c = a_d + b$，滿足下列不等式：
 \startformula
 p(n) = \sum_{i = 0}^{d}a_i n^i = a_d n^d + a_{d-1}n^{d-1} + \ldots + a_1 n + a_0 \leq cn^d
 \stopformula
-兩邊同除以 \m{n^d}，有：
+兩邊同除以 $n^d$，有：
 \startformula
 c = a_d + b \geq a_d + \frac{a_{d-1}}n + \frac{a_{d-2}}{n^2} + \ldots + \frac{a_0}{n^d}
 \stopformula
@@ -29,39 +30,39 @@ c = a_d + b \geq a_d + \frac{a_{d-1}}n + \frac{a_{d-2}}{n^2} + \ldots + \frac{a_
 \startformula
 b \geq \frac{a_{d-1}}n + \frac{a_{d-2}}{n^2} + \ldots + \frac{a_0}{n^d}
 \stopformula
-如果使 \m{b = 1}，則選取 \m{n_0}，使得：
+如果使 $b = 1$，則選取 $n_0$，使得：
 \startformula
 n_0 = \max(da_{d-1}, d\sqrt{a_{d-2}}, \ldots, d\sqrt[d]{a_0})
 \stopformula
-則有：
-\startformula
-p(n) \leq cn^d \quad \text{對於 } n \geq n_0
-\stopformula
-即 \m{O(n^d)} 的定義。如果選 \m{b = -1}，則可得 \m{\Omega(n^d)}，綜合可得 \m{\Theta(n^d)}。
+對於所有 $n\ge n_0$，有 $p(n) \le c n^d$，即 $O(n^d)$；
+如果選 $b = -1$，則可得 $\Omega(n^d)$；
+綜合可得 $\Theta(n^d)$。
 另外兩個的證明類似。
 \stopANSWER
 
+%p3-2
 \startPROBLEM
 （相對漸進增長）
-對於下表中每對算式 \m{(A, B)}，指明 \m{A} 是否是 \m{B} 的 \m{O}、\m{o}、\m{\Omega}、\m{\omega}、\m{\Theta}。
-假定 \m{k \geq 1}，\m{\epsilon > 0} 且 \m{c > 1}，均爲常量。
+對於下表中每對算式 $(A, B)$，
+指明 $A$ 是否是 $B$ 的 $O$、 $o$、 $\Omega$、 $\omega$、 $\Theta$。
+假定 $k \ge 1$， $\epsilon > 0$ 且 $c > 1$，均爲常量。
 
 \bTABLE[align=center]
 \bTABLEhead
 \bTR
-	\bTH \m{A} \eTH
-	\bTH \m{B} \eTH
-	\bTH \m{O} \eTH
-	\bTH \m{o} \eTH
-	\bTH \m{\Omega} \eTH
-	\bTH \m{\omega} \eTH
-	\bTH \m{\Theta} \eTH
+	\bTH $A$ \eTH
+	\bTH $B$ \eTH
+	\bTH $O$ \eTH
+	\bTH $o$ \eTH
+	\bTH $\Omega$ \eTH
+	\bTH $\omega$ \eTH
+	\bTH $\Theta$ \eTH
 \eTR
 \eTABLEhead
 \bTABLEbody
 \bTR
-	\bTD \m{\lg^kn} \eTD
-	\bTD \m{n^\epsilon} \eTD
+	\bTD $\lg^k n$ \eTD
+	\bTD $n^\epsilon$ \eTD
 	\bTD\startANSWER yes \stopANSWER\eTD
 	\bTD\startANSWER yes \stopANSWER\eTD
 	\bTD\startANSWER no \stopANSWER\eTD
@@ -69,8 +70,8 @@ p(n) \leq cn^d \quad \text{對於 } n \geq n_0
 	\bTD\startANSWER no \stopANSWER\eTD
 \eTR
 \bTR
-	\bTD \m{n^k} \eTD
-	\bTD \m{c^n} \eTD
+	\bTD $n^k$ \eTD
+	\bTD $c^n$ \eTD
 	\bTD\startANSWER yes \stopANSWER\eTD
 	\bTD\startANSWER yes \stopANSWER\eTD
 	\bTD\startANSWER no \stopANSWER\eTD
@@ -78,8 +79,8 @@ p(n) \leq cn^d \quad \text{對於 } n \geq n_0
 	\bTD\startANSWER no \stopANSWER\eTD
 \eTR
 \bTR
-	\bTD \m{\sqrt{n}} \eTD
-	\bTD \m{n^{\sin n}} \eTD
+	\bTD $\sqrt{n}$ \eTD
+	\bTD $n^{\sin n}$ \eTD
 	\bTD\startANSWER no \stopANSWER\eTD
 	\bTD\startANSWER no \stopANSWER\eTD
 	\bTD\startANSWER no \stopANSWER\eTD
@@ -87,8 +88,8 @@ p(n) \leq cn^d \quad \text{對於 } n \geq n_0
 	\bTD\startANSWER no \stopANSWER\eTD
 \eTR
 \bTR
-	\bTD \m{2^n} \eTD
-	\bTD \m{2^{n/2}} \eTD
+	\bTD $2^n$ \eTD
+	\bTD $2^{n/2}$ \eTD
 	\bTD\startANSWER no \stopANSWER\eTD
 	\bTD\startANSWER no \stopANSWER\eTD
 	\bTD\startANSWER yes \stopANSWER\eTD
@@ -96,8 +97,8 @@ p(n) \leq cn^d \quad \text{對於 } n \geq n_0
 	\bTD\startANSWER no \stopANSWER\eTD
 \eTR
 \bTR
-	\bTD \m{n^{\lg c}} \eTD
-	\bTD \m{c^{\lg n}} \eTD
+	\bTD $n^{\lg c}$ \eTD
+	\bTD $c^{\lg n}$ \eTD
 	\bTD\startANSWER yes \stopANSWER\eTD
 	\bTD\startANSWER no \stopANSWER\eTD
 	\bTD\startANSWER yes \stopANSWER\eTD
@@ -105,8 +106,8 @@ p(n) \leq cn^d \quad \text{對於 } n \geq n_0
 	\bTD\startANSWER yes \stopANSWER\eTD
 \eTR
 \bTR
-	\bTD \m{\lg(n!)} \eTD
-	\bTD \m{\lg(n^n)} \eTD
+	\bTD $\lg(n!)$ \eTD
+	\bTD $\lg(n^n)$ \eTD
 	\bTD\startANSWER yes \stopANSWER\eTD
 	\bTD\startANSWER no \stopANSWER\eTD
 	\bTD\startANSWER yes \stopANSWER\eTD
@@ -137,7 +138,7 @@ p(n) \leq cn^d \quad \text{對於 } n \geq n_0
 
 \startANSWER
 \startformula\startalign
-\NC (\sqrt{2})^{\lg{n}} \NC = \sqrt{n} \NR
+\NC 2^{\lg{n}} \NC = \sqrt{n} \NR
 \NC \sqrt{2}^{\lg{n}} \NC = 2^{1/2\lg{n}} = 2^{\lg{\sqrt{n}}} = \sqrt{n} \NR
 \NC n! < n^n \NC = 2^{\lg{n^n}} = 2^{n\lg{n}} \NR
 \NC n^{1/\lg{n}} \NC = n^{\log_n{2}} = 2 \NR
@@ -146,79 +147,94 @@ p(n) \leq cn^d \quad \text{對於 } n \geq n_0
 \stopalign\stopformula
 \startcolumns[n=3,blank=small,distance=2em,balance=yes]
 \startigBase[n]
-\item \m{1 = n^{1/\lg n}}
-\item \m{\lg(\lg^{\ast}n)}
-\item \m{\lg^{\ast}n\simeq \lg^{\ast}{\lg{n}}}
-\item \m{2^{\lg^{\ast}n}}
-\item \m{\ln{\ln{n}}}
-\item \m{\sqrt{\lg{n}}}
-\item \m{\ln{n}}
-\item \m{\lg^2{n}}
-\item \m{2^{\sqrt{2\lg{n}}}}
-\item \m{(\sqrt{2})^{\lg{n}}}
-\item \m{n = 2^{\lg{n}}}
-\item \m{n\lg{n} \simeq \lg(n!)}
-\item \m{n^2 = 4^{\lg{n}}}
-\item \m{n^3}
-\item \m{n^{\lg\lg{n}} = (\lg{n})^{\lg{n}}}
-\item \m{(\frac{3}{2})^n}
-\item \m{2^n}
-\item \m{n \cdot 2^n}
-\item \m{e^n}
-\item \m{n!}
-\item \m{(n + 1)!}
-\item \m{2^{2^n}}
 \item \m{2^{2^{n+1}}}
+\item \m{2^{2^n}}
+\item \m{(n + 1)!}
+\item \m{n!}
+\item \m{e^n}
+\item \m{n \cdot 2^n}
+\item \m{2^n}
+\item \m{(\frac{3}{2})^n}
+\item \m{n^{\lg\lg{n}} = (\lg{n})^{\lg{n}}}
+\item \m{(\lg n)!}
+\item \m{n^3}
+\item \m{n^2 = 4^{\lg{n}}}
+\item \m{n\lg{n} \simeq \lg(n!)}
+\item \m{n = 2^{\lg{n}}}
+\item \m{(\sqrt{2})^{\lg{n}}}
+\item \m{2^{\sqrt{2\lg{n}}}}
+\item \m{\lg^2{n}}
+\item \m{\ln{n}}
+\item \m{\sqrt{\lg{n}}}
+\item \m{\ln{\ln{n}}}
+\item \m{2^{\lg^{\ast}n}}
+\item \m{\lg^{\ast}n\simeq \lg^{\ast}{\lg{n}}}
+\item \m{\lg(\lg^{\ast}n)}
+\item \m{1 = n^{1/\lg n}}
 \stopigBase
 \stopcolumns
 \stopANSWER
 
 \startitem
-給出一個非負函數 \m{f(n)}，使得對於所有 \m{g_i(n)}，\m{f(n)}既不是 \m{O(g_i(n))}，也不是 \m{\Omega(g_i(n))}。
+給出一個非負函數 $f(n)$，
+使得對於上一問中所有 $g_i(n)$，
+$f(n)$既不是 $O(g_i(n))$，
+也不是 $\Omega(g_i(n))$。
 \stopitem
 
 \startANSWER
-\m{2^{2^{(n + 1)\sin{x}}}}
+$2^{2^{(n + 1)\sin{n}}}$，或
+\startformula
+f(n) = \startmathcases
+\NC 2^{2^{n+2}} \NC 若 n 是偶數，\NR
+\NC 0 \NC 若 n 是奇數。\NR
+\stopmathcases
+\stopformula
 \stopANSWER
 \stopigBase
 \stopPROBLEM
 
+%p3-4
 \startPROBLEM
 （漸進記號的性質）
-假設 \m{f(n)} 和 \m{g(n)} 是漸進正函數，證明或反駁下面的每個猜測。
+令 $f(n)$ 和 $g(n)$ 是漸進正函數，證明或反駁下面的猜測。
 \startigBase[a]
-\item \m{f(n) = O(g(n))} 蘊含 \m{g(n) = O(f(n))}。
+\item $f(n) = O(g(n))$ 蘊含 $g(n) = O(f(n))$。
 
 \startANSWER
-錯誤。 \m{n = O(n^2)}，但是 \m{n^2 \neq O(n)}。
+錯誤。 $n = O(n^2)$，但是 $n^2 \ne O(n)$。
 \stopANSWER
 
-\item \m{f(n) + g(n) = \Theta(\min(f(n), g(n)))}。
+\item $f(n) + g(n) = \Theta(\min(f(n), g(n)))$。
 
 \startANSWER
-錯誤。 \m{n^2 + n \neq \Theta(min(n^2, n)) = \Theta(n)}。
+錯誤。 $n^2 + n \ne \Theta(min(n^2, n)) = \Theta(n)$。
 \stopANSWER
 
-\item 如果對於足夠的 \m{n}，有 \m{\lg(g(n))\geq 1} 且 \m{f(n)\geq 1}，那麼 \m{f(n) = O(g(n))} 蘊含 \m{\lg(f(n)) = O(lg(g(n)))}。
+\item 如果對於所有足夠大的 $n$，
+有 $\lg(g(n))\ge 1$ 且 $f(n)\ge 1$，
+那麼 $f(n) = O(g(n))$ 蘊含 $\lg(f(n)) = O(lg(g(n)))$。
 
 \startANSWER
-正確。 因爲對於給定 \m{n \geq n_0}， \m{f(n) \geq 1}：
+正確。 因爲對於給定 $n \ge n_0$， $f(n) \ge 1$：
 \startformula
-\exists c, n_0 : \forall n \geq n_0 : 0 \leq f(n) \leq cg(n)
+\exists c, n_0 : \forall n \ge n_0 : 0 \le f(n) \le cg(n)
 \stopformula
 \startformula
    \Downarrow
 \stopformula
 \startformula
-   0 \leq \lg{f(n)} \leq \lg(cg(n)) = \lg{c} + \lg{g(n)}
+   0 \le \lg{f(n)} \le \lg(cg(n)) = \lg{c} + \lg{g(n)}
 \stopformula
 需要證明：
 \startformula
-\lg{f(n)} \leq d\lg{g(n)}
+\lg{f(n)} \le d\lg{g(n)}
 \stopformula
-很容易找到 \m{d}：
+很容易找到 $d$：
 \startformula
-d = \frac{\lg{c} + \lg{g(n)}}{\lg{g(n)}} = \frac{\lg{c}}{\lg{g}} + 1 \leq \lg{c} + 1
+d = \frac{\lg{c} + \lg{g(n)}}{\lg{g(n)}}
+= \frac{\lg{c}}{\lg{g(n)}} + 1
+\le \lg{c} + 1
 \stopformula
 最後一步顯然成立，因爲 \m{\lg{g(n)} \geq 1}。
 \stopANSWER
@@ -226,27 +242,28 @@ d = \frac{\lg{c} + \lg{g(n)}}{\lg{g(n)}} = \frac{\lg{c}}{\lg{g}} + 1 \leq \lg{c}
 \item \m{f(n) = O(g(n))} 蘊含 \m{2^{f(n)} = O(2^{g(n)})}。
 
 \startANSWER
-錯誤。 \m{2n = O(n)}，但是 \m{2^{2n} = 4^n \neq O(2^n)}。
+錯誤。 $2n = O(n)$，但是 $2^{2n} = 4^n \ne O(2^n)$。
 \stopANSWER
 
-\item \m{f(n) = O((f(n))^2)}。
+\item $f(n) = O((f(n))^2)$。
 
 \startANSWER
-正確。只要 \m{f(n) \geq 1}， \m{0 \leq f(n) \leq cf^2(n)} 是很自然的。
-當然如果對於所有 \m{n}， \m{f(n) < 1}，則錯誤，但我們通常不考慮這種函數。
+正確。只要 $f(n) \ge 1$， $0 \le f(n) \le c(f(n))^2$ 是很自然的。
+當然如果對於所有 $n$， $f(n) < 1$，則錯誤，但我們通常不考慮這種函數。
 \stopANSWER
 
-\item \m{f(n) = O(g(n))} 蘊含 \m{g(n) = \Omega(f(n))}。
+\item $f(n) = O(g(n))$ 蘊含 $g(n) = \Omega(f(n))$。
 
 \startANSWER
-正確。如果 \m{f(n) = O(g(n))}，則 \m{0 \leq f(n) \leq cg(n)}，我們只需證明：
+正確。如果 $f(n) = O(g(n))$，
+則 $0 \le f(n) \le cg(n)$，我們只需證明：
 \startformula
-0 \leq df(n) \leq g(n)
+0 \le d f(n) \le g(n)
 \stopformula
-對於 \m{d = 1/c}，上式顯然成立。
+對於 $d = 1/c$，上式顯然成立。
 \stopANSWER
 
-\item \m{f(n) = \Theta(f(n/2))}。
+\item $f(n) = \Theta(f(n/2))$。
 
 \startANSWER
 錯誤。取 \m{f(n) = 2^n}，我們需要證明：
@@ -260,12 +277,119 @@ d = \frac{\lg{c} + \lg{g(n)}}{\lg{g(n)}} = \frac{\lg{c}}{\lg{g}} + 1 \leq \lg{c}
 \item \m{f(n) + o(f(n)) = \Theta(f(n))}。
 
 \startANSWER
-正確。設 \m{g(n) = o(f(n))}，我們需要證明 \m{c_1f(n) \leq f(n) + g(n) \leq c_2f(n)}，我們知道：
+正確。令 $g(n) = o(f(n))$，
+我們需要證明 $c_1 f(n) \le f(n) + g(n) \le c_2 f(n)$，
+我們知道：
 \startformula
 \forall c \exists n_0 \forall n \geq n_0 : cg(n) < f(n)
 \stopformula
-因此，只需 \m{c_1 = 1}， \m{c_2 = 2} 即可。
+因此，只需 $c_1 = 1$， $c_2 = 2$ 即可。
 \stopANSWER
+
+\stopigBase
+\stopPROBLEM
+
+%p3-5
+\startPROBLEM
+（掌握漸進記號）
+令 $f(n)$ 和 $g(n)$ 爲漸進正函式。
+證明：
+\startigBase[a]
+
+% a
+\startitem
+$\Theta(\Theta(f(n))) = \Theta(f(n))$
+
+\startANSWER
+\startformula\startmathalignment[n=3]
+\NC c_1 f(n) \le \NC \Theta(f(n)) \NC \le c_2 f(n) \NR
+\NC c_3 \Theta(f(n)) \le \NC \Theta(\Theta(f(n))) \NC \le c_4 \Theta(f(n)) \NR
+\NC c_1 c_3 f(n) \le \NC \Theta(\Theta(f(n))) \NC \le c_2 c_4 f(n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+\stopitem
+
+% b
+\startitem
+$\Theta(f(n)) + O(f(n)) = \Theta(f(n))$
+
+\startANSWER
+\startformula\startmathalignment[n=3]
+\NC c_1 f(n) \le \NC \Theta(f(n)) \NC \le c_2 f(n) \NR
+\NC \NC O(f(n)) \NC \le c_3 f(n) \NR
+\NC c_1 \Theta(f(n)) \le \NC \Theta(f(n)) + O(f(n)) \NC \le (c_2 + c_3) f(n) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+\stopitem
+
+% c
+\startitem
+$\Theta(f(n)) + \Theta(g(n)) = \Theta(f(n)+g(n))$
+
+\startANSWER
+\startformula\startmathalignment[n=3]
+\NC c_1 f(n) \le \NC \Theta(f(n)) \NC \le c_2 f(n) \NR
+\NC c_3 g(n) \le \NC \Theta(g(n)) \NC \le c_4 g(n) \NR
+\NC \min(c_1,c_3) (f(n)+g(n)) \le
+	 \NC \Theta(f(n)) + \Theta(g(n))
+	 \NC \le \max(c_2 + c_4) (f(n)+g(n)) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+\stopitem
+
+% d
+\startitem
+$\Theta(f(n)) \cdot \Theta(g(n)) = \Theta(f(n) \cdot g(n))$
+
+\startANSWER
+\startformula\startmathalignment[n=3]
+\NC c_1 f(n) \le \NC \Theta(f(n)) \NC \le c_2 f(n) \NR
+\NC c_3 g(n) \le \NC \Theta(g(n)) \NC \le c_4 g(n) \NR
+\NC c_1 c_3 (f(n)\cdot g(n)) \le
+	 \NC \Theta(f(n)) \cdot \Theta(g(n))
+	 \NC \le c_2 c_4 (f(n)\cdot g(n)) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+\stopitem
+
+% e
+\startitem
+分析對於任意常實數 $a_1,a_2 > 0$ 和常整數 $k_1,k_2$，
+下列漸進界是否都能成立：
+\startformula
+(a_1 n)^{k_1} \lg^{k_2}(a_2 n) = \Theta(n^{k_1} \lg^{k_2} n)
+\stopformula
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopitem
+
+% f
+\startitem
+證明對於所有 $S\subseteq Z$，下式成立：
+\startformula
+\sum_{k\in S}\Theta(f(k)) = \Theta(\sum_{k\in S}f(k))
+\stopformula
+假設兩邊求和均收斂。
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopitem
+
+% g
+\startitem
+對於 $S\subseteq Z$，下列漸進界不一定成立，
+即使兩側求積均收斂，請給出反例。
+\startformula
+\prod_{k\in S}\Theta(f(k)) = \Theta(\prod_{k\in S}f(k))
+\stopformula
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopitem
 
 \stopigBase
 \stopPROBLEM

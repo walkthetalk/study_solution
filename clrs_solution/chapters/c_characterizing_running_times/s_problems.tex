@@ -361,7 +361,26 @@ $\Theta(f(n)) \cdot \Theta(g(n)) = \Theta(f(n) \cdot g(n))$
 \stopformula
 
 \startANSWER
-\TODO{略。}
+令 $n>n_0=1/a_2$，則有 $\lg(a_2 n)\ge 0$；
+令 $0 < c_1 < 1 < c_2$，對於任意 $a_2 > 0$，要使下式成立：
+\startformula\startmathalignment[n=3,align={right,middle,left}]
+\NC n^{c_1 - 1} \le \NC a_2 \NC \le n^{c_2 - 1} \NR
+\stopmathalignment\stopformula
+，要求 $n\ge {a_2}^{1/(c_1-1)}$，且 $n\ge {a_2}^{1/(c_2-1)}$，
+即 $n \ge \max({a_2}^{1/(c_1-1)}, {a_2}^{1/(c_2-1)})$，
+
+\startformula\startmathalignment[n=3,align={right,middle,left}]
+\NC n^{c_1 - 1} \le \NC a_2 \NC \le n^{c_2 - 1} \NR
+\NC n^{c_1} \le \NC a_2 n \NC \le n^c_2 \NR
+\NC c_1 \lg n \le \NC \lg (a_2 n) \NC \le c_2 \lg n \NR
+\NC c_1^{k_2} \lg^{k_2} n \le \NC \lg^{k_2}(a_2 n) \NC \le c_2^{k_2} \lg^{k_2}n \NR
+\NC c_1^{k_2} (a_1 n)^{k_1} \lg^{k_2} n \le
+    \NC (a_1 n)^{k_1} \lg^{k_2}(a_2 n)
+	\NC \le c_2^{k_2} (a_1 n)^{k_1} \lg^{k_2}n \NR
+\NC (c_1^{k_2} a_1^{k_1}) n^{k_1} \lg^{k_2} n \le
+    \NC (a_1 n)^{k_1} \lg^{k_2}(a_2 n)
+	\NC \le (c_2^{k_2} a_1^{k_1}) n^{k_1} \lg^{k_2}n \NR
+\stopmathalignment\stopformula
 \stopANSWER
 \stopitem
 
@@ -394,6 +413,7 @@ $\Theta(f(n)) \cdot \Theta(g(n)) = \Theta(f(n) \cdot g(n))$
 \stopigBase
 \stopPROBLEM
 
+%p3-6
 \startPROBLEM
 （\m{O}與\m{\Omega}的一些變形）
 某些作者用一種與我們稍微不同的方式來定義 \m{\Omega}；

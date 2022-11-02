@@ -399,8 +399,10 @@ $\Theta(f(n)) \cdot \Theta(g(n)) = \Theta(f(n) \cdot g(n))$
 
 % g
 \startitem
-對於 $S\subseteq Z$，下列漸進界不一定成立，
-即使兩側求積均收斂，請給出反例。
+對於 $S\subseteq Z$，
+即使下式兩側求積均收斂，
+此漸進界也不一定成立，
+請給出反例。
 \startformula
 \prod_{k\in S}\Theta(f(k)) = \Theta(\prod_{k\in S}f(k))
 \stopformula
@@ -416,81 +418,169 @@ $\Theta(f(n)) \cdot \Theta(g(n)) = \Theta(f(n) \cdot g(n))$
 %p3-6
 \startPROBLEM
 （\m{O}與\m{\Omega}的一些變形）
-某些作者用一種與我們稍微不同的方式來定義 \m{\Omega}；
-假設我們使用 \m{\mathop{\Omega}\limits^{\infty}} 來表示這種定義。
-若存在正常量 \m{c}，使得對無窮多個整數 \m{n}，有 \m{f(n)\geq cg(n)\geq 0}，
+某些作者定義 $\Omega$ 的方式跟本書有點差異；
+我們使用 \m{\mathop{\Omega}\limits^{\infty}} 來表示這種定義。
+若存在正常數 $c$，
+使得存在無限個正整數 $n$，
+滿足 $f(n)\ge c g(n)\ge 0$，
 則稱 \m{f(n) = \mathop{\Omega}\limits^{\infty}(g(n))}。
 \startigBase[a]
-\item 證明：對漸進非負的任意兩個函數 \m{f(n)} 和 \m{g(n)}，
-或者 \m{f(n) = O(g(n))} 或者 \m{f(n) = \mathop{\Omega}\limits^{\infty}(g(n))} 或者二者均成立，
-然而，如果用 \m{\Omega} 代替 \m{\mathop{\Omega}\limits^{\infty}}，那麼該命題卻不成立。
+% a
+\startitem
+證明：對任意兩個漸進非負函式 $f(n)$ 和 $g(n)$，
+肯定滿足 $f(n) = O(g(n))$ 或 $f(n) = \mathop{\Omega}\limits^{\infty}(g(n))$ 中的一個，
+也可能二者均成立。
+然而，如果用 $\Omega$ 代替 $\mathop{\Omega}\limits^{\infty}$，
+那麼該命題卻不成立。
 
 \startANSWER
-我們需要比較 \m{cg(n) \leq f(n)}；
-如果對於正無窮整數均成立，則有 \m{\mathop{\Omega}\limits^{\infty}}；
-而如果之對有限的整數成立，則設最大值爲 \m{n_0}，有：
+我們需要比較 $cg(n) \le f(n)$；
+如果存在無限個正整數 $n$ 能使其成立，
+則有 \m{\mathop{\Omega}\limits^{\infty}}；
+反之，則令滿足此式的 $n$ 最大爲 $n_0$，有：
 \startformula
 \forall n > n_0: f(n) < cg(n)
 \stopformula
-足以說明 \m{f(n) = O(g(n))}。
+足以說明 $f(n) = O(g(n))$。
 
-如果 \m{f(n) = g(n)}，顯然兩式均成立。
+如果 $f(n) = g(n)$，顯然兩式均成立。
 
-但是對於 \m{\Omega}，卻不一定，
-如 \m{n = \mathop{\Omega}\limits^{\infty}(n^{\sin{n}})}，
-但 \m{n \neq \Omega(n^{\sin{n}})}。
+但是對於 $\Omega$，卻不一定，
+如 $n = \mathop{\Omega}\limits^{\infty}(n^{\sin{n}})$，
+但 $n \ne \Omega(n^{\sin{n}})$。
+
+再如， $f(n)=n^2(n\mod 2)$， $g(n)=n$，
+對於所有偶數， $g(n)$ 更大，
+但對於所有奇數， $f(n)$ 增長的更快。
 \stopANSWER
+\stopitem
 
-\item 描述用 \m{\mathop{\Omega}\limits^{\infty}} 代替 \m{\Omega} 來刻畫程序運行時間的潛在優點和缺點。
+% b
+\startitem
+是否存在兩個非負函式 $f(n)$ 和 $g(n)$，
+既不滿足 $f(n)=O(g(n))$ 也不滿足 $f(n)=\Omega(g(n))$？
+若有，請舉例。
 
 \startANSWER
-TODO
+$f(n)=n^2(n\mod 2)$， $g(n)=n$，
+對於所有偶數， $g(n)$ 更大，
+但對於所有奇數， $f(n)$ 增長的更快。
 \stopANSWER
+\stopitem
+
+% c
+\startitem
+刻畫程序運行時間時，
+用 $\mathop{\Omega}\limits^{\infty}$ 代替 $\Omega$ 有
+哪些潛在優點和缺點。
+
+\startANSWER
+優點：你可以使用第一問中所描述的性質。
+
+劣勢：所得到的集合中雖然有無限個數，但其值可能很稀疏。
+而且對集合外的數沒有任何約束。
+\stopANSWER
+\stopitem
 
 \stopigBase
 
-某些作者也用一種稍微不同的方式定義 \m{O}；
-假設用 \m{O'} 來表示這種可選的定義。
-我們稱 \m{f(n) = O'(g(n))}，當且儘當 \m{|f(n)| = O(g(n))}。
+某些作者定義 $O$ 的方式也跟本書有點差異；
+用 $O'$ 來表示這種定義。
+當且儘當 $|f(n)| = O(g(n))$ 時，我們稱 $f(n) = O'(g(n))$。
 
 \startigBase[a,continue]
-\item 如果用 \m{O'} 代替 \m{O}，但仍使用 \m{\Omega}，定理 3.1 中的“當且儘當”的每個方向將出現什麼情況？
+% d
+\startitem
+如果將 $O$ 改爲 $O'$，但 $\Omega$ 保持不變，
+定理 3.1 中的“當且儘當”兩個方向上各自會出現什麼情況？
+附定理 3.1：
+
+任意兩個函式 $f(n)$ 和 $g(n)$，
+當且僅當 $f(n)=O(g(n))$ 及 $f(n)=\Omega(g(n))$ 時，
+有 $f(N)=\Theta(g(n))$。
 
 \startANSWER
-定理 3.1 中的“當且儘當”要改爲“蘊含”，即 \m{\Theta \Rightarrow O'}，反向則不成立。
-比如函數 \m{f(n) = n \cdot \sin{n}}，即爲 \m{O'(n)}，但卻不是 \m{O(n)} 或 \m{\Theta(n)}。
+定理 3.1 中的“當且儘當”要改爲“蘊含”，即 \m{\Theta \Rightarrow O'}，
+反向則不成立。
+例如：
+
+函數 $f(n) = n \cdot \sin{n}$，
+即爲 $O'(n)$，但卻不是 $O(n)$ 或 $\Theta(n)$。
 \stopANSWER
+\stopitem
 \stopigBase
 
-有些作者定義 \m{\tilde{O}} 來意指忽略對數因子的 \m{O}：
+有些作者給 $O$ 添上對數因子後改爲 $\tilde{O}$：
 \startformula
-\tilde{O} = \lbrace f(n) : \exists c > 0, k > 0, n_0 > 0 \forall n \geq n_0: 0 \leq f(n) \leq cg(n)\lg^k(n) \rbrace
+\tilde{O} = \lbrace f(n)
+ : \exists c > 0, k > 0, n_0 > 0
+\forall n \ge n_0
+ : 0 \le f(n) \le c g(n) \lg^k(n) \rbrace
 \stopformula
 \startigBase[a,continue]
-\item 用類似方式定義 \m{\tilde{\Omega}} 和 \m{\tilde{\Theta}}。
-證明定理 3.1 相對應的類似結論。
+% e
+\startitem
+按類似的方式定義 $\tilde{\Omega}$ 和 $\tilde{\Theta}$，
+並證明：
+
+任意兩個函式 $f(n)$ 和 $g(n)$，
+當且僅當 $f(n)=\tilde{O}(g(n))$ 及 $f(n)=\tilde{\Omega}(g(n))$ 時，
+有 $f(N)=\tilde{\Theta}(g(n))$。
 
 \startANSWER
-\startformula
-\tilde{\Omega} = \lbrace f(n) : \exists c, k, n_0 \forall n > n_0 : 0 \leq cg(n) \lg^{-k}(n) \leq f(n) \rbrace
-\stopformula
-\startformula
-\tilde{\Theta} = \lbrace f(n) : \exists c_1, c_2, k_1, k_2, n_0 \forall n > n_0 : 0 \leq c_1g(n) \lg^{-k_1}(n) \leq f(n) \leq c_2g(n) \lg^{k_2}(n)\rbrace
-\stopformula
+\startformula\startmathalignment
+\NC \tilde{\Omega} = \lbrace f(n): \NC
+  \exists c, k, n_0>0 \NR
+\NC \NC \forall n > n_0
+  : 0 \leq cg(n) \lg^{-k}(n) \leq f(n) \rbrace \NR
+
+\NC \tilde{\Theta} = \lbrace f(n): \NC
+ \exists c_1, c_2, k_1, k_2, n_0 > 0 \NR
+\NC \NC \forall n > n_0
+ : 0 \leq c_1g(n) \lg^{-k_1}(n) \leq f(n) \leq c_2g(n) \lg^{k_2}(n)\rbrace \NR
+\stopmathalignment\stopformula
+
+$\tilde{\Theta}$ 顯然蘊含 $\tilde{O}$ 和 $\tilde{\Omega}$。
+反之，如果：
+\startformula\startmathalignment
+\NC \tilde{\Omega} = \lbrace f(n): \NC
+  \exists c_1, k_1, n_1>0 \NR
+\NC \NC \forall n > n_1
+  : 0 \leq c_1 g(n) \lg^{-k_1}(n) \leq f(n) \rbrace \NR
+
+\NC \tilde{O} = \lbrace f(n): \NC
+ \exists c_2, k_2, n_2 > 0 \NR
+\NC \NC \forall n \ge n_2
+ : 0 \le f(n) \le c_2 g(n) \lg^{k_2}(n) \rbrace \NR
+\stopmathalignment\stopformula
+那麼：
+\startformula\startmathalignment
+\NC \tilde{\Theta} = \lbrace f(n): \NC
+ \exists c_1,c_2,k_1,k_2 > 0, n_0 > \max(n_1,n_2) \NR
+\NC \NC \forall n \ge n_0
+ : 0 \le c_1 g(n) \lg^{-k_1}(n) \le f(n) \le c_2 g(n) \lg^{k_2}(n) \rbrace \NR
+\stopmathalignment\stopformula
 \stopANSWER
+\stopitem
 \stopigBase
 
 \stopPROBLEM
 
 \startPROBLEM
-（多重函數）我們可以把用於函數 \m{\lg^{\ast}} 中的重復運算符 \m{\ast} 應用於實數集上的任意單調遞增函數 \m{f(n)}。
-對給定的常量 \m{c \in R}，我們定義多重函數 \m{f_c^{\ast}} 爲：
+（多重函數）我們可以把用於函數 $\lg^{\ast}$ 中的
+重復算符 $\ast$ 應用於實數集上的任意單調遞增函數 $f(n)$。
+對給定的常數 $c \in R$，
+我們將多重函數 \m{f_c^{\ast}} 定義爲：
 \startformula
 f_c^{\ast}(n) = \min \lbrace i \geq 0 : f^{(i)}(n) \leq c \rbrace
 \stopformula
-該函數不必在所有情況下都爲良定義的。
-換句話說， \m{f_c^{\ast}(n)} 的值就是爲將其參數縮小至 \m{c} 或更小所需要將函數 \m{f} 重復應用的數目。
-對如下每個函數 \m{f(n)} 和常量 \m{c}，給出 \m{f_c^{\ast}(n)} 的一個盡量緊確的界。
+該函數在某些情況下可能不是良定義的。
+換句話說， 爲了將 $n$ 縮小至 $c$ 或更小，
+需要將函數 $f$ 重復應用的次數。
+對如下每個函數 $f(n)$ 和常數 $c$，
+給出 $f_c^{\ast}(n)$ 的一個盡量緊確的界。
+如果無法使得 $f^{(i)}(n)\le c$，
+則填入“未定義”。
 
 \bTABLE[align=center]
 \bTABLEhead

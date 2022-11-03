@@ -1,0 +1,93 @@
+\startsection[
+  title={Multiplying square matrices},
+]
+
+%4.1-1
+\startEXERCISE
+\ALGO{MATRIX-MULTIPLY-RECURSIVE} 用於計算兩個大小均爲 $n\times n$ 的矩陣的乘積，
+將其進行推廣，使得 $n$ 不必是 $2$ 的冪。
+用遞歸的方式給出其運行時間。
+並分析最壞運行時間爲 $\Theta(n^3)$。
+\stopEXERCISE
+
+\startANSWER
+可以將其補全，使得 $n$ 爲 $2$ 的冪。
+最壞運行時間依舊是 $\Theta(n^3)$。
+\stopANSWER
+
+%4.1-2
+\startEXERCISE
+怎樣快速計算兩個大小分別爲 $k n\times n$ （$kn$ 行， $n$ 列）
+和 $n\times kn$ 的矩陣的乘積？
+其中 $k\ge 1$，
+可以調用 \ALGO{MATRIX-MULTIPLY-RECURSIVE}。
+如果兩個矩陣大小改爲 $n\times kn$ 和 $kn\times n$，
+又該如何計算？
+那一個漸進更快一些？快多少？
+\stopEXERCISE
+
+\startANSWER
+將矩陣劃分爲大小均爲 $n\times n$ 的子陣。
+
+前者爲：$T(kn，n) = (2k-1)T(n,n)$。
+
+後者爲：$T(n,kn) = k T(n,n)$。
+
+後者更快一些，運行時間約爲前者的一半。
+\stopANSWER
+
+%4.1-3
+\startEXERCISE
+在 \ALGO{MATRIX-MULTIPLY-RECURSIVE} 中，
+設想一下，我們不是通過計算索引劃分矩陣，
+而是將 $A,B,C$ 中相應元素複製到大小爲 $n/2\times n/2$ 的矩陣
+$A_{11},A_{12},A_{21},A_{22}$、 $B_{11},B_{12},B_{21},B{22}$
+以及 $C_{11},C_{12},C_{21},C_{22}$ 中。
+待遞迴結束後，再將 $C_{11},C_{12},C_{21},C_{22}$ 中的結果
+複製到 $C$ 中的相應位置。
+則 （4.9）中的遞迴式要怎麼改？結果是什麼？
+附遞迴式（4.9）：
+\startformula
+T(n) = 8T(n/2) + \Theta(1)
+\stopformula
+\stopEXERCISE
+
+\startANSWER
+\startformula\startmathalignment
+\NC T(n) \NC = 8T(n/2) + \Theta(n^2) \NR
+\NC \NC = \Theta(n^3) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%4.1-4
+\startEXERCISE
+要計算兩個矩陣 $A$ 和 $B$ 之和，
+其大小均爲 $n\times n$，
+可以將其都劃分爲四個 $n/2\times n/2$ 子陣，
+然後遞歸對相對應的子陣求和，
+試寫出矩陣求和分治算法 \ALGO{MATRIX-ADD-RECURSIVE} 的僞碼。
+假設劃分子陣、計算索引所用時間爲 $\Theta(1)$。
+寫出其最壞運行時間的遞迴式，並求解。
+如果劃分時不是計算索引，
+而是改爲用時 $\Theta(n^2)$ 的複製，
+會發生什麼？
+\stopEXERCISE
+
+\startANSWER
+\CLRSH{MATRIX-ADD-RECURSIVE(A,B,C,n)}
+\startCLRSCODE
+if n \le 1
+	return A+B
+\ALGO{MATRIX-ADD-RECURSIVE(A_{11},B_{11},C_{11},n/2)}
+\ALGO{MATRIX-ADD-RECURSIVE(A_{12},B_{12},C_{12},n/2)}
+\ALGO{MATRIX-ADD-RECURSIVE(A_{21},B_{21},C_{21},n/2)}
+\ALGO{MATRIX-ADD-RECURSIVE(A_{22},B_{22},C_{22},n/2)}
+\stopCLRSCODE
+
+\startformula\startmathalignment
+\NC T(n) \NC = 4T(n/2) + \Theta(1) \NR
+\NC \NC = \Theta(n^2) \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+\stopsection

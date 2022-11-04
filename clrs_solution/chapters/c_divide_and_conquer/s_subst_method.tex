@@ -2,6 +2,67 @@
   title={The substitution method for solving recurrences},
 ]
 
+%e4.3-1
+\startEXERCISE
+用替代法證明下列漸進解：
+\startigBase[a]
+% a
+\startitem
+$T(n)=T(n-1)+n$ 的解爲 $T(n)=O(n^2)$。
+
+\startANSWER
+$T(n)=T(1)+2+3+\cdots+n=\frac{n(n+1)}{2}+T(1)-1=O(n^2)$
+\stopANSWER
+\stopitem
+
+% b
+\startitem
+$T(n)=T(n/2)+\Theta(1)$ 的解爲 $T(n)=O(\lg n)$。
+
+\startANSWER
+$T(n)=T(1)+(\lg n - 1)\Theta(1)=O(\lg n)$
+\stopANSWER
+\stopitem
+
+% c
+\startitem
+$T(n)=2T(n/2)+n$ 的解爲 $T(n)=\Theta(n\lg n)$。
+
+\startANSWER
+$T(n)=n T(1)+n\lg n=O(n\lg n)$
+\stopANSWER
+\stopitem
+
+% d
+\startitem
+$T(n)=2T(n/2+17)+n$ 的解爲 $T(n)=O(n\lg n)$。
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopitem
+
+% e
+\startitem
+$T(n)=2T(n/3)+\Theta(n)$ 的解爲 $T(n)=\Theta(n)$。
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopitem
+
+% f
+\startitem
+$T(n)=4T(n/2)+\Theta(n)$ 的解爲 $T(n)=\Theta(n^2)$。
+
+\startANSWER
+\TODO{略。}
+\stopANSWER
+\stopitem
+
+\stopigBase
+\stopEXERCISE
+
 \startEXERCISE
 證明 \m{T(n)  = T(n - 1) + n} 的解爲 \m{O(n^2)}。
 \stopEXERCISE

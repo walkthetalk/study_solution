@@ -62,32 +62,52 @@
 \stopEXERCISE
 
 \startANSWER
-\startCLRS
-TODO
-\stopCLRS
+\CLRSH{STRASSEN(A,B)}
+\startCLRSCODE
+if A.row == 1
+	C = A * B
+	return C
+// 劃分子陣
+S_1 = B_{12} - B_{22}
+S_2 = A_{11} + A_{12}
+S_3 = A_{21} + A_{22}
+S_4 = B_{21} - B_{11}
+S_5 = A_{11} + A_{22}
+S_6 = B_{11} + B_{22}
+S_7 = A_{12} - A_{22}
+S_8 = B_{21} + B_{22}
+S_9 = A_{11} - A_{21}
+S_{10} = B_{11} + B_{12}
+
+P_1 = \ALGO{STRASSEN(A_{11},S_1)}
+P_2 = \ALGO{STRASSEN(S_2,B_{22})}
+P_3 = \ALGO{STRASSEN(S_3,B_{11})}
+P_4 = \ALGO{STRASSEN(A_{22},S_4)}
+P_5 = \ALGO{STRASSEN(S_5,S_6)}
+P_6 = \ALGO{STRASSEN(S_7,S_8)}
+P_7 = \ALGO{STRASSEN(S_9,S_{10})}
+
+C_{11} = P_5 + P_4 - P_2 + P_6
+C_{12} = P_1 + P_2
+C_{21} = P_3 + P_4
+C_{22} = P_5 + P_1 - P_3 - P_7
+
+return C
+\stopCLRSCODE
 \stopANSWER
 
+%e4.2-3
 \startEXERCISE
-修改 Strassen 算法，使之能適應矩陣規模 \m{n} 不是 \m{2} 的冪的情況？
-證明：算法的運行時間爲 \m{\Theta(n^{\lg 7})}。
-\stopEXERCISE
-
-\startANSWER
-我們可以通過添加值爲 \m{0} 的元素來擴展矩陣，使得矩陣規模 \m{n} 是 \m{2} 的冪。
-運行時間顯然爲 \m{\Theta(n^{\lg 7})}。
-\stopANSWER
-
-\startEXERCISE
-如果可以用 \m{k} 次乘法運算（假定乘法的交換律不成立）完成兩個 \m{3 \times 3} 矩陣相乘，
-那麼就可以在 \m{o(n^{\lg 7})} 時間內完成 \m{n \times n} 矩陣相乘，
-滿足這一條件的 \m{k} 最大是多少？
+要想在 $o(n^{\lg 7})$ 時間內完成 $n \times n$ 矩陣相乘，
+且完成兩個 $3 \times 3$ 矩陣相乘需要 $k$ 次乘法運算（不滿足乘法交換律），
+滿足這一條件的 $k$ 最大是多少？
 此算法運行時間如何？
 \stopEXERCISE
 
 \startANSWER
 由分治法可得遞迴算法運行時間爲：
 \startformula
-T(n) = k T(n/3) + \Theta(n)
+T(n) = k T(n/3) + O(1)
 \stopformula
 如果 \m{k} 足夠大，則求解得 \m{T(n) = \Theta(n^{\log_3^k})}。則：
 \startformula\startmathalignment[n=1,align=center]
@@ -97,12 +117,14 @@ T(n) = k T(n/3) + \Theta(n)
 \NC \Downarrow \NR
 \NC k < 3^{\lg7} \approx 21.84986\NR
 \stopmathalignment\stopformula
+所以 $k$ 最大爲 $21$。
 \stopANSWER
 
+%e4.2-4
 \startEXERCISE
-V.Pan 發現一種方法可以用 \m{132464} 次乘法操作完成 \m{68\times 68} 的矩陣乘法；
-還發現一種方法可以用 \m{143640} 次乘法操作完成 \m{70\times 70} 的矩陣乘法；
-還發現一種方法可以用 \m{155424} 次乘法操作完成 \m{72\times 72} 的矩陣乘法。
+V.Pan 發現一種方法可以用 $132464$ 次乘法操作完成大小爲 $68\times 68$ 的矩陣乘法；
+還發現一種方法可以用 $143640$ 次乘法操作完成大小爲 $70\times 70$ 的矩陣乘法；
+還發現一種方法可以用 $155424$ 次乘法操作完成大小爲 $72\times 72$ 的矩陣乘法。
 若用於矩陣相乘的分治算法，上述哪種方法會得到最佳的漸進運行時間？
 與 Strassen 算法相比，性能如何？
 \stopEXERCISE
@@ -112,37 +134,47 @@ V.Pan 發現一種方法可以用 \m{132464} 次乘法操作完成 \m{68\times 6
 \NC \log_{70} 143640 \NC \approx 2.795122 \NR
 \NC \log_{72} 155424 \NC \approx 2.795147 \NR
 \stopalign\stopformula
-顯然 \m{70 \times 70} 的方法漸進運行時間最佳。比 Strassen 算法要好。
+顯然 $70 \times 70$ 的方法漸進運行時間最佳。比 Strassen 算法要好。
 \stopANSWER
 
+%e4.2-5
 \startEXERCISE
-用 Strassen 算法作爲子例程求解 \m{kn\times n} 和 \m{n \times kn} 兩個矩陣相乘，
-最快需要花費多少時間？
-如果兩個輸入矩陣規模互換，又需要多長時間？
+如何只用三次實數相乘得到兩個複數 $a+bi$ 和 $c+di$ 的乘積。
+以 $a,b,c,d$ 作爲算法的輸入，
+結果分別爲實部 $ac-bd$ 和虛部 $ad+bc$。
 \stopEXERCISE
 
 \startANSWER
-\m{(kn \times n)(n \times kn)} 生成 \m{kn \times kn} 矩陣，需要 \m{k^2} 次 \m{n\times n} 矩陣相乘。
-
-\m{(n \times kn)(kn \times n)} 生成 \m{n \times n} 矩陣，需要 \m{k} 次乘法和 \m{k-1} 次加法。
+\startCLRSCODE
+S_1 = a \cdot (c+d)
+S_2 = (a+b) \cdot d
+S_3 = (a-b) \cdot c
+C_r = S_1 - S_2	// $ac-bd$
+C_i = S_1 - S_3	// $ad+bc$
+\stopCLRSCODE
+也可以是：
+\startCLRSCODE
+S_1 = (a+b)\cdot (c+d)
+S_2 = a\cdot c
+S_3 = b\cdot d
+C_r = S_2 - S_3
+C_i = S_1 - S_2 - S_3
+\stopCLRSCODE
+均用了三次乘法運算，五次加減運算
 \stopANSWER
 
+%e4.2-6
 \startEXERCISE
-設計算法，僅使用三次實數乘法即可完成復數 \m{a + bi} 和 \m{c + di} 相乘。
-算法輸入爲 \m{a}、 \m{b}、 \m{c}、 \m{d}，分別生成實部 \m{ac - bd} 和虛部 \m{ad + bc}。
+現有一算法用於求 $n\times n$ 矩陣的平方，
+時間複雜度爲 $\Theta(n^{\alpha})$，
+其中 $\alpha \ge 2$。
+根據此算法計算兩個不同的 $n\times n$ 矩陣的積，
+要求時間複雜度依然是 $\Theta(n^{\alpha})$。
 \stopEXERCISE
 
 \startANSWER
-三次乘法分別爲：
-\startformula\startalign
-\NC A \NC = (a+b)(c+d) = ac + ad + bc + bd \NR
-\NC B \NC = ac \NR
-\NC C \NC = bd \NR
-\stopalign\stopformula
-結果爲：
-\startformula
-(B - C) + (A - B - C)i
-\stopformula
+若此算法爲分治算法，
+僅需改造 $n=1$ 的情況下代碼的計算方式即可。
 \stopANSWER
 
 \stopsection

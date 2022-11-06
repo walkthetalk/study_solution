@@ -11,7 +11,14 @@
 $T(n)=T(n-1)+n$ 的解爲 $T(n)=O(n^2)$。
 
 \startANSWER
-$T(n)=T(1)+2+3+\cdots+n=\frac{n(n+1)}{2}+T(1)-1=O(n^2)$
+$T(n) \le c n^2 + d n$，其中 $d\ge c \ge 1/2$：
+\startformula\startmathalignment
+\NC T(n-1)\NC \le c (n-1)^2 + d (n-1) \NR
+\NC T(n) \NC = T(n-1) + n \NR
+\NC \NC \le c (n-1)^2 + d(n-1) + n \NR
+\NC \NC = c n^2 + (d-2c + 1)n + (c-d) \NR
+\NC \NC \le c n^2 + dn \NR
+\stopmathalignment\stopformula
 \stopANSWER
 \stopitem
 
@@ -20,7 +27,14 @@ $T(n)=T(1)+2+3+\cdots+n=\frac{n(n+1)}{2}+T(1)-1=O(n^2)$
 $T(n)=T(n/2)+\Theta(1)$ 的解爲 $T(n)=O(\lg n)$。
 
 \startANSWER
-$T(n)=T(1)+(\lg n - 1)\Theta(1)=O(\lg n)$
+$T(n)\le c \lg n$，其中 $c>\Theta(1)$：
+\startformula\startmathalignment
+\NC T(n/2)\NC \le c \lg(n/2) \NR
+\NC T(n) \NC = T(n/2) + \Theta(1) \NR
+\NC \NC \le c \lg(n/2) + \Theta(1) \NR
+\NC \NC = c \lg n - (c - \Theta(1)) \NR
+\NC \NC \le c \lg n \NR
+\stopmathalignment\stopformula
 \stopANSWER
 \stopitem
 
@@ -29,7 +43,14 @@ $T(n)=T(1)+(\lg n - 1)\Theta(1)=O(\lg n)$
 $T(n)=2T(n/2)+n$ 的解爲 $T(n)=\Theta(n\lg n)$。
 
 \startANSWER
-$T(n)=n T(1)+n\lg n=O(n\lg n)$
+$c_1 n \lg n \le T(n) \le c_2 n\lg n$，其中 $c_1<1, c_2>1$：
+\startformula\startmathalignment[n=3,align={right,middle,left}]
+\NC c_1 (n/2)\lg(n/2) \le \NC T(n/2) \NC \le c_2 (n/2)\lg(n/2) \NR
+\NC 2c_1 (n/2)\lg(n/2) + n \le \NC 2T(n/2) + n \NC \le 2c_2 (n/2)\lg(n/2) + n \NR
+\NC c_1n\lg n \le c_1 n \lg n - (c_1 - 1)n \le
+ \NC T(n)
+ \NC \le c_2 n \lg n - (c_2-1)n \le c_2n\lg n\NR
+\stopmathalignment\stopformula
 \stopANSWER
 \stopitem
 
@@ -38,7 +59,33 @@ $T(n)=n T(1)+n\lg n=O(n\lg n)$
 $T(n)=2T(n/2+17)+n$ 的解爲 $T(n)=O(n\lg n)$。
 
 \startANSWER
-\TODO{略。}
+$T(n)\le cn \lg n + dn$，其中 $d < c$：
+\startformula\startmathalignment
+\NC T(n/2+17)\NC \le c (n/2+17)\lg(n/2+17) \NR
+\NC T(n) \NC = 2T(n/2+17) + n \NR
+\NC \NC \le 2c(n/2+17) \lg(n/2+17) + n \NR
+\NC \NC = cn\lg(n/2+17) + 34c\lg(n/2+17) + n \NR
+\NC \NC = cn\lg(n\frac{n+34}{2n}) + 34c\lg\frac{n+34}{2} + n \NR
+\NC \NC = cn\lg n + cn\lg\frac{n+34}{2n} + 34c\lg\frac{n+34}{2} + n \NR
+\stopmathalignment\stopformula
+現在我們需要滿足： $cn\lg\frac{n+34}{2n} + 34c\lg\frac{n+34}{2} + n\le 0$：
+\startformula\startmathalignment
+\NC \NC cn\lg\frac{n+34}{2n} + 34c\lg\frac{n+34}{2} + n \NR
+\NC < \NC cn\lg\frac{n+34}{2n} + 34c\lg(n+34) + n \NR
+\NC = \NC c(-n + \lg\frac{n+34}{n} + 34\lg(n+34)) + n\NR
+\NC = \NC c(\frac{1-c}{c}n + \lg\frac{n+34}{n} + 34\lg(n+34))\NR
+\NC = \NC c(\frac{1-c}{c}n + 35\lg(n+34) - \lg n)\NR
+\NC \le \NC c(-c_1 n + c_2 \lg n) \qquad
+ \text{令} c_1 = \frac{c-1}{c}, 35\lg(n+34)-\lg n\le c_2 \lg n\NR
+\stopmathalignment\stopformula
+即要滿足 $c_2\lg n -c_1 n \le 0$。
+
+由於 $35\lg(n+34)-\lg n = O(\lg n)$，
+所以 $35\lg(n+34)-\lg n\le c_2 \lg n$ 中的 $c_2>0$ 必定有解。
+
+又由於 $c_2\lg n = O(n)$，因此 $-c_1n + c_2\lg n \le 0$ 中的 $c_1>0$ 必定有解。
+
+因此 $(c-1)/c = c_1$ 中的 $c > 1$ 必定有解。
 \stopANSWER
 \stopitem
 
@@ -47,7 +94,19 @@ $T(n)=2T(n/2+17)+n$ 的解爲 $T(n)=O(n\lg n)$。
 $T(n)=2T(n/3)+\Theta(n)$ 的解爲 $T(n)=\Theta(n)$。
 
 \startANSWER
-\TODO{略。}
+令 $c_3n\le\Theta(N)\le c_4n$， $c_1n\le T(n)\le c_2n$：
+\startformula\startmathalignment[n=3,align={right,middle,left}]
+\NC c_1 (n/3) \le \NC T(n/3) \NC \le c_2 (n/3) \NR
+\NC 2 c_1 (n/3) + \Theta(n) \le
+  \NC 2T(n/3) + \Theta(n)
+  \NC \le 2c_2(n/3) + \Theta(n) \NR
+\NC \frac{2}{3}c_1n + c_3 n \le \NC T(n)
+  \NC \le \frac{2}{3}c_2 n + c_4 n \NR
+\NC (\frac{2}{3}c_1 + c_3)n \le \NC T(n)
+  \NC \le (\frac{2}{3}c_2 + c_4)n \NR
+\stopmathalignment\stopformula
+需要滿足 $c_1 \le \frac{2}{3}c_1 + c_3$ 且 $\frac{2}{3}c_2 + c_4 \le c_2$，
+即 $c_1 \le 3c_3$， $c_2\ge 3c_4$。
 \stopANSWER
 \stopitem
 
@@ -56,15 +115,29 @@ $T(n)=2T(n/3)+\Theta(n)$ 的解爲 $T(n)=\Theta(n)$。
 $T(n)=4T(n/2)+\Theta(n)$ 的解爲 $T(n)=\Theta(n^2)$。
 
 \startANSWER
-\TODO{略。}
+令 $c_5n\le\Theta(N)\le c_6n$， $c_1n^2 + c_2n\le T(n)\le c_3n^2 + c_4n$：
+\startformula\startmathalignment[n=3,align={right,middle,left}]
+\NC c_1 (n/2)^2 + c_2(n/2) \le \NC T(n/2) \NC \le c_3 (n/2)^2 + c_4(n/2) \NR
+\NC 4 c_1 (n/2)^2 + 4c_2(n/2) + c_5 n \le
+  \NC 4T(n/2) + \Theta(n)
+  \NC \le 4c_3(n/2)^2 + 4c_4(n/2) + c_6n \NR
+\NC c_1n^2 + (2c_2+c_5) n \le \NC T(n)
+  \NC \le c_3 n^2 + (2c_4+c_6) n \NR
+\stopmathalignment\stopformula
+需要滿足 $c_2\le 2c_2+c_5$ 及 $2c_4+c6\le c_4$，
+即 $c_2\ge 0$ 且 $c_4\le -c_6$。
 \stopANSWER
 \stopitem
 
 \stopigBase
 \stopEXERCISE
 
+%e4.3-2
 \startEXERCISE
-證明 \m{T(n)  = T(n - 1) + n} 的解爲 \m{O(n^2)}。
+遞迴式 $T(n)=4T(n/2)+n$ 的解爲 $T(n)=\Theta(n^2)$。
+請分析說明：
+如果只是假設 $T(n)\le cn^2$，用替代法無法證明此結論。
+但如果在此基礎上再減去一個低階項，替代法就能生效了。
 \stopEXERCISE
 \startANSWER
 猜測 \m{T(n) \leq cn^2}，則：

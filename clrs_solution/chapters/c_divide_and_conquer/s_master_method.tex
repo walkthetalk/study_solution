@@ -2,95 +2,98 @@
   title={The master method for solving recurrences},
 ]
 
+%e4.5-1
 \startEXERCISE
 用主定理求下列遞迴式的漸進緊確界。
 \startigBase[a]
-\item \m{T(n) = 2T(n/4) + 1}
-\item \m{T(n) = 2T(n/4) + \sqrt{n}}
-\item \m{T(n) = 2T(n/4) + n}
-\item \m{T(n) = 2T(n/4) + n^2}
+\item $T(n) = 2T(n/4) + 1$
+\item $T(n) = 2T(n/4) + \sqrt{n}$
+\item $T(n) = 2T(n/4) + n$
+\item $T(n) = 2T(n/4) + n^2$
 \stopigBase
 \stopEXERCISE
 \startANSWER
 \startigBase[a]
-\item \m{\Theta(n^{\log_4{2}}) = \Theta(\sqrt{n})}
-\item \m{\Theta(n^{\log_4{2}}\lg{n}) = \Theta(\sqrt{n}\lg{n})}
-\item \m{\Theta(n)}
-\item \m{\Theta(n^2)}
+\item case 1： $b=4,a=2,f(n)=1,\epsilon=1>0$， $\Theta(n^{\log_4{2}}) = \Theta(\sqrt{n})$
+\item case 2： $b=4,a=2,f(n)=\sqrt{n},k=0\ge 0$， $\Theta(n^{\log_4{2}}\lg{n}) = \Theta(\sqrt{n}\lg{n})$
+\item case 3： $b=4,a=2,f(n)=n,\epsilon=2>0$， $\Theta(n)$
+\item case 3： $b=4,a=2,f(n)=n^2,\epsilon=14>0$， $\Theta(n^2)$
 \stopigBase
 \stopANSWER
 
+%e4.5-2
 \startEXERCISE
-Caesar 教授想設計一個漸進優於 Strassen 算法的矩陣相乘算法。
-他的算法使用分治策略，將每個矩陣分解爲 \m{n/4 \times n/4} 的子矩陣，
-分解和合並步驟共花費時間爲 \m{\Theta(n^2)}。
-他需要確定，這個算法需要創建多少個子問題，才能擊敗 Strassen 算法。
-如果他的算法創建 \m{a} 個子問題，則描述運行時間 \m{T(n)} 的遞迴式爲
-\m{T(n) = a T(n/4) + \Theta(n^2)}。
-Caesar 教授的算法如果要漸進優於 Strassen 算法， \m{a} 的最大整數值應爲多少？
+Caesar 教授想設計一個算法用於矩陣乘法，
+想讓其時間複雜度優於 Strassen 算法。
+他的算法使用分治策略，
+將每個矩陣分解爲 $n/4 \times n/4$ 個子矩陣，
+分解和合並步驟花費時間爲 $\Theta(n^2)$。
+他需要確定，這個算法需要創建多少個子問題，
+才能擊敗 Strassen 算法。
+如果他的算法創建 $a$ 個規模爲 $n/4$ 的子問題，
+則描述運行時間 $T(n)$ 的遞迴式爲 $T(n) = a T(n/4) + \Theta(n^2)$。
+這個算法要想漸進優於 Strassen 算法， $a$ 的最大整數值應爲多少？
 \stopEXERCISE
 \startANSWER
-當 \m{a < 16} 時適用於主定理的第一種情況。
-此時，此算法 \m{T(n) = \Theta(n^{\log_4{a}})}。
-要想更快，需 \m{\log_4{a} < \log_{2}7}，其中 \m{a < 14}。
-因此，最大整數值爲 \m{13}。
+當 $a < 16$ 時適用於主定理的第一種情況。
+此時，此算法 $T(n) = \Theta(n^{\log_4{a}})$。
+要想更快，需 $\log_4{a} < \log_{2}7$，其中 $a < 49$。
+因此， $a$ 的最大整數值爲 $15$。
 \stopANSWER
 
+%e4.5-3
 \startEXERCISE
-用主定理證明：而分查找遞迴式 \m{T(n) = T(n/2) + \Theta(1)} 的解爲 \m{T(n) = \Theta(\lg n)}。
-（二分查找的描述參見\refexercise{bin_search}）
+用主定理證明：二分查找遞迴式 $T(n) = T(n/2) + \Theta(1)$ 的解爲 $T(n) = \Theta(\lg n)$。
+（關於二分查找參見\refexercise{bin_search}）
 \stopEXERCISE
 \startANSWER
+適用主定理第二種情況：
 \startformula\startmathalignment
 \NC a =\NC 1\NR
 \NC b =\NC 2\NR
-\NC f(n) =\NC \Theta(n^{\log_2^1}) = \Theta(1) \NR
+\NC f(n) =\NC \Theta(1) = \Theta(n^{\log_b^a}\lg^{k}n)\qquad \text{其中 $k=0$} \NR
 \NC T(n) =\NC \Theta(\lg n) \NR
 \stopmathalignment\stopformula
 \stopANSWER
 
+%e4.5-4
 \startEXERCISE
-主定理是否可用於遞迴式 \m{T(n) = 4 T(n/2) + n^2 \lg n}？
-請說明爲什麼。
-請給出此遞迴式的漸進上界。
+現有函式 $f(n)=\lg n$。
+試分析：
+儘管 $f(n/2)<f(n)$，
+任意常數 $c<1$ 都無法滿足正則條件 $af(n/b)\le cf(n)$，
+其中 $a=1,b=2$。
+更進一步，任意 $\epsilon>0$，
+也無法滿足第三種情況中的條件 $f(n)=\Omega(n^{\log_b{a+\epsilon}})$。
 \stopEXERCISE
 \startANSWER
-根據主定理， 有 \m{a = 4}、 \m{b = 2}，
-而 \m{f(n) = n^2\lg{n} \ne O(n^{2-\epsilon}) \ne \Omega(n^{2-\epsilon})}，
-因此無法使用主定理。
+\startformula
+af(n/b)=f(n/2)=\lg(n/2)=\lg n - 1 = f(n)-1\le cf(n)
+\stopformula
+如果 $c<1$，則 $(1-c)f(n)\le 1$，即 $f(n)\le \frac{1}{1-c}$，
+而無論 $c$ 有多小，總能找到 $n_0$，當 $n>n_0$ 時，使得 $f(n)>\frac{1}{1-c}$。
+因此 $af(n/b)\le cf(n)$ 無法成立。
 
-猜測 \m{\Theta(n^2\lg^2{n})}：
 \startformula\startmathalignment
-\NC T(n) \NC \le 4T(n/2) + n^2\lg{n} \NR
-\NC      \NC \le 4c(n/2)^2\lg^2(n/2) + n^2\lg{n} \NR
-\NC      \NC \le cn^2\lg(n/2)\lg{n} - cn^2\lg(n/2)\lg{2} + n^2\lg{n} \NR
-\NC      \NC \le cn^2\lg^2{n} - cn^2\lg{n}\lg{2} - cn^2\lg(n/2) + n^2\lg{n} \NR
-\NC      \NC \le cn^2\lg^2{n} + (1 - c)n^2\lg{n} - cn^2\lg(n/2) \qquad (c > 1) \NR
-\NC      \NC \le cn^2\lg^2{n} - cn^2\lg(n/2) \NR
-\NC      \NC \le cn^2\lg^2{n} \NR
+\NC f(n) \NC =\Omega(n^{\log_b{a+\epsilon}}) \NR
+\NC \NC \ge c n^{\lg\epsilon} \NR
 \stopmathalignment\stopformula
-
-推廣結論參見 \refexercise{master_method_generalized}。
+令 $k=\log_b{a+\epsilon}>0$，即 $\lg n \ge c n^k$。
+ $cn^k$ 增長速度要快於 $\lg n$。
 \stopANSWER
 
-\startEXERCISE \DIFFICULT
-考慮主定理第三種情況中，對於某個常數 \m{c < 1}，考慮其正則條件 \m{a f(n/b) \le c f(n)} 是否成立。
-給出例子，使常數 \m{a \ge 1}、 \m{b > 1}，且函數 \m{f(n)} 滿足主定理第三種情況中除正則條件外的所有條件。
+%e4.5-5
+\startEXERCISE
+有函式 $f(n)=2^{\lceil \lg n\rceil}$，
+選擇適當的常數 $a,b,\epsilon$，
+可以使其滿足主定理第三種情況中所有條件（正則條件除外）。
 \stopEXERCISE
 \startANSWER
-\startformula\startmathalignment
-\NC a \NC = 1 \NR
-\NC b \NC = 2 \NR
-\NC f(n) \NC = n (2 - \cos n) \NR
-\stopmathalignment\stopformula
-
-如果想要證明：
-\startformula\startmathalignment[n=1]
-\NC \frac{n}{2}(2 - \cos \frac{n}{2}) < c n \NR
-\NC \frac{1 - \cos(n/2)}{2} < c \NR
-\NC c \ge 1 - \frac{\cos(n/2)}{2} \NR
-\stopmathalignment\stopformula
-由於 \m{\min \cos(n/2) = -1}，因此需要 \m{c \ge \frac{3}{2}}，但是 \m{c < 1}。
+令 $2^{k-1}< n\le 2^{k}$，則 $f(n)=2^k$，
+要想使得 $f(n)=\Omega(n^{\log_b{a+\epsilon}})$，
+需要滿足 $n^{\log_b{a+\epsilon}} < n\le f(n)$，
+即 $a+\epsilon < 0$，
+可以找到 $a>0,b>1,\epsilon>0$ 滿足此式。
 \stopANSWER
 
 \stopsection

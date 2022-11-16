@@ -2,6 +2,18 @@
   title={Proof of the master theorem},
 ]
 
+%e4.6-1
+\startEXERCISE
+證明 $\sum_{j=0}^{\lfloor \log_b n\rfloor}(\log_b n - j)^k = \Omega(\log_b^{k_1}n)$。
+\stopEXERCISE
+\startANSWER
+令 $f(n)=\sum_{j=0}^{\lfloor \log_b n\rfloor}(\log_b n - j)^k$，
+則如果 $f(n)\ge c \log_b^{k+1}n$，那麼：
+\startformula
+f(bn) = \sum_{j=0}^{\lfloor \log_b n\rfloor + 1}(\log_b n -j + 1)^k
+\stopformula
+\stopANSWER
+
 \startEXERCISE \DIFFICULT
 對 \m{b} 時正整數而非任意實數的情況，給出公式（4.27）中 \m{n_j} 的表達式，要求既簡單又準確。
 附公式（4.27）：

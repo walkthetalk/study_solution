@@ -20,8 +20,8 @@
 
 \startEXERCISE
 對於 \ALGO{BUILD-MAX-HEAP} 中第 2 行的循環控制變量 \m{i} 而言，
-爲什麼要求他從 \m{\left\lfloor A.length/2 \right\rfloor} 到 \m{1} 遞減，
-而不是從 \m{1} 到 \m{\left\lfloor A.length/2 \right\rfloor} 遞增？
+爲什麼要求他從 \m{\lfloor A.length/2 \rfloor} 到 \m{1} 遞減，
+而不是從 \m{1} 到 \m{\lfloor A.length/2 \rfloor} 遞增？
 附：
 
 \CLRSH{BUILD-MAX-HEAP(A)}
@@ -38,23 +38,23 @@ for i =  ⌊A.length/2⌋ downto 1
 \stopANSWER
 
 \startEXERCISE
-證明：對於任一含有 \m{n} 個元素的堆，最多有 \m{\left\lceil n/2^{h+1} \right\rceil} 個高度爲 \m{h} 的節點。
+證明：對於任一含有 \m{n} 個元素的堆，最多有 \m{\lceil n/2^{h+1} \rceil} 個高度爲 \m{h} 的節點。
 \stopEXERCISE
 
 \startANSWER
-首先，堆中葉子節點的個數爲 \m{\left\lceil n/2 \right\rceil} \refexercise{heap_leave}。
+首先，堆中葉子節點的個數爲 \m{\lceil n/2 \rceil} \refexercise{heap_leave}。
 下面歸納證明 \m{h}：
 
-{\EMP 初始化：} \m{h = 0} 時，葉子節點數目 \m{\left\lceil n/2 \right\rceil = \left\lceil n/2^{0+1} \right\rceil}；
+{\EMP 初始化：} \m{h = 0} 時，葉子節點數目 \m{\lceil n/2 \rceil = \left\lceil n/2^{0+1} \right\rceil}；
 
 {\EMP 保持：}假設對於 \m{h - 1} 結論成立，移除所有葉子節點得到的新堆含有
- \m{n-\left\lceil n/2 \right\rceil = \left\lfloor n/2 \right\rfloor} 個元素，
+ \m{n-\lceil n/2 \rceil = \lfloor n/2 \rfloor} 個元素，
 原堆中高度爲 \m{h} 的節點在新樹中高度爲 \m{h-1}；
 令新樹中高度爲 \m{h-1} 的節點個數爲 \m{T}，則由假設可知：
 \startformula
-T = \left\lceil \left\lfloor n/2 \right\rfloor / 2^{h-1+1} \right\rceil
-     < \left\lceil (n/2)/2^h \right\rceil
-     = \left\lceil \frac{n}{2^{h+1}} \right\rceil
+T = \lceil \lfloor n/2 \rfloor / 2^{h-1+1} \rceil
+     < \lceil (n/2)/2^h \rceil
+     = \lceil \frac{n}{2^{h+1}} \rceil
 \stopformula
 即對於 \m{h} 結論依舊成立。
 \stopANSWER

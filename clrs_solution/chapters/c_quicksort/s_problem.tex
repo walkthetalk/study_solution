@@ -257,14 +257,14 @@ E[T(n)] = \frac{2}{n}\sum_{q=2}^{n-1}E[T(q)] + \Theta(n)
 \startformula
 \sum_{k=2}^{n-1}k\lg{k} \le \frac{1}{2}n^2\lg{n} - \frac{1}{8}n^2
 \stopformula
-（\hint 以將其分成兩部分，一部分是 \m{k=2,3,\ldots,\left\lceil n/2\right\rcel-1}，
-另一部分是 \m{k=\left\lceil n/2 \right\rcel,\ldots,n-1}。）
+（\hint 以將其分成兩部分，一部分是 \m{k=2,3,\ldots,\lceil n/2\right\rcel-1}，
+另一部分是 \m{k=\lceil n/2 \right\rcel,\ldots,n-1}。）
 \stopitem
 
 \startANSWER
 \startformula\startmathalignment
 \NC \sum_{k=2}^{n-1}k\lg{k}
-   \NC=   \sum_{k=2}^{\left\lceil n/2 \right\rcel - 1}k\lg{k} + \sum_{k=\left\lceil n/2 \right\rcel}^{n - 1}k\lg{k} \NR
+   \NC=   \sum_{k=2}^{\lceil n/2 \right\rcel - 1}k\lg{k} + \sum_{k=\left\lceil n/2 \right\rcel}^{n - 1}k\lg{k} \NR
 \NC\NC\le \sum_{k=2}^{n/2}k\lg{k} + \sum_{k=n/2 + 1}^{n}k\lg{k} \NR
 \NC\NC\le \sum_{k=2}^{n/2}k\lg(n/2) + \sum_{k=n/2 + 1}^{n}k\lg{n} \NR
 \NC\NC=   \lg(n/2)\sum_{k=2}^{n/2}k\ + \lg{n}\sum_{k=n/2 + 1}^{n}k \NR
@@ -394,7 +394,7 @@ p_i = \frac{6(i-1)(n-i)}{n(n-1)(n-2)}
 \stopANSWER
 
 \startitem
-與普通實現相比，在這種實現中，選擇 \m{x=A'\left[\left\lfloor (n+1)/2 \right\rfloor\right]} （即 \m{A[1..n]} 的中位數）
+與普通實現相比，在這種實現中，選擇 \m{x=A'\left[\lfloor (n+1)/2 \rfloor\right]} （即 \m{A[1..n]} 的中位數）
 的值作爲主元的概率增加了多少？
 假設 \m{n\to\infty}，請給出這一概率的極限值。
 \stopitem

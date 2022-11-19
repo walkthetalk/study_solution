@@ -72,12 +72,12 @@ B(T) = \sum_{c\in C} f(c)d_{T} (c)
 \startEXERCISE
 假定我們有字母表 \m{C=\{0,1,\ldots,n-1\}} 上的一個最優前綴碼，
 我們希望用最少的二進制位傳輸此編碼。
-說明如何僅用 \m{2n-1+n\left\lceil \lg n\right\rceil} 位表示 \m{C} 上的任意最優前綴碼。
+說明如何僅用 \m{2n-1+n\lceil \lg n\rceil} 位表示 \m{C} 上的任意最優前綴碼。
 （\hint 通過對樹的遍歷，用 \m{2n-1} 位說明編碼樹的結構。）
 \stopEXERCISE
 
 \startANSWER
-深度優先遍歷整棵樹，每個葉子節點的值用 \m{\left\lceil \lg n\right\rceil} 位表示，
+深度優先遍歷整棵樹，每個葉子節點的值用 \m{\lceil \lg n\rceil} 位表示，
 內部節點用 1 表示，葉子節點用 0 表示，共 \m{n-1} 個內部節點， \m{n} 個葉子節點。
 \stopANSWER
 

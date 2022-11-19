@@ -23,14 +23,14 @@
 \startEXERCISE
 求下面和式的漸進上界：
 \startformula
-\sum_{k=0}^{\left\lfloor\lg n\right\rfloor}\left\lceil \frac{n}{2^k}\right\rceil
+\sum_{k=0}^{\lfloor\lg n\rfloor}\lceil \frac{n}{2^k}\rceil
 \stopformula
 \stopEXERCISE
 
 \startANSWER
 \startformula\startmathalignment
-\NC \sum_{k=0}^{\left\lfloor\lg n\right\rfloor}\left\lceil \frac{n}{2^k}\right\rceil
-    \NC \le \sum_{k=0}^{\left\lfloor\lg n\right\rfloor} \left(\frac{n}{2^k} + 1\right)\NR
+\NC \sum_{k=0}^{\lfloor\lg n\rfloor}\lceil \frac{n}{2^k}\rceil
+    \NC \le \sum_{k=0}^{\lfloor\lg n\rfloor} \left(\frac{n}{2^k} + 1\right)\NR
 \NC \NC \le \lg n + 1 + \sum_{k=0}^{\infty} \frac{n}{2^k} \NR
 \NC \NC = \lg n + 1 + n\cdot \frac{1}{1-\frac{1}{2}} \NR
 \NC \NC = \lg n + 1 + 2n \NR

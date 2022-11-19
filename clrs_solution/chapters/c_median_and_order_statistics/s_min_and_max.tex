@@ -4,7 +4,7 @@
 
 \startEXERCISE
 證明：在最壞情況下，
-找到 \m{n} 個元素中第二小元素需要 \m{n+\left\lceil\lg{n}\right\rceil-2} 次比較。
+找到 \m{n} 個元素中第二小元素需要 \m{n+\lceil\lg{n}\rceil-2} 次比較。
 （\hint 以同時找最小元素。）
 \stopEXERCISE
 
@@ -13,23 +13,23 @@
 需要跟蹤潛在的贏家所參與的每次“賽事”。
 
 通過 \m{n-1} 次比較確定最終贏家。
-而第二小元素就在比賽輸於最小元素的 \m{\left\lceil\lg{n}\right\rceil} 中——
+而第二小元素就在比賽輸於最小元素的 \m{\lceil\lg{n}\rceil} 中——
 其中每個元素都是在所參與的最後一次賽事中失利。
-因此要找到最小元素還須 \m{\left\lceil\lg{n}\right\rceil - 1} 次比較。
+因此要找到最小元素還須 \m{\lceil\lg{n}\rceil - 1} 次比較。
 \stopANSWER
 
 \startEXERCISE\DIFFICULT
 證明：在最壞情況下，同時找到 \m{n} 個元素中最大值和最小值的比較次數的下界
-是 \m{\left\lceil 3n/2 \right\rceil - 2}。
+是 \m{\lceil 3n/2 \rceil - 2}。
 （\hint 慮有多少個數有成爲最大值或最小值的潛在可能，
 然後分析一下每一次比較會如何影響這些計數。）
 \stopEXERCISE
 
 \startANSWER
 以錦標賽方式，最大元素需要 \m{n-1} 次比較，而最小元素只可能在第一輪比賽中失利的元素中產生，
-這樣的元素有 \m{\left\lceil n/2 \right\rceil} 個（考慮 \m{n} 爲奇數的情況）。
-要產生最小元素還須 \m{\left\lceil n/2 \right\rceil - 1} 次比較。
-一共需要 \m{\left\lceil 3n/2 \right\rceil - 2} 次比較。
+這樣的元素有 \m{\lceil n/2 \rceil} 個（考慮 \m{n} 爲奇數的情況）。
+要產生最小元素還須 \m{\lceil n/2 \rceil - 1} 次比較。
+一共需要 \m{\lceil 3n/2 \rceil - 2} 次比較。
 \stopANSWER
 
 \stopsection

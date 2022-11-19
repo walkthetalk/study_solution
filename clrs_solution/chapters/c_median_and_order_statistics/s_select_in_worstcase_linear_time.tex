@@ -12,7 +12,7 @@
 \startANSWER
 每組 7 個元素仍然是線性的。每次劃分時，小於或大於 \m{x} 的元素數列至少爲：
 \startformula
-4 \left(\left\lceil \frac{1}{2} \left\lceil \frac{n}{7} \right\rceil \right\rceil
+4 \left(\lceil \frac{1}{2} \left\lceil \frac{n}{7} \rceil \right\rceil
            - 2 \right) \ge \frac{2n}{7} - 8
 \stopformula
 
@@ -20,13 +20,13 @@
 \startformula
 T(n) = \startmathcases
  \NC O(1) \NC 若 \m{n < n_0} \NR
- \NC T(\left\lceil n/7 \right\rceil) + T(5n/7 + 8) + O(n) \NC 若 \m{n \ge n_0} \NR
+ \NC T(\lceil n/7 \rceil) + T(5n/7 + 8) + O(n) \NC 若 \m{n \ge n_0} \NR
 \stopmathcases
 \stopformula
 
 猜測 \m{T(n)\le cn}，令非遞迴項爲 \m{an}：
 \startformula\startmathalignment
-\NC T(n) \NC \le c\left\lceil n/7 \right\rceil + c(5n/7 + 8) + an \NR
+\NC T(n) \NC \le c\lceil n/7 \rceil + c(5n/7 + 8) + an \NR
 \NC \NC \le cn/7 + c + 5cn/7 + 8c + an \NR
 \NC \NC = 6cn/7 + 9c + an \NR
 \NC \NC = cn + (-cn/7 + 9c + an) \NR
@@ -49,18 +49,18 @@ T(n) = \startmathcases
 
 而對於 3 個一組，則大於或小於中位數的中位數的元素數目至少爲：
 \startformula
-2 \left(\left\lceil \frac{1}{2} \left\lceil \frac{n}{3} \right\rceil \right\rceil
+2 \left(\lceil \frac{1}{2} \left\lceil \frac{n}{3} \rceil \right\rceil
            - 2 \right) \ge \frac{n}{3} - 4
 \stopformula
 
 遞迴式如下：
 \startformula
-T(n) = T(\left\lceil n/3 \right\rceil) + T(2n/3 + 4) + O(n)
+T(n) = T(\lceil n/3 \rceil) + T(2n/3 + 4) + O(n)
 \stopformula
 
 用代入法證明 \m{T(n)=\omega(n)}。猜測 \m{T(n) > cn}，令非遞迴項爲 \m{an}：
 \startformula\startmathalignment
-\NC T(n) \NC > c\left\lceil n/3 \right\rceil + c(2n/3 + 2) + an \NR
+\NC T(n) \NC > c\lceil n/3 \rceil + c(2n/3 + 2) + an \NR
 \NC \NC > cn/3 + c + 2cn/3 + 2c + an \NR
 \NC \NC = cn + 3c + an \qquad c>0,a>0,n>0\NR
 \NC \NC > cn \NR
@@ -73,13 +73,13 @@ T(n) = T(\left\lceil n/3 \right\rceil) + T(2n/3 + 4) + O(n)
 % e9.3-2
 \startEXERCISE[exercise:partition_1_4]
 分析 \ALGO{SELECT}，並證明：
-如果 \m{n\ge 140}，則至少 \m{\left\lceil n/4 \right\rceil} 個元素大於中位數的中位數 \m{x}，
-至少 \m{\left\lceil n/4 \right\rceil} 個元素小於 \m{x}。
+如果 \m{n\ge 140}，則至少 \m{\lceil n/4 \rceil} 個元素大於中位數的中位數 \m{x}，
+至少 \m{\lceil n/4 \rceil} 個元素小於 \m{x}。
 \stopEXERCISE
 
 \startANSWER
 \startformula\startmathalignment[n=1]
-\NC \frac{3n}{10} - 6 \ge \left\lceil \frac{n}{4} \right\rceil \NR
+\NC \frac{3n}{10} - 6 \ge \lceil \frac{n}{4} \rceil \NR
 \NC \Downarrow \NR
 \NC \frac{3n}{10} - 6 \ge \frac{n}{4} + 1 \NR
 \NC \Downarrow \NR
@@ -137,7 +137,7 @@ T(n)=T(n/4)+T(3n/4)+O(n)
 \stopEXERCISE
 
 \startANSWER
-如果 \m{i=\left\lceil n/2\right\rceil}，則只需調用一次子過程，顯然是線性時間。
+如果 \m{i=\lceil n/2\rceil}，則只需調用一次子過程，顯然是線性時間。
 否則，只需針對所劃分成的兩部分中的一個調用子過程（視 \m{i} 的大小而定），
 因此有如下遞迴式：
 \startformula
@@ -158,14 +158,14 @@ T(n)=T(n/2)+O(n)
 \startigNum
 \item 如果 \m{k=1}，則返回空；
 \item 如果 \m{k} 是偶數，我們先找到中位數，用中位數將集合劃分成兩部分，
-然後對兩個規模爲 \m{\left\lfloor n/2 \right\rfloor} 的子問題求解，最後加上中位數即可；
-\item 如果 \m{k} 是奇數，則先找到 \m{\left\lfloor k/2\right\rfloor} 和 \m{\left\lceil k/2\right\rceil} 兩個邊界，
+然後對兩個規模爲 \m{\lfloor n/2 \rfloor} 的子問題求解，最後加上中位數即可；
+\item 如果 \m{k} 是奇數，則先找到 \m{\lfloor k/2\rfloor} 和 \m{\lceil k/2\rceil} 兩個邊界，
 然後對兩個規模均小於 n/2 的子問題求解。
 \stopigNum
 
 最壞情況的遞迴式爲：
 \startformula
-T(n,k)=2T(\left\lfloor n/2\right\rfloor,k/2)+O(n)
+T(n,k)=2T(\lfloor n/2\rfloor,k/2)+O(n)
 \stopformula
 其解爲 \m{O(n\lg{k})}。
 
@@ -200,7 +200,7 @@ T(n,k)=2T(\left\lfloor n/2\right\rfloor,k/2)+O(n)
 \item 如果 \m{n=1}，我們選擇小的那個；
 \item 否則，分別找出兩個數列的中位數；
 \item 中位數較小的那個數列留下大於中位數的元素，另一個數列留下小於其中位數的元素，
-這樣問題規模就變爲 \m{\left\lfloor n/2 \right\rfloor}；
+這樣問題規模就變爲 \m{\lfloor n/2 \rfloor}；
 \item 求兩個新數列的中位數。
 \stopigNum
 

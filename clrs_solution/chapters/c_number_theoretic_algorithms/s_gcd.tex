@@ -98,7 +98,7 @@ F_k = F_{k-1} + F_{k-2} \qquad \text{對於} k\ge 2
 \startformula
 k > \log_{\phi}b + \log_{\phi}\sqrt{5} - 1 = \log_{\phi}b + 1.67 - 1 = \log_{\phi}b + 0.67
 \stopformula
-解得 \m{k \le \left\lfloor \log_{\phi}b + \log_{\phi}\sqrt{5} - 1 + 0.5 \right\rfloor}：
+解得 \m{k \le \lfloor \log_{\phi}b + \log_{\phi}\sqrt{5} - 1 + 0.5 \rfloor}：
 
 因此， \ALGO{EUCLID(a, b)} 最多執行 \m{1 + \log_\phi b} 次遞迴調用。
 
@@ -119,8 +119,8 @@ k > \log_{\phi}b + \log_{\phi}\sqrt{5} - 1 = \log_{\phi}b + 1.67 - 1 = \log_{\ph
 如果結論對 k 成立，則：
 \startformula\startmathalignment
 \NC EXTEND-EUCLID(F_{k+2}, F_{k+1})
-    =\NC (d, -f(k) F_{k+1}, f(k) F_k - \left\lfloor\frac{F_{k+2}}{F_{k+1}}\right\rfloor (-f(k) F_{k+1})) \NR
-\NC =\NC (d, -f(k) F_{k+1}, f(k) (F_k + \left\lfloor\frac{F_{k+2}}{F_{k+1}}\right\rfloor F_{k+1})) \NR
+    =\NC (d, -f(k) F_{k+1}, f(k) F_k - \lfloor\frac{F_{k+2}}{F_{k+1}}\rfloor (-f(k) F_{k+1})) \NR
+\NC =\NC (d, -f(k) F_{k+1}, f(k) (F_k + \lfloor\frac{F_{k+2}}{F_{k+1}}\rfloor F_{k+1})) \NR
 \NC =\NC (d, -f(k) F_{k+1}, f(k) F_{k+2}) \NR
 \NC =\NC (d, f(k+1) F_{k+1}, -f(k+1) F_{k+2}) \NR
 \stopmathalignment\stopformula

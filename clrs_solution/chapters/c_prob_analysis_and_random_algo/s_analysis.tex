@@ -72,8 +72,8 @@
 \stopmathalignment\stopformula
 至少有三人生日相同的概率爲：
 \startformula\startmathalignment
-\NC \NC 1 - \sum_{i=0}^{\left\lfloor n/2\right\rfloor}\frac{m!n!}{i!(n-2i)!(m-n+i)! 2^i m^n} \NR
-\NC = \NC 1 - \frac{m!n!}{m^n}\sum_{i=0}^{\left\lfloor n/2\right\rfloor}
+\NC \NC 1 - \sum_{i=0}^{\lfloor n/2\rfloor}\frac{m!n!}{i!(n-2i)!(m-n+i)! 2^i m^n} \NR
+\NC = \NC 1 - \frac{m!n!}{m^n}\sum_{i=0}^{\lfloor n/2\rfloor}
               \frac{1}{i!(n-2i)!(m-n+i)! 2^i} \NR
 \stopmathalignment\stopformula
 請參考：\simpleurl{http://math.stackexchange.com/questions/25876/probability-of-3-people-in-a-room-of-30-having-the-same-birthday}

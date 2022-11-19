@@ -39,7 +39,7 @@ for i = 1 to n
 \startANSWER
 令 \m{n=b-a}，算法爲：
 \startigBase[n]
-\item 找到最小整數 \m{c}，使得 \m{2^c\ge n} （\m{c=\left\lceil\ln{n}\right\rceil}）；
+\item 找到最小整數 \m{c}，使得 \m{2^c\ge n} （\m{c=\lceil\ln{n}\rceil}）；
 \item 調用 \ALGO{RANDOM(0,1)} \m{c} 次，得到一個 \m{c} 比特的二進制數 \m{r}；
 \item 如果 \m{r>n}，跳轉到上一步；
 \item 否則返回 \m{a+r}。

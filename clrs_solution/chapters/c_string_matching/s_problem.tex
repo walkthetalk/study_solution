@@ -47,7 +47,7 @@ while /BTEX \m{s \le n-m} /ETEX
 		if q == m
 			print "Pattern occurs with shift" s
 	if q == m or /BTEX \m{T[s+q+1] \ne P[q+1]} /ETEX
-		/BTEX \m{s = s + \max(1,\left\lceil q/k \right\rceil)} /ETEX
+		/BTEX \m{s = s + \max(1,\lceil q/k \rceil)} /ETEX
 		q = 0
 \stopCLRS
 該算法是 Galil 和 Seiferas 提出的。

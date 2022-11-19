@@ -65,8 +65,8 @@ O(n + i\lg{i})
 \stopitem
 
 \startANSWER
-如果所有權重均爲 \m{1/n}，則小於中位數的元素權重和爲 \m{\left\lfloor \frac{n-1}{2}\right\rfloor \frac{1}{n}}，
-大於中位數的元素權重和爲 \m{\left\lceil \frac{n-1}{2}\right\rceil \frac{1}{n}}。
+如果所有權重均爲 \m{1/n}，則小於中位數的元素權重和爲 \m{\lfloor \frac{n-1}{2}\rfloor \frac{1}{n}}，
+大於中位數的元素權重和爲 \m{\lceil \frac{n-1}{2}\rceil \frac{1}{n}}。
 滿足帶權中位數的要求。
 \stopANSWER
 
@@ -135,10 +135,10 @@ O(n + i\lg{i})
 \startformula
 U_i(n)=\startmathcases
 \NC T(n) \NC 若 \m{i\ge n/2}； \NR
-\NC \left\lfloor n/2 \right\rfloor + U_i(\left\lceil n/2 \right\rceil) + T(2i) \NC 否則。 \NR
+\NC \lfloor n/2 \rfloor + U_i(\lceil n/2 \rceil) + T(2i) \NC 否則。 \NR
 \stopmathcases
 \stopformula
-（\hint 相互獨立的\m{\left\lfloor n/2\right\rfloor} 對元素比較開始，
+（\hint 相互獨立的\m{\lfloor n/2\rfloor} 對元素比較開始，
 然後在規模更小的子集上進行遞迴）
 \stopitem
 

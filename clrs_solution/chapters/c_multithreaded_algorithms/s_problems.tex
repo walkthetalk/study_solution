@@ -44,7 +44,7 @@ MAT-VEC-MAIN-LOOP(A,B,C, 1, len)
 \startCLRS
 n = A.length
 grainsize = ?		// to be determined
-r = /BTEX \m{\left\lceil n / grainsize \right\rceil} /ETEX
+r = /BTEX \m{\lceil n / grainsize \rceil} /ETEX
 for k = 0 to r-1
 	spawn /BTEX \CLRSH{ADD-SUBARRAY(A,B,C,k\cdot grainsize + 1, \min((k+1)\cdot grainsize, n))} /ETEX
 sync
@@ -270,7 +270,7 @@ return y
 if i == j
 	y[i] = x[i]
 else
-	k = /BTEX \m{\left\lfloor (i+j)/2 \right\rfloor} /ETEX
+	k = /BTEX \m{\lfloor (i+j)/2 \rfloor} /ETEX
 	spawn P-SCAN-2-AUX(x, y, i, k)
 	P-SCAN-2-AUX(x, y, k+1, j)
 	sync
@@ -313,7 +313,7 @@ return y
 if i == j
 	return x[i]
 else
-	k = /BTEX \m{\left\lfloor (i+j)/2 \right\rfloor} /ETEX
+	k = /BTEX \m{\lfloor (i+j)/2 \rfloor} /ETEX
 	t[k] = spawn P-SCAN-UP(x, t, i, k)
 	right = P-SCAN-UP(x, t, k+1, j)
 	sync
@@ -325,7 +325,7 @@ else
 if i == j
 	/BTEX \m{y[i] = v\otimes x[i]} /ETEX
 else
-	k = /BTEX \m{\left\lfloor (i+j)/2 \right\rfloor}/ETEX
+	k = /BTEX \m{\lfloor (i+j)/2 \rfloor}/ETEX
 	spawn P-SCAN-DOWN(____, x, t, y, i, k)		// fill in the blank
 	P-SCAN-DOWN(____, x, t, y, k+1, j)		// fill in the blank
 	sync

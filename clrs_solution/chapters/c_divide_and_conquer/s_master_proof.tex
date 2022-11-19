@@ -46,10 +46,52 @@
 對於 $f(n)=\Theta(n^{\log_b a}/\lg n)$，
 證明公式（4.19）的解爲 $g(n)=\Theta(n^{\log_b a}\lg\lg n)$。
 同時，如果將 $f(n)$ 作爲主遞迴 $T(n)$ 的驅動函式，
-那麼 $T(n)=\Theta(n^{\log_b a \lg\lg n})$。
+那麼 $T(n)=\Theta(n^{\log_b a}\lg\lg n)$。
+附公式（4.19）：
+\startformula
+g(n)=\sum_{j=0}^\floor{\log_b n} a^j f(n/b^j)
+\stopformula
 \stopEXERCISE
 \startANSWER
 證明如下，參見\simpleurl{https://zhuanlan.zhihu.com/p/529434777}。
+\startformula\startmathalignment
+\NC g(n) \NC = \sum_{j=0}^\floor{\log_b n} a^j f(n/b^j) \NR
+\NC \NC = \sum_{j=0}^\floor{\log_b n} a^j \Theta\left(\frac{(\frac{n}{b^j})^{\log_b a}}{\lg\frac{n}{b^j}}\right) \NR
+\NC \NC = \sum_{j=0}^\floor{\log_b n} a^j \Theta\left(\frac{n^{\log_b a}}{a^j(\lg n - j\lg b)}\right) \NR
+\NC \NC = \Theta\left(\sum_{j=0}^\floor{\log_b n} \frac{n^{\log_b a}}{\lg n - j\lg b}\right) \NR
+\NC \NC = \Theta\left(\frac{n^{\log_b a}}{\lg b}\sum_{j=0}^\floor{\log_b n} \frac{1}{\log_b n - j}\right) \NR
+\stopmathalignment\stopformula
+
+$\log_b n - 1 \le \floor{\log_b n} \le \log_b n \le \floor{\log_b n} + 1$
+\startformula\startmathalignment
+\NC \sum_{j=0}^\floor{\log_b n}\frac{1}{\log_b n - j}
+    \NC > \sum_{j=0}^\floor{\log_b n}\frac{1}{\floor{\log_b n} + 1 - j} \NR
+\NC \NC = 1 + \frac{1}{2} + \frac{1}{3} + \cdots + \frac{1}{\floor{\log_b n} + 1} \NR
+\NC \NC > \ln(\floor{\log_b n} + 1) \qquad \text{（可以用歸納法證明）}\NR
+\stopmathalignment\stopformula
+因此 $\sum_{j=0}^\floor{\log_b n}\frac{1}{\log_b n - j} = \Omega(\lg\lg n)$。
+
+又：
+\startformula\startmathalignment
+\NC \sum_{j=0}^\floor{\log_b n}\frac{1}{\log_b n - j}
+    \NC = \sum_{j=0}^{\floor{\log_b n}-1}\frac{1}{\log_b n - j} + O(1) \NR
+\NC \NC \le \sum_{j=0}^{\floor{\log_b n}-1} \frac{1}{\log_b n - j} + O(1) \NR
+\NC \NC = 1 + \frac{1}{2} + \frac{1}{3} + \cdots + \frac{1}{\floor{\log_b n}} + O(1) \NR
+\NC \NC < \ln(\floor{\log_b n}) + 1 + O(1) \NR
+\stopmathalignment\stopformula
+故 $\sum_{j=0}^\floor{\log_b n}\frac{1}{\log_b n - j} = O(\lg\lg n)$。
+
+由定理 3.1 可知： $\sum_{j=0}^\floor{\log_b n}\frac{1}{\log_b n - j} = \Theta(\lg\lg n)$。
+代入 $g(n)$ 得 $g(n)=\Theta(n^{\log_b a}\lg\lg n)$。
+
+若主遞迴式 $T(n)$ 使用 $f(n)$ 作爲驅動函式，
+則 $T(n)=aT(n/b)+\Theta(n^{\log_b a}/\lg n)$。
+由引理 4.2，解爲 $T(n)=\Theta(n^{\log_b a}) + \sum_{j=0}^\floor{\log_b n} a^j f(n/b^j)$。
+將 $g(n)$ 的解代入得：
+\startformula
+T(n)=\Theta(n^{\log_b a}) + \Theta(n^{\log_b a}\lg \lg n) = \Theta(n^{\log_b a}\lg\lg n)
+\stopformula
+問題得證。
 \stopANSWER
 
 \stopsection

@@ -3,50 +3,66 @@
 ]
 
 %p4-1
-\startPROBLEM（遞迴式例子）
-對於下列遞迴式，給出 \m{T(n)} 的漸進上界和下界。
-假定 \m{n\le 2} 時 \m{T(n)} 是常數。給出盡量緊確的界，並驗證其正確性。
+\startPROBLEM（遞迴示例）
+對於下列遞迴式，給出 $T(n)$ 的漸進上緊界和下緊界，
+並驗證其正確性。
 \startigBase[n]
-\item \m{T(n) = 2 T(n/2) + n^4}
+% a
+\item $T(n) = 2 T(n/2) + n^3$
 
 \startANSWER
-\m{\Theta(n^4)} （主定理）
+$\Theta(n^3)$ （主定理）
 \stopANSWER
 
-\item \m{T(n) = T(7n/10) + n}
+% b
+\item $T(n) = T(8n/11) + n$
 
 \startANSWER
-\m{\Theta(n)} （主定理， \m{\log_{10/7} 1 = 0}）
+$\Theta(n)$ （主定理， $\log_{11/8} 1 = 0$）
 \stopANSWER
 
-\item \m{T(n) = 16 T(n/4) + n^2}
+% c
+\item $T(n) = 16 T(n/4) + n^2$
 
 \startANSWER
-\m{\Theta(n^2\lg n)} （主定理）
+$\Theta(n^2\lg n)$ （主定理）
 \stopANSWER
 
-\item \m{T(n) = 7 T(n/3) + n^2}
+% d
+\item $T(n) = 4 T(n/2) + n^2\lg n$
 
 \startANSWER
-\m{\Theta(n^2)} （主定理）
+$\Theta(n^2\lg^2 n)$ （主定理）
 \stopANSWER
 
-\item \m{T(n) = 7 T(n/2) + n^2}
+% e
+\item $T(n) = 8 T(n/3) + n^2$
 
 \startANSWER
-\m{\Theta(n^{\log_2 7})} （主定理）
+$\Theta(n^2)$ （主定理）
 \stopANSWER
 
-\item \m{T(n) = 2 T(n/4) + n^2}
+% f
+\item $T(n) = 7 T(n/2) + n^2\lg n$
 
 \startANSWER
-\m{\Theta(\sqrt{n}\log_n)} （主定理）
+$\Theta(n^{\log_2 7})$ （主定理）
 \stopANSWER
 
-\item \m{T(n) = T(n-2) + n^2}
+% g
+\item $T(n)=2T(n/4) + \sqrt{n}$
 
 \startANSWER
-\m{T(n) = n^2 + T(n-2) = n^2 + (n-2)^2 + T(n-4) = \sum_{i=0}^{n/2}(n-2i)^2 = \Theta(n^3)}
+$\Theta(n^{1/2}\lg n)$ （主定理）
+\stopANSWER
+
+% h
+\item $T(n) = T(n-2) + n^2$
+
+\startANSWER
+$T(n) = n^2 + T(n-2)
+  = n^2 + (n-2)^2 + T(n-4)
+  = \sum_{i=0}^{n/2}(n-2i)^2 = \Theta(n^3)$
 \stopANSWER
 \stopigBase
 \stopPROBLEM
@@ -54,78 +70,166 @@
 %p4-2
 \startPROBLEM（參數傳遞代價）
 本書中自始至終假設：過程調用中的參數傳遞花費常量時間，
-即使傳遞一個 \m{N} 個元素的數列亦是如此。
+即使傳遞一個有 $N$ 個元素的數列亦是如此。
 在大多數系統中，這個假設是成立的，因爲傳遞的是數列的指標，而非數列本身。
 本題討論三種參數傳遞策略：
 \startigBase[n]
-\item 通過指標傳遞數列。時間爲 \m{\Theta(1)}。
-\item 通過復制元素傳遞數列。時間爲 \m{\Theta(N)}，其中 \m{N} 是數列的規模。
-\item 傳遞數列時，只復制過程可能存取的子區域。若子數列 \m{A[p..q]} 被傳遞，則時間爲 \m{\Theta(q-p+1)}。
-\stopigBase
-\startigBase[a]
-\item[parameter_pass_cost_item]
-考慮在有序數列中查找元素的遞迴二分查找算法（參見\refexercise{bin_search}）。
-分別給出上述三種策略下，二分查找最壞情況運行時間的遞迴式，並給出遞迴式解的好的上界。
-令 \m{N} 爲原問題的規模， \m{n} 爲子問題的規模。
-\item 對節 2.3.1 中的 MERGE-SORT 算法重做上一項。
+\item 通過指標傳遞數列。時間爲 $\Theta(1)$。
+\item 通過復制元素傳遞數列。時間爲 $\Theta(N)$，其中 $N$ 是數列的規模。
+\item 傳遞數列時，只復制過程可能存取的子區域。若子數列包含 $n$ 個元素，則時間爲 $\Theta(n)$。
 \stopigBase
 
+分別給出這三種策略下，
+下列三個算法最壞情況下的運行時間遞迴式 $T_{a1}(N,n), T_{a2}(N,n),\cdots,T_{c3}(N,n)$，
+並求解：
+\startigBase[a]
+% a
+\startitem[parameter_pass_cost_item]
+在有序數列中查找元素的遞迴二分查找算法（參見\refexercise{bin_search}）。
+\stopitem
 \startANSWER
-二分查找：
 \startigBase[n]
-\item \m{T(n) = T(n/2) + c = \Theta(\lg n)} （主定理）
-\item \m{T(n) = T(n/2) + cN = T(n/4) + 2cN = \sum_{i=0}^{\lg n - 1}(2^i cN/2^i) = cN\lg n = \Theta(n\lg n)}
-\item \m{T(n) = T(n/2) + cn = \Theta(n)} （主定理）
-\stopigBase
-歸並排序：
-\startigBase[n]
-\item \m{T(n) = 2T(n/2) + cn = \Theta(n\lg{n})} （主定理）
-\item
-\startformula\startmathalignment
-\NC T(n) \NC= 2T(n/2) + cn + 2N = 4N + cn + 2c(n/2) + 4T(n/4) \NR
-\NC      \NC= 8N + 2cn + 4c(n/4) + 8T(n/8) \NR
-\NC      \NC= \sum_{i=0}^{\lg{n}-1}(cn + 2^iN) \NR
-\NC      \NC= \sum_{i=0}^{\lg{n}-1}cn + N\sum_{i=0}^{\lg{n}-1}2^i \NR
-\NC      \NC= cn\lg{n} + N\frac{2^{\lg{n}} - 1}{2-1} \NR
-\NC      \NC= cn\lg{n} + nN - N \NR
-\NC      \NC= \Theta(nN) \NR
-\NC      \NC= \Theta(n^2) \NR
-\stopmathalignment\stopformula
-\item \m{T(n) = 2T(n/2) + cn + 2n/2 = 2T(n/2) + (c+1)n = \Theta(n\lg{n})} （主定理）
+\item $T(N,n) = T(N,n/2) + c = \Theta(\lg n)$
+\item $T(N,n) = T(N,n/2) + cN = T(N,n/4) + 2cN = \sum_{i=0}^{\lg n - 1}(2^i cN/2^i) = cN\lg n = \Theta(N\lg n)$
+\item $T(N,n) = T(N,n/2) + cn = \Theta(n)$
 \stopigBase
 \stopANSWER
+
+% b
+\startitem
+節 2.3.1 中的 \ALGO{MERGE-SORT} 算法。
+\stopitem
+\startANSWER
+\startigBase[n]
+\item $T(N,n) = 2T(N,n/2) + cn = \Theta(n\lg{n})$
+\item
+\startformula\startmathalignment
+\NC T(N,n) \NC= 2T(N,n/2) + cn + 2N \NR
+\NC      \NC= 2(2T(N,n/4) + cn/2 + 2N) + cn + 2N \NR
+\NC      \NC= 4T(N,n/4) + 2cn + (2+4)N \NR
+\NC      \NC= 4(2T(N,n/8) + c(n/4) + 2N) + 2cn + (2+4)N \NR
+\NC      \NC= 8T(N,n/8) + 3cn + (2+4+8)N \NR
+\NC      \NC= \cdots \NR
+\NC      \NC= nT(1) + cn\lg n + N(n-2) \NR
+\NC      \NC=\Theta(Nn) \NR
+\stopmathalignment\stopformula
+\item $T(N,n) = 2T(N,n/2) + cn + n = 2T(N,n/2) + (c+1)n = \Theta(n\lg{n})$
+\stopigBase
+\stopANSWER
+
+% c
+\startitem
+節 4.1 中的 \ALGO{MATRIX-MULTIPLY-RECURSIVE}。即公式（4.9）：
+\startformula
+T(n)=8T(n/2)+\Theta(1)
+\stopformula
+\stopitem
+\startANSWER
+\startigBase[n]
+\item $T(N,n) = 8T(N,n/2) + \Theta(1) = \Theta(n^3)$
+\item $T(N,n) = 8T(N,n/2) + \Theta(N^2) = \Theta(n N^2)$
+\item $T(N,n) = 8T(N,n/2) + \Theta(n^2) = \Theta(n^3)$
+\stopigBase
+\stopANSWER
+\stopigBase
 \stopPROBLEM
 
 %p4-3
+\startPROBLEM（通過更改變量來求解遞迴式）
+有時，可以通過代數變換將一些陌生的遞迴式變成常見的形式。
+下面我們就用這種方法來求解遞迴式：
+\startformula
+T(n)=2T(\sqrt{n})+\Theta(\lg n)	\hfill (4.25)
+\stopformula
+\startigBase[a]
+% a
+\startitem
+令 $m=\lg n$， $S(m)=T(2^m)$。
+用 $m$ 和 $S(m)$ 重寫遞迴式（4.25）。
+\stopitem
+\startANSWER
+$S(m)=2S(m/2)+\Theta(m)$
+\stopANSWER
+
+% b
+\startitem
+求解 $S(m)$。
+\stopitem
+\startANSWER
+$S(m)=\Theta(m\lg m)$。
+\stopANSWER
+
+% c
+\startitem
+利用 $S(m)$ 的解證明 $T(n)=\Theta(\lg n \lg\lg n)$。
+\stopitem
+\startANSWER
+$T(n)=S(m)=\Theta(m\lg m)=\Theta(\lg n\lg\lg n)$
+\stopANSWER
+
+% d
+\startitem
+畫出（4.25）的遞迴樹，並解釋爲什麼 $T(n)=\lg n\lg\lg n$。
+\stopitem
+\startANSWER
+遞迴數的每一層都是 $\lg n$，一共 $\lg\lg n$ 層。
+\stopANSWER
+
+利用此方法求解下列遞迴式：
+% e
+\startitem
+$T(n)=2T(\sqrt{n}) + \Theta(1)$
+\stopitem
+\startANSWER
+$T(n)=\Theta(\lg\lg n)$
+\stopANSWER
+
+% f
+\startitem
+$T(n)=3T(\sqrt[3]{n}) + \Theta(n)$
+\stopitem
+\startANSWER
+令 $m=\log_3 n$， $S(m)=T(3^m)$：
+\startformula
+S(m)=T(3^m)=3S(m/3) + \Theta(3^m)
+\stopformula
+$T(n)=\Theta(n)$
+\stopANSWER
+\stopigBase
+\stopPROBLEM
+
+%p4-4
 \startPROBLEM（更多遞迴式例子）
-對於下列遞迴式，給出 \m{T(n)} 的漸進上界和下界。
-假定對足夠小的 \m{n}， \m{T(n)} 是常數。給出盡量緊確的界，並驗證其正確性。
-\startigBase[n]
-\item \m{T(n) = 4T(n/3) + n\lg{n}}
+對於下列遞迴式，給出 $T(n)$ 的漸進上緊界和下緊界，
+並驗證其正確性。
+\startigBase[a]
+\item $T(n) = 4T(n/3) + n\lg{n}$
 
 \startANSWER
-\m{\Theta(n^{\log_3 4})} （主定理）
+$\Theta(n^{\log_3 4})$
 \stopANSWER
 
-\item \m{T(n) = 3T(n/3) + n/\lg{n}}
+\item $T(n) = 3T(n/3) + n/\lg{n}$
 
 \startANSWER
-\m{\Theta(n \lg \lg n)} （參見\refitem{Tnlgn}）
+$\Theta(n \lg \lg n)$ （參見\refitem{Tnlgn}）
 \stopANSWER
 
-\item \m{T(n) = 4T(n/2) + n^2\sqrt{n}}
+\item $T(n) = 8T(n/2) + n^3\sqrt{n}$
 
 \startANSWER
-\m{\Theta(n^2\sqrt{n}) = \Theta(n^{2.5})} （主定理 \m{\log_2{4} = 2 < 2.5}）
+$\Theta(n^2\sqrt{n}) = \Theta(n^{2.5})$ \hfill（主定理 \m{\log_2{4} = 2 < 2.5}）
 \stopANSWER
 
-\item \m{T(n) = 3T(n/3 - 2) + n/2}
+% d
+\item $T(n) = 2T(n/2 - 2) + n/2$
 
 \startANSWER
-可以忽略 \m{-2}，用主定理可得 \m{\Theta(n\lg{n})}。
+可以忽略 $-2$，用主定理可得 $\Theta(n\lg{n})$。
 \stopANSWER
 
-\item[item:Tnlgn] \m{T(n) = 2T(n/2) + n/\lg{n}}
+% e
+\item[item:Tnlgn] $T(n) = 2T(n/2) + n/\lg{n}$
 
 \startANSWER
 \startformula\startmathalignment
@@ -138,17 +242,19 @@
 \stopmathalignment\stopformula
 \stopANSWER
 
-\item \m{T(n) = T(n/2) + T(n/4) + T(n/8) + n}
+% f
+\item $T(n) = T(n/2) + T(n/4) + T(n/8) + n$
 
 \startANSWER
-猜測 \m{\Theta(n)}：
+猜測 $T(n)=\Theta(n)$：
 \startformula\startmathalignment
 \NC T(n) \NC = cn/2 + cn/4 + cn/8 + n \le (7/8)cn + n \le cn = O(n) \quad (c \ge 8) \NR
 \NC T(n) \NC = cn/2 + cn/4 + cn/8 + n \ge (7/8)cn + n \ge cn = \Omega(n) \quad (c \le 8) \NR
 \stopmathalignment\stopformula
 \stopANSWER
 
-\item \m{T(n) = T(n - 1) + 1/n}
+% g
+\item $T(n) = T(n - 1) + 1/n$
 
 \startANSWER
 \startformula\startmathalignment
@@ -161,7 +267,8 @@
 \stopmathalignment\stopformula
 \stopANSWER
 
-\item \m{T(n) = T(n - 1) + \lg{n}}
+% h
+\item $T(n) = T(n - 1) + \lg{n}$
 
 \startANSWER
 \startformula\startmathalignment
@@ -169,51 +276,52 @@
 \NC      \NC= \lg{n} + \lg{n-1} + T(n-2) \NR
 \NC      \NC= \sum_{i=0}^{n-1}\lg(n - i) \NR
 \NC      \NC= \sum_{i=1}^{n}\lg{i} \NR
-\NC      \NC= \lg(n!) \le \lg{n^n} \NR
-\NC      \NC= n\lg{n} \NR
-\NC      \NC= \Theta(n\lg{n}) \NR
+\NC      \NC= \lg(n!) \NR
+\NC      \NC= \Theta(n\lg{n}) \qquad \text{$n^{n/2}\le n! \le n^n$} \NR
 \stopmathalignment\stopformula
 \stopANSWER
 
-\item \m{T(n) = T(n - 2) + 1/\lg{n}}
+% i
+\item $T(n) = T(n - 2) + 1/\lg n$
 
 \startANSWER
 \startformula\startmathalignment
-\NC T(n) \NC= \frac{1}{\lg{n}} + \frac{1}{\lg{n-2}} + \ldots \NR
+\NC T(n) \NC= \frac{1}{\lg{n}} + \frac{1}{\lg(n-2)} + \cdots + \frac{1}{\lg 2} + c\NR
 \NC      \NC= \sum_{i=1}^{n/2}\frac{1}{\lg(2i)} \NR
-\NC      \NC= \sum_{i=1}^{\infty}\frac{1}{\lg{i}} \NR
 \NC      \NC= \Theta(\lg\lg{n}) \NR
 \stopmathalignment\stopformula
 \stopANSWER
 
-\item \m{T(n) = \sqrt{n}T(\sqrt{n}) + n}
+% j
+\item $T(n) = \sqrt{n}T(\sqrt{n}) + n$
 
 \startANSWER
-猜測 \m{T(n) \le cn\lg{n}\lg{n}}：
+猜測 $T(n)=\Theta(n\lg\lg n)$，
+即 $c_1 n\lg\lg n\le T(n) \le c_2 n\lg\lg{n}$，
+其中 $c_1>0,c_2>0$：
 \startformula\startmathalignment
-\NC T(n) \NC\le \sqrt{n}c\sqrt{n}\lg\lg\sqrt{n} + n \NR
+\NC T(n) \NC= \sqrt{n}c\sqrt{n}\lg\lg\sqrt{n} + n \NR
 \NC      \NC= cn\lg\lg\sqrt{n} + n \NR
 \NC      \NC= cn\lg\frac{\lg{n}}{2} + n \NR
 \NC      \NC= cn\lg\lg{n} - cn\lg{2} + n \NR
-\NC      \NC= cn\lg\lg{n} + (1 - c)n \quad (c > 1) \NR
-\NC      \NC\le cn\lg\lg{n} \NR
-\NC      \NC= \Theta(n\lg\lg{n}) \NR
+\NC      \NC= cn\lg\lg{n} + (1 - c)n \NR
 \stopmathalignment\stopformula
+因此 $c_1<1,c_2>1$ 時，有 $T(n)=\Theta(n\lg\lg n)$。
 \stopANSWER
 
 \stopigBase
 \stopPROBLEM
 
-%p4-4
+%p4-5
 \startPROBLEM[problem:generating_function] （Fibonacci 數）
 本題討論遞迴式（3.22）所定義的 Fibonacci 數的性質。
 我們將使用生成函數技術來求解 Fibonacci 遞迴式。
-{\EMP 生成函數 generating function}（又稱{\EMP 形式冪級數 formal power series}） \m{{\cal F}} 定義爲：
+{\EMP 生成函數 generating function}（又稱{\EMP 形式冪級數 formal power series}） ${\cal F}$ 定義爲：
 \startformula\startmathalignment
 \NC {\cal F}(z) \NC= \sum_{i=0}^{\infty}F_iz^i \NR
-\NC                \NC= 0 + z + z^2 + 2z^3 + 3z^4 + 5z^5 + 8z^6 + 13z^7 + 21z^8 + \ldots \NR
+\NC                \NC= 0 + z + z^2 + 2z^3 + 3z^4 + 5z^5 + 8z^6 + 13z^7 + 21z^8 + \cdots \NR
 \stopmathalignment\stopformula
-其中 \m{F_i} 是第 \m{i} 個 Fibonacci 數。
+其中 $F_i$ 是第 $i$ 個 Fibonacci 數。
 
 附遞迴式（3.22）：
 \startformula\startmathalignment
@@ -223,9 +331,10 @@
 \stopmathalignment\stopformula
 
 \startigBase[a]
-\item 證明： \m{{\cal F}(z) = z + z{\cal F}(z) + z^2{\cal F}(z)}。
+\item 證明： ${\cal F}(z) = z + z{\cal F}(z) + z^2{\cal F}(z)$。
 
 \startANSWER
+% a
 \startformula\startmathalignment
 \NC  \NC z + z{\cal F}(z) + z^2{\cal F}(Z) \NR
 \NC =\NC z + z\sum_{i=0}^{\infty}F_iz^i + z^2\sum_{i=0}^{\infty}F_iz^i \NR
@@ -236,48 +345,65 @@
 \stopmathalignment\stopformula
 \stopANSWER
 
+% b
 \startitem 證明：\startformula\startmathalignment
 \NC {\cal F}(z) \NC= \frac{z}{1 - z - z^2} \NR
 \NC                \NC= \frac{z}{(1 - \phi z)(1 - \hat\phi z)} \NR
 \NC                \NC= \frac{1}{\sqrt5}\Big(\frac{1}{1 - \phi z} - \frac{1}{1 - \hat{\phi} z}\Big) \NR
 \stopmathalignment\stopformula
 
-其中\startformula\startmathalignment
+其中 $\phi$ 是黃金比例， $\hat{\phi}$ 是其共軛：
+\startformula\startmathalignment
 \NC     \phi \NC= \frac{1 + \sqrt5}{2} = 1.61803\ldots \NR
 \NC \hat\phi \NC= \frac{1 - \sqrt5}{2} = -0.61803\ldots \NR
 \stopmathalignment\stopformula
 \stopitem
 
 \startANSWER
-只需注意到 \m{\phi - \hat\phi = \sqrt5}， \m{\phi + \hat\phi = 1}， \m{\phi\hat\phi = -1}：
+只需注意到 $\phi - \hat\phi = \sqrt5$， $\phi + \hat\phi = 1$， $\phi\hat\phi = -1$：
 \startformula\startmathalignment
 \NC  \NC {\cal F}(z) \NR
 \NC =\NC \frac{{\cal F}(z)(1 - z - z^2)}{1 - z - z^2} \NR
 \NC =\NC \frac{{\cal F}(z) - z{\cal F}(z) - z^2{\cal F}(z) - z + z}{1 - z - z^2} \NR
 \NC =\NC \frac{{\cal F}(z) - {\cal F}(z) + z}{1 - z - z^2} \NR
-\NC =\NC \frac{z}{1 - z - z^2} \NR
+\NC =\NC \frac{z}{1 - z - z^2} \hfill (1)\NR
 \NC =\NC \frac{z}{1 - (\phi + \hat\phi)z + \phi\hat\phi z^2} \NR
-\NC =\NC \frac{z}{(1 - \phi z)(1 - \hat\phi z)} \NR
+\NC =\NC \frac{z}{(1 - \phi z)(1 - \hat\phi z)} \hfill (2)\NR
 \NC =\NC \frac{\sqrt5 z}{\sqrt5 (1 - \phi z)(1 - \hat\phi z)} \NR
 \NC =\NC \frac{(\phi - \hat\phi)z + 1 - 1}{\sqrt5 (1 - \phi z)(1 - \hat\phi z)} \NR
 \NC =\NC \frac{(1 - \hat\phi z) - (1 - \phi z)}{\sqrt5 (1 - \phi z)(1 - \hat\phi z)} \NR
-\NC =\NC \frac{1}{\sqrt5}\Big(\frac{1}{1 - \phi z} - \frac{1}{1 - \hat\phi z}\Big) \NR
+\NC =\NC \frac{1}{\sqrt5}\Big(\frac{1}{1 - \phi z} - \frac{1}{1 - \hat\phi z}\Big) \hfill (3)\NR
 \stopmathalignment\stopformula
 \stopANSWER
 
-\item 證明： \m{{\cal F}(z) = \sum_{i=0}^{\infty}\frac{1}{\sqrt5}(\phi^i - \hat{\phi}^i)z^i}。
+\startitem
+證明：
+\startformula
+{\cal F}(z) = \sum_{i=0}^{\infty}\frac{1}{\sqrt5}(\phi^i - \hat{\phi}^i)z^i
+\stopformula
+
+可以直接使用公式（A.7）（不必證明），其生成函數版爲 $\sum_{k=0}^{\infty}x^k=1/(1-x)$。
+由於此公式包含一個生成函數， $x$ 是形式變量，而不是一個具體值，
+所以你無需擔心是否收斂，
+同樣也不必擔心公式（A.7）中的限制條件 $\abs{x}<1$，
+這兩項在此都沒意義。
+\stopitem
 
 \startANSWER
-如果 \m{|x|<1}，則 \m{\frac{1}{1 - x} = \sum_{k=0}^{\infty}x^k}。因此：
+如果 $\abs{x}<1$，則 $\frac{1}{1 - x} = \sum_{k=0}^{\infty}x^k$。因此：
 \startformula\startmathalignment
-\NC {\cal F}(n) \NC= \frac{1}{\sqrt5}\Big(\frac{1}{1 - \phi z} - \frac{1}{1 - \hat\phi z}\Big) \NR
-\NC                \NC= \frac{1}{\sqrt5}\Big(\sum_{i=0}^{\infty}\phi^i z^i - \sum_{i=0}^{\infty}\hat{\phi}^i z^i\Big) \NR
-\NC                \NC= \sum_{i=0}^{\infty}\frac{1}{\sqrt5}(\phi^i - \hat{\phi}^i) z^i\NR
+\NC {\cal F}(z)
+    \NC= \frac{1}{\sqrt5}\Big(\frac{1}{1 - \phi z} - \frac{1}{1 - \hat\phi z}\Big) \NR
+\NC \NC= \frac{1}{\sqrt5}\Big(\sum_{i=0}^{\infty}\phi^i z^i - \sum_{i=0}^{\infty}\hat{\phi}^i z^i\Big) \NR
+\NC \NC= \sum_{i=0}^{\infty}\frac{1}{\sqrt5}(\phi^i - \hat{\phi}^i) z^i\NR
 \stopmathalignment\stopformula
 \stopANSWER
 
-\item 利用上一項的結果證明：對 \m{i>0}， \m{F_i = \phi^i / \sqrt5}，結果舍入到最近整數。
-（\hint \m{|\hat\phi|<1}）
+% d
+\startitem 利用上一項的結果證明：
+對於 $i>0$， $F_i = \phi^i / \sqrt5$，結果舍入到最近整數。
+（\hint $\abs{\hat\phi}<1$）
+\stopitem
 
 \startANSWER
 \startformula
@@ -293,15 +419,34 @@ F_i = \frac{\phi^i - \hat{\phi}^i}{\sqrt5}  = \frac{\phi^i}{\sqrt5} - \frac{\hat
 對於 \m{i > 2}， \m{|{\hat\phi}^i| < 0.5}。
 \stopANSWER
 
+% e
+\startitem
+證明：對於 $i\ge 0$，有 $F_{i+2}\ge \phi^i$。
+\stopitem
+
+\startANSWER
+用歸納法，如果對於 $F_i,F_{i+1}$ 均成立，則：
+\startformula\startmathalignment
+\NC F_{i+2}
+    \NC = F_i + F_{i+1} \NR
+\NC \NC \ge \phi^{i-2} + \phi^{i-1} \NR
+\NC \NC = \phi^{i-2} (1+\phi) \NR
+\stopmathalignment\stopformula
+即證明 $1+\phi\ge \phi^2$ 即可，顯然成立。
+\stopANSWER
+
 \stopigBase
 \stopPROBLEM
 
-%p4-5
+%p4-6
 \startPROBLEM（芯片檢測）
-Diogenes教授有 \m{n} 片可能完全一樣的集成電路芯片，原理上可以用來相互檢測。
-教授的測試夾具同時只能容納兩塊芯片。當家具裝載上時，每塊芯片都檢測兩一塊，並報告它是好是壞。
-一塊好的芯片總能準確報告另一塊芯片的好壞，但教授不能信任壞芯片報告的結果。
-因此， 4 種可能的檢測結果如下：
+Diogenes教授有 $n$ 片應該完全一樣的集成電路芯片，原理上可以用來相互檢測。
+教授的測試夾具同時只能容納兩塊芯片。
+當夾具裝載上時，每塊芯片都會檢測另一塊，並報告他是好是壞。
+一塊好的芯片總能準確報告另一塊芯片的好壞，
+但壞芯片報告的結果不可信。
+因此，可能會產生 4 種檢測結果：
+
 \bTABLE[align=center]
 \bTABLEhead\bTR
 	\bTH 芯片 A 報告 \eTH
@@ -326,18 +471,30 @@ Diogenes教授有 \m{n} 片可能完全一樣的集成電路芯片，原理上�
 	\bTD 至少一塊是壞的 \eTD
 \eTR\eTABLEbody
 \eTABLE
+
 \startigBase[a]
-\item 證明：如果超過 \m{n/2} 塊芯片是壞的，使用任何基於這種結對檢測的策略都不能確定哪些芯片是好的。
+% a
+\item 證明：如果超過 $n/2$ 塊芯片是壞的，
+按這種結對檢測方法，任何策略都不能確定哪些芯片是好的。
 假定壞芯片可以合謀欺騙教授。
 
 \startANSWER
-假定有 \m{g < n/2} 塊好芯片。其餘同樣數量的壞芯片可以表現出與好芯片類似的行爲。
-也就是說，他們可以相互識別爲好芯片，並將其餘芯片識別爲壞的。
+假定有 $g < n/2$ 塊好芯片。
+而其餘同樣數量的壞芯片可以表現出與好芯片類似的行爲。
+也就是說，這些壞芯片可以相互識別爲好芯片，並將其餘芯片識別爲壞的。
 由於這兩組芯片表現出來的行爲一樣，無從區分，也就無法識別哪塊是好芯片。
 \stopANSWER
 
-\item 考慮從 \m{n} 塊芯片中尋找一塊好芯片的問題，假定超過 \m{n/2} 塊芯片是好的。
-證明：進行 \m{\lfloor n/2 \rfloor} 次結對檢測足以將問題規模減半。
+現在設計算法來識別芯片的好壞，
+假定好芯片多於 $n/2$ 塊。
+首先，要確定如何識別好芯片。
+
+% b
+\item 證明:
+$\floor{n/2}$ 次結對測試足以將問題規模縮減一半。
+即如何利用 $\floor{n/2}$ 次結對檢測獲得一個集合，
+此集合最多有 $\ceil{n/2}$ 塊芯片，
+而且一多半都是好的。
 
 \startANSWER
 將芯片分成兩組進行比較。如果結果是第一種（都是好的或都是壞的）我們可以取其一，否則兩塊都棄用。
@@ -346,27 +503,41 @@ Diogenes教授有 \m{n} 片可能完全一樣的集成電路芯片，原理上�
 現在我們最多有 \m{n/2} 塊芯片，其中至少一半是好的。
 \stopANSWER
 
-\item 假定超過 \m{n/2} 塊芯片是好的，證明：可以用 \m{\Theta(n)} 次結對檢測找到好的芯片。
-給出描述檢測次數的遞迴式，並求解。
+% c
+\item 利用上一項的結果，如何識別好芯片？
+給出遞迴式，用來表示結對檢測的次數，並求解。
 
 \startANSWER
-遞迴式爲 \m{T(n) = T(n/2) + n/2}。
-由主定理可知其解爲 \m{\Theta(n)}。
-找到一個好的後，我們可以用他與其他芯片進行結對檢測，即進行 \m{\Theta(n)} 次運算。
+遞迴式爲 $T(n) = T(n/2) + n/2$。
+由主定理可知其解爲 $\Theta(n)$。
+找到一個好的後，我們可以用他與其他芯片進行結對檢測，即進行 $\Theta(n)$ 次運算。
+\stopANSWER
+
+現在考慮一下如何識別好芯片。
+
+% d
+\startitem
+如果可以再進行 $\Theta(n)$ 次結對檢測，如何將所有好芯片都識別出來？
+\stopitem
+
+\startANSWER
+找到一個好芯片後，用此芯片與其他所有芯片進行結對檢測，
+即用這個好芯片去檢測其他所有芯片，最多還需 $n-1$ 次檢測，
+就可以將所有好芯片都識別出來。
 \stopANSWER
 
 \stopigBase
 \stopPROBLEM
 
-%p4-6
+%p4-7
 \startPROBLEM（Monge 陣列）
-對一個 \m{m\times n} 的實數陣列 \m{A}，
-若對所有滿足 \m{1\le i < k \le m} 和 \m{1\le j < l \le n} 的 \m{i}、 \m{j}、 \m{k} 和 \m{l} 有：
+對一個 $m\times n$ 的實數陣列 $A$，
+如果 $i,j,k,l$ 只要滿足 $1\le i < k \le m$ 和 $1\le j < l \le n$，下式就成立：
 \startformula
 A[i, j] + A[k, l] \le A[i, l] + A[k, j]
 \stopformula
-則稱 \m{A} 爲 {\EMP Monge 陣列}。
-還句話說，在 Monge 陣列中任選兩行和兩列，對於交叉點上的 4 個元素，
+那麼稱 $A$ 爲 {\EMP Monge 陣列}。
+換句話說，在 Monge 陣列中任選兩行和兩列，對於交叉點上的 4 個元素，
 左上角和右下角兩個元素之和總是小於等於左下角和右上角元素之和。
 例如，下面就是一個 Monge 陣列：
 \startformula\startmatrix
@@ -378,8 +549,11 @@ A[i, j] + A[k, l] \le A[i, l] + A[k, j]
 \NC 36 \NC 33 \NC 19 \NC 21 \NC  6 \NR
 \NC 75 \NC 66 \NC 51 \NC 53 \NC 34 \NR
 \stopmatrix\stopformula
+
 \startigBase[a]
-\startitem 證明：若一個陣列是 Monge 陣列，當且儘當對所有 \m{i=1,2,\ldots,m-1} 和 {j = 1,2,\ldots,n-1} 都有
+% a
+\startitem 證明：若一個陣列是 Monge 陣列，
+當且儘當對所有 $i=1,2,\ldots,m-1$ 和 $j = 1,2,\ldots,n-1$ 都有
 \startformula
 A[i,j] + A[i+1,j+1] \le A[i,j+1] + A[i+1,j]
 \stopformula
@@ -397,7 +571,7 @@ A[i,j] + A[i+1,j+1] \le A[i,j+1] + A[i+1,j]
 其中 \m{i<k}。
 
 第一步， \m{k=i+1}，由已知條件顯然成立。
-歸納時，我們假設對於 \m{k=i+n} 成立，我們需要證明對於 \m{k+1=i+n+1} 仍然成立。
+歸納時，我們假設對於 $k$ 成立，我們需要證明對於 $k+1$ 仍然成立。
 \startformula\startmathalignment[n=1]
 \NC A[i, j] + A[k, j+1] \le A[i, j+1] + A[k, j] \quad (assumption) \NR
 \NC A[k, j] + A[k+1, j+1] \le A[k, j+1] + A[k+1, j] \quad (given) \NR
@@ -406,10 +580,16 @@ A[i,j] + A[i+1,j+1] \le A[i,j+1] + A[i+1,j]
 \NC \Downarrow \NR
 \NC A[i, j] + A[k+1, j+1] \le A[i, j+1] + A[k+1, j] \NR
 \stopmathalignment\stopformula
+
+類似，用歸納法可以證明如果對於 $l$ 成立，那麼對於 $l+1$ 也成立。
+
+綜上，“當”的部分得證。
 \stopANSWER
 
+% b
 \startitem
-如下陣列並不是 Monge 陣列，改變其中一個元素，使其成爲 Monge 陣列。（\hint 用上一項的結果）
+如下陣列並不是 Monge 陣列，改變其中一個元素，使其成爲 Monge 陣列。
+（\hint 用上一項的結果）
 \startformula\startmatrix
 \NC 37 \NC 23 \NC 22 \NC 32 \NR
 \NC 21 \NC  6 \NC  7 \NC 10 \NR
@@ -420,7 +600,6 @@ A[i,j] + A[i+1,j+1] \le A[i,j+1] + A[i+1,j]
 \stopitem
 
 \startANSWER
-
 \startformula\startmatrix
 \NC 37 \NC 23 \NC \bf 24 \NC 32 \NR
 \NC 21 \NC  6 \NC  7 \NC 10 \NR
@@ -430,15 +609,16 @@ A[i,j] + A[i+1,j+1] \le A[i,j+1] + A[i+1,j]
 \stopmatrix\stopformula
 \stopANSWER
 
-\item 令 \m{f(i)} 表示第 \m{i} 行中最左最小元素的列下標。
-證明：對任意 \m{m\times n} 的 Monge 陣列，
+% c
+\item 令 $f(i)$ 表示第 $i$ 行中最左最小元素的列下標。
+證明：對任意 $m\times n$ 的 Monge 陣列，
 \startformula
-f(1)\le f(2)\le\ldots\le f(m)
+f(1)\le f(2)\le\cdots\le f(m)
 \stopformula
 
 \startANSWER
-令 \m{i} 和 \m{j} 分別爲行 \m{a} 和 \m{b} 中的最左最小元素的列下標，其中 \m{a < b}。
-假設 \m{i>j}，則：
+令 $i$ 和 $j$ 分別爲行 $a$ 和 $b$ 中的最左最小元素的列下標，其中 $a < b$。
+假設 $i>j$，則：
 \startformula
 A[j, a] + A[i, b] \le A[i, a] + A[j, b]
 \stopformula
@@ -461,27 +641,28 @@ A[j, a] + A[i, b] \le A[i, a] + A[j, b]
 \startformula
 a < b \Rightarrow f(a) \le f(b)
 \stopformula
-即 \m{f(1)\le f(2)\le\ldots\le f(m)}。
-
+即 \m{f(1)\le f(2)\le\cdots\le f(m)}。
 \stopANSWER
 
+% d
 \startitem
-下面所描述的分治算法可用於找出 \m{m\times n} Monge 陣列 \m{A} 中每行的最左最小元素：
+下面的分治算法可用於找出 $m\times n$ Monge 陣列 $A$ 中每行的最左最小元素：
 
-提取 \m{A} 的偶數行構造其子矩陣 \m{A'}。
-遞迴確定 \m{A'} 每行的最左最小元素。
-然後找出 \m{A} 的奇數行最左最小元素。
+提取 $A$ 的偶數行構造其子矩陣 $A'$。
+遞迴確定 $A'$ 每行的最左最小元素。
+然後找出 $A$ 的奇數行最左最小元素。
 
-如何在 \m{O(m+n)} 時間內找出 \m{A} 的奇數行最左最小元素？
+如何在 $O(m+n)$ 時間內找出 $A$ 的奇數行最左最小元素？
 （假定已知偶數行的最左最小元素）
 \stopitem
 
 \startANSWER
-如果 \m{\mu_i} 是第 \m{i} 行最左最小元素的列坐標，由上一項可知 \m{\mu_{i-1} \le \mu_i \le \mu_{i+1}}。
+如果 $\mu_i$ 是第 $i$ 行最左最小元素的列坐標，
+由上一項可知 $\mu_{i-1} \le \mu_i \le \mu_{i+1}$。
 
-對於 \m{i = 2k+1}，其中 \m{k\ge 0}，
-我們只需要比較此行中列坐標從 \m{\mu_{i-1}} 到 \m{\mu_{i+1}} 中的這些元素，
-最多 \m{\mu_{i+1}-\mu_{i-1} + 1} 步就可以找出 \m{\mu_i}。
+對於 $i = 2k+1$，其中 $k\ge 0$，
+我們只需要比較此行中列坐標從 $\mu_{i-1}$ 到 $\mu_{i+1}$ 中的這些元素，
+最多 $\mu_{i+1}-\mu_{i-1} + 1$ 步就可以找出 $\mu_i$。
 \startformula\startmathalignment
 \NC T(m, n) \NC= \sum_{i=0}^{m/2-1}\Big(\mu_{2i + 2} - \mu_{2i} + 1\Big) \NR
 \NC \NC= \sum_{i=0}^{m/2-1}\mu_{2i+2} - \sum_{i=0}^{m/2-1}\mu_{2i} + m/2 \NR
@@ -492,18 +673,20 @@ a < b \Rightarrow f(a) \le f(b)
 \stopmathalignment\stopformula
 \stopANSWER
 
-\item 給出上一項中所述算法的運行時間的遞迴式。證明其解爲 \m{O(m+n\log{m})}。
+% e
+\item 給出上一項中所述算法運行時間的遞迴式。
+並證明其解爲 $O(m+n\log{m})$。
 
 \startANSWER
-“分”所用時間爲 \m{O(1)}，“治”所用時間爲 \m{T(m/2)}，合並所用時間爲 \m{O(m+n)}。
+“分”所用時間爲 $O(1)$，“治”所用時間爲 $T(m/2)$，合並所用時間爲 $O(m+n)$。
 \startformula\startmathalignment
-\NC T(m) \NC= T(m/2) + cn + dm \NR
-\NC      \NC= cn + dm + cn + dm/2 + cn + dm/4 + \ldots \NR
+\NC T(m, n) \NC= T(m/2, n) + cn + dm \NR
+\NC      \NC= cn + dm + cn + dm/2 + cn + dm/4 + \cdots \NR
 \NC      \NC= \sum_{i=0}^{\lg{m}-1}cn + \sum_{i=0}^{\lg{m}-1}\frac{dm}{2^i} \NR
 \NC      \NC= cn\lg{m} + dm\sum_{i=0}^{\lg{m} - 1}\frac{1}{2^i} \NR
 \NC      \NC< cn\lg{m} + 2dm \NR
-\NC      \NC= O(n\lg{m} + m) \NR
 \stopmathalignment\stopformula
+因此 $T(m,n)=O(m+n\log m)$。
 \stopANSWER
 
 \stopigBase

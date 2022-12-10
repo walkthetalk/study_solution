@@ -2,98 +2,137 @@
   title={Indicator random variables},
 ]
 
+%e5.2-1
 \startEXERCISE
 在 \ALGO{HIRE-ASSISTANT} 中，假設應聘者以隨機順序出現，
-你只僱傭一次的概率是多少？正好僱傭 \m{n} 次的概率是多少？
+你只僱傭一次的概率是多少？正好僱傭 $n$ 次的概率又是多少？
 \stopEXERCISE
 \startANSWER
-當最好的應聘者出現在第一個時，我們只需僱傭一次，其概率爲 \m{1/n} （一共有 \m{n!} 種全排列，而最好的出現在第一個的全排列共 \m{(n-1)!} 種）。
-而正好僱傭 \m{n} 次，則需應聘者必須以增序出現，概率爲 \m{1/n!}。
+當最好的應聘者出現在第一個時，我們只需僱傭一次，
+其概率爲 $1/n$ （一共有 $n!$ 種全排列，
+而最好的出現在第一個的全排列共 $(n-1)!$ 種）。
+而正好僱傭 $n$ 次，則需應聘者必須以增序出現，概率爲 $1/n!$。
 \stopANSWER
 
+%e5.2-2
 \startEXERCISE
 在 \ALGO{HIRE-ASSISTANT} 中，假設應聘者以隨機順序出現，
 你正好僱傭兩次的概率是多少？
 \stopEXERCISE
 \startANSWER
-如果正好僱傭了兩次，那麼假設第一個僱傭的人級別爲 \m{i}，
-第二次僱傭的人級別肯定爲 \m{n}，且 \m{i < n}。
+如果正好僱傭了兩次，那麼假設第一個僱傭的人級別爲 $i$，
+第二次僱傭的人級別肯定爲 $n$，且 $i < n$。
 
-比第一個僱傭的人級別高的應聘者有 \m{n-i} 個，
-這些人中級別爲 \m{n} 的那個排在最前面，其概率爲 \m{1/(n-i)}
+比第一個僱傭的人級別高的應聘者有 $n-i$ 個，
+這些人中級別爲 $n$ 的那個排在最前面，其概率爲 $1/(n-i)$
 （我們可以忽略其他應聘者，他們不影響概率）。
-因此在第一個應聘者級別爲 \m{i}，則正好僱傭兩次的概率爲：
+因此在第一個應聘者級別爲 $i$，則正好僱傭兩次的概率爲：
 \startformula
-\Pr{T_i} = \frac{1}{n}\frac{1}{n-i}
+\Pr\{T_i\} = \frac{1}{n}\frac{1}{n-i}
 \stopformula
-其中第一部分反映的是級別爲 \m{i} 的應聘者排在第一個的概率。
+其中第一部分反映的是級別爲 $i$ 的應聘者排在第一個的概率。
 
 正好僱傭兩次的概率爲：
 \startformula\startmathalignment
-\NC \Pr{T} \NC= \sum_{i=1}^{n-1}\Pr{T_i} \NR
+\NC \Pr\{T\} \NC= \sum_{i=1}^{n-1}\Pr\{T_i\} \NR
 \NC        \NC= \sum_{i=1}^{n-1}\frac{1}{n}\frac{1}{n-i} \NR
 \NC        \NC= \frac{1}{n} \sum_{i=1}^{n-1}\frac{1}{i} \NR
 \NC        \NC= \frac{1}{n} (\lg(n-1) + O(1)) \NR
+\NC        \NC= \Omega(\frac{\lg n}{n})
 \stopmathalignment\stopformula
 \stopANSWER
 
+%e5.2-3
 \startEXERCISE
-利用指示器隨機變量計算擲 \m{n} 個骰子之和的期望值。
+利用指示器隨機變量計算擲 $n$ 個骰子之和的期望值。
 \stopEXERCISE
 \startANSWER
-如果是單個骰子，期望值 \m{X_i} 爲：
+令第 $k$ 個骰子的點數爲 $X_k$，
+則 $X_k = 1,2,3,4,5,6$。
+每個點數的概率相等 $\Pr\{X_k=i\}=1/6$。
+
+如果是單個骰子，期望值 $X_k$ 爲：
 \startformula\startmathalignment
-\NC E[X_k] \NC= \sum_{i=0}^6 i \Pr{X_k = i} \NR
-\NC        \NC= \frac{1 + 2 + 3 + 4 + 5 + 6}{6} \NR
-\NC        \NC= \frac{21}{6} \NR
-\NC        \NC= 3.5 \NR
+\NC \E[X_k]
+   \NC= \sum_{i=0}^6 i \Pr\{X_k = i\} \NR
+\NC\NC= \frac{1 + 2 + 3 + 4 + 5 + 6}{6} \NR
+\NC\NC= \frac{21}{6} \NR
+\NC\NC= 3.5 \NR
 \stopmathalignment\stopformula
 
 對於多個骰子，則：
 \startformula\startmathalignment
-\NC E[X] \NC= E[\sum_{i=1}^nX_i] \NR
-\NC      \NC= \sum_{i=1}^n E[X_i] \NR
+\NC \E[X] \NC= \E[\sum_{i=1}^nX_i] \NR
+\NC      \NC= \sum_{i=1}^n \E[X_i] \NR
 \NC      \NC= \sum_{i=1}^n 3.5 \NR
 \NC      \NC= 3.5 \cdot n \NR
 \stopmathalignment\stopformula
 \stopANSWER
 
+%e5.2-4
 \startEXERCISE
-利用指示器隨機變量來求解如下{\EMP 帽子核對問題}（hat-check problem）：
-\m{n} 位顧客，每個人都將自己的帽子交給服務生。
-服務生以隨機次序將帽子歸還給顧客。
-請問拿到自己帽子的顧客數目的期望值是多少？
+本練習要求你驗證：
+即使隨機變量並不相互獨立，期望值的線性性質依然成立。
+假設有兩個六面骰子，獨立投擲，投擲結果之和的期望值是多少？
+如果第一個骰子正常投擲，而將第二個設置成和第一個同樣的值。總和期望值又是多少？
+如果第一個骰子正常投擲，而令第二個的值爲 $7$ 減去第一個的值，總和期望值又是多少？
 \stopEXERCISE
 \startANSWER
-每位顧客拿回自己帽子的概率都是 \m{1/n}。
-記 \m{X_i} 爲第 \m{i} 個顧客拿回自己帽子的事件。
-因此：
-\startformula
-E[X] = E[X_1 + X_2 + \ldots + X_n]
-         = \sum_{i=1}^n E[X_i]
-         = \sum_{i=1}^n \frac{1}{n}
-         = 1
-\stopformula
+如果相互獨立，結果爲 $\E[X] = 3.5 \times 2 = 7$。
+
+如果兩者相同，結果依然是 $\E[X] = 3.5 \times 2 = 7$。
+
+如果要保證和爲 $7$，結果依然是 $\E[X] = 3.5 \times 2 = 7$。
 \stopANSWER
 
+%e5.2-5
 \startEXERCISE
-設 \m{A[1..n]} 是由 \m{n} 個不同的數構成的數列。
-如果 \m{i < j} 且 \m{A[i] > A[j]}，則稱 \m{(i,j)} 爲 \m{A} 的一個{\EMP 逆序對}（inversion）。
-（參見\refproblem{inversion} 中更多關於逆序對的例子）
-假設 \m{A} 的元素構成 \m{\langle1,2,\ldots,n\rangle} 上的一個均勻隨機排列，
-請用指示器隨機變量來計算其中逆序對的數目期望值。
+利用指示器隨機變量來求解如下{\EMP 帽子覈對問題}（hat-check problem）：
+$n$ 位顧客，每個人都將自己的帽子交給服務生。
+服務生以隨機次序將帽子歸還給顧客。
+請問拿到自己帽子的顧客數期望值是多少？
 \stopEXERCISE
 \startANSWER
-記 \m{X_{ij}} 爲 \m{i} 和 \m{j} 爲逆序對的情況。
-每個逆序對發生的概率爲 \m{1/2}，
-因爲有 \m{\binom{n}{2}} 種可能，而大的那個在前面的概率爲 \m{\frac{1}{n(n-1)}}。
-兩式相乘得 \m{1/2}。由此可得 \m{E[X_{ij}] = 1/2}。
+設 $X$ 爲最後拿到自己帽子的顧客總數，
+ $X_i$ 表示第 $i$ 位顧客拿回了自己的帽子：
+\startformula
+X_i = \startmathcases
+\NC 1 \NC 如果顧客 $i$ 拿回了自己的帽子；\NR
+\NC 0 \NC 如果顧客 $i$ 沒有拿回自己的帽子。\NR
+\stopmathcases
+\stopformula
+
+$\Pr\{X_i=1\}=1/n$， $\Pr\{X_i=0\}=1-1/n$
+
+$\E[X_i]=1\cdot \Pr\{X_i=1\} + 0\cdot \Pr\{X_i=0\}=1/n$
+
+每位顧客拿回自己帽子的概率都是 $1/n$。
 \startformula\startmathalignment
-\NC E[X] \NC= \sum_{i=1}^{n-1} \sum_{j=i+1}^n E[X_{ij}] \NR
-\NC      \NC= \sum_{i=1}^{n-1} \sum_{j=i+1}^n \frac{1}{2} \NR
+\NC \E[X] \NC= \E[X_1 + X_2 + \ldots + X_n] \NR
+\NC \NC = \sum_{i=1}^n E[X_i] \NR
+\NC \NC = \sum_{i=1}^n \frac{1}{n} \NR
+\NC \NC = 1 \NR
+\stopmathalignment\stopformula
+\stopANSWER
+
+%e5.2-6
+\startEXERCISE
+設 $A[1..n]$ 是由 $n$ 個不同的數構成的數列。
+如果 $i < j$ 且 $A[i] > A[j]$，則稱 $(i,j)$ 爲 $A$ 的一個{\EMP 逆序對}（inversion）。
+（參見\refproblem{inversion} 中更多關於逆序對的例子）
+假設 $A$ 的元素構成 $\langle1,2,\ldots,n\rangle$ 上的一個均勻隨機排列，
+請用指示器隨機變量來計算其中逆序對數目的期望值。
+\stopEXERCISE
+\startANSWER
+令 $X_{i,j}$ 表示 $A[i]$ 和 $A[j]$ 爲逆序對。
+其中 $\Pr\{A[i]>A[j]\} = \Pr\{A[i]<A[j]\} = 1/2$。
+\startformula\startmathalignment
+\NC \E[\sum_{i<j}X_{i,j}]
+   \NC = \sum{i<j}\E[X_{i,j}] \NR
+\NC\NC= \sum_{i=1}^{n-1} \sum_{j=i+1}^n \Pr\{A[i]>A[j]\} \NR
 \NC      \NC= \frac{1}{2} \sum_{i=1}^{n-1} \sum_{j=i+1}^n 1 \NR
 \NC      \NC= \frac{1}{2} \sum_{i=1}^{n-1} (n-i) \NR
-\NC      \NC= \frac{1}{2} \sum_{i=1}^{n-1} i \NR
+\NC      \NC= \frac{1}{2} \sum_{i=1}^{n-1} (n-i) \NR
 \NC      \NC= \frac{n(n-1)}{4} \NR
 \NC      \NC= \binom{n}{2}/2 \NR
 \stopmathalignment\stopformula

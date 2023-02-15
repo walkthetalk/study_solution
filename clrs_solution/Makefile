@@ -30,6 +30,8 @@ fig_deps:=$(patsubst %.mp,${dir_main}/fig/%.mp,$(fig_incs))
 
 #$(warning fig srcs is ${fig_pdfs})
 
+LMTX_DIR:=/usr/share/texmf-dist/texmf-context
+
 ifneq ($(MAKECMDGOALS),clean)
 #$(warning MAKECMDGOALS is $(MAKECMDGOALS))
 #$(warning asy_dirs is $(asy_dirs))
@@ -50,10 +52,11 @@ clean:
 fig_pdfs: ${fig_pdfs}
 
 $(pdf_name).pdf: $(tex_deps) ${fig_pdfs}
-	@echo [gen] $@
-	@context \
-		--luatex \
-		--jit --purge \
+	@echo [gen] $@; \
+	export TEXMF=$(LMTX_DIR); \
+	export OSFONTDIR=/opt/fonts; \
+	context \
+		--purge \
 		--nocompression \
 		--environment=env_cmm \
 		--path=$(dir_env) \

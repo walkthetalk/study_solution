@@ -1,11 +1,7 @@
 %% use `mtxrun --script font --list --all` to list all fonts
 %% use `mtxrun --script fonts --reload` to reload fonts
-\appendtoks \rm \to \everymathematics
-\setupmathematics[lcgreek=normal, ucgreek=normal]
-
-\definefontsynonym [boyangliuti] [name:hakuyoliuti3500]
-\definefont [booktitle] [boyangliuti at 72pt]
-\definefont [booksubtitle] [boyangliuti at 36pt]
+%\appendtoks \rm \to \everymathematics
+%\setupmathematics[lcgreek=normal, ucgreek=normal]
 
 % 字号对应表
 %	初号	42
@@ -28,22 +24,22 @@
 
 \setupzhfonts
 [serif]
-[regular=notoserifcjktcregular,%adobesongstd,
-bold=notoserifcjktcbold,%adobeheitistd,
+[regular=adobesongstd,
+bold=adobeheitistd,
 italic=adobekaitistd,
 bolditalic=adobeheitistd]
 
 \setupzhfonts
 [sans]
-[regular=notosanscjktcregular,%adobefangsongstd,
-bold=notosanscjktcblack,%adobeheitistd,
+[regular=adobefangsongstd,
+bold=adobeheitistd,
 italic=adobefangsongstd,
 bolditalic=adobeheitistd]
 
 \setupzhfonts
 [mono]
-[regular=notosansmonocjktc,%adobekaitistd,
-bold=notosansmonocjktcbold,%adobeheitistd,
+[regular=adobekaitistd,
+bold=adobeheitistd,
 italic=adobekaitistd,
 bolditalic=adobeheitistd]
 
@@ -76,10 +72,14 @@ bolditalic=notosansbolditalic%texgyreherosbolditalic
 \setupzhfonts[math][pagellaovereuler]
 
 % 加粗數學函數名 % neoeuler 字體粗細差不多，加粗也看不太出來
-\let\stdmfunctionlabeltext\mfunctionlabeltext
-\def\mfunctionlabeltext#1{%
-\stdmfunctionlabeltext{\bf #1}%
-}
+%\let\stdmfunctionlabeltext\mfunctionlabeltext
+%\def\mfunctionlabeltext#1{%
+%\stdmfunctionlabeltext{\bf #1}%
+%}
+
+%\definefontsynonym [boyangliuti] [name:hakuyoliuti3500]
+\definefont [booktitle] [zhfonts at 72pt]
+\definefont [booksubtitle] [zhfonts at 36pt]
 
 % 启用中文断行
 \setscript[hanzi]

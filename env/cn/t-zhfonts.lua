@@ -54,9 +54,6 @@ latinfonts.mono.bold        = {name = 'latinmodernmonobold'}
 latinfonts.mono.italic      = {name = 'latinmodernmonoitalic'}
 latinfonts.mono.bolditalic  = {name = 'latinmodernmonobolditalic'}
 
-local math_typeface = {}
-math_typeface.name = 'xits'
-
 local function gen_cjk_typescript (ft)
     local fb = '\\definefontfallback'
     local fb_area = '[0x00400-0x2FA1F]'
@@ -128,9 +125,9 @@ local function gen_fallback_typescript ()
     context ('\\starttypescript[serif][zhfonts]')
     context ('\\setups[font:fallbacks:serif]')
     context ('\\definefontsynonym[zhSeriffallback][latinSerif][fallbacks=zhSerif]')
-    context ('\\definefontsynonym[Serif][zhSeriffallback]')    
+    context ('\\definefontsynonym[Serif][zhSeriffallback]')
     context ('\\definefontsynonym[zhSerifBoldfallback][latinSerifBold][fallbacks=zhSerifBold]')
-    context ('\\definefontsynonym[SerifBold][zhSerifBoldfallback]')   
+    context ('\\definefontsynonym[SerifBold][zhSerifBoldfallback]')
     context ('\\definefontsynonym[zhSerifItalicfallback][latinSerifItalic][fallbacks=zhSerifItalic]')
     context ('\\definefontsynonym[SerifItalic][zhSerifItalicfallback]')
     context ('\\definefontsynonym[zhSerifBoldItalicfallback][latinSerifBoldItalic][fallbacks=zhSerifBoldItalic]')
@@ -140,9 +137,9 @@ local function gen_fallback_typescript ()
     context ('\\starttypescript[sans][zhfonts]')
     context ('\\setups[font:fallbacks:sans]')
     context ('\\definefontsynonym[zhSansfallback][latinSans][fallbacks=zhSans]')
-    context ('\\definefontsynonym[Sans][zhSansfallback]')    
+    context ('\\definefontsynonym[Sans][zhSansfallback]')
     context ('\\definefontsynonym[zhSansBoldfallback][latinSansBold][fallbacks=zhSansBold]')
-    context ('\\definefontsynonym[SansBold][zhSansBoldfallback]')   
+    context ('\\definefontsynonym[SansBold][zhSansBoldfallback]')
     context ('\\definefontsynonym[zhSansItalicfallback][latinSansItalic][fallbacks=zhSansItalic]')
     context ('\\definefontsynonym[SansItalic][zhSansItalicfallback]')
     context ('\\definefontsynonym[zhSansBoldItalicfallback][latinSansBoldItalic][fallbacks=zhSansBoldItalic]')
@@ -152,9 +149,9 @@ local function gen_fallback_typescript ()
     context ('\\starttypescript[mono][zhfonts]')
     context ('\\setups[font:fallbacks:mono]')
     context ('\\definefontsynonym[zhMonofallback][latinMono][fallbacks=zhMono]')
-    context ('\\definefontsynonym[Mono][zhMonofallback]')    
+    context ('\\definefontsynonym[Mono][zhMonofallback]')
     context ('\\definefontsynonym[zhMonoBoldfallback][latinMonoBold][fallbacks=zhMonoBold]')
-    context ('\\definefontsynonym[MonoBold][zhMonoBoldfallback]')   
+    context ('\\definefontsynonym[MonoBold][zhMonoBoldfallback]')
     context ('\\definefontsynonym[zhMonoItalicfallback][latinMonoItalic][fallbacks=zhMonoItalic]')
     context ('\\definefontsynonym[MonoItalic][zhMonoItalicfallback]')
     context ('\\definefontsynonym[zhMonoBoldItalicfallback][latinMonoBoldItalic][fallbacks=zhMonoBoldItalic]')
@@ -195,10 +192,6 @@ local function setup_latinfonts (meta, fontlist)
     end   
 end
 
-local function setup_math_typeface (name)
-    math_typeface.name = string_strip (name)
-end
-
 local fontfeatures = "mode=node,protrusion=myvector,liga=yes"
 local function setup_fontfeatures (s)
     fontfeatures = fontfeatures .. s
@@ -209,7 +202,6 @@ function zhfonts.setup (metainfo, fontinfo)
     local f = string_split_and_strip (fontinfo, ',')
     if #m == 1 and m[1] == 'feature' then setup_fontfeatures (fontinfo) end
     if #m == 1 and cjkfonts[m[1]] then setup_cjkfonts (m[1], f)  end
-    if #m == 1 and m[1] == 'math' then setup_math_typeface (f[1]) end
     if #m == 2 then
 	if m[1] == 'latin' and latinfonts[m[2]] then setup_latinfonts (m[2], f) end
 	if m[2] == 'latin' and latinfonts[m[1]] then setup_latinfonts (m[1], f) end	

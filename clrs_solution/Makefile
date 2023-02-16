@@ -4,8 +4,10 @@ pdf_name=CLRS_solution
 
 dir_self := $(shell dirname $(shell readlink -fe $(lastword ${MAKEFILE_LIST})))
 dir_main := $(shell readlink -fe ${dir_self})
+dir_proj := $(shell readlink -fe ${dir_self}/../)
 
-dir_env  := $(shell readlink -fe ${dir_self}/../env/cn)
+dir_modules := $(shell find ${dir_proj}/env/modules  -maxdepth 1 -mindepth 1 -type d | tr '\n' ',')
+dir_env  := ${dir_proj}/env/cn
 dir_output := ${dir_main}/output
 output_dirs:=${dir_output}
 
@@ -59,7 +61,7 @@ $(pdf_name).pdf: $(tex_deps) ${fig_pdfs}
 		--purge \
 		--nocompression \
 		--environment=env_cmm \
-		--path=$(dir_env) \
+		--path=$(dir_modules)$(dir_env) \
 		--result=$(pdf_name).pdf \
 		$(tex_name).tex; \
 	$(call clean_misc)

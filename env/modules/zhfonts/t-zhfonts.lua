@@ -1,7 +1,6 @@
 moduledata = moduledata or {}
 moduledata.zhfonts = moduledata.zhfonts or {}
 local zhfonts = moduledata.zhfonts
-local zhspuncs = require "t-zhspuncs"
 
 local string_strip = string.strip
 local string_split = string.split
@@ -221,7 +220,6 @@ end
 
 function zhfonts.main (param)
     context ('\\setscript[hanzi]')
-    zhspuncs.opt ()
     local arg_list = string_split_and_strip (param, ',')
     if arg_list[1] ~= "none" and arg_list[2] ~= "none" then
 	context ('\\definefontfeature[zh][default][' .. fontfeatures .. ']')

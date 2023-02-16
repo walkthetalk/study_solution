@@ -1,0 +1,104 @@
+\setuppapersize[A5]
+
+% 中文配置
+\mainlanguage[cn]
+\language[cn]
+\setscript[hanzi] % 汉字脚本（断行）
+\setupalign[hanging,hz] %行末标点悬挂
+
+% 汉字字体配置
+\usetypescriptfile[mscore]
+\usebodyfont   [mschinese,20pt]
+% \usebodyfont   [mschinese-light,12pt]
+% \setupbodyfont [mschinese-literate,12pt]
+% \usebodyfont   [mschinese-literate,12pt]
+% \definebodyfontenvironment[24pt]
+% \definebodyfontenvironment[18pt]
+% 定义字体
+% \definefont[kaiti][name:kaiti*default at 24pt]
+
+% 配置页码、结构序号等为汉字
+\setuppagenumber [numberconversion=cn]
+\definestructureconversionset[chinese][numbers][cn]
+\setupheads [sectionconversionset=chinese]
+
+% 配置章节格式
+\define[2]\ChineseChapter{第#1章\hskip 1em #2}
+\setuphead[chapter][command=\ChineseChapter,style={\bf\switchtobodyfont[24pt]}]
+\setuphead[section][style={\bf\switchtobodyfont[18pt]}]
+
+% 设置页码格式
+\setuppagenumbering[state=start,
+    alternative=singlesided,
+    location={footer, center} ,
+    % location={},
+    style={\bf\switchtobodyfont[11pt]}
+]
+
+% 行距
+\setupinterlinespace[line=2em]
+
+
+%%%%%%%%%%%%% 使用模块(保持顺序) %%%%%%%%%%%%%
+% 竖排
+\usemodule[vtypeset]
+
+
+% 标点压缩与支持
+\usemodule[zhpunc][pattern=kaiming, spacequad=0.5, hangjian=false]
+% 
+% 四种标点压缩方案：全角、开明、半角、原样：
+%   pattern: quanjiao(default), kaiming, banjiao, yuanyang
+% 行间标点（转换`、，。．：！；？`到行间，pattern建议用banjiao）：
+%   hangjian: false(default), true
+% 加空宽度（角）：
+%   spacequad: 0.5(default)
+% 
+% 行间书名号和专名号（\bar实例）：
+%   \zhuanmh{专名}
+%   \shumh{书名}
+
+
+% 夹注
+\usemodule[jiazhu][fontname=tf, fontsize=10.5pt, interlinespace=0.2em]
+% default: fontname=tf, fontsize=10.5pt, interlinespace=0.08em(行间标点时约0.2em)
+% fontname和fontsize与\switchtobodyfont的对应参数一致
+% 夹注命令：
+%   \jiazh{夹注}
+
+
+
+\definefont[tidebar][name:stsong*default at 5pt]
+\definebar[xbartwo][text=\lower\exheight\hbox{\tidebar\rotate[rotation=-10]{～\kern-0.3em}}, repeat=yes, continue=yes]
+
+%%%%% 显式视觉调试信息 %%%%
+\showboxes
+\showframe
+% \showmakeup
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\startluacode
+     function builders.paragraphs.constructors.methods.preroll_a(head)
+         local result, info = tex.linebreak(head)
+         tex.prevdepth = info.prevdepth
+         tex.prevgraf = info.prevgraf
+         return result
+     end
+     function builders.paragraphs.constructors.methods.preroll_b(head)
+         local result, info = tex.linebreak(nodes.nuts.copylist(head))
+         inspect(info)
+         return true
+     end
+\stopluacode
+
+\defineparbuilder[preroll_a]
+\defineparbuilder[preroll_b]
+
+\starttext
+    \setmainparbuilder[default]   \input tufte \par \input tufte \page
+
+    \setmainparbuilder[preroll_a] \input tufte \par \input tufte \page
+
+    \setmainparbuilder[preroll_b] \input tufte \par \input tufte \page
+\stoptext
+

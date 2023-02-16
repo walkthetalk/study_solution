@@ -1,0 +1,121 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 演示：
+%% 在processors类回调中干预断行；
+%% tex.linebreak()的用法；
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setuppapersize[A4,landscape]
+
+% 中文配置
+\mainlanguage[cn]
+\language[cn]
+\setscript[hanzi] % 汉字脚本（断行）
+\setupalign[hanging,hz] %行末标点悬挂
+
+% 汉字字体配置
+\usetypescriptfile[mscore]
+\usebodyfont   [mschinese,20pt]
+% \usebodyfont   [mschinese-light,12pt]
+% \setupbodyfont [mschinese-literate,12pt]
+% \usebodyfont   [mschinese-literate,12pt]
+% \definebodyfontenvironment[24pt]
+% \definebodyfontenvironment[18pt]
+% 定义字体
+% \definefont[kaiti][name:kaiti*default at 24pt]
+
+% 配置页码、结构序号等为汉字
+\setuppagenumber [numberconversion=cn]
+\definestructureconversionset[chinese][numbers][cn]
+\setupheads [sectionconversionset=chinese]
+
+% 配置章节格式
+% \define[2]\ChineseChapter{第#1章\hskip 1em #2}
+\define[2]\ChineseChapter{#2}
+\setuphead[chapter][command=\ChineseChapter,style={\bf\switchtobodyfont[24pt]}]
+\setuphead[section][style={\bf\switchtobodyfont[22pt]}]
+
+% 设置页码格式
+\setuppagenumbering[state=start,
+    alternative=singlesided,
+    location={footer, center},
+    style=\itx
+]
+
+% 行距设置
+\setupinterlinespace[line=1.6em]
+% 缩进设置
+\setupindenting[yes, 2em, first]
+\setuphead[indentnext=yes] %标题后段落缩进，默认是no
+
+%%%% 使用系统中安装的中文标点压缩模块 %%%%
+% \usemodule[zhspuncs]
+
+% 章句
+\define[1]\zhangj{%
+    {\leftskip=2em \it \noindentation #1}
+}
+
+% 后款
+\define[1]\houkuan{%
+    {\leftskip=0.5\textwidth \noindentation #1}
+}
+
+% 专名号
+\definebar[zhuanmh][underbar][offset=-0.25, unit=em,rulethickness=0.1mm,continue=no]
+
+% 竖排书名号两种
+% 1对3，适合大字号: 如21pt正文对应0.455em
+\definefont[tidebar][name:stsong*default at 0.455em]
+\definebar[shumh][text=\lower\exheight\hbox{\tidebar\rotate[rotation=-9]{\kern-0.16em～\kern-0.16em}}, repeat=yes, continue=no, offset=-0.25]
+% 1对2，适合小字号，如10.5pt正文对应0.683em
+\definefont[tidebars][name:stsong*default at 0.683\jiazhsize]
+\definebar[shumhs][text=\lower\exheight\hbox{\tidebars\rotate[rotation=-9]{\kern-0.16em～\kern-0.16em}}, repeat=yes, continue=no, offset=-0.25]
+
+
+%%%%%%%%%%%%% 使用模块(保持顺序) %%%%%%%%%%%%%
+% 竖排
+\usemodule[vtypeset]
+
+
+% 标点压缩与支持
+\usemodule[zhpunc][pattern=kaiming, spacequad=0.5, hangjian=false]
+% 
+% 四种标点压缩方案：全角、开明、半角、原样：
+%   pattern: quanjiao(default), kaiming, banjiao, yuanyang
+% 行间标点（转换`、，。．：！；？`到行间，pattern建议用banjiao）：
+%   hangjian: false(default), true
+% 加空宽度（角）：
+%   spacequad: 0.5(default)
+% 
+% 行间书名号和专名号（\bar实例）：
+%   \zhuanmh{专名}
+%   \shumh{书名}
+
+
+% 夹注
+\usemodule[jiazhu][fontname=tf, fontsize=10.5pt, interlinespace=0.2em]
+% default: fontname=tf, fontsize=10.5pt, interlinespace=0.08em(行间标点时约0.2em)
+% fontname和fontsize与\switchtobodyfont的对应参数一致
+% 夹注命令：
+%   \jiazh{夹注}
+
+%%%%% 显式视觉调试信息 %%%%
+\showboxes
+% \showframe
+\showglyphs
+% \showmakeup
+% \tracingnodes=1 %1,2
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% begin example
+\setupinterlinespace[line=4ex]
+
+\setuptype[style=\ttx]
+\starttext
+
+
+\zhangj{右傳之七章。釋正心修身。
+\jiazh{此亦承上章以起下章。蓋意誠則真無惡而實有善矣，所以能存是心以檢其身。然或但知誠意，而不能密察此心之存否，則又無以直内而修身也。○自此以下，并以舊文爲正。}
+}
+
+\stoptext
+

@@ -1,0 +1,88 @@
+% \setuppapersize[A4,landscape]
+\setuppapersize[A4]
+
+% 中文配置
+\mainlanguage[cn]
+\language[cn]
+\setscript[hanzi] % 汉字脚本（断行）
+\setupalign[hanging,hz] %行末标点悬挂
+
+% 汉字字体配置
+\usetypescriptfile[mscore]
+\usebodyfont   [mschinese,20pt]
+% \usebodyfont   [mschinese-light,20pt]
+% \setupbodyfont [mschinese-literate,20pt]
+% \usebodyfont   [mschinese-literate,20pt]
+% \definebodyfontenvironment[24pt]
+% \definebodyfontenvironment[18pt]
+% 定义字体
+% \definefont[kaiti][name:kaiti*default at 24pt]
+
+% 行距设置
+\setupinterlinespace[line=1.6em]
+% 缩进设置
+\setupindenting[yes, 2em, first]
+\setuphead[indentnext=yes] %标题后段落缩进，默认是no
+
+
+% 标点宽度测试
+\def\test[#1][#2]{%
+    {\showglyphs\showboxes%
+    \inframed[width=#1,align=flushleft,offset=0em]{\hbox{#2}}%
+    }%
+}
+
+%%%%% 显式视觉调试信息 %%%%
+\showboxes
+\showframe
+\showglyphs
+% \showbodyfont
+% \showmakeup
+% \tracingnodes1 %1,2
+\replacemissingcharacters
+
+
+%%%%%%%%%%%%% 使用模块(保持顺序) %%%%%%%%%%%%%
+% 竖排
+\usemodule[vtypeset]
+
+
+% 标点压缩与支持
+\usemodule[zhpunc][pattern=kaiming, spacequad=0.5, hangjian=false]
+% 
+% 四种标点压缩方案：全角、开明、半角、原样：
+%   pattern: quanjiao(default), kaiming, banjiao, yuanyang
+% 行间标点（转换`、，。．：！；？`到行间，pattern建议用banjiao）：
+%   hangjian: false(default), true
+% 加空宽度（角）：
+%   spacequad: 0.5(default)
+% 
+% 行间书名号和专名号（\bar实例）：
+%   \zhuanmh{专名}
+%   \shumh{书名}
+
+
+% 夹注
+\usemodule[jiazhu][fontname=tf, fontsize=10.5pt, interlinespace=0.2em]
+% default: fontname=tf, fontsize=10.5pt, interlinespace=0.08em(行间标点时约0.2em)
+% fontname和fontsize与\switchtobodyfont的对应参数一致
+% 夹注命令：
+%   \jiazh{夹注}
+
+% 标点宽度测试
+\def\test[#1][#2]{%
+    {\showglyphs\showboxes%
+        \inframed[width=#1,align=flushleft,offset=0em]{\hbox{#2}}%
+    }%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\starttext
+
+《我我我\jiazh{〈本，謂身也。所厚謂家也〉〈此兩節結上文兩節之意}我我我我我我我我我》
+《我我我
+
+% <node :   3865 <=   4045 =>   4042 : kern rightmarginkern>      613548000       nil
+% <node :   4584 <=   4371 =>   3885 : kern leftmarginkern>       613548000       nil
+
+\stoptext

@@ -49,7 +49,7 @@
 \section[appendix:appDataTypeAlignment]{應用程式數據型別的齊位}
 
 用戶要負責確保傳入和傳出 OpenCL 緩衝的數據相對於緩衝的起始位址原生對齊，
-遵守\refsection{alignmentOfTypes}中的要求。
+遵守\insection[alignmentOfTypes]中的要求。
 其中隱含着，
 用 \cenum{CL_MEM_USE_HOST_PTR} 創建 OpenCL 緩衝時所提供的\cnglo{host}內存指位器
 必須按\cnglo{kernel}中存取這些緩衝時所用的數據型別進行對齊。
@@ -60,7 +60,7 @@
 
 對於那些由\cnglo{app}所定義的、既不是緩衝也不是圖像的數據型別， OpenCL 不對其齊位作任何要求，
 但是如果包含矢量（如 \ccmm{__cl_float4}），
-必須要能用 \ccmm{cl_type} 聯合體中欄位的名字直接存取才行（\refappendixsec{appendixVecCom}）。
+必須要能用 \ccmm{cl_type} 聯合體中欄位的名字直接存取才行（\inappendixsec[appendixVecCom]）。
 儘管如此，還是建議頭檔 \cemp{cl_platform.h} 將 OpenCL 所定義的\cnglo{app}數據型別
 （如 \ccmm{cl_float4}）按其型別自然地對齊。
 

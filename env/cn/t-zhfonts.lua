@@ -54,6 +54,9 @@ latinfonts.mono.bold        = {name = 'latinmodernmonobold'}
 latinfonts.mono.italic      = {name = 'latinmodernmonoitalic'}
 latinfonts.mono.bolditalic  = {name = 'latinmodernmonobolditalic'}
 
+local math_typeface = {}
+math_typeface.name = 'palatino'
+
 local function gen_cjk_typescript (ft)
     local fb = '\\definefontfallback'
     local fb_area = '[0x00400-0x2FA1F]'
@@ -164,6 +167,9 @@ local function gen_typeface ()
     context ('\\definetypeface[zhfonts][rm][serif][zhfonts][default][features=zh]')
     context ('\\definetypeface[zhfonts][ss][sans][zhfonts][default][features=zh]')
     context ('\\definetypeface[zhfonts][tt][mono][zhfonts][default]')
+    if math_typeface then
+	context ('\\definetypeface[zhfonts][mm][math]['.. math_typeface.name .. '][default]')
+    end
     context ('\\stoptypescript')
 end
 
@@ -192,6 +198,10 @@ local function setup_latinfonts (meta, fontlist)
     end   
 end
 
+local function setup_math_typeface (name)
+    math_typeface.name = string_strip (name)
+end
+
 local fontfeatures = "mode=node,protrusion=myvector,liga=yes"
 local function setup_fontfeatures (s)
     fontfeatures = fontfeatures .. s
@@ -202,6 +212,7 @@ function zhfonts.setup (metainfo, fontinfo)
     local f = string_split_and_strip (fontinfo, ',')
     if #m == 1 and m[1] == 'feature' then setup_fontfeatures (fontinfo) end
     if #m == 1 and cjkfonts[m[1]] then setup_cjkfonts (m[1], f)  end
+    if #m == 1 and m[1] == 'math' then setup_math_typeface (f[1]) end
     if #m == 2 then
 	if m[1] == 'latin' and latinfonts[m[2]] then setup_latinfonts (m[2], f) end
 	if m[2] == 'latin' and latinfonts[m[1]] then setup_latinfonts (m[1], f) end	

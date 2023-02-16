@@ -54,7 +54,7 @@
 對於矢量關係運算，結果也是矢量，
 要想知道其中的元素是否有 \ccmm{true} 或者是否所有元素都是 \ccmm{true}，
 例如，在 \ccmm{if ()} 語句的上下文中使用，
-請查閱\refsection{relationFunc}中的內建函式 \capi{any} 和 \capi{all}。}
+請查閱\insection[relationFunc]中的內建函式 \capi{any} 和 \capi{all}。}
 大於（\ccmm{>}）、小於（\ccmm{<}）、大於等於（\ccmm{>=}）、
 小於等於（\ccmm{<=}）可在標量或矢量型別上進行運算。
 所有關係算子的結果都是整數型別。在對算元進行型別轉換後，有如下情況：
@@ -88,7 +88,7 @@
 對於矢量關係運算，結果也是矢量，
 要想知道其中的元素是否有 \ccmm{true} 或者是否所有元素都是 \ccmm{true}，
 例如，在 \ccmm{if ()} 語句的上下文中使用，
-請查閱\refsection{relationFunc}中的內建函式 \capi{any} 和 \capi{all}。}
+請查閱\insection[relationFunc]中的內建函式 \capi{any} 和 \capi{all}。}
 相等（\ccmm{==}）、不等（\ccmm{!=}）可對所有內建標量和矢量型別進行運算。
 所有等號算子的結果均為整數型別。
 在對算元進行型別轉換後，有如下情況：
@@ -181,7 +181,7 @@
 如果結果是矢量，則等同於調用 \capi{select}\ccmm{(exp3, exp2, exp1)}。
 函式 \capi{select} 在\reftab{svRelationalFunc}中有所描述。
 第二個和第三個算式的結果可以是任意型別，只要型別匹配即可；
-如果不匹配，則會進行隱式轉換（參見\refsection{implicityConversion}）使其匹配；
+如果不匹配，則會進行隱式轉換（參見\insection[implicityConversion]）使其匹配；
 而如果一個是矢量，另一個是標量，則會對標量進行算術轉換，使其型別與矢量算元的元素型別相同，
 然後將其拓寬成型別與矢量算元相同的矢量。
 其結果的型別就是整個算式的型別。
@@ -215,11 +215,11 @@
 % sizeof
 \startitem
 算子 \ccmm{sizeof} 的結果就是算元的大小（單位字節），
-其中包括對齊時所需的填補字節（參見\refsection{alignmentOfTypes}）。
+其中包括對齊時所需的填補字節（參見\insection[alignmentOfTypes]）。
 算元可能是算式，也可能是帶小括號的型別。
 這個大小是由算元的型別所決定的。
 結果的型別為 \ctype{size_t}。
-如果算元的型別為變長陣列\footnote{OpenCL 1.1 不支持變長陣列，參見\refsection{restrictions}中的\refitem{vaFaStructure}。}，
+如果算元的型別為變長陣列\footnote{OpenCL 1.1 不支持變長陣列，參見\insection[restrictions]中的\initem[vaFaStructure]。}，
 則會對算元進行求值；
 否則，不求值，並且結果是整形常數。
 
@@ -232,7 +232,7 @@
 如果算元是陣列，則結果為整個陣列的大小；
 如果算元的型別為結構體或聯合體，結果就是這樣一個物件的大小，包括內部或尾部的填補字節。
 算元不能是函式型別或不完整的型別的算式，也不能是帶小括號的這種型別的名字，
-位欄結構體成員也不行\footnote{OpenCL 1.1 不支持位欄結構體成員，參見\refsection{restrictions}中的\refitem{bfMemInStructure}。}。
+位欄結構體成員也不行\footnote{OpenCL 1.1 不支持位欄結構體成員，參見\insection[restrictions]中的\initem[bfMemInStructure]。}。
 
 如果算元的型別為 \ctype{bool}、 \ctype{image2d_t}、 \ctype{image3d_t}、
  \ctype{image2d_array_t}、 \ctype{image1d_t}、 \ctype{image1d_buffer_t}、

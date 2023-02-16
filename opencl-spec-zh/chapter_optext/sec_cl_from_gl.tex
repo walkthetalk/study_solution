@@ -3,7 +3,7 @@
 % Overview
 \subsection{概覽}
 
-\refsection{clShareGl}中定義了如何與 OpenGL 實作中的材質和緩衝對象共享數據，
+\insection[clShareGl]中定義了如何與 OpenGL 實作中的材質和緩衝對象共享數據，
 但對於如何在 OpenCL \cnglo{context}和 OpenGL \cnglo{context}或共享組間建立聯繫，
 則沒有定義。
 此擴展為創建 OpenCL \cnglo{context}的例程定義了一個可選特性，
@@ -52,13 +52,13 @@ CL_CGL_SHAREGROUP_KHR	0x200C
 %  Additions to Chapter 4 of the OpenCL 1.2 Specification
 \subsection{對第 4 章的補充}
 
-\refsection{contexts}中，用下列內容取代 \clapi{clCreateContext} 後面對 \carg{properties} 的描述：
+\insection[contexts]中，用下列內容取代 \clapi{clCreateContext} 後面對 \carg{properties} 的描述：
 
 \carg{properties} 指向一個特性列，即 \ccmm{<特性名, 值>} 的陣列，此陣列已排好序，以零終止。
 如果此陣列中沒有某個特性，則使用其缺省值，參見\reftab{prptForclCreateContext}。
 如果 \carg{properties} 是 \cmacro{NULL} 或者是空的（第一個值就是零），所有特性都使用缺省值。
 
-\refsection{clShareGl}中定義了一些特性，
+\insection[clShareGl]中定義了一些特性，
 用來控制如何與 OpenGL 緩衝、材質和渲染緩衝對象共享 OpenCL \cnglo{memobj}。
 
 可以設置下列特性來識別 OpenGL \cnglo{context}，當然，
@@ -96,7 +96,7 @@ EGL 是 Khronos 渲染 API （如 OpenGL ES 或 OpenVG）和底層原生平台�
 
 如果特性列中沒有指定 OpenGL 或 OpenGL ES \cnglo{context}或者共享組，
 那麼就不能共享\cnglo{memobj}，
-並且調用\refsection{clShareGl}中的\cnglo{cmd}時
+並且調用\insection[clShareGl]中的\cnglo{cmd}時
 會導致錯誤 \cenum{CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR}。
 
 OpenCL / OpenGL 間的共享不支持屬性 \cenum{CL_CONTEXT_INTEROP_USER_SYNC}
@@ -148,7 +148,7 @@ OpenCL / OpenGL 間的共享不支持屬性 \cenum{CL_CONTEXT_INTEROP_USER_SYNC}
 \item 為特性 \cenum{CL_CGL_SHAREGROUP_KHR} 和 \cenum{CL_GL_CONTEXT_KHR} 都設置了非缺省值。
 
 \item 引數 \carg{devices} 中任一\cnglo{device}不支持 OpenCL 對象與 OpenGL 對象共享數據存儲，
-參見\refsection{clShareGl}。
+參見\insection[clShareGl]。
 \stopigBase
 則 \carg{errcode_ret} 會返回 \cenum{CL_INVALID_OPERATION}。
 
@@ -251,7 +251,7 @@ cl_int clGetGLContextInfoKHR (
 \item 為特性 \cenum{CL_CGL_SHAREGROUP_KHR} 和 \cenum{CL_GL_CONTEXT_KHR} 都設置了非缺省值。
 
 \item 引數 \carg{devices} 中任一\cnglo{device}不支持 OpenCL 對象與 OpenGL 對象共享數據存儲，
-參見\refsection{clShareGl}。
+參見\insection[clShareGl]。
 \stopigBase
 則 \clapi{clGetGLContextInfoKHR} 會返回 \cenum{CL_INVALID_OPERATION}。
 
@@ -316,7 +316,7 @@ cl_int clGetGLContextInfoKHR (
 這時其行為如何？
 \stopQUESTION
 \startANSWER
-已解決：如\refsection{clShareGl}所言，
+已解決：如\insection[clShareGl]所言，
 創建 OpenCL 對象時，會在對應的 GL 對象的數據存儲中放置一個址參器。
 對應的 GL 名可能會被刪除，但只要有 CL 對象引用他，數據存儲本身會一直存在。
 然而，如果銷毀了與 CL \cnglo{context}對應的共享組中的所有 GL \cnglo{context}，
@@ -339,7 +339,7 @@ cl_int clGetGLContextInfoKHR (
 \startANSWER
 已解決：前面已經列出了幾個跨平台的失敗條件
 （GL \cnglo{context}或 CGL 共享組不存在，
- GL \cnglo{context}不支持\refsection{clShareGl}中接口所要求類型的 GL 對象，
+ GL \cnglo{context}不支持\insection[clShareGl]中接口所要求類型的 GL 對象，
  GL \cnglo{context}的實作不允許共享），
 但由於具體實作的原因可能還會導致其他問題，
 這些情況也要加入此擴展。
@@ -365,7 +365,7 @@ cl_int clGetGLContextInfoKHR (
 （典型的就是 GL \cnglo{context}正運行其上的顯示屏），
 或者特定\cnglo{context}可能運行其上的所有 CL \cnglo{device}
 （在多線程 / “虛擬屏幕”環境中可能有用）。
-並沒有只是簡單地將此\cnglo{cmd}放到\refsection{clShareGl}中，
+並沒有只是簡單地將此\cnglo{cmd}放到\insection[clShareGl]中，
 因為他依賴於本擴展中所介紹的用於指定 GL \cnglo{context}的特性列。
 \stopANSWER
 

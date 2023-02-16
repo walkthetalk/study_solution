@@ -81,7 +81,7 @@ while TRUE
 
 \stopigBase
 
-在\refsection{desc_quicksort} 的 \ALGO{PARTITION} 過程中，
+在\insection[desc_quicksort] 的 \ALGO{PARTITION} 過程中，
 主元（原來存儲在 \m{A[r]} 中）是與他所劃分的兩個分區分離的。
 與之對應，在 \ALGO{HOARE-PARTITION} 中，
 主元（原來存儲在 \m{A[p]} 中）是存在於 \m{A[p..j]} 或 \m{A[j+1..r]} 中的。
@@ -299,7 +299,7 @@ E[T(n)] = \frac{2}{n}\sum_{q=2}^{n-1}E[T(q)] + \Theta(n)
 
 \startPROBLEM
 （Stack depth for quicksort）
-\refsection{desc_quicksort} 中的 \ALGO{QUICKSORT} 算法包含了兩個對其自身的遞迴調用。
+\insection[desc_quicksort] 中的 \ALGO{QUICKSORT} 算法包含了兩個對其自身的遞迴調用。
 在調用 \ALGO{PARTITION} 後， \ALGO{QUICKSORT} 分別遞迴調用了左邊的子數列和右邊的子數列。
  \ALGO{QUICKSORT} 中的第二個遞迴調用並不是必須的。
 我們可以用一個循環控制結構來代替他。

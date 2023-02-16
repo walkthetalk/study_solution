@@ -1,9 +1,9 @@
 % Edge Case Behavior
 \section[section:edgeCaseBehavior]{邊界條件下的行為}
 
-數學函式（\refsection{mathFunc}）在邊界條件下的行為
+數學函式（\insection[mathFunc]）在邊界條件下的行為
 要符合《ISO/IEC 9899：TC2》（通常稱作 C99, TC2）中的{\ftRef{節 F.9}} 和{\ftRef{節 G.6}}，
-\refsection{addReqBeyondC99}中所列之處除外。
+\insection[addReqBeyondC99]中所列之處除外。
 
 % Additional Requirements Beyond C99 TC2
 \subsection[section:addReqBeyondC99]{C99 TC2 之外的附加要求}
@@ -20,9 +20,9 @@ sNaN 轉換後應當是 NaN，但可能被轉換成非 sNaN。
 （以單精度結果來衡量），儘管鼓勵更高的精確度。
 
 對於那些明確規定了其結果的值（參見《C99, TC2》中的{\ftRef{節 F.9}}，
-或者\refsection{addReqBeyondC99}以及後面的\refsection{ftzmECB}）
+或者\insection[addReqBeyondC99]以及後面的\insection[ftzmECB]）
 （如： \ccmm{ceil(-1 < x < 0)} 會返回 \ccmm{-0}），
-捨入誤差（\refsection{relativeError}）或刷新行為（\refsection{ftzmECB}）的容差不會起作用。
+捨入誤差（\insection[relativeError]）或刷新行為（\insection[ftzmECB]）的容差不會起作用。
 那些值肯定產生規定的答案，不會是其他的。
 使用 \math{\pm} 的地方，正負號會保留下來。
 例如， \math{sin(\pm{0}) = \pm{0}} 的意思就是：
@@ -56,18 +56,18 @@ gentype modf(gentype value, gentype *iptr)
 \startigNum
 \item[item:nftz]任何符合 non-flush-to-zero 模式的結果；
 
-\item 如果捨入前，\refitem{nftz}所給出的結果是次規格化數，則可能會將其刷成零；
+\item 如果捨入前，\initem[nftz]所給出的結果是次規格化數，則可能會將其刷成零；
 
 \item[item:nfcr] 如果有一個或多個次規格化算元被刷成了零，則結果為符合此函式的任意未刷新的值。
 
-\item 如果捨入前，\refitem{nfcr}的結果是次規格化數，則可能將其刷成零。
+\item 如果捨入前，\initem[nfcr]的結果是次規格化數，則可能將其刷成零。
 \stopigNum
 
 在上述任一情況中，如果某個算元或結果被刷成了零，零的正負號未定義。
 
 如果次規格化數被刷成了零，
 則\cnglo{device}可能採用下列方式來處理 \capi{nextafter} 的邊界情況，
-以取代\refsection{addReqBeyondC99}中的那些：
+以取代\insection[addReqBeyondC99]中的那些：
 
 \startEnglishWithoutWhiteSpace
 \setupnarrower[left=2em,right=0em]

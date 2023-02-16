@@ -39,11 +39,11 @@ CL_COMMAND_GL_FENCE_SYNC_OBJECT_KHR	0x200D
 % Additions to Chapter 5 of the OpenCL 1.2 Specification
 \subsection{對第五章的補充}
 
-將下面內容添加到\refsection{evtObj}的第四段中（\clapi{clCreateUserEvent} 的描述之前）：
+將下面內容添加到\insection[evtObj]的第四段中（\clapi{clCreateUserEvent} 的描述之前）：
 \startreplacepar
 \cnglo{evtobj}也可用來反映 OpenGL 同步對象的狀態。
 同步對象指的是 OpenGL 命令流中所執行的隔柵（fence）命令。
-這為在 OpenGL 和 OpenCL 間共享緩衝和圖像提供了一種新方法（參見\refsection{syncCLGL}）。
+這為在 OpenGL 和 OpenCL 間共享緩衝和圖像提供了一種新方法（參見\insection[syncCLGL]）。
 \stopreplacepar
 
 在\reftab{clGetEventInfo}關於 \clapi{clGetEventInfo} 的描述中，
@@ -137,7 +137,7 @@ cl_event clCreateEventFromGLsyncKHR (
 則只有當他報告完成後，才會執行這些 OpenGL \cnglo{cmd}。
 \stopreplacepar
 
-用下列內容取代\refsection{syncCLGL}的第二段：
+用下列內容取代\insection[syncCLGL]的第二段：
 \startreplacepar
 調用 \clapi{clEnqueueAcquireGLObjects} 之前，
 \cnglo{app}必須確保會存取 \carg{mem_objects} 中對象並且處於擱置狀態的 OpenGL 操作全部完成。

@@ -253,7 +253,7 @@ c_k = \sum_{i=1}^{k}p_i
 %p16-4
 \startPROBLEM
 （Scheduling variations）
-對\refsection{task_schedule} 中帶截止時間和懲罰的單位時間任務調度問題，
+對\insection[task_schedule] 中帶截止時間和懲罰的單位時間任務調度問題，
 考慮如下算法。
 初始時另 \m{n} 個時間槽均爲空，時間槽 \m{i} 爲單位時間長度，結束於時刻 \m{i}。
 我們按懲罰值單調遞減的順序處理所有任務。
@@ -266,7 +266,7 @@ c_k = \sum_{i=1}^{k}p_i
 \stopitem
 
 \startANSWER
-此算法本質上只是\refsection{task_schedule} 中所給算法的一種實現。
+此算法本質上只是\insection[task_schedule] 中所給算法的一種實現。
 此算法中，我們將任務放入沒有懲罰的最晚的空槽。
 如果沒有這樣的時間槽，我們則將其放入最晚的空槽。
 這種算法是所有方案中最極端的一個。
@@ -274,7 +274,7 @@ c_k = \sum_{i=1}^{k}p_i
 \stopANSWER
 
 \startitem
-利用\refsection{disjoint_set_op} 提出的快速不相交集合森林來高效實現此算法。
+利用\insection[disjoint_set_op] 提出的快速不相交集合森林來高效實現此算法。
 假定輸入任務集合已經按懲罰值單調遞減的順序排序。
 分析實現程序的運行時間。
 \stopitem

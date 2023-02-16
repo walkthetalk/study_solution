@@ -126,7 +126,7 @@ for k = i to j
 \startPROBLEM
 （Multithreaded matrix algorithms）
 \startigBase[a]\startitem
-參考\refsection{solve_system_of_linear_equation} 中的 \ALGO{LU-DECOMPOSITION}，
+參考\insection[solve_system_of_linear_equation] 中的 \ALGO{LU-DECOMPOSITION}，
 給出其多線程實現的僞碼。使其儘可能並行，分析其工作量、持續時間和並行度。
 \stopitem\stopigBase
 
@@ -135,7 +135,7 @@ for k = i to j
 \stopANSWER
 
 \startigBase[continue]\startitem
-對\refsection{solve_system_of_linear_equation} 中的 \ALGO{LUP-DECOMPOSITION} 做同樣處理。
+對\insection[solve_system_of_linear_equation] 中的 \ALGO{LUP-DECOMPOSITION} 做同樣處理。
 \stopitem\stopigBase
 \stopPROBLEM
 
@@ -144,7 +144,7 @@ for k = i to j
 \stopANSWER
 
 \startigBase[continue]\startitem
-對\refsection{solve_system_of_linear_equation} 中的 \ALGO{LUP-SOLVE} 做同樣處理。
+對\insection[solve_system_of_linear_equation] 中的 \ALGO{LUP-SOLVE} 做同樣處理。
 \stopitem\stopigBase
 
 \startANSWER
@@ -366,7 +366,7 @@ else
 填充數列中的元素，所填值取決於已計算出的相鄰元素以及其他一些信息
 （計算過程中這些信息保持不變）。
 這種計算過程中臨近元素保持不變的模式稱爲{\EMP 模板（stencil）}計算。
-例如，\refsection{lcs} 提供了一個計算最長公共子序列的模板算法，
+例如，\insection[lcs] 提供了一個計算最長公共子序列的模板算法，
 其中 \m{c[i,j]} 的值僅取決於 \m{c[i-1,j]}、 \m{c[i,j-1]} 和 \m{c[i-1,j-1]} 以及
 兩個給定輸入串中的元素 \m{x_i} 和 \m{y_j}。
 輸入的序列是固定不變的，
@@ -381,7 +381,7 @@ else
 此外，整個過程中假設，
 一旦計算 \m{A[i,j]} 時所需的元素都已填寫完，
 就可以在 \m{\Theta(1)} 的時間內填入 \m{A[i,j]}。
-（與\refsection{lcs} 中的 \ALGO{LCS-LENGTH} 一樣）
+（與\insection[lcs] 中的 \ALGO{LCS-LENGTH} 一樣）
 
 將 \m{n\times n} 數列 \m{A} 劃分爲 \m{n/2\times n/2} 的子數列：
 \startformula
@@ -531,7 +531,7 @@ sync
 \stopANSWER
 
 \startigBase[continue]\startitem
-使用嵌套並行，多線程化\refsection{rand_quicksort} 中的 \ALGO{RANDOMIZED-QUICKSORT}
+使用嵌套並行，多線程化\insection[rand_quicksort] 中的 \ALGO{RANDOMIZED-QUICKSORT}
 （注意不是並行化 \ALGO{RANDOMIZED-PARTITION}）。
 給出 \ALGO{P-RANDOMIZED-QUICKSORT} 的僞碼。
 \stopitem\stopigBase
@@ -549,7 +549,7 @@ if p < r
 
 \startigBase[continue]\startitem
 分析給出的隨機快速排序的多線程算法。
-（\hint 回顧\refsection{selection_in_expected_linear_time} 中
+（\hint 回顧\insection[selection_in_expected_linear_time] 中
 關於 \ALGO{RANDOMIZED-SELECT} 的分析。）
 \stopitem\stopigBase
 

@@ -58,7 +58,7 @@ cl_int clEnqueueNDRangeKernel (
 其中 \math{0\leq i \leq \marg{work_dim} -1}。
 
 也可以在\cnglo{program}源碼中通過限定符
-\ccmm{__attribute__((reqd_work_group_size(X, Y, Z)))} （參見\refsection{optAttrQlf}）
+\ccmm{__attribute__((reqd_work_group_size(X, Y, Z)))} （參見\insection[optAttrQlf]）
 為 \carg{kernel} 指定\cnglo{workgrp}的大小。
 這種情況下， \carg{local_work_size} 的值必須與此特性限定符所指定的值相匹配。
 

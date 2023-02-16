@@ -62,7 +62,7 @@ a = *p;		<- not allowed. must use vload_half function
 
 函式 \clapi{vload_half}、 \clapi[n]{vload_half}、 \clapi[n]{vloada_half}
 和 \clapi{vstore_half}、 \clapi[n]{vstore_half}、 \clapi[n]{vstorea_half}
-可分別裝載和存儲 \cldt{half} 指位器，參見\refsection{vectorLsFunc}。
+可分別裝載和存儲 \cldt{half} 指位器，參見\insection[vectorLsFunc]。
 裝載函式可從內存中讀取標量或矢量 \cldt{half} 值 並將其轉換成 \cldt{float} 值。
 而存儲函式則將標量或矢量 \cldt{float} 值作為輸入，並（以恰當的捨入模式）
 將其轉換成標量或矢量 \cldt{half} 值後寫入內存中。
@@ -89,7 +89,7 @@ a = *p;		<- not allowed. must use vload_half function
 \startnotepar
 對於這些內建的矢量數據型別，即使下層的計算設備不支持， OpenCL 實作也要支持。
 設備編譯器需要將這些型別翻譯成恰當的指令，用計算設備原生支持的內建型別來取代他。
-\refappendix{port}中描述了矢量型別所含組件在內存中的順序。
+\inappendix[port]中描述了矢量型別所含組件在內存中的順序。
 \stopnotepar
 
 \reftab{builtInVectorDataTypes}中列出了內建的矢量數據型別。
@@ -125,9 +125,9 @@ a = *p;		<- not allowed. must use vload_half function
 \stopnotepar
 
 C99 的衍生型別（陣列、結構體、聯合體、函式以及指位器）也在支持之列，
-不過必須是由\refsection{bisdt}、\refsection{bivdt}
-和\refsection{obidt}中所描述的內建數據型別所構造的，
-同時有\refsection{restrictions}中所描述的限制。
+不過必須是由\insection[bisdt]、\insection[bivdt]
+和\insection[obidt]中所描述的內建數據型別所構造的，
+同時有\insection[restrictions]中所描述的限制。
 
 % Reserved Data Types
 \subsection{保留的數據型別}
@@ -159,7 +159,7 @@ OpenCL 編譯器負責數據項的對齊。
 如果 \cqlf{__kernel} 函式的參數聲明為某種數據型別的指位器，
 那麼 OpenCL 編譯器就可以假定這個指位器已經按照相應數據型別的要求進行了對齊。
 如果裝載或存儲時沒有對齊，則其行為是未定義的，
-\refsection{vectorLsFunc}中定義的函式 \clapi[n]{vload}、 \clapi[n]{vload_half}、
+\insection[vectorLsFunc]中定義的函式 \clapi[n]{vload}、 \clapi[n]{vload_half}、
  \clapi[n]{vstore} 和 \clapi[n]{vstore_half} 例外。
 矢量裝載函式可以從已經按矢量元素型別對齊的位址中讀取矢量數據。
 矢量存儲函式可以將矢量數據寫入已經按矢量元素型別對齊的位址中。

@@ -15,29 +15,52 @@
 ]
 \fi
 
-\define[1]\refchapter{%
-\in{第}{章}[chapter:#1]%
+% 缺省的交叉引用会在前面自动添加空格
+\def\defineIn[#1][#2]{%
+\expandafter\definereferenceformat[in#1][#2]
+\expandafter\let
+  \csname stdin#1\expandafter\endcsname
+  \csname in#1\endcsname
+\expandafter\def\csname in#1\endcsname[##1]{%
+\csname stdin#1\endcsname[#1:##1]%
+}
 }
 
-\define[1]\refappendix{%
-\in{附錄}{}[appendix:#1]%
-}
+% in chapter
+\defineIn[chapter][
+  left=第,
+  right=章,
+]
 
-\define[1]\refappendixsec{%
-\in{附錄}{}[section:#1]%
-}
+% in appendix
+\defineIn[appendix][
+  left=附錄,
+  right=,
+]
 
-\define[1]\refsection{%
-\in{節}{}[section:#1]%
-}
+% in appendixsec
+\defineIn[appendixsec][
+  left=附錄,
+  right=,
+]
 
-\define[1]\refitem{%
-\in{第}{項}[item:#1]%
-}
+% in section
+\defineIn[section][
+  left=第,
+  right=章,
+]
 
-\define[1]\reffig{%
-\in{圖}{}[fig:#1]%
-}
-\define[1]\reftab{%
-\in{表}{}[tab:#1]%
-}
+% in item
+\defineIn[item][
+  left=第,
+  right=項,
+]
+
+\defineIn[fig][
+  left=圖,
+  right=,
+]
+\defineIn[tab][
+  left=表,
+  right=,
+]

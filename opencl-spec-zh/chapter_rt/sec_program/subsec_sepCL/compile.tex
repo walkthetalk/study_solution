@@ -33,7 +33,7 @@ cl_int clCompileProgram(
 \carg{num_devices} 即 \carg{device_list} 中\cnglo{device}的數目。
 
 \carg{options} 指向一個以 null 終止的字串，用來描述編譯選項。
-所支持的選項請參閱\refsection{compilerOption}。
+所支持的選項請參閱\insection[compilerOption]。
 
 \carg{num_input_headers} 即陣列 \carg{input_headers} 中\cnglo{program}的數目。
 
@@ -44,7 +44,7 @@ cl_int clCompileProgram(
 每一項就是 \carg{program} 源碼中一個內嵌頭檔的名字。
 \carg{input_headers} 中對應項即為包含此頭檔源碼的\cnglo{programobj}。
 搜索頭檔時，
-內嵌頭檔比編譯選項 \ccmm{-I} 所列目錄（\refsection{preprocessorOption}）有更高優先級。
+內嵌頭檔比編譯選項 \ccmm{-I} 所列目錄（\insection[preprocessorOption]）有更高優先級。
 如果 \carg{header_include_names} 中有多項名字相同的頭檔，則使用最先搜索到的。
 
 例如，假設有如下\cnglo{program}源碼：

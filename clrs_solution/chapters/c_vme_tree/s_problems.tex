@@ -36,7 +36,7 @@ P(u) = (\sqrt{u}+1)P(\sqrt{u}) + \Theta(\sqrt{u})
  RS-vEB 樹是一棵 vEB 樹，但作出了如下修改：
 \startigNum[1]
 \item 屬性 V.cluster 並不是一個指向全域大小爲 \m{\sqrt{u}} 的 vEB 樹的簡單指針數列，
-而是一個散列表（見\refchapter{hash_tables}），以動態表的方式來存儲（\refsection{dynamic_tables}）。
+而是一個散列表（見\inchapter[hash_tables]），以動態表的方式來存儲（\insection[dynamic_tables]）。
 相應於 V.cluster 的數列版本，而散列表存儲指向全域大小爲 \m{\sqrt{u}} 的 RS-vEB 樹的指針。
 於是要查找第 \m{i} 個簇，就在散列表中查找關鍵字 \m{i}，
 所以可以用在散列表中的簡單搜索找到第 \m{i} 個簇。
@@ -124,7 +124,7 @@ return V
  \ALGO{INSERT} 和 \ALGO{DELETE} 操作的攤還時間爲 \m{O(\lg\lg u)}。
 像縮減空間的 van Emde Boas 樹一樣（見\refproblem{cs_veb}），
  y-fast 檢索樹存儲 \m{n} 個元素的空間僅需要 \m{O(n)} 空間。
- y-fast 檢索樹的設計依賴於完全散列（見\refsection{perfect_hashing}）。
+ y-fast 檢索樹的設計依賴於完全散列（見\insection[perfect_hashing]）。
 
  假設創建一個完全散列表作爲初步的結構，
  該散列表中不僅包含動態集合中的每個元素，

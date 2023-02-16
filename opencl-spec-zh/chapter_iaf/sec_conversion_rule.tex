@@ -106,7 +106,7 @@ convert_char_sat_rte(f * 127.0f)
 convert_short_sat_rte(f * 32767.0f)
 \stopclCmmDesc
 
-對於溢出時的行為以及飽和轉換規則請參考\refsection{oorbasc}。
+對於溢出時的行為以及飽和轉換規則請參考\insection[oorbasc]。
 
 OpenCL 實作也可能採用其他捨入模式來逼近上述轉換結果。
 如果使用的捨入模式不是捨入為最近偶數（\ccmm{_rte}），
@@ -156,7 +156,7 @@ fabs(f\low{preferred} – f\low{approx}) 必須 <= 0.6
 \subsection{半精度浮點通道數據類型的轉換規則}
 
 如果圖像通道數據類型為 \cenum{CL_HALF_FLOAT}，
-則由 \ctype{half} 到 \ctype{float} 的轉換是無損的（參見\refsection{dataTypeHalf}）。
+則由 \ctype{half} 到 \ctype{float} 的轉換是無損的（參見\insection[dataTypeHalf]）。
 由 \ctype{float} 到 \ctype{half} 的轉換中，
 捨入尾數所用的捨入模式為捨入為最近偶數或向零捨入。
 型別為 \ctype{half} 的去規格化數（可能是將 \ctype{float} 轉換為 \ctype{half} 時生成）

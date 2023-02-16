@@ -3,7 +3,7 @@
 \subsection{簡介}
 
 本擴展是為了使得在 OpenCL 和 Direct3D 10 間可以進行互操作。
-其運作方式與\refsection{clShareGl}和\refsection{clEvtObjFromGlSync}中的 OpenGL 類似。
+其運作方式與\insection[clShareGl]和\insection[clEvtObjFromGlSync]中的 OpenGL 類似。
 如果實作支持本擴展，
 則 \cenum{CL_PLATFORM_EXTENSIONS} 或 \cenum{CL_DEVICE_EXTENSIONS} 中
 應包含字串 \clext{cl_khr_d3d10_sharing}，參見\reftab{cldevquery}。
@@ -127,7 +127,7 @@ CL_D3D10_RESOURCE_NOT_ACQUIRED_KHR	-1005
 % Additions to Chapter 4 of the OpenCL 1.2 Specification
 \subsection{對第 4 章的補充}
 
-\refsection{contexts}中，用下列內容取代 \clapi{clCreateContext} 後面對 \carg{properties} 的描述：
+\insection[contexts]中，用下列內容取代 \clapi{clCreateContext} 後面對 \carg{properties} 的描述：
 \startreplacepar
 \carg{properties} 指向一個特性列，即 \ccmm{<特性名, 值>} 的陣列，以零終止。
 如果此陣列中沒有某個特性，則使用其缺省值，參見\reftab{prptForclCreateContext}。

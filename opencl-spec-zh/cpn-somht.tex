@@ -43,7 +43,7 @@ OpenCL \cnglo{memobj}、\cnglo{programobj}或\cnglo{kernelobj}都可以由多個
 \chapter{多個主機線程}
 
 除了 \capi{clSetKernelArg}，所有的 OpenCL API 調用都是\refglo{thsafe}\inmargin{%
-請參考\refchapter{glossary}中對\cnglo{thsafe}的定義。
+請參考\inchapter[glossary]中對\cnglo{thsafe}的定義。
 在不同語境中這個名詞的定義可能不一樣。}的。
 只要操作的是不同的 \ctype{cl_kernel} 對象，
 那麼在任何 \cnglo{host} 線程中調用 \capi{clSetKernelArg} 都是安全的，
@@ -51,7 +51,7 @@ OpenCL \cnglo{memobj}、\cnglo{programobj}或\cnglo{kernelobj}都可以由多個
 然而，如果多個\cnglo{host}線程同時調用 \capi{clSetKernelArg}
 以操作同一個 \ctype{cl_kernel} 對象，則其行為\cnglo{undef}。
 需要注意的是，如果是在 OpenCL 回調函式中調用 OpenCL API，還有其他限制，
-請參考\refsection{evtObj}。
+請參考\insection[evtObj]。
 
 \startnotepar
 在 OpenCL 的設計中還存在一個天生的竟態：

@@ -76,7 +76,7 @@ uchar4	vtrue = (uchar4)true;
 \startclc
 convert_destType(sourceType)
 \stopclc
-這組函式可以支持所有所支持型別（參加\refsection{bisdt}、\refsection{bivdt}和\refsection{obidt}）
+這組函式可以支持所有所支持型別（參加\insection[bisdt]、\insection[bivdt]和\insection[obidt]）
 間的型別轉換，這些型別除外：
  \ctype{bool}、 \ctype{half}、 \ctype{size_t}、 \ctype{ptrdiff_t}、
  \ctype{intptr_t}、 \ctype{uintptr_t} 和 \ctype{void}。
@@ -121,7 +121,7 @@ destTypen convert_destTypen<_sat><_roundingMode> (sourceTypen)
 算元和結果的型別可能相同，這種情況下不會進行轉換，算式的型別和值都不變。
 
 整數之間的轉換遵循 C99 規範的{\ftRef{節 6.3.1.1}} 和{\ftRef{節 6.3.1.3}} 中的轉換規則，
-不過\refsection{oorbasc}中所描述的溢出行為和飽和轉換例外。
+不過\insection[oorbasc]中所描述的溢出行為和飽和轉換例外。
 
 % Rounding Modes
 \subsubsection{捨入模式}
@@ -214,7 +214,7 @@ float4 f = convert_float4_rtp( i );
 在 OpenCL 中，經常有需要將某一種數據型別重釋為另一種數據型別。
 在需要直接存取浮點型別中的位元時就需要這樣做，
 例如，屏蔽掉（mask off）浮點數據的符號位，
-或者使用浮點矢量關係算子的結果（參加\refsection{operator}中的\refitem{relationalOperator}）
+或者使用浮點矢量關係算子的結果（參加\insection[operator]中的\initem[relationalOperator]）
 \footnote{另外，對於一些設計用來支持特定矢量 ISA
 （如 AltiVec\high{TM}、 CELL Broadband Engine\high{TM} 架構）的 C 語言擴展，
 會將這樣的轉換與重排算子（swizzle oprator）一起使用對型別進行還原（unconversion）。
@@ -346,7 +346,7 @@ float3 g = /BTEX\ftEmp{as_float3}/ETEX(f);
 如果與算元的實型相同，則其型域也相同，否則為複數。
 這種模式稱作常規算術轉換（usual arithmetic conversion）。
 如果型別為矢量的算元多於一個，則會發生錯誤。
-按照\refsection{implicityConversion}，不允許在矢量型別間進行隱式轉換。
+按照\insection[implicityConversion]，不允許在矢量型別間進行隱式轉換。
 
 否則，如果算元中只有一個是矢量型別，其他都是標量型別，
 則會先將標量型別轉換成矢量元素的型別，然後將其拓寬成一個新的矢量，

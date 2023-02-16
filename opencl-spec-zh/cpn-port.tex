@@ -14,7 +14,7 @@ OpenCL 的設計、能力以及限制很好的反映了下層硬件的能力。
 不幸的是，有很多事情某種硬件能夠做到，而對於其他硬件來說則無能為力。
 拜常駐 CPU 的操作系統所賜，在一些實作中，
 \cnglo{kernel}在 CPU 上執行時可以調出系統服務，
-而在 GPU 上同樣的調用則可能會失敗，至少目前如此。（參見\refchapter{optExt}）。
+而在 GPU 上同樣的調用則可能會失敗，至少目前如此。（參見\inchapter[optExt]）。
 出於調試的目的，這些服務還是非常有用的，實作可以用 OpenCL 的擴展機制來實現這些服務。
 
 同樣，計算架構的不同可能意味着，一個迴圈結構在 CPU 上的執行速度還可以接受，
@@ -130,7 +130,7 @@ v contains { x[3], x[2], x[1], x[0] }
 將一個矢量轉型成另外一個大小相同但元素個數不同的矢量，
 則在不同的實作中可能得到不同的結果，這取決於系統是大端的、小端的，還是根本沒有矢量單元。
 （因此，對於元素數目不同的矢量間的直轉（bitcast），
-其行為\cnglo{impdef}，參見\refsection{reinterpret}。）
+其行為\cnglo{impdef}，參見\insection[reinterpret]。）
 
 看下面這個例子：
 \startclc[indentnext=no]
@@ -179,7 +179,7 @@ OpenCL 以移植性的名義規定，如果無需轉換的轉型改變了元素�
 \startigBase
 \item 使用算子 \ccmm{.even} 和 \ccmm{.odd} 將兩個 \ccmm{uchar8} 分別
 作為 \ccmm{ushort} 的高字節和低字節組合成一個 \ccmm{ushort8}
-（請使用 \capi{upsample}，參見\refsection{integerFunc}）。
+（請使用 \capi{upsample}，參見\insection[integerFunc]）。
 
 \item 任何會改變矢量元素數目的直轉。（新型別上的運算是不可移植的。）
 
@@ -218,7 +218,7 @@ OpenCL \ccmm{convert_} 算子的飽和版本和非飽和版本可能都會使用
 如果移位運算的移位數大於或等於第一個算子的位數，則會對其取模。
 例如，如果要將 \ccmm{int4} 左移 \ccmm{33} 位，則 OpenCL 將按左移 \ccmm{33%32 = 1} 對待。
 
-\item 對於數學庫函式中的大量邊界條件，比 C99 定義的更加嚴格。參見\refsection{edgeCaseBehavior}。
+\item 對於數學庫函式中的大量邊界條件，比 C99 定義的更加嚴格。參見\insection[edgeCaseBehavior]。
 \stopigBase
 
 \stopcomponent

@@ -136,7 +136,7 @@ CL_PLATFORM_NOT_FOUND_KHR	-1001
 % Additions to Chapter 4 of the OpenCL 1.2 Specification
 \subsection{對第四章的補充}
 
-以下列內容取代\refsection{queryPlf}中對 \clapi{clGetPlatformIDs} 的返回值的描述：
+以下列內容取代\insection[queryPlf]中對 \clapi{clGetPlatformIDs} 的返回值的描述：
 \startreplacepar
 如果執行成功，並且找到了至少一個可用\cnglo{platform}，
 則 \clapi{clGetPlatformIDs} 會返回 \cenum{CL_SUCCESS}。
@@ -146,7 +146,7 @@ CL_PLATFORM_NOT_FOUND_KHR	-1001
 則返回 \cenum{CL_INVALID_VALUE}。
 \stopreplacepar
 
-\refsection{queryPlf}中，在 \clapi{clGetPlatformIDs} 的描述後添加以下內容：
+\insection[queryPlf]中，在 \clapi{clGetPlatformIDs} 的描述後添加以下內容：
 \startreplacepar
 \topclfunc{clIcdGetPlatformIDsKHR}
 
@@ -189,7 +189,7 @@ cl_int clIcdGetPlatformIDsKHR (
 % Additions to Chapter 9 of the OpenCL 1.2 Extension Specification
 \subsection{對第九章的補充}
 
-在\refsection{getFuncPtr}的最後添加以下內容：
+在\insection[getFuncPtr]的最後添加以下內容：
 \startreplacepar
 對於 ICD 裝載器所支持的那些函式，
  \clapi{clGetExtensionFunctionAddress} 會返回 ICD 裝載器實作的函式指位器。

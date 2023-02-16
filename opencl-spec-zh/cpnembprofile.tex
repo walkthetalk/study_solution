@@ -83,10 +83,10 @@ OpenCL 1.2 嵌入式規格有如下局限：
 （\ccmm{<}、 \ccmm{>}、 \ccmm{<=}、 \ccmm{>=}、 \ccmm{==}、 \ccmm{!=}）
 所返回的值也\cnglo{impdef}。
 
-所有情況下，轉換（\refsection{conversionCast}和\refsection{vectorLsFunc}）
+所有情況下，轉換（\insection[conversionCast]和\insection[vectorLsFunc]）
 都要像 \cenum{FULL_PROFILE} 一樣正確捨入，包括那些會消耗或產生 INF 或 NaN 的轉換。
-內建數學函式（\refsection{mathFunc}）的表現也與 \cenum{FULL_PROFILE} 中描述的一樣，
-包括\refsection{addReqBeyondC99}中所描述的邊界條件下的行為，
+內建數學函式（\insection[mathFunc]）的表現也與 \cenum{FULL_PROFILE} 中描述的一樣，
+包括\insection[addReqBeyondC99]中所描述的邊界條件下的行為，
 但是精確度則以\reftab{EP_ulpMathFunc}為准。
 
 \startnotepar
@@ -102,8 +102,8 @@ OpenCL 1.2 嵌入式規格有如下局限：
 對於由 \cenum{CL_UNORM_INT8}、 \cenum{CL_SNORM_INT8}、 \cenum{CL_UNORM_INT16}
 和 \cenum{CL_SNORM_INT16} 到 \ctype{float} 的轉換，
 在嵌入式規格中要求其精度 \math{\leq 2 ulp}，
-這取代了\refsection{normIntToFloat}中的 \math{\leq 1.5 ulp}。
-在嵌入式規格中，\refsection{normIntToFloat}中的異常情況以及下列異常情況都有效。
+這取代了\insection[normIntToFloat]中的 \math{\leq 1.5 ulp}。
+在嵌入式規格中，\insection[normIntToFloat]中的異常情況以及下列異常情況都有效。
 
 \startclCmmDesc{對於 \cenum{CL_UNORM_INT8}}
 \ccmm{0} 必須轉換為 \ccmm{0.0f}
@@ -141,7 +141,7 @@ OpenCL 1.2 嵌入式規格有如下局限：
 \stopitem
 
 \startitem
-\refsection{atomicFunc}中所定義的原子函式是可選的。
+\insection[atomicFunc]中所定義的原子函式是可選的。
 \stopitem
 \stopigNum
 
@@ -175,7 +175,7 @@ OpenCL 1.0 和 OpenCL 1.1 規範中所定義的下列擴展（{\ftRef{第 9 章}
 {內建數學函式的 ULP 值}
 {\input{chapter_emb_profile/tbl/tbl_ep_spmathulp.tex}}
 
-語言中加入了巨集 \cmacro{__EMBEDDED_PROFILE__} （參見\refsection{pp_macro}）。
+語言中加入了巨集 \cmacro{__EMBEDDED_PROFILE__} （參見\insection[pp_macro]）。
 對於那些實現了嵌入式規格的 OpenCL \cnglo{device}，此巨集為整數常量 1，
 否則未定義此巨集。
 

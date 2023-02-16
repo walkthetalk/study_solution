@@ -81,7 +81,7 @@
 （Average node depth in a randomly built binary search tree）
 現有一棵隨機構建的二叉搜索樹，証明其節點平均深度為 \m{O(\lg{n})}。
 雖然此結果比定理 12.4 要弱，但是我們要使用的方法將會告訴你，構建二叉搜索樹的過程，
-與\refsection{rand_quicksort} 中執行 \ALGO{RANDOMIZED-QUICKSORT} 驚人的相似。
+與\insection[rand_quicksort] 中執行 \ALGO{RANDOMIZED-QUICKSORT} 驚人的相似。
 
 給定二叉搜索樹 \m{T}，其中任一節點 \m{x} 的深度為 \m{d(x, T)}，則所有節點深度的和為 \m{P(T)}，
 稱為 \m{T} 的 {\EMP 路徑總長度（total path length）}。
@@ -213,7 +213,7 @@ f(x) = \sum_{k=0}^{\infty}\frac{f^{(k)}(a)}{k!}(x-a)^k
 b_n = \frac{1}{n+1}\binom{2n}{n}
 \stopformula
 （即第 \m{n} 個 {\EMP Catalan number}）如果不想用泰勒展開式，也可以使用二項展開式，
-參見\refsection{geometric_binom}，
+參見\insection[geometric_binom]，
 將其推廣到非整數的指數 \m{n} 上去，也就是對於所有實數 \m{n} 和任一整數 \m{k}，
 當 \m{k\ge 0} 時，\m{\binom{n}{k}} 可以表示爲 \m{n(n-1)\cdots(n-k+1)/k!}，否則爲 0。
 \stopitem

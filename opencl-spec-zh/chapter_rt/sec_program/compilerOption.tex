@@ -59,7 +59,7 @@ OpenCL 編譯器可以選擇不將其刷成零。
 \startclOption{-cl-fp32-correctly-rounded-divide-sqrt}
 對於\cnglo{program}源碼中的單精度浮點除法（\ccmm{x/y} 和 \ccmm{1/x}）和 \ccmm{sqrt} 而言，
 \cnglo{app}可以使用此選項來保證對他們進行正確的捨入；
-而如果沒有使用此選項，則他們的最小數值精確度在\refsection{relativeError}中定義。
+而如果沒有使用此選項，則他們的最小數值精確度在\insection[relativeError]中定義。
 
 只有在對應\cnglo{device}的 \cenum{CL_DEVICE_SINGLE_FP_CONFIG}
 （參見\reftab{cldevquery}）
@@ -100,23 +100,23 @@ OpenCL 編譯器可以選擇不將其刷成零。
 \startigBase
 \item 假定參數和結果都是有效的；
 \item 可能違反 IEEE 754 的標準；以及
-\item 可能違反\refsection{relativeError}中所定義的對單雙精度浮點數的數值符合性的要求，
-還有\refsection{edgeCaseBehavior}中邊界條件下的行為。
+\item 可能違反\insection[relativeError]中所定義的對單雙精度浮點數的數值符合性的要求，
+還有\insection[edgeCaseBehavior]中邊界條件下的行為。
 \stopigBase
 此選項包含了 \ccmm{-cl-no-signed-zeros} 和 \ccmm{-cl-mad-enable}。
 \stopclOption
 
 \startclOption{-cl-finite-math-only}
 在執行浮點算術運算時，可以假定引數和結果都不是 NaN 或 \math{\pm\infty}。
-這可能違反\refsection{relativeError}中所定義的對單雙精度浮點數的數值符合性的要求，
-還有\refsection{edgeCaseBehavior}中邊界條件下的行為。
+這可能違反\insection[relativeError]中所定義的對單雙精度浮點數的數值符合性的要求，
+還有\insection[edgeCaseBehavior]中邊界條件下的行為。
 \stopclOption
 
 \startclOption{-cl-fast-relaxed-math}
 相當於 \ccmm{-cl-finite-math-only} 和 \ccmm{-cl-unsafe-math-optimizations} 的組合。
 對浮點算術的優化可以違反 IEEE 754 的標準，
-也可以違反\refsection{relativeError}中所定義的對單雙精度浮點數的數值符合性的要求，
-還有\refsection{edgeCaseBehavior}中邊界條件下的行為。
+也可以違反\insection[relativeError]中所定義的對單雙精度浮點數的數值符合性的要求，
+還有\insection[edgeCaseBehavior]中邊界條件下的行為。
 此選項會使得\cnglo{program}中定義預處理器巨集 \ccmm{__FAST_RELAXED_MATH__}。
 \stopclOption
 
@@ -144,8 +144,8 @@ OpenCL 編譯器可以選擇不將其刷成零。
 確定所使用的 OpenCL C 語言的版本。
 必須為此選項提供一個值。有效的值有：
 \startigBase
-\item CL1.1 —— 所有 OpenCL C \cnglo{program}都使用 OpenCL 1.1 規範\refchapter{clcpl}中所定義的特性。
-\item CL1.2 —— 所有 OpenCL C \cnglo{program}都使用 OpenCL 1.2 規範\refchapter{clcpl}中所定義的特性。
+\item CL1.1 —— 所有 OpenCL C \cnglo{program}都使用 OpenCL 1.1 規範\inchapter[clcpl]中所定義的特性。
+\item CL1.2 —— 所有 OpenCL C \cnglo{program}都使用 OpenCL 1.2 規範\inchapter[clcpl]中所定義的特性。
 \stopigBase
 \stopclOption
 

@@ -2,18 +2,27 @@
   title={Randomized algorithms},
 ]
 
+%5.3-1
 \startEXERCISE
-Marceau 教授不同意引理 5.5 證明中所用的循環不變式。
-他對第一次迭代之前循環不變式是否爲真提出質疑。
-他的理由是，我們可以很容易宣稱一個空數列不包含 0 排列，
-從而第一次迭代之前循環不變式無效。
-請重寫過程 \ALGO{RANDOMIZE-IN-PLACE}，
-使得循環不變式適用於第一次迭代之前的非空子數列，
-並爲你的過程修改引理 5.5 的證明。
+Marceau 教授不同意引理 5.4 證明中所用的循環不變式。
+第一次迭代之前循環不變式是否爲真？他對此提出了質疑。
+他的理由是，我們也可以宣稱一個空數列不包含 0-排列，
+從而在第一次迭代之前使得循環不變式失效。
+請重寫過程 \ALGO{RANDOMLY-PERMUTE}，
+使得在第一次迭代之前子數列非空的情况下，
+循環不變式依舊適用。
+並据此证明引理 5.4。
+
+\CLRSH{RANDOMLY-PERMUTE(A,n)}
+
+\startCLRSCODE
+for i = 1 to n
+	// swap A[i] with A[RANDOM(i,n)]
+\stopCLRSCODE
 \stopEXERCISE
 \startANSWER
 變通一下，其實我們可以在循環之前，隨機選擇一個元素來替代第一個。
-這樣不變式對於 1 排列是有效的。
+這樣不變式對於 1-排列是有效的。
 \stopANSWER
 
 \startEXERCISE

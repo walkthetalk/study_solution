@@ -76,9 +76,9 @@
 先調用 \ALGO{TREE-SEARCH(x, a)}，對其稍作修改，使其返回大於等於 a 的最小元素，
 如果沒有就返回空。此步需要時間 \m{O(\lg n)}。
 然後不停調用 \ALGO{TREE-SUCCESSOR(x)}，直到遇到比 b 大的節點。共需 m 次。
-根據\refexercise{cont_successor}，這 m 次調用需要時間爲 \m{O(m+h)}。
+根據\inexercise[cont_successor]，這 m 次調用需要時間爲 \m{O(m+h)}。
 因此總時間爲 \m{\Theta(m + \lg n)}。
-我們也可以根據\refexercise{add_pointer_for_node} 使用指向前驅、後繼節點的指針，但總的時間還是 \m{O(m+\lg n)}。
+我們也可以根據\inexercise[add_pointer_for_node] 使用指向前驅、後繼節點的指針，但總的時間還是 \m{O(m+\lg n)}。
 \stopANSWER
 
 \stopsection

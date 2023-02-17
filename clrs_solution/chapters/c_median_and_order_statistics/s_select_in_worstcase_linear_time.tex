@@ -102,12 +102,12 @@ T(n) = T(\lceil n/3 \rceil) + T(2n/3 + 4) + O(n)
 \startANSWER
 用 \ALGO{SELECT} 的方式重寫 \ALGO{PARTITION}，
 則時間變爲 \m{O(n)}；
-但是當 \m{n} 足夠大時，最小的劃分將是整個輸入的四分之一（參見\refexercise{partition_1_4}）。
+但是當 \m{n} 足夠大時，最小的劃分將是整個輸入的四分之一（參見\inexercise[partition_1_4]）。
 遞迴式爲：
 \startformula
 T(n)=T(n/4)+T(3n/4)+O(n)
 \stopformula
-由\refexercise{partition_alpha} 可知，解爲 \m{\Theta(n\lg{n})}。
+由\inexercise[partition_alpha] 可知，解爲 \m{\Theta(n\lg{n})}。
 
 這樣我們就可以改善快速排序的漸進時間，雖然常數因子太大以致不太實用。
 

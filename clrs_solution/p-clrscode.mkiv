@@ -233,9 +233,11 @@
   %numberstopper={：},
   way=bysection,
 ]
-\define[1]\refexercise{%
-\in{練習}{}[exercise:#1]%
-}
+
+\defineIn[exercise][
+  left=練習,
+  right=,
+]
 
 \defineenumeration[PROBLEM][
   text={思考題},

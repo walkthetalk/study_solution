@@ -75,7 +75,7 @@ C(x) = 56 x^6 - 8x^5 - 34x^4 - 53x^3 - 9x^2 + 63x - 30
 \startEXERCISE
 說明如何利用等式（30.5）在 \m{\Theta(n^2)} 時間複雜度內進行插值運算。
 （\hint 首先計算多項式 \m{\Pi_{j}(x - x_j)} 的係數表達，
-然後把每項的分子除以 \m{(x - x_k)}；參見\refexercise{30.1-2}。
+然後把每項的分子除以 \m{(x - x_k)}；參見\inexercise[30.1-2]。
 你可以在 \m{O(n)} 時間複雜度內計算 \m{n} 個分母中的每一個。）
 附等式：
 \startformula
@@ -90,7 +90,7 @@ A(x) = \sum_{k=0}^{n-1} y_k \frac{\Pi_{j\ne k}(x - x_j)}{\Pi_{j\ne k}(x_k - x_j)
 \item 然後利用 \ALGO{DFT} 逆求出其係數表達，時間爲 \m{O(n\lg n)}；
 \item 再寫一個求 \m{y_k / \Pi(x_j - x_k)} 的循環，時間爲 \m{O(n^2)}，
 把求得的值存入數列 a；
-\item 利用\refexercise{30.1-2}，對這個求出係數的多項式依次除以 \m{(x-x_j)} 並乘以 \m{a[i]}，
+\item 利用\inexercise[30.1-2]，對這個求出係數的多項式依次除以 \m{(x-x_j)} 並乘以 \m{a[i]}，
 每次做除法需要 \m{O(n)} 時間，然後同時循環 n 次求累加和，
 最終這個雙重循環需要時間 \m{O(n^2)}；
 \stopigBase

@@ -95,7 +95,7 @@ $T(n) = 1 + 2 + 3 + ... + (n-1) = \Theta(n^2)$
 \stopANSWER
 
 \startEXERCISE[exercise:bin_search]
-回顧\refexercise{linear_earch} 中的搜索問題，我們發現：
+回顧\inexercise[linear_earch] 中的搜索問題，我們發現：
 如果待搜索的子數列已經排好序，
 則搜索算法可以檢查子數列的中間數值，而不是檢查 $v$，
 在下一步搜索時可以直接跳過子數列中的一半數據。
@@ -130,7 +130,7 @@ T(n) = T(n/2) + c = \Theta(\lg n)
 在\insection[insersion_sort] 的例程 \ALGO{INSERTION-SORT} 中，
 第 5~7 行的 \CLRSCODE{while} 循環以綫性搜索的方式，
 後向掃描已排好序的子數列 $A[1:j-1]$。
-如果用二分查找（\refexercise{bin_search}）代替綫性查找，該怎麽做？
+如果用二分查找（\inexercise[bin_search]）代替綫性查找，該怎麽做？
 這能將最壞情況的運行時間提升到 $\Theta(n\lg n)$ 嗎？
 \stopEXERCISE
 \startANSWER

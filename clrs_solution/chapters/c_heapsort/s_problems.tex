@@ -37,7 +37,7 @@ for i = 2 to A.length
 最壞情況下， \ALGO{MAX-HEAP-INSERT} 的運行時間爲 \m{\Theta(\lg{n})}，會被調用 \m{n-1} 次。
 最壞情況下， \ALGO{MAX-HEAP-INSERT} 會將所有元素都移到堆的根節點上， 即需要 \m{\lg{k}} 次交換，
 無論 \m{k} 的值是多少。
-如果輸入數列已經是排好序的，則就是最壞情況。時間復雜度爲（參見\refexercise{lg_n_fac}）：
+如果輸入數列已經是排好序的，則就是最壞情況。時間復雜度爲（參見\inexercise[lg_n_fac]）：
 \startformula
 \sum_{i=2}^{n}\lg{i} = \lg(n!) = \Theta(n\lg{n})
 \stopformula

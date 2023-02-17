@@ -27,7 +27,7 @@
 
 %e21.4-3
 \startEXERCISE
-根據\refexercise{21.4-2} 的結論，對於每個節點 \m{x}，需要多少位（bit）來存儲 \m{x.rank}？
+根據\inexercise[21.4-2] 的結論，對於每個節點 \m{x}，需要多少位（bit）來存儲 \m{x.rank}？
 \stopEXERCISE
 
 \startANSWER
@@ -36,7 +36,7 @@
 
 %e21.4-4
 \startEXERCISE
-利用\refexercise{21.4-2} 請給出一個簡單的證明，
+利用\inexercise[21.4-2] 請給出一個簡單的證明，
 證明在一個不相交集合森林上使用按秩合併策略而不使用路徑壓縮策略的運行時間爲 \m{O(m\lg n)}。
 \stopEXERCISE
 
@@ -62,7 +62,7 @@ Dante 教授認爲，因爲各節點的秩在一條指向根的簡單路徑上�
 考慮函數 \m{\alpha'(n)=\min\{k:A_k(1)\ge\lg(n+1)\}}。
 證明：
 對於 \m{n} 的所有實際值，有 \m{\alpha'(n)\le 3}，
-並利用 \refexercise{21.4-2}，
+並利用 \inexercise[21.4-2]，
 說明如何修改勢函數的參數來證明對於一組 \m{m} 個 \ALGO{MAKE-SET}、 \ALGO{UNION} 和 \ALGO{FIND-SET} 操作的序列
 （其中 \m{n} 個是 \ALGO{MAKE-SET} 操作），
 我們能在一個不相交集合森林上使用按秩合併與路徑壓縮在最壞情況時間 \m{O(m\alpha'(n))} 內處理完。

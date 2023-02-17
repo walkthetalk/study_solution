@@ -31,22 +31,22 @@
 
 \setupzhfonts
 [serif]
-[regular=adobesongstd,
-bold=adobeheitistd,
+[regular=notoserifcjktc,%adobesongstd,
+bold=notoserifcjktcbold,%adobeheitistd,
 italic=adobekaitistd,
 bolditalic=adobeheitistd]
 
 \setupzhfonts
 [sans]
-[regular=adobefangsongstd,
-bold=adobeheitistd,
+[regular=notosanscjktc,%adobefangsongstd,
+bold=notosanscjktcblack,%adobeheitistd,
 italic=adobefangsongstd,
 bolditalic=adobeheitistd]
 
 \setupzhfonts
 [mono]
-[regular=adobekaitistd,
-bold=adobeheitistd,
+[regular=notosansmonocjktc,%adobekaitistd,
+bold=notosansmonocjktcbold,%adobeheitistd,
 italic=adobekaitistd,
 bolditalic=adobeheitistd]
 
@@ -94,10 +94,6 @@ bolditalic=notosansbolditalic%texgyreherosbolditalic
 %\definefontsynonym [boyangliuti] [name:hakuyoliuti3500]
 \definefont [booktitle] [zhfonts at 72pt]
 \definefont [booksubtitle] [zhfonts at 36pt]
-
-% 启用中文断行
-\setscript[hanzi]
-\mainlanguage[cn]
 
 % 交互
 %\startallmodes[screen,solution]

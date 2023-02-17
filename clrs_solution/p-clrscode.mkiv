@@ -88,7 +88,7 @@
 
 \defineenumeration[QUESTION][
   text={問題},
-  %right={：},
+  right={\space},
   headstyle=\rm\bf,	%normal bold slanted boldslanted type cap small... command
   headcolor=red,
   %style=\rm\bf,		%normal bold slanted boldslanted type cap small... command
@@ -209,13 +209,13 @@
 
 \defineenumeration[EXERCISE][
   text={練習},
-  right={ ：},
+  right={\space},
   headstyle=\rm\bf,	%normal bold slanted boldslanted type cap small... command
   headcolor=red,
   %style=\rm\bf,		%normal bold slanted boldslanted type cap small... command
   color=red,	%name
   width=fit,	%fit broad dimension
-  distance=0em,		%dimension
+  distance=.5em,		%dimension
 %sample	text
   %align=flushleft,	%flushleft middle flushright
   %margin=no,	%standard yes no dimension
@@ -230,7 +230,7 @@
   prefix=yes,
   prefixsegments=chapter:section, %chapter:section
   prefixconnector={-},
-  %numberstopper={：},
+  numberstopper={ ：},
   way=bysection,
 ]
 
@@ -241,13 +241,14 @@
 
 \defineenumeration[PROBLEM][
   text={思考題},
-  right={ ：},
+  left={},
+  right={},
   headstyle=\rm\bf,	%normal bold slanted boldslanted type cap small... command
   headcolor=red,
   %style=\rm\bf,		%normal bold slanted boldslanted type cap small... command
   color=red,	%name
   width=fit,	%fit broad dimension
-  distance=0em,		%dimension
+  distance=.5em,		%dimension
 %sample	text
   %align=flushleft,	%flushleft middle flushright
   %margin=no,	%standard yes no dimension
@@ -262,7 +263,7 @@
   prefix=yes,
   prefixsegments=chapter, %chapter:section
   prefixconnector={-},
-  %numberstopper={：},
+  numberstopper={ ：},
   way=bychapter,
 ]
 \define[1]\refproblem{%

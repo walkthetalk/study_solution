@@ -219,11 +219,9 @@ function zhfonts.setup (metainfo, fontinfo)
 end
 
 function zhfonts.main (param)
-    context ('\\setscript[hanzi]')
     local arg_list = string_split_and_strip (param, ',')
     if arg_list[1] ~= "none" and arg_list[2] ~= "none" then
 	context ('\\definefontfeature[zh][default][' .. fontfeatures .. ']')
-	context ('\\setupalign[hanging, hz]')
         zhfonts.gen_typescript ()
         if arg_list[1] ~= "hack" and arg_list[2] ~= "hack" then
 	    context ('\\usetypescript[zhfonts]')

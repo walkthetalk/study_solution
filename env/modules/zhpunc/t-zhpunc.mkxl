@@ -17,7 +17,8 @@
 \setupmodule[pattern=quanjiao, spacequad=0.5, hangjian=false]
 
 % 导入lua
-\ctxlua{require("t-zhpunc.lua")}
+%\ctxlua{require("t-zhpunc.lua")}
+\ctxloadluafile{t-zhpunc}
 
 % 传参设置命令
 % local named_values = utilities.parsers.settings_to_hash(keyvals)

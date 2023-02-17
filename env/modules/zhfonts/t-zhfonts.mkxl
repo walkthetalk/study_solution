@@ -14,8 +14,7 @@
 \unprotect
 \setupmodule[style=rm,size=11pt]
 
-\ctxloadluafile{t-zhfonts} % this command can not work in latest beta,
-                            % so i have to use \startluacode ... \stopluacode.
+\ctxloadluafile{t-zhfonts}
 
 \edef\@@@@??style{\currentmoduleparameter{style}}
 \edef\@@@@??size{\currentmoduleparameter{size}}

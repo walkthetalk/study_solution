@@ -40,7 +40,8 @@
 % \definebar[shumhs][text=\lower\exheight\hbox{\tidebars\rotate[rotation=-9]{\kern-0.16em～\kern-0.16em}}, repeat=yes, continue=yes, offset=-0.25]
 
 % 导入lua
-\ctxlua{require("t-jiazhu.lua")}
+%\ctxlua{require("t-jiazhu.lua")}
+\ctxloadluafile{t-jiazhu}
 
 % 传参设置命令
 % local named_values = utilities.parsers.settings_to_hash(keyvals)

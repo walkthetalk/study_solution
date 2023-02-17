@@ -571,7 +571,7 @@ local function process_punc (head, n)
             end
             shinnk_glue.shrink = shrink
         end
-        
+
         head,k = node_insertafter (head, n, nodes_pool_kern (r_kern))
         if  not next_p then --仅处理后面不是标时
             shinnk_glue = the_shrink_glue(k, "next")

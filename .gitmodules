@@ -1,0 +1,3 @@
+[submodule "lmtx_env"]
+	path = scripts
+	url = https://github.com/walkthetalk/lmtx_env

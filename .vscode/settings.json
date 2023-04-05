@@ -1,0 +1,10 @@
+{
+    "editor.tabSize": 8,
+    "tex": {
+        "editor.tabSize": 2
+    },
+    "editor.unicodeHighlight.allowedLocales": {
+        "zh-hans": true,
+        "zh-hant": true
+    }
+}

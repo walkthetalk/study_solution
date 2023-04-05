@@ -1,7 +1,0 @@
-yay -S context
-
-export TEXMF="/usr/share/texmf-dist/texmf-context/"
-export OSFONTDIR="/usr/share/texmf-dist/texmf-context/fonts/"
-mtxrun --generate
-mtxrun --script font --reload
-mtxrun --script fonts --list --all --pattern='*helvetica*'

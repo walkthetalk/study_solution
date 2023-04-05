@@ -1,22 +1,8 @@
-tex_name=main
+pdf_name := CLRS_solution
+doc_env  := book
+dir_main := $(shell dirname $(shell readlink -fe $(lastword ${MAKEFILE_LIST})))
 
-pdf_name=CLRS_solution
-
-dir_self := $(shell dirname $(shell readlink -fe $(lastword ${MAKEFILE_LIST})))
-dir_main := $(shell readlink -fe ${dir_self})
-dir_proj := $(shell readlink -fe ${dir_self}/../)
-
-dir_modules := $(shell find ${dir_proj}/env/modules  -maxdepth 1 -mindepth 1 -type d | tr '\n' ',')
-dir_env  := ${dir_proj}/env/cn
-dir_output := ${dir_main}/output
-output_dirs:=${dir_output}
-
-tex_deps:=$(shell find ${dir_env} -type f)
-tex_deps+=$(shell find . -type f -name \*.tex)
-tex_deps+=$(shell find . -type f -name \*.mp)
-tex_deps+=$(shell find . -type f -name \*.bib)
-tex_deps+=$(shell find . -type f -name \*.lua)
-tex_deps+=$(shell find . -type f -name \*.mkiv)
+include $(dir_main)/../scripts/common.mk
 
 define clean_misc =
 	rm -f $(tex_name).aux $(tex_name).bbl $(tex_name).blg $(tex_name).log $(pdf_name).tuc
@@ -27,51 +13,22 @@ fig_srcs+=$(shell cd fig; find . -type f -name p\*.mp | cut -d '/' -f 2)
 fig_incs:=$(shell cd fig; find . -type f -name "*.mp" | cut -d '/' -f 2 | grep -v "^[e|p]")
 #$(warning figincs is ${fig_incs})
 
-fig_pdfs:=$(patsubst %.mp,$(dir_output)/%-1.pdf,$(fig_srcs))
+fig_pdfs:=$(patsubst %.mp,$(output_dir)/%-1.pdf,$(fig_srcs))
 fig_deps:=$(patsubst %.mp,${dir_main}/fig/%.mp,$(fig_incs))
 
 #$(warning fig srcs is ${fig_pdfs})
 
-LMTX_DIR:=/usr/share/texmf-dist/texmf-context
-
-ifneq ($(MAKECMDGOALS),clean)
-#$(warning MAKECMDGOALS is $(MAKECMDGOALS))
-#$(warning asy_dirs is $(asy_dirs))
-#$(warning output_dirs is $(output_dirs))
-$(foreach temp, $(output_dirs), $(shell mkdir -p $(temp)))
-endif
-
-.PHONY: all
-all: $(pdf_name).pdf
-
-.PHONY: clean
-clean:
-	@rm -f $(pdf_name).pdf
-	@$(call clean_misc)
-	@rm -f ${dir_output}/*
-
 .PHONY: fig_pdfs
 fig_pdfs: ${fig_pdfs}
 
-$(pdf_name).pdf: $(tex_deps) ${fig_pdfs}
-	@echo [gen] $@; \
-	export TEXMF=$(LMTX_DIR); \
-	export OSFONTDIR=/opt/fonts; \
-	context \
-		--purge \
-		--nocompression \
-		--environment=env_cmm \
-		--path=$(dir_modules)$(dir_env) \
-		--result=$(pdf_name).pdf \
-		$(tex_name).tex; \
-	$(call clean_misc)
+${main_object}: ${fig_pdfs}
 
-$(dir_output)/%-1.pdf : ${dir_main}/fig/%.mp ${fig_deps}
+$(output_dir)/%-1.pdf : ${dir_main}/fig/%.mp ${fig_deps}
 	@set -e; \
 	COMPILE_DIR=$$(mktemp -d /tmp/CLRSMP.XXXXXXXX); \
 	echo [compile] $* at $${COMPILE_DIR}; \
 	cp $^ $${COMPILE_DIR}/; \
 	cd $${COMPILE_DIR}; \
 	mptopdf $*.mp > /dev/null; \
-	cp *.pdf ${dir_output}/; \
+	cp *.pdf ${output_dir}/; \
 	rm -r $${COMPILE_DIR}

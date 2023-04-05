@@ -12,17 +12,18 @@
 \writestatus{loading}{ConTeXt User Module / clrscode}
 \startmodule[clrscode]
 
-\define\prdname{《算法导论》習題彙編}
-
-\setupinteraction[
-  state=start,
-  color=blue,
-  contrastcolor=blue,
-  style=bold,
+\setvariables[documentproperty][
   title={《算法导论》習題彙編},
+  subtitle={},
   author={倪慶亮},
-  subtitle={《算法导论》習題彙編},
-  keyword=算法导论 笔记,
+  keyword={算法导论 笔记},
+  authorblog={http://walkthetalk.top},
+  authorgithub={https://github.com/walkthetalk},
+  authoremail={niqingliang2003@gmail.com},
+  companycn={},
+  companyen={},
+  docnumber={},
+  docversion={}
 ]
 
 % The "CLRS" environment
@@ -340,11 +341,10 @@ end
 \definemathmatrix[pmatrix]%
 [left={\left(\,},right={\,\right)}]
 
-\define\hint{{\EMP 提示：}}
+\define\hint{\emph{提示：}}
 
 %urls
 \useurl[urlgreedyalgo][http://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/04GreedyAlgorithmsI.pdf]
 
 \stopmodule
 \endinput
-

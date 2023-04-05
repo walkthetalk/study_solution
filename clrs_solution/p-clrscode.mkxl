@@ -28,33 +28,33 @@
 
 % The "CLRS" environment
 % NOTE: you can only use the star/stop form of CLRS
-\definetyping[CLRS][%option=c,
-  bodyfont=9pt,
-  %space	on off
-  %page	yes no
-  %option	slanted normal commands color none
-  %text	yes no
-  %icommand	command
-  %vcommand	command
-  %ccommand	command
-  before={\vskip.5ex\starttextbackground[verb]},	%command
-  after={\stoptextbackground\vskip.5ex},	%command
-  margin=no,	%dimension standard yes no
-  %evenmargin	dimension
-  %oddmargin	dimension
-  %blank	dimension small medium big standard halfline line
-  escape=yes,	%character %{[[,]]}
-  %space	on off
-  tab=8,	%number yes no
-  %page	yes no
-  %indentnext	yes no
-  style=\tt\tf,		%normal bold slanted boldslanted type cap small... command
-  %color	name
-  %palet	name
-  %lines=yes,	%yes no hyphenated
-  %empty	yes all no
-  numbering=no,	%line file no
-]
+%\definetyping[CLRS][%option=c,
+%  bodyfont=9pt,
+%  %space	on off
+%  %page	yes no
+%  %option	slanted normal commands color none
+%  %text	yes no
+%  %icommand	command
+%  %vcommand	command
+%  %ccommand	command
+%  before={\vskip.5ex\starttextbackground[verb]},	%command
+%  after={\stoptextbackground\vskip.5ex},	%command
+%  margin=no,	%dimension standard yes no
+%  %evenmargin	dimension
+%  %oddmargin	dimension
+%  %blank	dimension small medium big standard halfline line
+%  escape=yes,	%character %{[[,]]}
+%  %space	on off
+%  tab=8,	%number yes no
+%  %page	yes no
+%  %indentnext	yes no
+%  style=\tt\tf,		%normal bold slanted boldslanted type cap small... command
+%  %color	name
+%  %palet	name
+%  %lines=yes,	%yes no hyphenated
+%  %empty	yes all no
+%  numbering=no,	%line file no
+%]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% for enum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % NOTE: if you want to use specific font:
@@ -209,9 +209,9 @@
 ]
 
 \defineenumeration[EXERCISE][
-  text={練習},
-  left={},
-  right={},
+  text={},
+  left={練習 },
+  right={：},
   headstyle=\rm\bf,	%normal bold slanted boldslanted type cap small... command
   headcolor=red,
   %style=\rm\bf,		%normal bold slanted boldslanted type cap small... command
@@ -232,7 +232,7 @@
   prefix=yes,
   prefixsegments=chapter:section, %chapter:section
   prefixconnector={-},
-  numberstopper={ ：},
+  %numberstopper={ ：}, % @note 不要使用，否則\in會包含此內容
   way=bysection,
 ]
 

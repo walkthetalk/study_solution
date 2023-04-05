@@ -85,7 +85,7 @@ $T(n) = n^2 + T(n-2)
 \startigBase[a]
 % a
 \startitem[parameter_pass_cost_item]
-在有序數列中查找元素的遞迴二分查找算法（參見\refexercise{bin_search}）。
+在有序數列中查找元素的遞迴二分查找算法（參見\inexercise[bin_search]）。
 \stopitem
 \startANSWER
 \startigBase[n]
@@ -316,7 +316,7 @@ $\Theta(n^2\sqrt{n}) = \Theta(n^{2.5})$ \hfill（主定理 \m{\log_2{4} = 2 < 2.
 \startPROBLEM[problem:generating_function] （Fibonacci 數）
 本題討論遞迴式（3.22）所定義的 Fibonacci 數的性質。
 我們將使用生成函數技術來求解 Fibonacci 遞迴式。
-{\EMP 生成函數 generating function}（又稱{\EMP 形式冪級數 formal power series}） ${\cal F}$ 定義爲：
+\emph{生成函數 generating function}（又稱\emph{形式冪級數 formal power series}） ${\cal F}$ 定義爲：
 \startformula\startmathalignment
 \NC {\cal F}(z) \NC= \sum_{i=0}^{\infty}F_iz^i \NR
 \NC                \NC= 0 + z + z^2 + 2z^3 + 3z^4 + 5z^5 + 8z^6 + 13z^7 + 21z^8 + \cdots \NR
@@ -536,7 +536,7 @@ $\floor{n/2}$ 次結對測試足以將問題規模縮減一半。
 \startformula
 A[i, j] + A[k, l] \le A[i, l] + A[k, j]
 \stopformula
-那麼稱 $A$ 爲 {\EMP Monge 陣列}。
+那麼稱 $A$ 爲 \emph{Monge 陣列}。
 換句話說，在 Monge 陣列中任選兩行和兩列，對於交叉點上的 4 個元素，
 左上角和右下角兩個元素之和總是小於等於左下角和右上角元素之和。
 例如，下面就是一個 Monge 陣列：

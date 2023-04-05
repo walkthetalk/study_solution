@@ -1,5 +1,7 @@
+input TEX;
+
 vardef rtlabel@#(expr strname, pos) text p =
-	label@#(textext(strname), pos) p
+	label@#(TEX(strname), pos) p
 enddef;
 
 vardef rlc(suffix A, C, D)(expr k, x_coord, lvl, y_offset) :=
@@ -50,7 +52,7 @@ enddef;
 
 vardef rlc_sizes(suffix A, C, D)(expr k, lvl, cell_h, xgap, yoffset) :=
 	for i := 0 upto lvl:
-		C[i] := (urcorner thelabel.urt(A[i], (0,0))) + (xgap,0);
+		C[i] := (urcorner thelabel.urt(TEX(A[i]), (0,0))) + (xgap,0);
 	endfor;
 	save tmp;
 	for i := 1 upto lvl:
@@ -75,7 +77,7 @@ enddef;
 
 vardef rlc_sizes_vertical(suffix A, C, D)(expr k, lvl, cell_w, ygap, xoffset) :=
 	for i := 0 upto lvl:
-		C[i] := (urcorner thelabel.urt(A[i], (0,0))) + (0, ygap);
+		C[i] := (urcorner thelabel.urt(TEX(A[i]), (0,0))) + (0, ygap);
 	endfor;
 	save tmp;
 	for i := 1 upto lvl:
@@ -120,7 +122,7 @@ vardef width_of_label(expr lbl) :=
 enddef;
 
 vardef size_of_label(expr lbl) :=
-	(urcorner thelabel.rt(lbl, (0,0)))
+	(urcorner thelabel.rt(TEX(lbl), (0,0)))
 enddef;
 
 vardef width_of_labels(suffix A)(expr n) :=

@@ -14,7 +14,6 @@ Marceau 教授不同意引理 5.4 證明中所用的循環不變式。
 並据此证明引理 5.4。
 
 \CLRSH{RANDOMLY-PERMUTE(A,n)}
-
 \startCLRSCODE
 for i = 1 to n
 	// swap A[i] with A[RANDOM(i,n)]
@@ -25,124 +24,102 @@ for i = 1 to n
 這樣不變式對於 1-排列是有效的。
 \stopANSWER
 
+%5.3-2
 \startEXERCISE
-Kelp 教授決定寫一個過程來隨機產生除恆等排列（identity permutation）外的任意排列。
-他提出了如下過程：
+Kelp 教授決定寫一個過程來隨機產生任意排列,
+\emph{恆等排列}（identity permutation）除外。
+所謂恆等排列是指所有元素保持原位不動。
+他給出了如下過程：
 
 \CLRSH{PERMUTE-WITHOUT-IDENTITY(A)}
-\startCLRS
+\startCLRSCODE
 n = A.length
 for i = 1 to n - 1
-	swap A[i] with A[RANDOM(i + 1, n)]
-\stopCLRS
-這段代碼實現了 Kelp 教授的意圖嗎？
+	// swap A[i] with A[RANDOM(i + 1, n)]
+\stopCLRSCODE
+這段代碼能得到 Kelp 教授想要的結果嗎？
 \stopEXERCISE
 \startANSWER
-不能。因爲這個過程改變了所有元素的位置。
-我們無法得到恆等排列，但同時也無法使得任何一個元素處於原有位置。
+不能。
+比如有數列 $1,2,3$，無法得到 $3,2,1$。
+要想得到 $3,2,1$，第一步只能是 $1$ 和 $3$ 進行交換，
+得到 $3,2,1$，第二步只能是 $2$ 和 $1$ 交換，
+得到的是 $3,1,2$，無法得到 $3,2,1$。
 \stopANSWER
 
+%5.3-3
 \startEXERCISE
 假設我們不是將元素 \m{A[i]} 與子數列 \m{A[i..n]} 中的一個隨機元素交換，
 而是將他與數列任意位置上的隨機元素交換：
 
 \CLRSH{PERMUTE-WITH-ALL(A)}
-\startCLRS
+\startCLRSCODE
 n = A.length
 for i = 1 to n
 	swap A[i] with A[RANDOM(1, n)]
-\stopCLRS
+\stopCLRSCODE
 這段代碼會產生一個均勻隨機排列嗎？爲什麼？
 \stopEXERCISE
 \startANSWER
-不會。直覺上來講，有 \m{n^n} 種不同方式，但只有 \m{n!} 種組合。
-由於 \m{n!} 無法整除 \m{n^n}，不可能是均勻分布
-（爲什麼無法整除？這就是直覺。對於 \m{n>2}， \m{n-1} 可以整除 \m{n!}，但卻不能整除 \m{n^n}）。
+不會。有 \m{n^n} 種執行過程，但只有 \m{n!} 種排列。
+由於 \m{n!} 無法整除 \m{n^n}，不可能是均勻分布。
+（爲什麼無法整除？對於 \m{n>2}， \m{n-1} 可以整除 \m{n!}，但卻不能整除 \m{n^n}）。
 參見 \simpleurl{http://blog.codinghorror.com/the-danger-of-naivete/}。
 \stopANSWER
 
+%5.3-4
 \startEXERCISE
-Armstrong 教授建議用下面的過程來產生一個均勻隨機排列：
+Knievel 教授建議用下面的過程來生成均勻隨機排列：
 
-\CLRSH{PERMUTE-BY-CYCLIC(A)}
-\startCLRS
+\CLRSH{PERMUTE-BY-CYCLE(A)}
+\startCLRSCODE
 n = A.length
-let B[1..n] be a new array
-offset = RANDOM(1, n)
+// 令 B[1..n] 爲一個新數列
+offset = \ALGO{RANDOM(1, n)}
 for i = 1 to n
 	dest = i + offset
 	if dest > n
 		dest = dest - n
 	B[dest] = A[i]
 return B
-\stopCLRS
+\stopCLRSCODE
 
 請說明每個元素 \m{A[i]} 出現在 \m{B} 中任何特定位置的概率是 \m{1/n}。
 然後通過說明排列結果不是均勻隨機排列，證明 Armstrong 教授錯了。
 \stopEXERCISE
+
 \startANSWER
 如果 \m{j \equiv \text{offset} + i \pmod{n}}，則 \m{A[i]} 就會出現在 \m{B[j]} 處，其概率爲 \m{1/n}。
 但他不能生成所有排列，他所生成的排列都是數列 \m{A} 循環右移得到。
 \stopANSWER
 
-\startEXERCISE \DIFFICULT
-證明：在過程 \ALGO{PERMUTE-BY-SORTING} 的數列 \m{P} 中，所有元素都唯一的概率至少是 \m{1 - 1/n}。
-\stopEXERCISE
-\startANSWER
-令 \m{\Pr\{j\}} 爲索引爲 \m{j} 的元素唯一的概率。
-如果有 \m{n^3} 個元素，則 \m{\Pr\{j\} = 1 - \frac{j-1}{n^3}}。
-\startformula\startmathalignment
-\NC \Pr\{1 \cap 2 \cap 3 \cap \ldots\}
-       \NC= \Pr\{1\} \cdot \Pr\{2 | 1\} \cdot \Pr\{3 | 1 \cap 2\} \cdots \NR
-\NC    \NC= 1 (1 - \frac{1}{n^3})
-            (1 - \frac{2}{n^3})
-            (1 - \frac{3}{n^3})
-            \cdots \NR
-\NC    \NC\ge 1 (1 - \frac{n}{n^3})
-            (1 - \frac{n}{n^3})
-            (1 - \frac{n}{n^3})
-            \cdots \NR
-\NC    \NC\ge (1 - \frac{1}{n^2})^n \NR
-\NC    \NC\ge 1 - \frac{1}{n} \NR
-\stopmathalignment\stopformula
-你問最後一步如何推導出來的？ \m{(1-x)^n \ge 1 - nx}。
-\stopANSWER
-
+%5.3-5
 \startEXERCISE
-請解釋如何實現算法 \ALGO{PERMUTE-BY-SORTING}，
-以處理兩個或更多優先級相同的情形。
-也就是說，即使有兩個或更多優先級相同，你的算法也應該產生一個均勻隨機排列。
-\stopEXERCISE
-\startANSWER
-愚蠢的算法需要用愚蠢的方式解決。只要重新生成優先級重試就可以了。
-\stopANSWER
-
-\startEXERCISE
-假設我們希望創建集合 \m{\{1,2,3,\ldots,n\}} 的一個{\EMP 隨機樣本（random sample）}，
+Gallup 教授希望創建集合 \m{\{1,2,3,\ldots,n\}} 的一個\emph{隨機樣本（random sample）}，
 即一個具有 \m{m} 個元素的子集 \m{S}，其中 \m{0\le m\le n}，
-使得以同樣的概率創建每個 \m{m} 子集。
-一種方法是對 \m{i = 1,2,\ldots,n} 設 \m{A[i] = i}，
-調用 \ALGO{RANDOMIZE-IN-PLACE(A)}，
-然後取最前面的 \m{m} 個數列元素。
-這種方法會調用 \m{n} 次過程 \ALGO{RANDOM}。
-如果 \m{n} 比 \m{m} 大的多，
-只調用 \ALGO{RANDOM} 少量次數，就能創建一個隨機樣本。
-請說明下面遞迴過程返回 \m{\{1,2,3,\ldots,n\}} 的一個隨機 \m{m} 子集 \m{S}，
-其中每個 \m{m} 子集是等概率的，
-然後只調用 \m{m} 次 \ALGO{RANDOM}。
+使得以同樣的概率創建每個 \m{m}-子集。
+一種方法是對 \m{i = 1,2,\ldots,n} 令 \m{A[i] = i}，
+調用 \ALGO{RANDOMLY-PERMUTE(A)}，
+然後取最前面的 \m{m} 個元素。
+這種方法會調用 \m{n} 次 \ALGO{RANDOM}。
+在 Gallup 教授的應用中， \m{n} 比 \m{m} 大的多，
+所以他想調用 \ALGO{RANDOM} 更少的次數，就能創建一個隨機樣本。
+請說明下面遞迴過程返回 \m{\{1,2,3,\ldots,n\}} 的一個隨機 \m{m}-子集 \m{S}，
+每種 \m{m}-子集的概率相等，
+且只需調用 \m{m} 次 \ALGO{RANDOM}。
 
-\CLRSH{RANDOM-SAMPLE(m,n)}
-\startCLRS
-if m == 0
-	return ∅
-else S = RANDOM-SAMPLE(m - 1, n - 1)
-	i = RANDOM(1, n)
+\CLRSH{RANDOMLY-SAMPLE(m,n)}
+\startCLRSCODE
+S = ∅
+for k = n-m+1 to n	// 迭代 m 次
+	i = RANDOM(1, k)
 	if i ∈ S
 		S = S ∪ {n}
 	else S = S ∪ {i}
 	return S
-\stopCLRS
+\stopCLRSCODE
 \stopEXERCISE
+
 \startANSWER
 每種組合的概率應爲 \m{1/\binom{n}{m}}。
 我們來證明下面的命題：
@@ -153,17 +130,22 @@ else S = RANDOM-SAMPLE(m - 1, n - 1)
 現在假定 \m{m-1} 時命題成立，看看 \m{m} 會發生什麼。
 
 遞迴調用 \m{m - 1} 返回的樣本時均勻分布的。
-然後有兩種情況，新的 \m{m} 子集是否包含 \m{n}。
+然後有兩種情況， $i ∈ S$ 是否成立。
 
-如果包含 \m{n} （概率： \m{m/n}），則其概率爲：
+如果 $i ∈ S$ 成立（概率： \m{m/n}），則其概率爲：
 \startformula
 \frac{m}{n}\frac{1}{\binom{n-1}{m-1}} = 1/\binom{n}{m}
 \stopformula
 
-如果不包含 \m{n} （概率： \m{(n-m)/n}），則其概率爲：
+如果 $i ∈ S$ 不成立（概率： \m{(n-m)/n}），則其概率爲：
 \startformula
 \frac{n-m}{n}\frac{1}{\binom{n-1}{m}} = 1/\binom{n}{m}
 \stopformula
+
+即對於 $m,n$，所返回的每種結果的概率均爲 $1/binom{n}{m}$。
+歸納完成，命題得證。
+
+另外， $k$ 一共迭代了 $n-(n-m+1) + 1$ 共 $m$ 次。
 \stopANSWER
 
 \stopsection

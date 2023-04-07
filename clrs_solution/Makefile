@@ -1,5 +1,5 @@
 pdf_name := CLRS_solution
-doc_env  := book
+doc_env  := book_cht
 dir_main := $(shell dirname $(shell readlink -fe $(lastword ${MAKEFILE_LIST})))
 
 include $(dir_main)/../scripts/common.mk

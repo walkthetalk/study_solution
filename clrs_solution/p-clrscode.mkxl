@@ -211,7 +211,7 @@
 \defineenumeration[EXERCISE][
   text={},
   left={練習 },
-  right={：},
+  right={ ：},
   headstyle=\rm\bf,	%normal bold slanted boldslanted type cap small... command
   headcolor=red,
   %style=\rm\bf,		%normal bold slanted boldslanted type cap small... command
@@ -242,9 +242,9 @@
 ]
 
 \defineenumeration[PROBLEM][
-  text={思考題},
-  left={},
-  right={},
+  text={},
+  left={思考題 },
+  right={ ：},
   headstyle=\rm\bf,	%normal bold slanted boldslanted type cap small... command
   headcolor=red,
   %style=\rm\bf,		%normal bold slanted boldslanted type cap small... command
@@ -265,7 +265,7 @@
   prefix=yes,
   prefixsegments=chapter, %chapter:section
   prefixconnector={-},
-  numberstopper={ ：},
+  %numberstopper={ ：}, % @note 不要使用，否則\in會包含此內容
   way=bychapter,
 ]
 \define[1]\refproblem{%

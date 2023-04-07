@@ -4,36 +4,53 @@
 
 %e5.4-1
 \startEXERCISE
-屋子裏至少要有多少人，才能使得某人與你生日相同的概率不小於 \m{1/2}？
-至少要有多少人，才能使得至少兩人生日爲 7 月 4 日的概率大於 \m{1/2}？
+屋子裏至少要有多少人，才能保證有人與你生日相同的概率不小於 \m{1/2}？
+至少要有多少人，才能保證至少兩人生日爲 7 月 4 日的概率大於 \m{1/2}？
 \stopEXERCISE
+
 \startANSWER
-任一人生日與己不同的概率爲 \m{(n-1)/n}，
-則 \m{k} 個人生日都與己不同的概率爲 \m{(\frac{n-1}{n})^k}。
-利用互補事件求 \m{k}：
+令縂人數為 $n$，
+任一人生日與己不同的概率爲 \m{364/365}，記爲 $p$，
+則 \m{k} 個人生日都與己不同的概率爲 \m{p^k}。
+利用互補事件求 \m{n}：
 \startformula\startmathalignment
-\NC 1 - (\frac{n-1}{k})^k \NC \ge \frac{1}{2} \NR
-\NC (\frac{n-1}{k})^k     \NC \le \frac{1}{2} \NR
-\NC k \lg(\frac{n-1}{n})  \NC \ge \lg\frac{1}{2} \NR
-\NC k = \frac{\log(1/2)}{\log(364/365)} \NC \approx 263 \NR
+\NC 1 - p^n \NC \ge \frac{1}{2} \NR
+\NC p^n     \NC \le \frac{1}{2} \NR
+\NC n \lg p  \NC \ge \lg\frac{1}{2} \NR
+\NC n = \lceil \log_p \frac{1}{2}\rceil \NC = 254 \NR
 \stopmathalignment\stopformula
 
-另外一個問題：
+另外一個問題，令生日為 7 月 4 日的人數為 $k$：
 \startformula\startmathalignment
-\NC \Pr\{\text{至少兩人生日爲 7 月 4 日}\} \NC=
-        1 - \Pr\{\text{只有 1 人生日爲 7 月 4 日}\} - Pr\{\text{沒有人生日爲 7 月 4 日}\} \NR
-\NC \NC= 1 - \frac{k}{n}(\frac{n-1}{n})^{k-1} - (\frac{n-1}{n})^k \NR
-\NC \NC= 1 - (\frac{n-1}{n})^{k-1}(\frac{n+k-1}{n}) \NR
+\NC \Pr\{k\ge 2\} \NC=
+        1 - \Pr\{k=1\} - Pr\{k=0\} \NR
+\NC \NC= 1 - \binom{n}{k}p^{n-k}|_{k=1} - p^{n-k}|_{k=0} \NR
+\NC \NC= 1 - (n-p)p^{n-1} \NR
 \stopmathalignment\stopformula
 計算可得 \m{k} 爲 115。
 \stopANSWER
 
 %e5.4-2
 \startEXERCISE
+屋子裏至少需要多少人，才能保證有兩人生日相同的概率至少為 0.99？
+在此人數下，記共有 $k$ 對人生日相同， $k$ 的期望值是多少？
+\stopEXERCISE
+
+\startANSWER
+令人數為 $m$，則兩人生日相同的概率為：
+\startformula\startmathalignment
+\NC 1 - \binom{n}{m} \NC \ge 0.99 \NR
+\NC \frac{m}{n} \NC \le 0.01 \NR
+\NC m \NC \le 
+\stopmathalignment\stopformula
+\stopANSWER
+
+\startEXERCISE
 假設我們將球投到 \m{b} 個箱子裏，直到某個箱子中有兩個球。
 每一次投擲都是獨立的，並且每個球落入任一箱子的機會均等。
 請問投擲次數的期望值是多少？
 \stopEXERCISE
+
 \startANSWER
 本質還是生日問題，更多討論參見 \simpleurl{http://en.wikipedia.org/wiki/Birthday_problem#Average_number_of_people}。
 \stopANSWER

@@ -4,15 +4,15 @@
 
 %e5.4-1
 \startEXERCISE
-屋子裏至少要有多少人，才能保證有人與你生日相同的概率不小於 \m{1/2}？
-至少要有多少人，才能保證至少兩人生日爲 7 月 4 日的概率大於 \m{1/2}？
+屋子裏至少要有多少人，才能保證有人與你生日相同的概率不小於 $1/2$？
+至少要有多少人，才能保證至少兩人生日爲 7 月 4 日的概率大於 $1/2$？
 \stopEXERCISE
 
 \startANSWER
 令縂人數為 $n$，
-任一人生日與己不同的概率爲 \m{364/365}，記爲 $p$，
-則 \m{k} 個人生日都與己不同的概率爲 \m{p^k}。
-利用互補事件求 \m{n}：
+任一人生日與己不同的概率爲 $364/365$，記爲 $p$，
+則 $k$ 個人生日都與己不同的概率爲 $p^k$。
+利用互補事件求 $n$：
 \startformula\startmathalignment
 \NC 1 - p^n \NC \ge \frac{1}{2} \NR
 \NC p^n     \NC \le \frac{1}{2} \NR
@@ -24,38 +24,57 @@
 \startformula\startmathalignment
 \NC \Pr\{k\ge 2\} \NC=
         1 - \Pr\{k=1\} - Pr\{k=0\} \NR
-\NC \NC= 1 - \binom{n}{k}p^{n-k}|_{k=1} - p^{n-k}|_{k=0} \NR
-\NC \NC= 1 - (n-p)p^{n-1} \NR
+\NC \NC= 1 - \binom{n}{k}(1-p)^k p^{n-k}|_{k=1} - p^{n-k}|_{k=0} \NR
+\NC \NC= 1 - (n-np+p)p^{n-1} \NR
 \stopmathalignment\stopformula
-計算可得 \m{k} 爲 115。
+計算可得 $n$ 至少爲 $613$。
 \stopANSWER
 
 %e5.4-2
 \startEXERCISE
-屋子裏至少需要多少人，才能保證有兩人生日相同的概率至少為 0.99？
+屋子裏至少需要多少人，才能保證有兩人生日相同的概率至少為 $0.99$？
 在此人數下，記共有 $k$ 對人生日相同， $k$ 的期望值是多少？
 \stopEXERCISE
 
 \startANSWER
-令人數為 $m$，則兩人生日相同的概率為：
+令人數為 $m$，$n$ 爲 $365$，則兩人生日相同的概率為：
 \startformula\startmathalignment
-\NC 1 - \binom{n}{m} \NC \ge 0.99 \NR
-\NC \frac{m}{n} \NC \le 0.01 \NR
-\NC m \NC \le 
+\NC 1 - \frac{n}{n}\cdot\frac{n-1}{n}\cdot\frac{n-2}{n}\cdots\frac{n-m+1}{n} \NC \ge 0.99 \NR
+\NC \frac{n!}{(n-m)! n^m} \NC \le 0.01 \NR
+\NC m \NC \ge 57 \NR 
 \stopmathalignment\stopformula
+
+% @todo
 \stopANSWER
 
+%e5.4-3
 \startEXERCISE
-假設我們將球投到 \m{b} 個箱子裏，直到某個箱子中有兩個球。
-每一次投擲都是獨立的，並且每個球落入任一箱子的機會均等。
+假設我們將球投到 $b$ 個箱子裏，直到某個箱子中有兩個球。
+每一次投擲都相互獨立，並且每個球落入任一箱子的機會均等。
 請問投擲次數的期望值是多少？
 \stopEXERCISE
 
 \startANSWER
 本質還是生日問題，更多討論參見 \simpleurl{http://en.wikipedia.org/wiki/Birthday_problem#Average_number_of_people}。
+
+令投擲次數爲 $X_b$，則 $X_b$ 大於 $k\ge 0$ 的概率爲：
+\startformula
+\NC \Pr\{X_b>k\} \NC = \frac{b!}{(b-k)!b^k} = 1 - \sum_{i=0}^{i=k}\Pr\{X_b=i\}\NR
+\stopformula
+$X_b$ 的期望值爲：
+\startformula\startmathalignment[n=3]
+\NC \E[X_b] \NC = \NC \sum_{k=0}^{b+1}k\Pr\{X_b=k\} \NR
+\NC \NC = \NC \Pr\{X_b=1\} + 2\Pr\{X_b=2\} + \cdots + (b+1)\Pr\{X_b=b+1\} \NR
+\NC \NC = \NC \Pr\{X_b=1\} + \Pr\{X_b=2\} + \cdots + \Pr\{X_b=b+1\} \NR
+\NC \NC   \NC + \Pr\{X_b=2\} + \Pr\{X_b=3\} + \cdots + \Pr\{X_b=b+1\} \NR
+\NC \NC   \NC + \cdots \NR
+\NC \NC   \NC + \Pr\{X_b=b+1\} \NR
+\NC \NC = \NC \sum_{k=0}^{b}\Pr\{X_b>k\} \NR
+\NC \NC = \NC 1 + \sum_{k=1}^{b}\frac{b!}{(b-k)!b^k} \NR
+\stopmathalignment\stopformula
 \stopANSWER
 
-%e5.4-3
+%e5.4-4
 \startEXERCISE \DIFFICULT
 生日悖論的分析中，要求各人生日彼此獨立是否很重要？
 或者，是否只要兩兩成對獨立就足夠了？
@@ -65,13 +84,13 @@
 成對獨立足夠了。對於（5.6）之後的推導，有此即可。
 \stopANSWER
 
-%e5.4-4
+%e5.4-5
 \startEXERCISE \DIFFICULT
 一次聚會需要邀請多少人，才能讓其中 3 人的生日很可能相同？
 \stopEXERCISE
 
 \startANSWER
-令生日有 \m{m=365} 種可能，人數爲 \m{n}，只有 \m{i} 對人生日相同的概率：
+令生日有 $m=365$ 種可能，人數爲 $n$，只有 $i$ 對人生日相同的概率：
 \startformula\startmathalignment
 \NC \NC
 \frac{\left(\binom{n}{2}\frac{m}{m} \frac{1}{m}\right)
@@ -96,11 +115,13 @@
 請參考：\simpleurl{http://math.stackexchange.com/questions/25876/probability-of-3-people-in-a-room-of-30-having-the-same-birthday}
 \stopANSWER
 
+%e5.4-6
 \startEXERCISE \DIFFICULT
-一個長度爲 \m{k} 的字串，其中所有字符均選自一個元素個數爲 \m{n} 的集合，
-那麼此字串構成一個 \m{k} 排列的概率是多少？
+一個長度爲 $k$ 的字串，其中所有字符均選自一個元素個數爲 $n$ 的集合，
+那麼此字串構成一個 $k$ 排列的概率是多少？
 此問題與生日悖論有何關聯？
 \stopEXERCISE
+
 \startANSWER
 \startformula
 \Pr\{k\text{-perm in }n\} = 1 \cdot
@@ -112,17 +133,19 @@
 這是生日問題的互補事件，即 \m{k} 個人生日各不相同。
 \stopANSWER
 
+%e5.4-7
 \startEXERCISE \DIFFICULT
-假設將 \m{n} 個球投入 \m{n} 個箱子裏，其中每次投球相互獨立，
+假設將 $n$ 個球投入 $n$ 個箱子裏，其中每次投球相互獨立，
 並且每個球落入任一箱子的機會均等。
 空箱子的數目期望值是多少？
 正好有一個球的箱子數目期望值是多少？
 \stopEXERCISE
+
 \startANSWER
-當 \m{n} 足夠大時，兩個答案都漸進於 \m{n/e}。
+當 $n$ 足夠大時，兩個答案都漸進於 $n/e$。
 首先來看空箱子的數目：
 
-令 \m{X_i} 代表的事件爲：第 \m{i} 個箱子爲空：
+令 $X_i$ 代表的事件爲：第 $i$ 個箱子爲空：
 \startformula
 \Pr\{X_i\} = \left(\frac{n-1}{n}\right)^n
                 = \left(1 - \frac{1}{n}\right)^n
@@ -130,7 +153,7 @@
 \stopformula
 其期望值爲：
 \startformula
-E[X] = \sum_{i=1}^n E[X_i] = \frac{n}{e}
+E[X] = \sum_{i=1}^n E[X_i] \approx \frac{n}{e}
 \stopformula
 
 箱子裏只有一個球的情況類似，其概率爲：
@@ -143,7 +166,7 @@ E[X] = \sum_{i=1}^n E[X_i] = \frac{n}{e}
 參見 \simpleurl{http://math.stackexchange.com/questions/545920/expectation-of-throwing-n-balls-into-n-bins}。
 \stopANSWER
 
-%e5.4-7
+%e5.4-8
 \startEXERCISE \DIFFICULT
 爲使特徵序列長度的下界更精確，
 請說明公平拋擲 \m{m} 次硬幣，
@@ -152,7 +175,21 @@ E[X] = \sum_{i=1}^n E[X_i] = \frac{n}{e}
 \stopEXERCISE
 
 \startANSWER
-\TODO{略。}
+將 $n$ 次結果分爲 $s$ 組，其中 $s=\lg(n)-2\lg(\lg(n))$。
+一組中均爲正面的概率爲：
+\startformula
+\Pr(A_{i,\lg n - 2\lg(\lg n)}) = \left(\frac{1}{2}\right)^{\lg n - 2\lg(\lg n)} = \frac{(\lg n)^2}{n}
+\stopformula
+各組之間相互獨立，所有組均不是全部正面的概率爲：
+\startformula\startmathalignment
+\NC  \NC \Pr(\bigwedge\neg A_{i,\lg n - 2\lg(\lg n)}) \NR
+\NC =\NC \prod_i\Pr(\neg A_{i,\lg n - 2\lg(\lg n)}) \NR
+\NC =\NC \left(1-\frac{(\lg n)^2}{n}\right)^{\frac{n}{\lg n - 2\lg(\lg n)}} \NR
+\NC \le\NC e^{-\frac{(\lg n)^2}{\lg n - 2\lg(\lg n)}} \NR
+\NC =\NC e^{-\lg n \left(1 + \frac{2\lg(\lg n)}{\lg n - 2\lg(\lg n)}\right)} \NR
+\NC <\NC e^{-\lg n} \NR
+\NC <\NC n^{-1} \NR
+\stopmathalignment\stopformula
 \stopANSWER
 
 \stopsection

@@ -85,7 +85,7 @@ $\log_b n - 1 \le \floor{\log_b n} \le \log_b n \le \floor{\log_b n} + 1$
 代入 $g(n)$ 得 $g(n)=\Theta(n^{\log_b a}\lg\lg n)$。
 
 若主遞迴式 $T(n)$ 使用 $f(n)$ 作爲驅動函式，
-則 $T(n)=aT(n/b)+\Theta(n^{\log_b a}/\lg n)$。
+則 $T(n) = aT(n/b) + \Theta(n^{\log_b a}/\lg n)$。
 由引理 4.2，解爲 $T(n)=\Theta(n^{\log_b a}) + \sum_{j=0}^\floor{\log_b n} a^j f(n/b^j)$。
 將 $g(n)$ 的解代入得：
 \startformula

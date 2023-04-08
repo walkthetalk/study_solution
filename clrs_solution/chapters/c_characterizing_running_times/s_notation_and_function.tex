@@ -83,6 +83,7 @@ f(m) \cdot g(m) \leq f(n) \cdot g(n)
 %item a
 \startitem
 $a^{\log_b^c} = c^{\log_b^a}$ \hfill (3.21)
+\stopitem
 
 \startANSWER
 \startformula
@@ -91,11 +92,11 @@ a^{\log_b^c} = b^{\log_b^{a^{\log_b^c}}}
 = c^{\log_b^a}
 \stopformula
 \stopANSWER
-\stopitem
 
 %item b
 \startitem
 $n!=o(n^n)$ \hfill (3.26)
+\stopitem
 
 \startANSWER
 $f(n)=n!$， $g(n)=n^n$，
@@ -112,7 +113,9 @@ $f(n)=n!$， $g(n)=n^n$，
 \stopmathalignment\stopformula
 \stopANSWER
 
+\startitem
 $n!=\omega(2^n)$ \hfill (3.27)
+\stopitem
 
 \startANSWER
 $f(n)=n!$， $g(n)=2^n$，
@@ -129,7 +132,9 @@ $f(n)=n!$， $g(n)=2^n$，
 \stopmathalignment\stopformula
 \stopANSWER
 
+\startitem
 $\lg(n!)=\Theta(n\lg n)$ \hfill (3.28)
+\stopitem
 
 \startANSWER
 根據（3.27）我們已知 $\lg(n!)=O(n\lg n)$，
@@ -148,6 +153,7 @@ $\lg(n!)=\Theta(n\lg n)$ \hfill (3.28)
 %item c
 \startitem
 $\lg(\Theta(n)) = \Theta(\lg n)$。
+\stopitem
 
 \startANSWER
 \startformula\startmathalignment[n=3,align={right,middle,left}]
@@ -156,7 +162,7 @@ $\lg(\Theta(n)) = \Theta(\lg n)$。
 \NC \lg c_1 + \lg n \le \NC \lg(\Theta(n)) \NC \le \lg c_2 + \lg n \NR
 \stopmathalignment\stopformula
 \stopANSWER
-\stopitem
+
 \stopigBase
 \stopEXERCISE
 

@@ -13,20 +13,20 @@
 任一人生日與己不同的概率爲 $364/365$，記爲 $p$，
 則 $k$ 個人生日都與己不同的概率爲 $p^k$。
 利用互補事件求 $n$：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC 1 - p^n \NC \ge \frac{1}{2} \NR
 \NC p^n     \NC \le \frac{1}{2} \NR
 \NC n \lg p  \NC \ge \lg\frac{1}{2} \NR
 \NC n = \lceil \log_p \frac{1}{2}\rceil \NC = 254 \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 另外一個問題，令生日為 7 月 4 日的人數為 $k$：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \Pr\{k\ge 2\} \NC=
         1 - \Pr\{k=1\} - Pr\{k=0\} \NR
 \NC \NC= 1 - \binom{n}{k}(1-p)^k p^{n-k}|_{k=1} - p^{n-k}|_{k=0} \NR
 \NC \NC= 1 - (n-np+p)p^{n-1} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 計算可得 $n$ 至少爲 $613$。
 \stopANSWER
 
@@ -38,11 +38,11 @@
 
 \startANSWER
 令人數為 $m$，$n$ 爲 $365$，則兩人生日相同的概率為：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC 1 - \frac{n}{n}\cdot\frac{n-1}{n}\cdot\frac{n-2}{n}\cdots\frac{n-m+1}{n} \NC \ge 0.99 \NR
 \NC \frac{n!}{(n-m)! n^m} \NC \le 0.01 \NR
 \NC m \NC \ge 57 \NR 
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 % @todo
 \stopANSWER
@@ -62,7 +62,7 @@
 \NC \Pr\{X_b>k\} \NC = \frac{b!}{(b-k)!b^k} = 1 - \sum_{i=0}^{i=k}\Pr\{X_b=i\}\NR
 \stopformula
 $X_b$ 的期望值爲：
-\startformula\startmathalignment[n=3]
+\startsplitformula\startmathalignment[n=3]
 \NC \E[X_b] \NC = \NC \sum_{k=0}^{b+1}k\Pr\{X_b=k\} \NR
 \NC \NC = \NC \Pr\{X_b=1\} + 2\Pr\{X_b=2\} + \cdots + (b+1)\Pr\{X_b=b+1\} \NR
 \NC \NC = \NC \Pr\{X_b=1\} + \Pr\{X_b=2\} + \cdots + \Pr\{X_b=b+1\} \NR
@@ -71,7 +71,7 @@ $X_b$ 的期望值爲：
 \NC \NC   \NC + \Pr\{X_b=b+1\} \NR
 \NC \NC = \NC \sum_{k=0}^{b}\Pr\{X_b>k\} \NR
 \NC \NC = \NC 1 + \sum_{k=1}^{b}\frac{b!}{(b-k)!b^k} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 %e5.4-4
@@ -91,7 +91,7 @@ $X_b$ 的期望值爲：
 
 \startANSWER
 令生日有 $m=365$ 種可能，人數爲 $n$，只有 $i$ 對人生日相同的概率：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \NC
 \frac{\left(\binom{n}{2}\frac{m}{m} \frac{1}{m}\right)
       \left(\binom{n-2}{2}\frac{m-1}{m} \frac{1}{m}\right)
@@ -105,13 +105,13 @@ $X_b$ 的期望值爲：
           \frac{m!}{(m-n+i)!}
           \frac{1}{m^n} \NR
 \NC = \NC \frac{m!n!}{i!(n-2i)!(m-n+i)! 2^i m^n} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 至少有三人生日相同的概率爲：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \NC 1 - \sum_{i=0}^{\lfloor n/2\rfloor}\frac{m!n!}{i!(n-2i)!(m-n+i)! 2^i m^n} \NR
 \NC = \NC 1 - \frac{m!n!}{m^n}\sum_{i=0}^{\lfloor n/2\rfloor}
               \frac{1}{i!(n-2i)!(m-n+i)! 2^i} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 請參考：\simpleurl{http://math.stackexchange.com/questions/25876/probability-of-3-people-in-a-room-of-30-having-the-same-birthday}
 \stopANSWER
 
@@ -123,13 +123,11 @@ $X_b$ 的期望值爲：
 \stopEXERCISE
 
 \startANSWER
-\startformula
-\Pr\{k\text{-perm in }n\} = 1 \cdot
-                                 \frac{n-1}{n} \cdot
-                                 \frac{n-2}{n} \cdots
-                                 \frac{n-k+1}{n}
-      = \frac{(n-1)!}{(n-k)!n^k}
-\stopformula
+\startsplitformula\startmathalignment
+\NC \NC \Pr\{k\text{-perm in }n\} \NR
+\NC =\NC  1 \cdot \frac{n-1}{n} \cdot \frac{n-2}{n} \cdots \frac{n-k+1}{n} \NR
+\NC =\NC \frac{(n-1)!}{(n-k)!n^k} \NR
+\stopmathalignment\stopsplitformula
 這是生日問題的互補事件，即 \m{k} 個人生日各不相同。
 \stopANSWER
 
@@ -146,21 +144,21 @@ $X_b$ 的期望值爲：
 首先來看空箱子的數目：
 
 令 $X_i$ 代表的事件爲：第 $i$ 個箱子爲空：
-\startformula
-\Pr\{X_i\} = \left(\frac{n-1}{n}\right)^n
-                = \left(1 - \frac{1}{n}\right)^n
-                \approx \frac{1}{e}
-\stopformula
+\startsplitformula\startmathalignment
+\NC \Pr\{X_i\} \NC = \left(\frac{n-1}{n}\right)^n\NR
+\NC \NC = \left(1 - \frac{1}{n}\right)^n \NR
+\NC \NC \approx \frac{1}{e} \NR
+\stopmathalignment\stopsplitformula
 其期望值爲：
 \startformula
 E[X] = \sum_{i=1}^n E[X_i] \approx \frac{n}{e}
 \stopformula
 
 箱子裏只有一個球的情況類似，其概率爲：
-\startformula
-\Pr\{Y_i\} = n\frac{1}{n}\left(\frac{n-1}{n}\right)^{n-1}
-                = \left(\frac{n-1}{n}\right)^{n-1} \approx \frac{1}{e}
-\stopformula
+\startsplitformula\startmathalignment
+\NC \Pr\{Y_i\} \NC = n\frac{1}{n}\left(\frac{n-1}{n}\right)^{n-1} \NR
+\NC \NC = \left(\frac{n-1}{n}\right)^{n-1} \approx \frac{1}{e} \NR
+\stopmathalignment\stopsplitformula
 期望值一樣。
 
 參見 \simpleurl{http://math.stackexchange.com/questions/545920/expectation-of-throwing-n-balls-into-n-bins}。
@@ -181,7 +179,7 @@ E[X] = \sum_{i=1}^n E[X_i] \approx \frac{n}{e}
 \Pr(A_{i,\lg n - 2\lg(\lg n)}) = \left(\frac{1}{2}\right)^{\lg n - 2\lg(\lg n)} = \frac{(\lg n)^2}{n}
 \stopformula
 各組之間相互獨立，所有組均不是全部正面的概率爲：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC  \NC \Pr(\bigwedge\neg A_{i,\lg n - 2\lg(\lg n)}) \NR
 \NC =\NC \prod_i\Pr(\neg A_{i,\lg n - 2\lg(\lg n)}) \NR
 \NC =\NC \left(1-\frac{(\lg n)^2}{n}\right)^{\frac{n}{\lg n - 2\lg(\lg n)}} \NR
@@ -189,7 +187,7 @@ E[X] = \sum_{i=1}^n E[X_i] \approx \frac{n}{e}
 \NC =\NC e^{-\lg n \left(1 + \frac{2\lg(\lg n)}{\lg n - 2\lg(\lg n)}\right)} \NR
 \NC <\NC e^{-\lg n} \NR
 \NC <\NC n^{-1} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 \stopsection

@@ -18,7 +18,7 @@
 
 \startANSWER
 十個矩陣分別爲：
-\startformula\startmathalignment[n=10]
+\startsplitformula\startmathalignment[n=10]
 \NC S_1 \NC= 6 \qquad
 \NC S_2 \NC=  4 \qquad
 \NC S_3 \NC= 12 \qquad
@@ -29,9 +29,9 @@
 \NC S_8 \NC=  6 \qquad
 \NC S_9 \NC= -6 \qquad
 \NC S_{10} \NC= 14 \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 七個矩陣積分別爲：
-\startformula\startmathalignment[n=8]
+\startsplitformula\startmathalignment[n=8]
 \NC P_1 \NC= 1 \cdot 6 = 6 \qquad
 \NC P_2 \NC= 4 \cdot 2 = 8 \qquad
 \NC P_3 \NC= 6 \cdot 12 = 72 \qquad
@@ -40,14 +40,14 @@
 \NC P_6 \NC= (-2) \cdot 6 = -12 \qquad
 \NC P_7 \NC= (-6) \cdot 14 = -84 \qquad
 \NC \NC \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 結果爲：
-\startformula\startmathalignment[n=4]
+\startsplitformula\startmathalignment[n=4]
 \NC C_{11} \NC = 48 + (-10) - 8 + (-12) = 18 \qquad
 \NC C_{12} \NC = 6 + 8 = 14 \NR
 \NC C_{21} \NC = 72 + (-10) = 62 \qquad
 \NC C_{22} \NC = 48 + 6 - 72 - (-84) = 66 \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 即：
 \startformula
 \startpmatrix
@@ -110,13 +110,13 @@ return C
 T(n) = k T(n/3) + O(1)
 \stopformula
 如果 \m{k} 足夠大，則求解得 \m{T(n) = \Theta(n^{\log_3^k})}。則：
-\startformula\startmathalignment[n=1,align=center]
+\startsplitformula\startmathalignment[n=1,align=center]
 \NC n^{\log_3 k} < n^{\lg7} \NR
 \NC \Downarrow \NR
 \NC \log_3k < \lg7 \NR
 \NC \Downarrow \NR
 \NC k < 3^{\lg7} \approx 21.84986\NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 所以 $k$ 最大爲 $21$。
 \stopANSWER
 
@@ -129,11 +129,11 @@ V.Pan 發現一種方法可以用 $132464$ 次乘法操作完成大小爲 $68\ti
 與 Strassen 算法相比，性能如何？
 \stopEXERCISE
 \startANSWER
-\startformula\startalign
+\startsplitformula\startalign
 \NC \log_{68} 132464 \NC \approx 2.795128 \NR
 \NC \log_{70} 143640 \NC \approx 2.795122 \NR
 \NC \log_{72} 155424 \NC \approx 2.795147 \NR
-\stopalign\stopformula
+\stopalign\stopsplitformula
 顯然 $70 \times 70$ 的方法漸進運行時間最佳。比 Strassen 算法要好。
 \stopANSWER
 

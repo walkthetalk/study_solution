@@ -35,7 +35,7 @@ Kelp 教授決定寫一個過程來隨機產生任意排列,
 \startCLRSCODE
 n = A.length
 for i = 1 to n - 1
-	// swap A[i] with A[RANDOM(i + 1, n)]
+	// 交換 $A[i]$ 與 $A[\ALGO{RANDOM(i+1, n)}]$
 \stopCLRSCODE
 這段代碼能得到 Kelp 教授想要的結果嗎？
 \stopEXERCISE
@@ -56,7 +56,7 @@ for i = 1 to n - 1
 \startCLRSCODE
 n = A.length
 for i = 1 to n
-	swap A[i] with A[RANDOM(1, n)]
+	// 交換 $A[i]$ 與 $A[\ALGO{RANDOM(1, n)}]$
 \stopCLRSCODE
 這段代碼會產生一個均勻隨機排列嗎？爲什麼？
 \stopEXERCISE
@@ -111,7 +111,7 @@ Gallup 教授希望創建集合 \m{\{1,2,3,\ldots,n\}} 的一個\emph{隨機樣�
 \CLRSH{RANDOMLY-SAMPLE(m,n)}
 \startCLRSCODE
 S = ∅
-for k = n-m+1 to n	// 迭代 m 次
+for k = n-m+1 to n	// 迭代 $m$ 次
 	i = RANDOM(1, k)
 	if i ∈ S
 		S = S ∪ {n}

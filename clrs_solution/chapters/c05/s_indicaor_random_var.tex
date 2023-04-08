@@ -33,13 +33,13 @@
 其中第一部分反映的是級別爲 $i$ 的應聘者排在第一個的概率。
 
 正好僱傭兩次的概率爲：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \Pr\{T\} \NC= \sum_{i=1}^{n-1}\Pr\{T_i\} \NR
 \NC        \NC= \sum_{i=1}^{n-1}\frac{1}{n}\frac{1}{n-i} \NR
 \NC        \NC= \frac{1}{n} \sum_{i=1}^{n-1}\frac{1}{i} \NR
 \NC        \NC= \frac{1}{n} (\lg(n-1) + O(1)) \NR
 \NC        \NC= \Omega(\frac{\lg n}{n})
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 %e5.2-3
@@ -52,21 +52,21 @@
 每個點數的概率相等 $\Pr\{X_k=i\}=1/6$。
 
 如果是單個骰子，期望值 $X_k$ 爲：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \E[X_k]
    \NC= \sum_{i=0}^6 i \Pr\{X_k = i\} \NR
 \NC\NC= \frac{1 + 2 + 3 + 4 + 5 + 6}{6} \NR
 \NC\NC= \frac{21}{6} \NR
 \NC\NC= 3.5 \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 對於多個骰子，則：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \E[X] \NC= \E[\sum_{i=1}^nX_i] \NR
 \NC      \NC= \sum_{i=1}^n \E[X_i] \NR
 \NC      \NC= \sum_{i=1}^n 3.5 \NR
 \NC      \NC= 3.5 \cdot n \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 %e5.2-4
@@ -107,12 +107,12 @@ $\Pr\{X_i=1\}=1/n$， $\Pr\{X_i=0\}=1-1/n$
 $\E[X_i]=1\cdot \Pr\{X_i=1\} + 0\cdot \Pr\{X_i=0\}=1/n$
 
 每位顧客拿回自己帽子的概率都是 $1/n$。
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \E[X] \NC= \E[X_1 + X_2 + \ldots + X_n] \NR
 \NC \NC = \sum_{i=1}^n E[X_i] \NR
 \NC \NC = \sum_{i=1}^n \frac{1}{n} \NR
 \NC \NC = 1 \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 %e5.2-6
@@ -127,7 +127,7 @@ $\E[X_i]=1\cdot \Pr\{X_i=1\} + 0\cdot \Pr\{X_i=0\}=1/n$
 \startANSWER
 令 $X_{i,j}$ 表示 $A[i]$ 和 $A[j]$ 爲逆序對。
 其中 $\Pr\{A[i]>A[j]\} = \Pr\{A[i]<A[j]\} = 1/2$。
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \E[\sum_{i<j}X_{i,j}]
    \NC = \sum{i<j}\E[X_{i,j}] \NR
 \NC\NC= \sum_{i=1}^{n-1} \sum_{j=i+1}^n \Pr\{A[i]>A[j]\} \NR
@@ -136,7 +136,7 @@ $\E[X_i]=1\cdot \Pr\{X_i=1\} + 0\cdot \Pr\{X_i=0\}=1/n$
 \NC      \NC= \frac{1}{2} \sum_{i=1}^{n-1} (n-i) \NR
 \NC      \NC= \frac{n(n-1)}{4} \NR
 \NC      \NC= \binom{n}{2}/2 \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 \stopsection

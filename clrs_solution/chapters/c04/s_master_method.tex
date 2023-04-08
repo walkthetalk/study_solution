@@ -48,12 +48,12 @@ Caesar 教授想設計一個算法用於矩陣乘法，
 \stopEXERCISE
 \startANSWER
 適用主定理第二種情況：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC a =\NC 1\NR
 \NC b =\NC 2\NR
 \NC f(n) =\NC \Theta(1) = \Theta(n^{\log_b^a}\lg^{k}n)\qquad \text{其中 $k=0$} \NR
 \NC T(n) =\NC \Theta(\lg n) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 %e4.5-4
@@ -74,10 +74,10 @@ af(n/b)=f(n/2)=\lg(n/2)=\lg n - 1 = f(n)-1\le cf(n)
 而無論 $c$ 有多小，總能找到 $n_0$，當 $n>n_0$ 時，使得 $f(n)>\frac{1}{1-c}$。
 因此 $af(n/b)\le cf(n)$ 無法成立。
 
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC f(n) \NC =\Omega(n^{\log_b{a+\epsilon}}) \NR
 \NC \NC \ge c n^{\lg\epsilon} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 令 $k=\log_b{a+\epsilon}>0$，即 $\lg n \ge c n^k$。
  $cn^k$ 增長速度要快於 $\lg n$。
 \stopANSWER

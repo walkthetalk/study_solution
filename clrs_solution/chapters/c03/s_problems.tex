@@ -137,14 +137,14 @@ n_0 = \max(da_{d-1}, d\sqrt{a_{d-2}}, \ldots, d\sqrt[d]{a_0})
 \stopitem
 
 \startANSWER
-\startformula\startalign
+\startsplitformula\startalign
 \NC 2^{\lg{n}} \NC = \sqrt{n} \NR
 \NC \sqrt{2}^{\lg{n}} \NC = 2^{1/2\lg{n}} = 2^{\lg{\sqrt{n}}} = \sqrt{n} \NR
 \NC n! < n^n \NC = 2^{\lg{n^n}} = 2^{n\lg{n}} \NR
 \NC n^{1/\lg{n}} \NC = n^{\log_n{2}} = 2 \NR
 \NC n^{\lg{\lg{n}}} \NC = (2^{\lg{n}})^{\lg\lg{n}} = (2^{\lg\lg{n}})^{\lg{n}} = (\lg{n})^{\lg{n}} \NR
 \NC \lg^2{n} \NC = 2^{\lg{\lg^2{n}}} = o(2^{\sqrt{2\lg{n}}}) \NR
-\stopalign\stopformula
+\stopalign\stopsplitformula
 \startcolumns[n=3,blank=small,distance=2em,balance=yes]
 \startigBase[n]
 \item \m{2^{2^{n+1}}}
@@ -232,11 +232,11 @@ f(n) = \startmathcases
 \lg{f(n)} \le d\lg{g(n)}
 \stopformula
 很容易找到 $d$：
-\startformula
-d = \frac{\lg{c} + \lg{g(n)}}{\lg{g(n)}}
-= \frac{\lg{c}}{\lg{g(n)}} + 1
-\le \lg{c} + 1
-\stopformula
+\startsplitformula\startmathalignment
+\NC d \NC = \frac{\lg{c} + \lg{g(n)}}{\lg{g(n)}} \NR
+\NC \NC = \frac{\lg{c}}{\lg{g(n)}} + 1 \NR
+\NC \NC \le \lg{c} + 1 \NR
+\stopmathalignment\stopsplitformula
 最後一步顯然成立，因爲 \m{\lg{g(n)} \geq 1}。
 \stopANSWER
 
@@ -302,11 +302,11 @@ d = \frac{\lg{c} + \lg{g(n)}}{\lg{g(n)}}
 $\Theta(\Theta(f(n))) = \Theta(f(n))$
 
 \startANSWER
-\startformula\startmathalignment[n=3]
+\startsplitformula\startmathalignment[n=3]
 \NC c_1 f(n) \le \NC \Theta(f(n)) \NC \le c_2 f(n) \NR
 \NC c_3 \Theta(f(n)) \le \NC \Theta(\Theta(f(n))) \NC \le c_4 \Theta(f(n)) \NR
 \NC c_1 c_3 f(n) \le \NC \Theta(\Theta(f(n))) \NC \le c_2 c_4 f(n) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 \stopitem
 
@@ -315,11 +315,11 @@ $\Theta(\Theta(f(n))) = \Theta(f(n))$
 $\Theta(f(n)) + O(f(n)) = \Theta(f(n))$
 
 \startANSWER
-\startformula\startmathalignment[n=3]
+\startsplitformula\startmathalignment[n=3]
 \NC c_1 f(n) \le \NC \Theta(f(n)) \NC \le c_2 f(n) \NR
 \NC \NC O(f(n)) \NC \le c_3 f(n) \NR
 \NC c_1 \Theta(f(n)) \le \NC \Theta(f(n)) + O(f(n)) \NC \le (c_2 + c_3) f(n) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 \stopitem
 
@@ -328,13 +328,13 @@ $\Theta(f(n)) + O(f(n)) = \Theta(f(n))$
 $\Theta(f(n)) + \Theta(g(n)) = \Theta(f(n)+g(n))$
 
 \startANSWER
-\startformula\startmathalignment[n=3]
+\startsplitformula\startmathalignment[n=3]
 \NC c_1 f(n) \le \NC \Theta(f(n)) \NC \le c_2 f(n) \NR
 \NC c_3 g(n) \le \NC \Theta(g(n)) \NC \le c_4 g(n) \NR
 \NC \min(c_1,c_3) (f(n)+g(n)) \le
 	 \NC \Theta(f(n)) + \Theta(g(n))
 	 \NC \le \max(c_2 + c_4) (f(n)+g(n)) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 \stopitem
 
@@ -343,13 +343,13 @@ $\Theta(f(n)) + \Theta(g(n)) = \Theta(f(n)+g(n))$
 $\Theta(f(n)) \cdot \Theta(g(n)) = \Theta(f(n) \cdot g(n))$
 
 \startANSWER
-\startformula\startmathalignment[n=3]
+\startsplitformula\startmathalignment[n=3]
 \NC c_1 f(n) \le \NC \Theta(f(n)) \NC \le c_2 f(n) \NR
 \NC c_3 g(n) \le \NC \Theta(g(n)) \NC \le c_4 g(n) \NR
 \NC c_1 c_3 (f(n)\cdot g(n)) \le
 	 \NC \Theta(f(n)) \cdot \Theta(g(n))
 	 \NC \le c_2 c_4 (f(n)\cdot g(n)) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 \stopitem
 
@@ -364,13 +364,13 @@ $\Theta(f(n)) \cdot \Theta(g(n)) = \Theta(f(n) \cdot g(n))$
 \startANSWER
 令 $n>n_0=1/a_2$，則有 $\lg(a_2 n)\ge 0$；
 令 $0 < c_1 < 1 < c_2$，對於任意 $a_2 > 0$，要使下式成立：
-\startformula\startmathalignment[n=3,align={right,middle,left}]
+\startsplitformula\startmathalignment[n=3,align={right,middle,left}]
 \NC n^{c_1 - 1} \le \NC a_2 \NC \le n^{c_2 - 1} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 ，要求 $n\ge {a_2}^{1/(c_1-1)}$，且 $n\ge {a_2}^{1/(c_2-1)}$，
 即 $n \ge \max({a_2}^{1/(c_1-1)}, {a_2}^{1/(c_2-1)})$，
 
-\startformula\startmathalignment[n=3,align={right,middle,left}]
+\startsplitformula\startmathalignment[n=3,align={right,middle,left}]
 \NC n^{c_1 - 1} \le \NC a_2 \NC \le n^{c_2 - 1} \NR
 \NC n^{c_1} \le \NC a_2 n \NC \le n^c_2 \NR
 \NC c_1 \lg n \le \NC \lg (a_2 n) \NC \le c_2 \lg n \NR
@@ -381,7 +381,7 @@ $\Theta(f(n)) \cdot \Theta(g(n)) = \Theta(f(n) \cdot g(n))$
 \NC (c_1^{k_2} a_1^{k_1}) n^{k_1} \lg^{k_2} n \le
     \NC (a_1 n)^{k_1} \lg^{k_2}(a_2 n)
 	\NC \le (c_2^{k_2} a_1^{k_1}) n^{k_1} \lg^{k_2}n \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 \stopitem
 
@@ -529,7 +529,7 @@ $f(n)=n^2(n\mod 2)$， $g(n)=n$，
 有 $f(N)=\tilde{\Theta}(g(n))$。
 
 \startANSWER
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \tilde{\Omega} = \lbrace f(n): \NC
   \exists c, k, n_0>0 \NR
 \NC \NC \forall n > n_0
@@ -539,11 +539,11 @@ $f(n)=n^2(n\mod 2)$， $g(n)=n$，
  \exists c_1, c_2, k_1, k_2, n_0 > 0 \NR
 \NC \NC \forall n > n_0
  : 0 \leq c_1g(n) \lg^{-k_1}(n) \leq f(n) \leq c_2g(n) \lg^{k_2}(n)\rbrace \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 $\tilde{\Theta}$ 顯然蘊含 $\tilde{O}$ 和 $\tilde{\Omega}$。
 反之，如果：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \tilde{\Omega} = \lbrace f(n): \NC
   \exists c_1, k_1, n_1>0 \NR
 \NC \NC \forall n > n_1
@@ -553,14 +553,14 @@ $\tilde{\Theta}$ 顯然蘊含 $\tilde{O}$ 和 $\tilde{\Omega}$。
  \exists c_2, k_2, n_2 > 0 \NR
 \NC \NC \forall n \ge n_2
  : 0 \le f(n) \le c_2 g(n) \lg^{k_2}(n) \rbrace \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 那麼：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \tilde{\Theta} = \lbrace f(n): \NC
  \exists c_1,c_2,k_1,k_2 > 0, n_0 > \max(n_1,n_2) \NR
 \NC \NC \forall n \ge n_0
  : 0 \le c_1 g(n) \lg^{-k_1}(n) \le f(n) \le c_2 g(n) \lg^{k_2}(n) \rbrace \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 \stopitem
 \stopigBase

@@ -15,10 +15,10 @@ $T(n)=T(n/2)+n^3$
 
 \startANSWER
 $T(n)\le c n^3$，
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n/2) \NC \le c (n/2)^3 \NR
 \NC T(n) \NC \le c (n/2)^3 + n^3 \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 有 $c/8 + 1\le c$，解得 $c\ge 8/7$。
 
 {\externalfigure[output/e4_4_1-1]}
@@ -32,14 +32,14 @@ $T(n)=4T(n/3)+n$
 \startANSWER
 $T(n)\le c (\lg_3 n)4^{\lg_3 n}$，
 即 $T(n)\le c k 4^k$，其中 $k=\lg_3 n$：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n/3) \NC \le c(k-1)4^{k-1} \NR
 \NC T(n) \NC = 4T(n/3) + n \NR
 \NC \NC \le 4c(k-1)4^{k-1} + n \NR
 \NC \NC = c(k-1)4^k + n \NR
 \NC \NC = ck4^k + (n-c4^k) \NR
 \NC \NC \le ck4^k \qquad \text{滿足 $n-c4^k\le 0$}\NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 只需滿足 $n\ge c^{\log_{3}\frac{3}{4}}$。
 
 {\externalfigure[output/e4_4_1-2]}
@@ -52,12 +52,12 @@ $T(n)=4T(n/2)+n$
 
 \startANSWER
 令 $T(n)\le c n^2 - n$：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n/2) \NC \le c(n/2)^2 - n/2 \NR
 \NC T(n) \NC = 4T(n/2) + n \NR
 \NC \NC \le 4c(n/2)^2 - 2n + n \NR
 \NC \NC = cn^2 - n \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 {\externalfigure[output/e4_4_1-3]}
 \stopANSWER
@@ -69,13 +69,13 @@ $T(n)=3T(n-1)+1$
 
 \startANSWER
 令 $T(n)\le c 3^n - 1$：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n-1) \NC \le c 3^{n-1} - 1 \NR
 \NC T(n) \NC = 3T(n-1) + 1 \NR
 \NC \NC \le 3c3^{n-1} - 3 + 1 \NR
 \NC \NC = c3^n - 2 \NR
 \NC \NC < c3^n - 1 \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 {\externalfigure[output/e4_4_1-4]}
 \stopANSWER
@@ -97,12 +97,12 @@ L(n)=\startmathcases
 \stopEXERCISE
 \startANSWER
 令 $T(n)\ge cn$，其中 $c>0$，則：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n/3) \NC \ge cn/3 \NR
 \NC T(2n/3) \NC \ge 2cn/3 \NR
 \NC T(n) \NC \ge cn/3 + 2cn/3 \NR
 \NC \NC = cn \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 將 $\ge$ 換成 $\le$ 一樣成立，
 因此 $L(n)=\Theta(N)$。
 \stopANSWER
@@ -118,23 +118,23 @@ T(n)=T(n/3)+T(2n/3)+\Theta(n)
 \stopEXERCISE
 \startANSWER
 令 $c_1 n\lg n \le T(n) \le c_2 n\lg n$，則：
-\startformula\startmathalignment[n=4,align={right,middle,left}]
+\startsplitformula\startmathalignment[n=3,align={right,middle,left}]
 \NC \frac{c_1 n}{3}\lg \frac{n}{3} \le \NC T(n/3) \NC \le \frac{c_2 n}{3}\lg \frac{n}{3} \NR
 \NC \frac{2c_1 n}{3}\lg \frac{2n}{3} \le \NC T(2n/3) \NC \le \frac{2c_2 n}{3}\lg \frac{2n}{3} \NR
 \NC c_1 n\lg n + (\frac{2}{3}-\lg 3)c_1 n + \Theta(n) \le
 	\NC T(n)
 	\NC \le c_2 n\lg n + (\frac{2}{3}-\lg 3)c_2 n + \Theta(n) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 令 $c_3 n\le \Theta(n)\le c_4 n$，則：
-\startformula
+\startsplitformula\startmathalignment
 \NC (\frac{2}{3}-\lg 3)c_1 + c_3 \NC > 0 \NR
 \NC (\frac{2}{3}-\lg 3)c_2 + c_4 \NC > 0 \NR
-\stopformula
+\stopmathalignment\stopsplitformula
 求解得：
-\startformula
+\startsplitformula\startmathalignment
 \NC c_1 \NC \le \frac{c_3}{\lg 3 - \frac{2}{3}} \NR
 \NC c_2 \NC \ge \frac{c_4}{\lg 3 - \frac{2}{3}} \NR
-\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 %e4.4-4
@@ -148,43 +148,45 @@ T(n)=T(n/3)+T(2n/3)+\Theta(n)
 
 由此，樹的深度爲 \m{\log_{1/\alpha}n}，每一層爲 \m{cn}。
 葉子節點不明朗，但我們可以假設爲 \m{\Theta(n)}。
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n) \NC = \sum_{i=0}^{\log_{1/\alpha}n}cn + \Theta(n) \NR
 \NC      \NC = cn\log_{1/\alpha}n + \Theta(n) \NR
 \NC      \NC = \Theta(n\lg{n}) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 另一種方式，設 \m{\beta = 1 - \alpha}，則：
-\startformula\startmathalignment
-\NC T(n) \NC = T(\alpha n) + T(\beta n) + cn \NR
-\NC      \NC = T(\alpha^2 n) + 2T(\alpha \beta n) + T(\beta^2 n) + cn + c \alpha n  + c \beta n \NR
-\NC      \NC = T(\alpha^2 n) + 2T(\alpha \beta n) + T(\beta^2 n) + 2cn \NR
-\NC      \NC = T(\alpha^3 n) + T(\alpha^2 \beta n) + c\alpha^2 n +
-               2T(\alpha^2 \beta n) + 2T(\alpha \beta^2 n) + 2c\alpha\beta n +
-               T(\alpha \beta^2 n) + T(\beta ^ 3 n) + c\beta ^ 2 n + 2cn \NR
-\NC      \NC = T(\alpha^3 n) + 3T(\alpha^2 \beta n) + 3T(\alpha \beta^2 n) + T(\beta^3 n) +
-               c \alpha^2 n + 2c \alpha \beta n + c \beta ^ 2 n + 2cn \NR
-\NC      \NC = T(\alpha^3 n) + 3T(\alpha^2 \beta n) + 3T(\alpha \beta^2 n) + T(\beta^3 n) + 3cn \NR
-\NC      \NC = \ldots \NR
-\stopmathalignment\stopformula
+\startsplitformula\startmathalignment[n=3]
+\NC T(n) \NC = \NC T(\alpha n) + T(\beta n) + cn \NR
+\NC      \NC = \NC T(\alpha^2 n) + 2T(\alpha \beta n) + T(\beta^2 n) + cn + c \alpha n  + c \beta n \NR
+\NC      \NC = \NC T(\alpha^2 n) + 2T(\alpha \beta n) + T(\beta^2 n) + 2cn \NR
+\NC      \NC = \NC T(\alpha^3 n) + T(\alpha^2 \beta n) + c\alpha^2 n +
+               2T(\alpha^2 \beta n) + 2T(\alpha \beta^2 n) \NR
+\NC      \NC   \NC + 2c\alpha\beta n + T(\alpha \beta^2 n) + T(\beta ^ 3 n) + c\beta ^ 2 n + 2cn \NR
+\NC      \NC = \NC T(\alpha^3 n) + 3T(\alpha^2 \beta n) + 3T(\alpha \beta^2 n) + T(\beta^3 n) \NR
+\NC      \NC   \NC + c \alpha^2 n + 2c \alpha \beta n + c \beta ^ 2 n + 2cn \NR
+\NC      \NC = \NC T(\alpha^3 n) + 3T(\alpha^2 \beta n) + 3T(\alpha \beta^2 n) + T(\beta^3 n) + 3cn \NR
+\NC      \NC = \NC \ldots \NR
+\stopmathalignment\stopsplitformula
 
 一直到 \m{\alpha^k n \le 1}，最後得到 \m{T(n) = O(1) + ckn}。
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \NC \alpha^k = \frac{1}{n} \NR
 \NC \Rightarrow \NC \log{\alpha^k} = \log\frac{1}{n} \NR
 \NC \Rightarrow \NC k\log\alpha = - \log{n} \NR
 \NC \Rightarrow \NC k = \frac{-\log{n}}{\log\alpha} = \frac{\log{n}}{\log(1/\alpha)} = \log_{1/\alpha}n \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 用代入法進行驗證。猜測 \m{T(n) \le dn\lg{n}}：
-\startformula\startmathalignment[n=3]
-\NC T(n) \NC \le d \alpha n \lg(\alpha n) + c \beta n \lg(\beta n) + cn \NC \NR
-\NC      \NC \le d \alpha n \lg{n} + d \beta n \lg{n} + d \alpha n \lg\alpha + d \beta n \lg\beta + cn \NC \NR
-\NC      \NC \le d n \lg{n} + \big(d (\alpha \lg\alpha + \beta \lg\beta) + c\big)n \NC (d(\alpha\lg\alpha + \beta\lg\beta) + c \le 0)\NR
-\NC      \NC \le d n \lg{n} \NC \NR
-\stopmathalignment\stopformula
+\startsplitformula\startmathalignment
+\NC T(n) \NC \le d \alpha n \lg(\alpha n) + c \beta n \lg(\beta n) + cn \NR
+\NC      \NC \le d \alpha n \lg{n} + d \beta n \lg{n} + d \alpha n \lg\alpha + d \beta n \lg\beta + cn \NR
+\NC      \NC \le d n \lg{n} + \big(d (\alpha \lg\alpha + \beta \lg\beta) + c\big)n
+                \qquad (d(\alpha\lg\alpha + \beta\lg\beta) + c \le 0)\NR
+\NC      \NC \le d n \lg{n} \NR
+\stopmathalignment\stopsplitformula
 
-由於 \m{1/2 \le \alpha < 1} 並且 \m{0 < 1 - \alpha \le 1/2}，有 \m{\lg\alpha < 0} 以及 \m{\lg(1-\alpha)<0}。
+由於 \m{1/2 \le \alpha < 1} 並且 \m{0 < 1 - \alpha \le 1/2}，
+有 \m{\lg\alpha < 0} 以及 \m{\lg(1-\alpha)<0}。
 因此 \m{\alpha\lg\alpha + \beta\lg\beta < 0}，因此：
 \startformula
 d \ge -\frac{c}{\alpha\lg\alpha + (1-\alpha)\lg(1-\alpha)}

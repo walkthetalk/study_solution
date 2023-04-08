@@ -10,18 +10,18 @@
 \stopEXERCISE
 \startANSWER
 由於單調遞增，則：
-\startformula\startalign[n=3]
+\startsplitformula\startalign[n=3]
 \NC \exists n_1, n_2: \NC f(n) \geq 0 \NC \quad\text{若 \m{n > n_1}；} \NR
 \NC                   \NC g(n) \geq 0 \NC \quad\text{若 \m{n > n_2}。} \NR
-\stopalign\stopformula
+\stopalign\stopsplitformula
 
 設 \m{n_0 = \max(n_1,n_2)}，對於 \m{n > n_0}：
-\startformula\startalign
+\startsplitformula\startalign
 \NC f(n) \NC \leq \max(f(n), g(n)) \NR
 \NC g(n) \NC \leq \max(f(n), g(n)) \NR
 \NC (f(n) + g(n))/2 \NC \leq \max(f(n),g(n)) \NR
 \NC \max(f(n), g(n)) \NC \leq f(n) + g(n) \NR
-\stopalign\stopformula
+\stopalign\stopsplitformula
 
 對於最後兩個不等式，有：
 \startformula
@@ -65,16 +65,16 @@ $2^{2n} = O(2^n)$ 不成立，
 0 \le c_1g(n) \le f(n) \le c_2g(n) \quad \text{若} n > n_0
 \stopformula
 將兩個常數 $c_1$ 和 $c_2$ 代入 $O$ 和 $\Omega$ 的定義中即得：
-\startformula\startalign
+\startsplitformula\startalign
 \NC f(n) \NC = O(g(n)) \NR
 \NC f(n) \NC = \Omega(g(n)) \NR
-\stopalign\stopformula
+\stopalign\stopsplitformula
 
 反之，如果 $f(n) = O(g(n))$ 並且 $f(n) = \Omega(g(n))$，則：
-\startformula\startalign
+\startsplitformula\startalign
 \NC 0 \le c_3 g(n) \le f(n) \NC \quad \text{若} n \ge n_1 \NR
 \NC 0 \le f(n) \le c_4 g(n) \NC \quad \text{若} n \ge n_2 \NR
-\stopalign\stopformula
+\stopalign\stopsplitformula
 設 \m{n_3=\max(n_1,n_2)}，合並兩個不等式，得：
 \startformula
 0 \leq c_3g(n) \leq f(n) \leq c_4g(n) \quad \text{若} n > n_3
@@ -89,10 +89,10 @@ $2^{2n} = O(2^n)$ 不成立，
 \startANSWER
 如果最壞情況運行時間爲 \m{O(g(n))}，且最好情況運行時間爲 \m{\Omega(g(n))}，
 設最壞情況運行時間爲 \m{T_w}，最好情況運行時間爲 \m{T_b}，則：
-\startformula\startalign
+\startsplitformula\startmathalignment
 \NC 0 \leq c_1g(n) \leq T_b(n) \NC \quad \text{若} n > n_b \NR
 \NC 0 \leq T_w(n) \leq c_2g(n) \NC \quad \text{若} n > n_w \NR
-\stopalign\stopformula
+\stopmathalignment\stopsplitformula
 結合兩式，有：
 \startformula
 0 \leq c_1g(n) \leq T_b(n) \leq T_w(n) \leq c_2g(n)
@@ -108,10 +108,10 @@ $2^{2n} = O(2^n)$ 不成立，
 \stopEXERCISE
 \startANSWER
 對於常量 \m{c > 0}：
-\startformula\startalign
+\startsplitformula\startalign
 \NC \exists n_1 > 0 : \NC 0 \leq f(n) < cg(n) \NR
 \NC \exists n_2 > 0 : \NC 0 \leq cg(n) < f(n) \NR
-\stopalign\stopformula
+\stopalign\stopsplitformula
 
 令 $n_0 = \max(n_1,n_2)$，若 $n>n_0$，則：
 \startformula

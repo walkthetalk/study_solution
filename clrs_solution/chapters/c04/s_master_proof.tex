@@ -7,14 +7,14 @@
 證明 $\sum_{j=0}^{\lfloor \log_b n\rfloor}(\log_b n - j)^k = \Omega(\log_b^{k+1}n)$。
 \stopEXERCISE
 \startANSWER
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC f(n) \NC = \sum_{j=0}^{\lfloor \log_b n\rfloor}(\log_b n -j)^k \NR
 \NC \NC \ge \sum_{j=0}^{\lfloor \log_b n\rfloor}(\lfloor\log_b n\rfloor -j)^k \NR
 \NC \NC \ge \sum_{j=0}^{\lfloor \log_b n\rfloor} j^k \NR
 \NC \NC = \sum_{j=1}^{\lfloor \log_b n\rfloor}j^k \NR
 \NC \NC = \Omega((\lfloor\log_b n\rfloor)^{k+1}) \qquad \text{附錄 A.1-5}\NR
 \NC \NC = \Omega(\log_b^{k+1}n) \qquad \text{參見\inexercise[floorceil_theta]}\NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 %e4.6-2
@@ -30,7 +30,7 @@
 \stopEXERCISE
 \startANSWER
 證明如下，參見\simpleurl{http://math.stackexchange.com/questions/510897/why-does-afn-b-cfn-for-c-1-imply-that-fn-omegan-log-ba-ep}：
-\startformula\startmathalignment[n=1]
+\startsplitformula\startmathalignment[n=1]
 \NC a f(n/b) \le cf(n) \NR
 \NC \alpha f(n/b) \le f(n) \quad \alpha = a/c \NR
 \NC \alpha f(n) \le f(nb) \NR
@@ -38,7 +38,7 @@
 \NC n = b^i \Rightarrow i = \log_{b}n \Rightarrow f(n) \ge \alpha^{\log_b{n}}f(1) = n^{\log_{b}\alpha} \NR
 \NC \alpha > a \Rightarrow \alpha = a + d \quad (c < 1, d > 0) \NR
 \NC \Rightarrow f(n) = n^{\log_b{a} + log_b{d}} = n^{\log_b{a}+\epsilon} \quad (\epsilon = \log_{b}d) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 %e4.6-3
@@ -54,31 +54,31 @@ g(n)=\sum_{j=0}^\floor{\log_b n} a^j f(n/b^j)
 \stopEXERCISE
 \startANSWER
 證明如下，參見\simpleurl{https://zhuanlan.zhihu.com/p/529434777}。
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC g(n) \NC = \sum_{j=0}^\floor{\log_b n} a^j f(n/b^j) \NR
 \NC \NC = \sum_{j=0}^\floor{\log_b n} a^j \Theta\left(\frac{(\frac{n}{b^j})^{\log_b a}}{\lg\frac{n}{b^j}}\right) \NR
 \NC \NC = \sum_{j=0}^\floor{\log_b n} a^j \Theta\left(\frac{n^{\log_b a}}{a^j(\lg n - j\lg b)}\right) \NR
 \NC \NC = \Theta\left(\sum_{j=0}^\floor{\log_b n} \frac{n^{\log_b a}}{\lg n - j\lg b}\right) \NR
 \NC \NC = \Theta\left(\frac{n^{\log_b a}}{\lg b}\sum_{j=0}^\floor{\log_b n} \frac{1}{\log_b n - j}\right) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 $\log_b n - 1 \le \floor{\log_b n} \le \log_b n \le \floor{\log_b n} + 1$
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \sum_{j=0}^\floor{\log_b n}\frac{1}{\log_b n - j}
     \NC > \sum_{j=0}^\floor{\log_b n}\frac{1}{\floor{\log_b n} + 1 - j} \NR
 \NC \NC = 1 + \frac{1}{2} + \frac{1}{3} + \cdots + \frac{1}{\floor{\log_b n} + 1} \NR
 \NC \NC > \ln(\floor{\log_b n} + 1) \qquad \text{（可以用歸納法證明）}\NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 因此 $\sum_{j=0}^\floor{\log_b n}\frac{1}{\log_b n - j} = \Omega(\lg\lg n)$。
 
 又：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \sum_{j=0}^\floor{\log_b n}\frac{1}{\log_b n - j}
     \NC = \sum_{j=0}^{\floor{\log_b n}-1}\frac{1}{\log_b n - j} + O(1) \NR
 \NC \NC \le \sum_{j=0}^{\floor{\log_b n}-1} \frac{1}{\log_b n - j} + O(1) \NR
 \NC \NC = 1 + \frac{1}{2} + \frac{1}{3} + \cdots + \frac{1}{\floor{\log_b n}} + O(1) \NR
 \NC \NC < \ln(\floor{\log_b n}) + 1 + O(1) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 故 $\sum_{j=0}^\floor{\log_b n}\frac{1}{\log_b n - j} = O(\lg\lg n)$。
 
 由定理 3.1 可知： $\sum_{j=0}^\floor{\log_b n}\frac{1}{\log_b n - j} = \Theta(\lg\lg n)$。

@@ -50,7 +50,7 @@ for i = 1 to n
 第二步所生成的值有效的概率是 $p=n/2^c$。
 
 令生成合法隨機數的總輪數爲 $X$，其數學期望 $\E(X)$ 爲：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC \E(X)
     \NC = p + 2(1-p)p + 3(1-p)^2p + \cdots + n(1-p)^{n-1}p + \cdots \NR
 \NC \NC = \sum_{i=1}^{\infty}i(1-p)^{i-1}p \NR
@@ -58,7 +58,7 @@ for i = 1 to n
 \NC \NC = p \frac{1}{(1-(1-p))^2} \NR
 \NC \NC = \frac{1}{p} \NR
 \NC \NC = \frac{2^\ceil{\lg n}}{n} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 由於 $1 \le \frac{2^{\ceil{\lg n}}}{n} \le 2$，所以 $E(X)=\Theta(1)$。
 
 而每輪所用時間爲 $\ceil{\lg n}$，因此運行時間爲：

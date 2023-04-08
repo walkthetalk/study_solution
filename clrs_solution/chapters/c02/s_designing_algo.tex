@@ -50,12 +50,12 @@ T(n)=\startmathcases
 \startigBase[n]
 \item $n=2$ 時， $T(n)=2=n\lg n$，成立；
 \item 如果 \m{T(n) = n \lg(n)}，那麼：
-\startformula\startalign
+\startsplitformula\startmathalignment
 \NC T(2n) \NC = 2n \lg(2n) \NR
 \NC       \NC = 2n (\lg(n) + 1) \NR
 \NC	      \NC = 2n \lg(n) + 2n \NR
 \NC	      \NC = 2T(n) + 2n \NR
-\stopalign\stopformula
+\stopmathalignment\stopsplitformula
 \item 由 1）、 2）归纳可知，問題得證。
 \stopigBase
 \stopANSWER

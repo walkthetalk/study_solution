@@ -103,7 +103,7 @@ $T(n) = n^2 + T(n-2)
 \startigBase[n]
 \item $T(N,n) = 2T(N,n/2) + cn = \Theta(n\lg{n})$
 \item
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(N,n) \NC= 2T(N,n/2) + cn + 2N \NR
 \NC      \NC= 2(2T(N,n/4) + cn/2 + 2N) + cn + 2N \NR
 \NC      \NC= 4T(N,n/4) + 2cn + (2+4)N \NR
@@ -112,7 +112,7 @@ $T(n) = n^2 + T(n-2)
 \NC      \NC= \cdots \NR
 \NC      \NC= nT(1) + cn\lg n + N(n-2) \NR
 \NC      \NC=\Theta(Nn) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \item $T(N,n) = 2T(N,n/2) + cn + n = 2T(N,n/2) + (c+1)n = \Theta(n\lg{n})$
 \stopigBase
 \stopANSWER
@@ -232,14 +232,14 @@ $\Theta(n^2\sqrt{n}) = \Theta(n^{2.5})$ \hfill（主定理 \m{\log_2{4} = 2 < 2.
 \item[item:Tnlgn] $T(n) = 2T(n/2) + n/\lg{n}$
 
 \startANSWER
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n) \NC= 2T(n/2) + \frac{n}{\lg{n}} \NR
 \NC      \NC= 4(n/4) + 2\frac{n/2}{\lg(n/2)} + \frac{n}{\lg{n}} \NR
 \NC      \NC= 4T(n/4) + \frac{n}{\lg{n} - 1} + \frac{n}{\lg{n}} \NR
 \NC      \NC= nT(1) + \sum_{i=0}^{\lg{n} - 1}\frac{n}{\lg{n}-i} \NR
 \NC      \NC= nT(1) + n\sum_{i=1}^{\lg{n}}\frac{1}{\lg{n}} \NR
 \NC      \NC= \Theta(n\lg\lg{n}) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 % f
@@ -247,49 +247,49 @@ $\Theta(n^2\sqrt{n}) = \Theta(n^{2.5})$ \hfill（主定理 \m{\log_2{4} = 2 < 2.
 
 \startANSWER
 猜測 $T(n)=\Theta(n)$：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n) \NC = cn/2 + cn/4 + cn/8 + n \le (7/8)cn + n \le cn = O(n) \quad (c \ge 8) \NR
 \NC T(n) \NC = cn/2 + cn/4 + cn/8 + n \ge (7/8)cn + n \ge cn = \Omega(n) \quad (c \le 8) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 % g
 \item $T(n) = T(n - 1) + 1/n$
 
 \startANSWER
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n) \NC= T(n-1) + 1/n \NR
 \NC      \NC= \frac{1}{n} + \frac{1}{n-1} + T(n-2) \NR
 \NC      \NC= \frac{1}{n} + \frac{1}{n-1} + \frac{1}{n-2} + T(n-3) \NR
 \NC      \NC= \sum_{i=0}^{n-1}\frac{1}{n-i} \NR
 \NC      \NC= \sum_{i=1}^n\frac{1}{i} \NR
 \NC      \NC= \Theta(\lg{n})
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 % h
 \item $T(n) = T(n - 1) + \lg{n}$
 
 \startANSWER
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n) \NC= \lg{n} + T(n-1) \NR
 \NC      \NC= \lg{n} + \lg{n-1} + T(n-2) \NR
 \NC      \NC= \sum_{i=0}^{n-1}\lg(n - i) \NR
 \NC      \NC= \sum_{i=1}^{n}\lg{i} \NR
 \NC      \NC= \lg(n!) \NR
 \NC      \NC= \Theta(n\lg{n}) \qquad \text{$n^{n/2}\le n! \le n^n$} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 % i
 \item $T(n) = T(n - 2) + 1/\lg n$
 
 \startANSWER
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n) \NC= \frac{1}{\lg{n}} + \frac{1}{\lg(n-2)} + \cdots + \frac{1}{\lg 2} + c\NR
 \NC      \NC= \sum_{i=1}^{n/2}\frac{1}{\lg(2i)} \NR
 \NC      \NC= \Theta(\lg\lg{n}) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 % j
@@ -299,13 +299,13 @@ $\Theta(n^2\sqrt{n}) = \Theta(n^{2.5})$ \hfill（主定理 \m{\log_2{4} = 2 < 2.
 猜測 $T(n)=\Theta(n\lg\lg n)$，
 即 $c_1 n\lg\lg n\le T(n) \le c_2 n\lg\lg{n}$，
 其中 $c_1>0,c_2>0$：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(n) \NC= \sqrt{n}c\sqrt{n}\lg\lg\sqrt{n} + n \NR
 \NC      \NC= cn\lg\lg\sqrt{n} + n \NR
 \NC      \NC= cn\lg\frac{\lg{n}}{2} + n \NR
 \NC      \NC= cn\lg\lg{n} - cn\lg{2} + n \NR
 \NC      \NC= cn\lg\lg{n} + (1 - c)n \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 因此 $c_1<1,c_2>1$ 時，有 $T(n)=\Theta(n\lg\lg n)$。
 \stopANSWER
 
@@ -317,51 +317,51 @@ $\Theta(n^2\sqrt{n}) = \Theta(n^{2.5})$ \hfill（主定理 \m{\log_2{4} = 2 < 2.
 本題討論遞迴式（3.22）所定義的 Fibonacci 數的性質。
 我們將使用生成函數技術來求解 Fibonacci 遞迴式。
 \emph{生成函數 generating function}（又稱\emph{形式冪級數 formal power series}） ${\cal F}$ 定義爲：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC {\cal F}(z) \NC= \sum_{i=0}^{\infty}F_iz^i \NR
 \NC                \NC= 0 + z + z^2 + 2z^3 + 3z^4 + 5z^5 + 8z^6 + 13z^7 + 21z^8 + \cdots \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 其中 $F_i$ 是第 $i$ 個 Fibonacci 數。
 
 附遞迴式（3.22）：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC F_0 \NC = 0 \NR
 \NC F_1 \NC = 1 \NR
 \NC F_i \NC = F_{i-1} + F_{i-2} \qquad \text{若 \m{i \ge 2}} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 \startigBase[a]
 \item 證明： ${\cal F}(z) = z + z{\cal F}(z) + z^2{\cal F}(z)$。
 
 \startANSWER
 % a
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC  \NC z + z{\cal F}(z) + z^2{\cal F}(Z) \NR
 \NC =\NC z + z\sum_{i=0}^{\infty}F_iz^i + z^2\sum_{i=0}^{\infty}F_iz^i \NR
 \NC =\NC z + \sum_{i=1}^{\infty}F_{i-1}z^i + \sum_{i=2}^{\infty}F_{i-2}z^i \NR
 \NC =\NC z + F_1z + \sum_{i=2}^{\infty}(F_{i-1} + F_{i-2})z^i \NR
 \NC =\NC z + F_1z + \sum_{i=2}^{\infty}F_iz^i \NR
 \NC =\NC {\cal F}(z) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 % b
-\startitem 證明：\startformula\startmathalignment
+\startitem 證明：\startsplitformula\startmathalignment
 \NC {\cal F}(z) \NC= \frac{z}{1 - z - z^2} \NR
 \NC                \NC= \frac{z}{(1 - \phi z)(1 - \hat\phi z)} \NR
 \NC                \NC= \frac{1}{\sqrt5}\Big(\frac{1}{1 - \phi z} - \frac{1}{1 - \hat{\phi} z}\Big) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 其中 $\phi$ 是黃金比例， $\hat{\phi}$ 是其共軛：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC     \phi \NC= \frac{1 + \sqrt5}{2} = 1.61803\ldots \NR
 \NC \hat\phi \NC= \frac{1 - \sqrt5}{2} = -0.61803\ldots \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopitem
 
 \startANSWER
 只需注意到 $\phi - \hat\phi = \sqrt5$， $\phi + \hat\phi = 1$， $\phi\hat\phi = -1$：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC  \NC {\cal F}(z) \NR
 \NC =\NC \frac{{\cal F}(z)(1 - z - z^2)}{1 - z - z^2} \NR
 \NC =\NC \frac{{\cal F}(z) - z{\cal F}(z) - z^2{\cal F}(z) - z + z}{1 - z - z^2} \NR
@@ -373,7 +373,7 @@ $\Theta(n^2\sqrt{n}) = \Theta(n^{2.5})$ \hfill（主定理 \m{\log_2{4} = 2 < 2.
 \NC =\NC \frac{(\phi - \hat\phi)z + 1 - 1}{\sqrt5 (1 - \phi z)(1 - \hat\phi z)} \NR
 \NC =\NC \frac{(1 - \hat\phi z) - (1 - \phi z)}{\sqrt5 (1 - \phi z)(1 - \hat\phi z)} \NR
 \NC =\NC \frac{1}{\sqrt5}\Big(\frac{1}{1 - \phi z} - \frac{1}{1 - \hat\phi z}\Big) \hfill (3)\NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 \startitem
@@ -391,12 +391,12 @@ $\Theta(n^2\sqrt{n}) = \Theta(n^{2.5})$ \hfill（主定理 \m{\log_2{4} = 2 < 2.
 
 \startANSWER
 如果 $\abs{x}<1$，則 $\frac{1}{1 - x} = \sum_{k=0}^{\infty}x^k$。因此：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC {\cal F}(z)
     \NC= \frac{1}{\sqrt5}\Big(\frac{1}{1 - \phi z} - \frac{1}{1 - \hat\phi z}\Big) \NR
 \NC \NC= \frac{1}{\sqrt5}\Big(\sum_{i=0}^{\infty}\phi^i z^i - \sum_{i=0}^{\infty}\hat{\phi}^i z^i\Big) \NR
 \NC \NC= \sum_{i=0}^{\infty}\frac{1}{\sqrt5}(\phi^i - \hat{\phi}^i) z^i\NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 % d
@@ -426,12 +426,12 @@ F_i = \frac{\phi^i - \hat{\phi}^i}{\sqrt5}  = \frac{\phi^i}{\sqrt5} - \frac{\hat
 
 \startANSWER
 用歸納法，如果對於 $F_i,F_{i+1}$ 均成立，則：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC F_{i+2}
     \NC = F_i + F_{i+1} \NR
 \NC \NC \ge \phi^{i-2} + \phi^{i-1} \NR
 \NC \NC = \phi^{i-2} (1+\phi) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 即證明 $1+\phi\ge \phi^2$ 即可，顯然成立。
 \stopANSWER
 
@@ -540,7 +540,7 @@ A[i, j] + A[k, l] \le A[i, l] + A[k, j]
 換句話說，在 Monge 陣列中任選兩行和兩列，對於交叉點上的 4 個元素，
 左上角和右下角兩個元素之和總是小於等於左下角和右上角元素之和。
 例如，下面就是一個 Monge 陣列：
-\startformula\startmatrix
+\startsplitformula\startmatrix
 \NC 10 \NC 17 \NC 13 \NC 28 \NC 23 \NR
 \NC 17 \NC 22 \NC 16 \NC 29 \NC 23 \NR
 \NC 24 \NC 28 \NC 22 \NC 34 \NC 24 \NR
@@ -548,7 +548,7 @@ A[i, j] + A[k, l] \le A[i, l] + A[k, j]
 \NC 45 \NC 44 \NC 32 \NC 37 \NC 23 \NR
 \NC 36 \NC 33 \NC 19 \NC 21 \NC  6 \NR
 \NC 75 \NC 66 \NC 51 \NC 53 \NC 34 \NR
-\stopmatrix\stopformula
+\stopmatrix\stopsplitformula
 
 \startigBase[a]
 % a
@@ -563,23 +563,23 @@ A[i,j] + A[i+1,j+1] \le A[i,j+1] + A[i+1,j]
 \startANSWER
 “儘當”的部分是顯然的，由 Monge 陣列的定義可知。
 而對於“當”的部分，先用歸納法證明：
-\startformula\startmathalignment[n=1]
+\startsplitformula\startmathalignment[n=1]
 \NC A[i,j] + A[i+1, j+1] \le A[i,j+1] + A[i+1, j] \NR
 \NC \Downarrow \NR
 \NC A[i,j] + A[k, j+1] \le A[i, j+1] + A[k,j] \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 其中 \m{i<k}。
 
 第一步， \m{k=i+1}，由已知條件顯然成立。
 歸納時，我們假設對於 $k$ 成立，我們需要證明對於 $k+1$ 仍然成立。
-\startformula\startmathalignment[n=1]
+\startsplitformula\startmathalignment[n=1]
 \NC A[i, j] + A[k, j+1] \le A[i, j+1] + A[k, j] \quad (assumption) \NR
 \NC A[k, j] + A[k+1, j+1] \le A[k, j+1] + A[k+1, j] \quad (given) \NR
 \NC \Downarrow \NR
 \NC A[i, j] + A[k, j+1] + A[k, j] + A[k+1, j+1] \le A[i, j+1] + A[k, j] + A[k, j+1] + A[k+1, j] \NR
 \NC \Downarrow \NR
 \NC A[i, j] + A[k+1, j+1] \le A[i, j+1] + A[k+1, j] \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 類似，用歸納法可以證明如果對於 $l$ 成立，那麼對於 $l+1$ 也成立。
 
@@ -590,23 +590,23 @@ A[i,j] + A[i+1,j+1] \le A[i,j+1] + A[i+1,j]
 \startitem
 如下陣列並不是 Monge 陣列，改變其中一個元素，使其成爲 Monge 陣列。
 （\hint 用上一項的結果）
-\startformula\startmatrix
+\startsplitformula\startmatrix
 \NC 37 \NC 23 \NC 22 \NC 32 \NR
 \NC 21 \NC  6 \NC  7 \NC 10 \NR
 \NC 53 \NC 34 \NC 30 \NC 31 \NR
 \NC 32 \NC 13 \NC  9 \NC  6 \NR
 \NC 43 \NC 21 \NC 15 \NC  8 \NR
-\stopmatrix\stopformula
+\stopmatrix\stopsplitformula
 \stopitem
 
 \startANSWER
-\startformula\startmatrix
+\startsplitformula\startmatrix
 \NC 37 \NC 23 \NC \bf 24 \NC 32 \NR
 \NC 21 \NC  6 \NC  7 \NC 10 \NR
 \NC 53 \NC 34 \NC 30 \NC 31 \NR
 \NC 32 \NC 13 \NC  9 \NC  6 \NR
 \NC 43 \NC 21 \NC 15 \NC  8 \NR
-\stopmatrix\stopformula
+\stopmatrix\stopsplitformula
 \stopANSWER
 
 % c
@@ -622,19 +622,19 @@ f(1)\le f(2)\le\cdots\le f(m)
 \startformula
 A[j, a] + A[i, b] \le A[i, a] + A[j, b]
 \stopformula
-但是\startformula\startmathalignment
+但是\startsplitformula\startmathalignment
 \NC A[j, a] \ge A[i, a] \NC \quad (A[i,a] \text{ 最小}) \NR
 \NC A[i, b] \ge A[j, b] \NC \quad (A[j,b] \text{ 最小}) \NR
-\stopmathalignment\stopformula
-隱含\startformula\startmathalignment
+\stopmathalignment\stopsplitformula
+隱含\startsplitformula\startmathalignment[n=1]
 \NC A[j, a] + A[i, b] \ge A[i, a] + A[j, b] \NR
 \NC \Downarrow \NR
 \NC A[j, a] + A[i, b] = A[i, a] + A[j, b] \NR
-\stopmathalignment\stopformula
-又分別隱含\startformula\startmathalignment
+\stopmathalignment\stopsplitformula
+又分別隱含\startsplitformula\startmathalignment
 \NC A[j, b] < A[i, b] \Rightarrow A[i, a] > A[j, a] \NC \Rightarrow A[i,a] \text{ 不是最小} \NR
 \NC A[j, b] = A[i, b] \NC \Rightarrow A[j,b] \text{ 不是最左最小} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
 推出矛盾，因此假設 \m{i>j} 不成立，即 \m{i\le j}。
 可以得出結論：
@@ -663,14 +663,14 @@ a < b \Rightarrow f(a) \le f(b)
 對於 $i = 2k+1$，其中 $k\ge 0$，
 我們只需要比較此行中列坐標從 $\mu_{i-1}$ 到 $\mu_{i+1}$ 中的這些元素，
 最多 $\mu_{i+1}-\mu_{i-1} + 1$ 步就可以找出 $\mu_i$。
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(m, n) \NC= \sum_{i=0}^{m/2-1}\Big(\mu_{2i + 2} - \mu_{2i} + 1\Big) \NR
 \NC \NC= \sum_{i=0}^{m/2-1}\mu_{2i+2} - \sum_{i=0}^{m/2-1}\mu_{2i} + m/2 \NR
 \NC \NC= \sum_{i=1}^{m/2}\mu{2i} - \sum_{i=0}^{m/2-1}\mu{2i} + m/2 \NR
 \NC \NC= \mu_m - \mu_0 + m/2 \NR
 \NC \NC= n + m/2 \NR
 \NC \NC= O(m + n) \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 % e
@@ -679,13 +679,13 @@ a < b \Rightarrow f(a) \le f(b)
 
 \startANSWER
 “分”所用時間爲 $O(1)$，“治”所用時間爲 $T(m/2)$，合並所用時間爲 $O(m+n)$。
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC T(m, n) \NC= T(m/2, n) + cn + dm \NR
 \NC      \NC= cn + dm + cn + dm/2 + cn + dm/4 + \cdots \NR
 \NC      \NC= \sum_{i=0}^{\lg{m}-1}cn + \sum_{i=0}^{\lg{m}-1}\frac{dm}{2^i} \NR
 \NC      \NC= cn\lg{m} + dm\sum_{i=0}^{\lg{m} - 1}\frac{1}{2^i} \NR
 \NC      \NC< cn\lg{m} + 2dm \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 因此 $T(m,n)=O(m+n\log m)$。
 \stopANSWER
 

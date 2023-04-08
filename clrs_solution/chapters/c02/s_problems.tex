@@ -39,12 +39,12 @@ T(a) = \startcases
 \stopformula
 
 設 $G(a) = \frac{T(a)}{a}$，則：
-\startformula\startalign
+\startsplitformula\startalign
 \NC G(a)	\NC = \frac{T(a)}{a} \NR
 \NC 		\NC = \frac{2 T(a/2) + a k}{a} \NR
 \NC		\NC = \frac{T(a/2)}{a/2} + k \NR
 \NC		\NC = G(a/2) + k \NR
-\stopalign\stopformula
+\stopalign\stopsplitformula
 即
 \startformula
 G(a) = \startcases
@@ -84,11 +84,11 @@ H(p) = \startcases
 $k$ 最大爲多少時（作爲 $n$ 的函式），新算法與原歸並排序算法所用時間相同？
 
 \startANSWER
-\startformula\startalign
+\startsplitformula\startalign
 \NC k \NC = \lg(n) \NR
 \NC \Theta(nk + n \lg(n/k)) \NC = \Theta(n \lg(n) + n \lg(\frac{n}{\lg(n)}) \NR
 \NC			\NC = \Theta(n \lg(n)) \NR
-\stopalign\stopformula
+\stopalign\stopsplitformula
 \stopANSWER
 
 \stopigBase
@@ -167,10 +167,10 @@ A'[1]\le A'[2]\le \cdots \le A'[n]
 %p2-3
 \startPROBLEM
 现有多项式：
-\startformula\startalign
+\startsplitformula\startmathalignment
 \NC P(x) \NC = \sum_{k=0}^{n} a_kx^k \NR
 \NC \NC = a_0 + a_1 x + a_2 x^2 + \cdots + a_{n-1}x^{n-1} + a_n x^n \NR
-\stopalign\stopformula
+\stopmathalignment\stopsplitformula
 给定系数 $a_0,a_1,a_2,\cdots,a_n$ 后，
 可以按 Horner 定律計算多項式的值：
 \startformula
@@ -221,12 +221,12 @@ y = \sum_{k=0}^n a_kx^k
 
 \startANSWER
 每次迭代完成後：
-\startformula\startalign
+\startsplitformula\startalign
 \NC p \NC = A_i + x \sum_{k=0}^{n-(i+1)}A_{k+i+1}x^k \NR
 \NC	\NC = A_i x^0 + \sum_{k=0}^{n-i-1}A_{k+i+1}x^{k+1} \NR
 \NC	\NC = A_i x^0 + \sum_{k=1}^{n-i}A_{k+i}x^{k} \NR
 \NC	\NC = \sum_{k=0}^{n-i}A_{k+i}x^{k} \NR
-\stopalign\stopformula
+\stopalign\stopsplitformula
 最後一次 $i$ 爲 $0$，
 代入上式可得 $p = \sum_{k=0}^{n}a_{k}x^{k}$。
 \stopANSWER

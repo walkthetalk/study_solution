@@ -2,175 +2,192 @@
   title={Problems},
 ]
 
+%p5-1
 \startPROBLEM（Probabilstic counting）
-利用一個 \m{b} 位的計數器，
-我們一般只能計數到 \m{2^b -1}。
-而用 R.Morris 的{\EMP 概率記數法}，
+利用一個 $b$ 位的計數器，
+我們一般只能計數到 $2^b -1$。
+而用 R.Morris 的\emph{概率記數法}，
 我們可以計數到一個大得多的值，
 代價是精度有所損失。
 
-對 \m{i=0,1,\ldots,2^b-1}，令計數器的值 \m{i} 表示 \m{n_i} 的計數，
-其中 \m{n_i} 構成了一個非負的遞增序列。
-假設計數器初值爲 \m{0}，表示計數 \m{n_0 = 0}。
-INCREMENT 運算單元工作在一個計數器上，
-他以概率的方式包含值 \m{i}。
-如果 \m{i = 2^b-1}，則該運算單元報告溢出錯誤；
-否則，該運算單元以概率 \m{1/(n_{i+1}-n_i)} 把計數器增加 \m{1}，
-以概率 \m{1-1/(n_{i+1}-n_i)} 保持計數器不變。
+對 $i=0,1,\ldots,2^b-1$，令計數器的值 $i$ 表示 $n_i$ 的計數，
+其中 $n_i$ 構成了一個非負的遞增序列。
+假設計數器初值爲 $0$，表示計數 $n_0 = 0$。
+現有這樣一個計數器，其值爲 $i$，
+INCREMENT 運算單元以概率的方式對其進行運算。
+如果 $i = 2^b-1$，則該運算單元報告溢出錯誤；
+否則，該運算單元以概率 $1/(n_{i+1}-n_i)$ 將計數器增加 $1$，
+而以概率 $1-1/(n_{i+1}-n_i)$ 保持計數器不變。
 
-對所有的 \m{i\ge 0}，若選擇 \m{n_i = i}，此計數器就退化爲一個普通的計數器。
-若選擇 \m{n_i=2^{i-1}(i>0)}，或者 \m{n_i=F_i}（第 \m{i} 個 Fibonacci 數，參見\insection[notationfunction]），
+對所有的 $i\ge 0$，若選擇 $n_i = i$，此計數器就退化爲一個普通的計數器。
+若選擇 $n_i=2^{i-1}(i>0)$，或者 $n_i=F_i$（第 $i$ 個 Fibonacci 數，參見\insection[notationfunction]），
 則會出現更多有趣的情形。
 
-對於這個問題，假設 \m{n_{2^b-1}} 已足夠大，發生溢出錯誤的概率可以忽略。
+對於這個問題，假設 $n_{2^b-1}$ 已足夠大，發生溢出錯誤的概率可以忽略。
 
 \startigBase[a]
-\item 請說明在執行 \m{n} 次 INCREMENT 運算後，計數器所表示的數期望值正好是 \m{n}；
+\startitem
+請說明在執行 $n$ 次 INCREMENT 運算後，計數器所表示的數期望值正好是 $n$；
+\stopitem
+\stopigBase
 
 \startANSWER
-假設第 \m{j} 次 INCREMENT 前，計數器的值爲 \m{i}，表示 \m{n_i}。
-如果計數器增加，那麼其值會增大 \m{n_{i+1} - n_i}。
-其概率爲 \m{1/(n_{i+1} - n_i)}，並且：
-\startformula\startmathalignment
+假設第 $j$ 次 INCREMENT 前，計數器的值爲 $i$，表示 $n_i$。
+如果計數器增加，那麼其值會增大 $n_{i+1} - n_i$，
+其概率爲 $1/(n_{i+1} - n_i)$，增加值的期望爲：
+\startsplitformula\startmathalignment
 \NC E[X_j] \NC= 0 \cdot \Pr\{\text{stays same}\} + 1 \cdot \Pr\{\text{increases}\} \NR
 \NC        \NC= 0 \cdot \left(1 - \frac{1}{n_{i+1} - n_i}\right) +
                 1 \cdot \left((n_{i+1} - n_i) \cdot \frac{1}{n_{i+1} - n_i}\right) \NR
 \NC        \NC= 1 \NR
-\stopmathalignment\stopformula
-這是每次 INCREMENT 的期望值，由於有 \m{n} 次 INCREMNT，其期望值爲 \m{n}。
+\stopmathalignment\stopsplitformula
+這是每次 INCREMENT 的期望值，由於有 $n$ 次 INCREMNT，其期望值爲 $n$。
 \stopANSWER
 
-\item 分析計數器表示的計數的方差依賴於 \m{n_i} 序列。
-我們來看一個簡單情形：對所有 \m{i\ge 0}， \m{n_i = 100i}。
-在執行了 \m{n} 次 INCREMENT 運算後，請估計計數器所表示數的方差。
+\startigBase[continue]
+\startitem
+此計數器所表示的計數的方差依賴於 $n_i$ 序列。
+我們來看一個簡單情形：對所有 $i\ge 0$， $n_i = 100i$。
+在執行 $n$ 次 INCREMENT 運算後，請估計計數器所表示數的方差。
+\stopitem
+\stopigBase
 
 \startANSWER
 單次 INCREMENT 運算的協方差：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC Var[X_j] \NC= E[X_j^2] - E^2[X_j] \NR
 \NC           \NC= \left(0^2 \cdot \frac{99}{100} + 100^2 \frac{1}{100}\right) - 1 \NR
 \NC           \NC= 99 \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 
-\m{n} 次運算的協方差：
+$n$ 次運算的協方差：
 \startformula
 Var[X] = Var[X_1 + X_2 + \ldots + X_n] = \sum_{i=1}^n Var[X_i] = 99n
 \stopformula
 \stopANSWER
-\stopigBase
+
 \stopPROBLEM
 
+%p5-2
 \startPROBLEM（Searching an unsorted array）
-本題將分析三個算法，他們在一個包含 \m{n} 個元素的無序數列 \m{A} 中查找一個值 \m{x}。
+本題將分析三個算法，他們在無序數列 $A$ 的 $n$ 個元素中搜索 $x$。
 
-考慮如下的隨機策略：隨機挑選 \m{A} 中的一個下標 \m{i}。
-如果 \m{A[i] = x}，則終止；否則，繼續挑選 \m{A} 中的一個新的隨機下標。
-重復隨機挑選下標，知道找到一個下標 \m{j}，使得 \m{A[j] = x}，
-或者知道我們已檢查過 \m{A} 中的所有元素。
-注意，我們每次都是從全部下標的結合中挑選，於是可能會不止一次地檢查某個元素。
+考慮如下隨機策略：隨機挑選 $A$ 中的一個下標 $i$。
+如果 $A[i] = x$，則終止；否則，繼續挑選 $A$ 中的一個新的隨機下標。
+重復隨機挑選下標，直到找到一個下標 $j$，使得 $A[j] = x$，
+或者直到我們已檢查過 $A$ 中的所有元素。
+注意，我們每次都是從全部下標集合中挑選，
+因此可能會對某個元素檢查多次。
 \startigBase[a]
-\item 請寫出過程 \ALGO{RANDOM-SEARCH} 的僞碼實現上述策略。
-確保當 \m{A} 中所有下標都被挑選過時，你的算法應停止。
+\item 請寫出過程 \ALGO{RANDOM-SEARCH} 的僞碼以實現上述策略。
+要確保當 $A$ 中所有下標都被挑選過後，算法應停止。
 \stopigBase
 
 \startANSWER
 \CLRSH{RANDOM-SEARCH(x, A, n)}
-\startCLRS
-/BTEX\m{v = \emptyset}/ETEX
-while /BTEX \m{|v|\ne n} /ETEX
-	i = RANDOM(1, n)
+\startCLRSCODE
+v = \emptyset
+while |v|\ne n
+	i = \ALGO{RANDOM(1, n)}
 	if A[i] = x
 		return i
 	else:
-		/BTEX\m{v = v\cup i}/ETEX
-return ␀
-\stopCLRS
-其中可以多種方式實現 \m{v}——如散列表、樹或位圖。位圖的時間、空間性能應當都是最好的。
+		v = v\cup i
+return -1
+\stopCLRSCODE
+其中可以多種方式實現 $v$——如散列表、樹或位圖。位圖的時間、空間性能應當都是最好的。
 \stopANSWER
 
 \startigBase[continue]
-\item 假定恰好有一個下標 \m{i} 使得 \m{A[i] = x}。
-在我們找到 \m{x} 和 \ALGO{RANDOM-SEARCH} 結束之前，
-必須挑選 \m{A} 下標的數目期望值是多少？
+\item 假定恰好有一個下標 $i$ 滿足 $A[i] = x$。
+在我們找到 $x$，結束 \ALGO{RANDOM-SEARCH} 之前，
+所檢查過的下標的數目期望值是多少？
 \stopigBase
 
 \startANSWER
-參考 \simpleurl{http://en.wikipedia.org/wiki/Bernoulli_trial}，期望值爲 \m{n}。
+參考 \simpleurl{http://en.wikipedia.org/wiki/Bernoulli_trial}，期望值爲 $n$。
+另 $N$ 爲代表搜索次數的隨即變量。則：
+\startsplitformula\startmathalignment
+\NC E[N] \NC = \sum_{i\ge 1}i \Pr\{i\} \NR\allowbreak
+\NC \NC = \sum_{i\ge i} i \frac{n-1}{n}^{i-1} \frac{1}{n} \NR
+\NC \NC = \frac{1}{n} \frac{1}{\left(1-\frac{n-1}{n}\right)^2} \NR
+\NC \NC = n \NR
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 \startigBase[continue]
-\item 假設有 \m{k\ge 1} 個下標 \m{i} 使得 \m{A[i] = x}，
+\item 假設有 $k\ge 1$ 個下標 $i$ 使得 $A[i] = x$，
 推廣你對上一項的解答。
-在找到 \m{x} 或 \ALGO{RANDOM-SEARCH} 結束之前，
-必須挑選 \m{A} 的下標的數目期望值是多少？
-你的答案應該是 \m{n} 和 \m{k} 的函數。
+在找到 $x$ 或 \ALGO{RANDOM-SEARCH} 結束之前，
+必須挑選 $A$ 的下標的數目期望值是多少？
+你的答案應該是 $n$ 和 $k$ 的函數。
 \stopigBase
 
 \startANSWER
-答案爲 \m{n/k}。
+答案爲 $n/k$。
 \stopANSWER
 
 \startigBase[continue]
-\item 假設沒有下標 \m{i} 使得 \m{A[i] = x}，
-在檢查完 \m{A} 的所有元素或 \ALGO{RANDOM-SEARCH} 結束之前，
-我們必須挑選 \m{A} 的下標的數目期望值是多少？
+\item 假設沒有下標 $i$ 使得 $A[i] = x$，
+在檢查完 $A$ 的所有元素或 \ALGO{RANDOM-SEARCH} 結束之前，
+我們必須挑選 $A$ 的下標的數目期望值是多少？
 \stopigBase
 
 \startANSWER
-答案爲 \m{n(\ln{n} + O(1))}，參見節 5.4.2。
+答案爲 $n(\ln{n} + O(1))$，參見節 5.4.2。
 \stopANSWER
 
 現在考慮一個確定性的線性查找算法，我們稱之爲 \ALGO{DETERMINISTIC-SEARCH}。
-具體地說，這個算法在 \m{A} 中順序查找 \m{x}，
-考慮 \m{A[1]}、 \m{A[2]}、 \m{A[3]}、 \m{\ldots}、 \m{A[n]}，
-直到找到 \m{A[i] = x}，或者到達數列的末尾。
+具體地說，這個算法在 $A$ 中順序查找 $x$，
+考慮 $A[1]$、 $A[2]$、 $A[3]$、 $\ldots$、 $A[n]$，
+直到找到 $A[i] = x$，或者到達數列的末尾。
 假設輸入數列的所有排列都是等可能的。
 \startigBase[continue]
-\item 假設恰好有一個下標 \m{i} 使得 \m{A[i] = x}。
+\item 假設恰好有一個下標 $i$ 使得 $A[i] = x$。
 \ALGO{DETERMINISTIC-SEARCH} 的平均運行時間是多少？
 最壞運行時間又是多少？
 \stopigBase
 
 \startANSWER
-最壞運行時間爲 \m{n}。平均運行時間爲 \m{(n+1)/2}。
+最壞運行時間爲 $n$。平均運行時間爲 $(n+1)/2$。
 \stopANSWER
 
 \startigBase[continue]
-\item 假設有 \m{k\ge 1} 個下標 \m{i} 使得 \m{A[i] = x}，推廣你對上一項的解答。
+\item 假設有 $k\ge 1$ 個下標 $i$ 使得 $A[i] = x$，推廣你對上一項的解答。
 \ALGO{DETERMINISTIC-SEARCH} 的平均運行時間是多少？最壞運行時間又是多少？
-你的答案應該是 \m{n} 和 \m{k} 的函數。
+你的答案應該是 $n$ 和 $k$ 的函數。
 \stopigBase
 
 \startANSWER
-最壞運行時間爲 \m{n-k+1}。
-平均運行時間爲 \m{(n+1)/(k+1)}。
-令 \m{X_i} 爲指示器隨機變量，代表第 \m{i} 個元素匹配，則 \m{\Pr\{X_i\} = 1/(k+1)}。
-令 \m{Y} 爲指示器隨機變量，代表在前 \m{n-k+1} 個元素中找到了匹配項（\m{\Pr{\{Y\}}=1}）。
+最壞運行時間爲 $n-k+1$。
+平均運行時間爲 $(n+1)/(k+1)$。
+令 $X_i$ 爲指示器隨機變量，代表第 $i$ 個元素匹配，則 $\Pr\{X_i\} = 1/(k+1)$。
+令 $Y$ 爲指示器隨機變量，代表在前 $n-k+1$ 個元素中找到了匹配項（$\Pr{\{Y\}}=1$）。
 因此：
-\startformula\startmathalignment
+\startsplitformula\startmathalignment
 \NC E[X] \NC= E[X_1 + X_2 + \ldots + X_{n-k} + Y] \NR
 \NC      \NC= 1 + \sum_{i=1}^{n-k}E[X_i] \NR
 \NC      \NC= 1 + \frac{n-k}{k+1} \NR
 \NC      \NC= \frac{n+1}{k+1} \NR
-\stopmathalignment\stopformula
+\stopmathalignment\stopsplitformula
 \stopANSWER
 
 \startigBase[continue]
-\item 假設沒有下標 \m{i} 使得 \m{A[i] = x}，
+\item 假設沒有下標 $i$ 使得 $A[i] = x$，
 \ALGO{DETERMINISTIC-SEARCH} 的平均運行時間是多少？最壞運行時間又是多少？
 \stopigBase
 
 \startANSWER
-兩種情況都是 \m{n}。
+兩種情況都是 $n$。
 \stopANSWER
 
 最後，考慮一個隨機算法 \ALGO{SCRAMBLE-SEARCH}，
 他縣將輸入數列隨機變換排列，然後在變換後的數列上，運行上面的確定性線性查找算法。
 \startigBase[continue]
-\item 設 \m{k} 是滿足 \m{A[i] = x} 的下標的數目，
-請給出在 \m{k=0} 和 \m{k=1} 兩種情況下，
+\item 設 $k$ 是滿足 $A[i] = x$ 的下標的數目，
+請給出在 $k=0$ 和 $k=1$ 兩種情況下，
 算法 \ALGO{SCRAMBLE-SEARCH} 最壞情形的運行時間和運行時間期望值。
-推廣你的解答以處理 \m{k\ge 1} 的情況。
+推廣你的解答以處理 $k\ge 1$ 的情況。
 \stopigBase
 
 \startANSWER
